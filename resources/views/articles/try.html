@@ -1,0 +1,84 @@
+<!DOCTYPE html><html><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <link href="/favicon.ico" type="image/x-icon" rel="icon"/><link href="/favicon.ico" type="image/x-icon" rel="shortcut icon"/>
+    <link rel="stylesheet" href="/css/itnrs.css"/>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css"/><link rel="stylesheet" href="http://example.com/css/jquery-picklist.css"/>    <script src="http://code.jquery.com/jquery.min.js"></script><script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script><script src="http://example.com/js/jquery-picklist.min.js"></script><script>
+    //<![CDATA[
+    $(document).ready(function() {
+        $('#btn-add').click(function(){
+            $('#select-from option:selected').each( function() {
+                $('#select-to').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+                $(this).remove();
+            });
+        });
+        $('#btn-remove').click(function(){
+            $('#select-to option:selected').each( function() {
+                $('#select-from').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+                $(this).remove();
+            });
+        });
+        $('#btn-up').bind('click', function() {
+            $('#select-to option:selected').each( function() {
+                var newPos = $('#select-to option').index(this) - 1;
+                if (newPos > -1) {
+                    $('#select-to option').eq(newPos).before("<option value='"+$(this).val()+"' selected='selected'>"+$(this).text()+"</option>");
+                    $(this).remove();
+                }
+            });
+        });
+        $('#btn-down').bind('click', function() {
+            var countOptions = $('#select-to option').size();
+            $('#select-to option:selected').each( function() {
+                var newPos = $('#select-to option').index(this) + 1;
+                if (newPos < countOptions) {
+                    $('#select-to option').eq(newPos).after("<option value='"+$(this).val()+"' selected='selected'>"+$(this).text()+"</option>");
+                    $(this).remove();
+                }
+            });
+        });
+        $('#pending').change(function() {
+            $.ajax({
+                url: 'recommend/'+$(this).val(),
+                success:function(data,textStatus) {
+                    $("#students").html(data);
+                }
+            });
+        });
+    });
+
+    //]]></script></head>
+<body>
+<div class="inner_content">
+    <select id="pending">
+        <option value='2978'>511-150602_M   S511 - Const... (4)</option>
+        <option value='3063'>031_M1 S031-Basic O... (4)</option>
+    </select>
+    <form method="post" accept-charset="utf-8" id="form1" action="/url">
+        <div style="display:none;"><input type="hidden" name="_method" value="POST"></div>
+        <table>
+            <tr id="students">
+                <td>
+                    <select id="select-from" multiple="multiple" style="clear:none" size='5'>
+                        <option value="0">Not recommended</option>
+                        <option value="0">Not recommended 1</option>
+                        <option value="0">Not recommended 2</option>
+                    </select>
+                </td>
+                <td>
+                    <select id="select-to" name='UserId[]' multiple="multiple" style="clear:none" size='5'>
+                        <option value="0">Recommended</option>
+                    </select>
+                    <input type="hidden" name="CourseId" value='0'/>
+                </td></tr><tr>
+            <td colspan="2">
+                <input type="button" id="btn-add" value="Add"/>
+                <input type="button" id="btn-remove" value="Remove"/>
+                <input type="button" id="btn-up" value="Up"/>
+                <input type="button" id="btn-down" value="Down"/>
+            </td></tr>
+        </table>
+        <button type="submit">Submit</button>    </form>        </div>
+</div>
+</body>
+</html>

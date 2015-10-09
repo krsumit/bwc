@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Create New QuickByte</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="shortcut icon" href="favicon.ico" />
+        <link rel="apple-touch-icon" href="iosicon.png" />
+<!--    DEVELOPMENT LESS -->
+<!--          <link rel="stylesheet/less" href="css/photon.less" media="all" />
+        <link rel="stylesheet/less" href="css/photon-responsive.less" media="all" /> -->
+<!--    PRODUCTION CSS -->
+        <link rel="stylesheet" href="css/css/photon.css" media="all" />
+<link rel="stylesheet" href="css/css/photon-pt2.css" media="all" />
+
+        <link rel="stylesheet" href="css/css/photon-responsive.css" media="all" />
+        <link rel="stylesheet" href="css/jquery.fileupload.css">
+        <link rel="stylesheet" href="css/jquery.fileupload-ui.css">
+
+<!--[if IE]>
+        <link rel="stylesheet" type="text/css" href="css/css_compiled/ie-only-min.css" />
+<![endif]-->
+
+<!--[if lt IE 9]>
+        <link rel="stylesheet" type="text/css" href="css/css_compiled/ie8-only-min.css" />
+        <script type="text/javascript" src="js/plugins/excanvas.js"></script>
+        <script type="text/javascript" src="js/plugins/html5shiv.js"></script>
+        <script type="text/javascript" src="js/plugins/respond.min.js"></script>
+        <script type="text/javascript" src="js/plugins/fixFontIcons.js"></script>
+<![endif]-->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="js/bootstrap/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/plugins/modernizr.custom.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.pnotify.min.js"></script>
+<script type="text/javascript" src="js/plugins/less-1.3.1.min.js"></script>        
+<script type="text/javascript" src="js/plugins/xbreadcrumbs.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.autotab-1.1b.js"></script>
+<script type="text/javascript" src="js/plugins/charCount.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.textareaCounter.js"></script>
+<script type="text/javascript" src="js/plugins/elrte.min.js"></script>
+<script type="text/javascript" src="js/plugins/elrte.en.js"></script>
+<script type="text/javascript" src="js/plugins/select2.js"></script>
+<script type="text/javascript" src="js/plugins/jquery-picklist.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.validate.min.js"></script>
+<script type="text/javascript" src="js/plugins/additional-methods.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.form.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.metadata.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.mockjax.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.uniform.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.tagsinput.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.rating.pack.js"></script>
+<script type="text/javascript" src="js/plugins/farbtastic.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.timeentry.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.jstree.js"></script>
+<script type="text/javascript" src="js/plugins/dataTables.bootstrap.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.mousewheel.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.mCustomScrollbar.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.flot.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.flot.stack.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.flot.pie.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.flot.resize.js"></script>
+<script type="text/javascript" src="js/plugins/raphael.2.1.0.min.js"></script>
+<script type="text/javascript" src="js/plugins/justgage.1.0.1.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.qrcode.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.clock.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.countdown.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.jqtweet.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.cookie.js"></script>
+<script type="text/javascript" src="js/plugins/bootstrap-fileupload.min.js"></script>
+<script type="text/javascript" src="js/plugins/prettify/prettify.js"></script>
+<script type="text/javascript" src="js/plugins/bootstrapSwitch.js"></script>
+<script type="text/javascript" src="js/plugins/mfupload.js"></script>
+
+<script type="text/javascript" src="js/common.js"></script>
+<script>
+            $(document).ready(function(){
+                $("#validation_form").validate({
+                    errorElement: "span",
+                    errorClass: "error",
+                    onclick: true,
+                    rules: {
+                        "req": {
+                            required: true
+                        },
+                        "numbers": {
+                            required: false,
+                            digits: true
+                        },
+                        "numbers_range": {
+                            range: [1, 7]
+                        },
+                        "email": {
+                            email: true
+                        },
+                        "url": {
+                            url: true
+                        }, 
+                        "date": {
+                            date: true
+                        }
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body class="body-inner light-version">
+            
+    <div class="btn-toolbar btn-mobile-menus">
+        <button class="btn btn-main-menu"></button>
+        <button class="btn btn-user-menu"><i class="icon-logo"></i></button>
+    </div>
+	
+	<div class="nav-fixed-left" style="visibility: hidden">
+        <ul class="nav nav-side-menu">
+            <li class="shadow-layer"></li>
+            <li>
+                <a href="dashboard.html" >
+                    <i class="icon-photon home"></i>
+                    <span class="nav-selection">Dashboard</span>
+                                    </a>
+            </li>
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon document_alt_stroke"></i>
+                    <span class="nav-selection">Articles</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="create-new-articles.html">Create New Articles</a>
+                        </li>
+						<li>
+                            <a href="new-articles.html">New Articles</a>
+                        </li>
+						<li>
+                            <a href="scheduled-articles.html">Scheduled Articles</a>
+                        </li>
+                        <li>
+                            <a href="published-articles.html">Published Article</a>
+                        </li>
+						<li>
+                            <a href="saved-articles.html">My Drafts</a>
+                        </li>
+						<li>
+                            <a href="feature-box-management.html">Feature Box Management</a>
+                        </li>
+						<li>
+                            <a href="campaign-management.html">Campaign Management</a>
+                        </li>
+                        <li>
+                            <a href="add-a-magazine-issue.html">Add A Magazine Issue</a>
+                        </li>
+                        <li>
+                            <a href="tips.html">Tips</a>
+                        </li>
+                        <li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon comment_alt2_stroke"></i>
+                    <span class="nav-selection">Tips &amp; Quotes</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="tips.html">Tips</a>
+                        </li>
+                        <li>
+                            <a href="tip-tag.html">Tags</a>
+						<li>
+                            <a href="quotes.html">Quotes</a>
+                        </li>
+                        <li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			<li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon mic"></i>
+                    <span class="nav-selection">Debate</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="published-debates.html">Published Debate</a>
+                        </li>
+                        <li>
+                            <a href="create-new-debate.html">Create New Debates</a>
+                        </li>
+						<li>
+                            <a href="new-comments-for-debate.html">Debate Comments</a>
+                        </li>
+                        <li>
+                            <a href="profanity-filter.html">Profanity Filter</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			   <li>
+			     <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon pen"></i>
+                    <span class="nav-selection">Columnist and Guest Author
+					</span>
+                         <i class="icon-menu-arrow"></i> </a>
+									<div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="add-edit-columnist.html">Add/Edit Columnist</a>
+                        </li>
+						<li>
+                            <a href="add-new-guest-author.html">Add New Guest Author</a>
+                        </li>
+                        <li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			
+			 
+			<li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon movie"></i>
+                    <span class="nav-selection">Events</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="add-new-events.html">Add New Events</a>
+                        </li>
+                        <li>
+                            <a href="published-events.html">Published Events</a>
+                        </li>
+						<li>
+                            <a href="deleted-events.html">Deleted Events</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon steering_wheel"></i>
+                    <span class="nav-selection">Quick Bytes</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="create-new-quickbyte.html">Create New Quick Byte</a>
+                        </li>
+                        <li>
+                            <a href="published-quickbyte.html">Published Quick Bytes</a>
+                        </li>
+						<li>
+                            <a href="deleted-quickbyte.html">Deleted Quick Bytes</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			
+			<li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon document_stroke"></i>
+                    <span class="nav-selection">Sponsored Post</span>
+                   <i class="icon-menu-arrow"></i>     </a>
+                 <div class="sub-nav">
+                 	<ul class="nav">
+                        <li>
+                        	<a href="create-new-sponsored-post.html">Create New Sponsored Post</a>
+                        </li>
+                        <li>
+                            <a href="published-sponsored-posts.html">Published Sponsored Posts</a>
+                        </li>
+						<li>
+                            <a href="deleted-sponsored-posts.html">Deleted Sponsored Posts</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon new_window"></i>
+                    <span class="nav-selection">Photos</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="upload-new-album.html">Upload New Album</a>
+                        </li>
+                        <li>
+                            <a href="published-album.html">Published Album</a>
+                        </li>
+						<li>
+                            <a href="deleted-photos.html">Deleted Photos</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon play"></i>
+                    <span class="nav-selection">Videos</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="upload-new-Video.html">Upload New Video</a>
+                        </li>
+                        <li>
+                            <a href="published-Videos.html">Published Videos</a>
+                        </li>
+						<li>
+                            <a href="deleted-Videos.html">Deleted Videos</a>
+                        </li>
+						<li>
+                            <a href="featured-Videos.html">Featured Videos</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			<li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon cog"></i>
+                    <span class="nav-selection">Site Management</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="category-master.html">Category Master</a>
+                        </li>
+						<li>
+                            <a href="location-master.html">Location Master</a>
+                        </li>
+						<li>
+                            <a href="topic-master.html">Topic Master</a>
+                        </li>
+                        <li>
+                            <a href="tags.html">Tags Master</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon cog"></i>
+                    <span class="nav-selection">Rights Management</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="cms-rights.html">CMS Rights</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			<li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon info"></i>
+                    <span class="nav-selection">Help</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="#">FAQ</a>
+                        </li>
+						<li>
+                            <a href="#">Sitemap</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+           
+           
+         
+         
+            <li class="nav-logout">
+                <a href="index.html">
+                    <i class="icon-photon key_stroke"></i><span class="nav-selection">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+	
+
+
+        
+<div class="panel">
+    <div class="panel-content filler">
+        <div class="panel-logo"></div>
+        <div class="panel-header">
+            <h1><small>Create New QuickByte</small></h1>
+            
+        </div>
+       
+		   <div class="panel-header">
+            <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
+        </div>
+        
+                    <script type="text/javascript">
+        $(function () {
+            $("#jstree").jstree({ 
+                "json_data" : {
+                    "data" : [
+										{
+                            "data" : { 
+                                "title" : "Channel", 
+                                "attr" : { "href" : "#Channel" } 
+                            }
+                        },
+						
+												{
+                            "data" : { 
+                                "title" : "Author", 
+                                "attr" : { "href" : "#Author" } 
+                            }
+                        },
+                                                {
+                            "data" : { 
+                                "title" : "Quick Byte Feature", 
+                                "attr" : { "href" : "#qb-feature" } 
+                            }
+                        },
+                                                {
+                            "data" : { 
+                                "title" : "Tags", 
+                                "attr" : { "href" : "#tags" } 
+                            }
+                        },
+                                                {
+                            "data" : { 
+                                "title" : "Topics", 
+                                "attr" : { "href" : "#topics" } 
+                            }
+                        },
+                                  ]
+                },
+                "plugins" : [ "themes", "json_data", "ui" ]
+            })
+            .bind("click.jstree", function (event) {
+                var node = $(event.target).closest("li");
+                document.location.href = node.find('a').attr("href");
+                return false;
+            })
+            .delegate("a", "click", function (event, data) { event.preventDefault(); });
+        });
+    </script>
+        <div class="sidebarMenuHolder">
+        <div class="JStree">
+            <div class="Jstree_shadow_top"></div>
+            <div id="jstree"></div>
+            <div class="Jstree_shadow_bottom"></div>
+        </div>
+    </div>    </div>
+    <div class="panel-slider">
+        <div class="panel-slider-center">
+            <div class="panel-slider-arrow"></div>
+        </div>
+    </div>
+</div>
+        <div class="main-content">
+            <div class="breadcrumb-container">
+    <ul class="xbreadcrumbs">
+        <li>
+            <a href="dashboard.html">
+                <i class="icon-photon home"></i>
+            </a>
+        </li>
+                <li>
+            <a href="#">QuickByte &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+            <ul class="breadcrumb-sub-nav">
+                                 <li>
+                            <a href="create-new-quickbyte.html">Create New QuickByte</a>
+                        </li>
+						<li>
+                            <a href="published-quickbyte.html">Published QuickByte</a>
+                        </li>
+						<li>
+                            <a href="deleted-quickbyte.html">Deleted QuickByte</a>
+                        </li>
+						<li>
+                            <a href="#">QuickByte for Footer</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                            </ul>
+        </li>
+                <li class="current">
+            <a href="javascript:;">Create New QuickByte</a>
+        </li>
+    </ul>
+</div>            <header>
+                <i class="icon-big-notepad"></i>
+                <h2><small>QuickByte ID: 45345</small></h2>
+            </header>
+            <form class="form-horizontal" id="fileupload" action="" method="POST" enctype="multipart/form-data">
+			<div class="container-fluid">
+                        <div class="form-legend" id="Notifications">Notifications</div>
+                        <!--Notifications begin-->
+                        <div class="control-group row-fluid">
+                            <div class="span12 span-inset">
+                                <div class="alert alert-success alert-block">
+                                    <i class="icon-alert icon-alert-info"></i>
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>This is Success Notification</strong>
+                                    <span>Your data has been successfully modified.</span>
+                                </div>
+                                <div class="alert alert-block">
+                                    <i class="icon-alert icon-alert-info"></i>
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>This is Alert Notification</strong>
+                                    <span>No result found.</span>
+                                </div>
+                                <div class="alert alert-error alert-block">
+                                    <i class="icon-alert icon-alert-info"></i>
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>This is Error Notification</strong>
+                                    <span>Please select a valid search criteria.</span>
+                                </div>
+								<div class="alert alert-error alert-block">
+                                    <i class="icon-alert icon-alert-info"></i>
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>This is Error Notification</strong>
+                                    <span>Please enter a valid email id.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Notifications end-->
+                </div>
+               <div class="container-fluid">
+
+                        <div class="form-legend" id="Channel">Channel</div>
+
+						<!--Select Box with Filter Search begin-->
+                        <div  class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label" for="selectBoxFilter">Channel</label>
+                            </div>
+							<div class="span9">
+                                <div class="controls">
+                                    <select name="selectBoxFilter" id="selectBoxFilter20">
+                                        <option selected="" value="All">Channel1</option>
+                                        <option value="Beige">Channel2</option>
+                                        <option value="Black">Channel3</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <script>
+                                $().ready(function(){
+                                    $("#selectBoxFilter20").select2();
+                                });
+                            </script>
+                        </div>
+						
+                        <!--Select Box with Filter Search end-->					
+                </div>
+                
+                <div class="container-fluid">
+
+                        <div class="form-legend" id="Author">Author</div>
+
+						<!--Select Box with Filter Search begin-->
+                        <div  class="control-group row-fluid" >
+                            <div class="span3">
+                                <label class="control-label" for="selectBoxFilter">Author</label>
+                            </div>
+							<div class="span9">
+                                <div class="controls">
+                                    <select name="selectBoxFilter" id="selectBoxFilter22">
+                                        <option selected="" value="online">BW Online Bureaw</option>
+                                        <option value="BW-Reporter">BW Reporters</option>
+                                        <option value="GA">Guest Author</option>
+                                        <option value="CL">Cloumnist</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <script>
+                                $().ready(function(){
+                                    $("#selectBoxFilter22").select2();
+                                });
+                            </script>
+                            
+                             <script type="text/javascript">
+
+											$(document).ready(function(){
+													$("#ch-reporter").hide();
+											
+												$("select").change(function(){
+											
+													$(this).find("option:selected").each(function(){
+											
+														if($(this).attr("value")=="BW-Reporter"){
+											
+															$("#ch-reporter").show();
+															
+											
+														}
+														else {
+											                $("#ch-reporter").hide();
+															
+											
+														}
+											
+													});
+											
+												}).change();
+											
+											});
+											
+											</script>
+                            
+                        </div>
+						
+                        <!--Select Box with Filter Search end-->					
+                        
+                        <div  class="control-group row-fluid" id="ch-reporter">
+                            <div class="span3">
+                                <label class="control-label" for="selectBoxFilter">Choose Reporter</label>
+                            </div>
+							<div class="span9">
+                                <div class="controls">
+                                    <select name="selectBoxFilter" id="selectBoxFilter221">
+                                        <option selected="" value="">Pankaj</option>
+                                        <option value="">Vaibhav</option>
+                                        <option value="">Vinay</option>
+                                        <option value="">Manoj</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <script>
+                                $().ready(function(){
+                                    $("#selectBoxFilter221").select2();
+                                });
+                            </script>                            
+                        </div>
+                        
+               	 </div>
+                
+                       
+                   <div class="container-fluid">  
+					   <div class="form-legend" id="qb-feature">Quick Byte Feature 
+						</div>
+						<div id="Photo-feature"  class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label">Feature Title </label>
+                            </div>
+                            <div class="span9">
+                                <div class="controls">
+                                   <input type="text" name="inputField" id="inputField">
+                                </div>
+                            </div>
+                        </div>
+						<div id="Text_Area_Resizable" class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label">Feature Discription</label>
+                            </div>
+                            <div class="span9">
+                                <div class="controls">
+                                    <textarea  rows="4" class=""></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                         <!--Drag And Drop Upload begin-->
+                        <div id="Drag_And_Drop_Upload" class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label" for="inputField">
+                                    Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos."><i class="icon-photon info-circle"></i></a>
+                                </label>
+                            </div>
+                            <div class="span9 row-fluid" >
+                                <div class=" fileupload-buttonbar">
+            <div class="col-lg-7">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span class="btn btn-success fileinput-button">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span>Add files...</span>
+                    <input type="file" name="files[]" multiple>
+                </span>
+                <button type="submit" class="btn btn-primary start">
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start upload</span>
+                </button>
+                <button type="reset" class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel upload</span>
+                </button>
+                <button type="button" class="btn btn-danger delete">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    <span>Delete</span>
+                </button>
+                <input type="checkbox" class="toggle">
+                <!-- The global file processing state -->
+                <span class="fileupload-process"></span>
+            </div>
+            <!-- The global progress state -->
+            <div class="col-lg-5 fileupload-progress fade">
+                <!-- The global progress bar -->
+                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                </div>
+                <!-- The extended global progress state -->
+                <div class="progress-extended">&nbsp;</div>
+            </div>
+        </div>
+        <!-- The table listing the files available for upload/download -->
+        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+                            </div>
+                            <script type="text/javascript">
+                            $().ready(function() {
+
+                                var errors="";
+                                
+                                $('#upload').mfupload({
+                                    
+                                    type        : '',   //all types
+                                    maxsize     : 2,
+                                    post_upload : "./file-uploader.html",
+                                    folder      : "./",
+                                    ini_text    : "Drag your file(s) here or click (max: 2MB each)",
+                                    over_text   : "Drop Here",
+                                    over_col    : '#666666',
+                                    over_bkcol  : '#f0f0f0',
+                                    
+                                    init        : function(){       
+                                        $("#uploaded").empty();
+                                    },
+                                    
+                                    start       : function(result){     
+                                        $("#uploaded").append("<div id='FILE"+result.fileno+"' class='files'>"+result.filename+"<div class='progress progress-info progress-thin'><div class='bar' id='PRO"+result.fileno+"'></div></div></div>"); 
+                                    },
+
+                                    loaded      : function(result){
+                                        $("#PRO"+result.fileno).remove();
+                                        $("#FILE"+result.fileno).html("Uploaded: "+result.filename+" ("+result.size+")");           
+                                    },
+
+                                    progress    : function(result){
+                                        $("#PRO"+result.fileno).css("width", result.perc+"%");
+                                    },
+
+                                    error       : function(error){
+                                        errors += error.filename+": "+error.err_des+"\n";
+                                    },
+
+                                    completed   : function(){
+                                        if (errors != "") {
+                                            alert(errors);
+                                            errors = "";
+                                        }
+                                    }
+                                });     
+                            })
+                        </script>
+                        </div>
+                        <!--Drag And Drop Upload end-->
+                        
+                        
+                        <div class="control-group row-fluid">
+                                <div class="span3" >
+                                    <a class="control-label text-info" href="edit-article-panel-page2.html" >Add Individual Photo Description</a>
+                                </div>
+                                
+                                <div class="span9 span-inset">
+                                    <button class="btn btn-info" id="add_des" type="button">Add </button>
+                                 </div>
+                         </div>
+                         
+                         <!-- descruiption divs can be multiple so place them here-->
+                         <div id="des_area">
+                         <div  class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label">Description 1</label>
+                            </div>
+                            <div class="span9">
+                                <div class="controls">
+                                    <textarea  rows="2" class=""></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div  class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label">Description2</label>
+                            </div>
+                            <div class="span9">
+                                <div class="controls">
+                                    <textarea  rows="2" class=""></textarea>
+                                </div>
+                            </div>
+                        </div>
+						</div>
+                        <script>
+							$(document).ready(function(e) {
+                                $("#des_area").hide();
+								$("#add_des").click(function(e) {
+                                    $("#des_area").show();
+                                });
+                            });
+						</script>
+                        
+              	  </div>
+                  
+                  <div class="container-fluid">
+
+                        <div class="form-legend" id="tags">Tags</div>
+                         <!--Select Box with Filter Search begin-->
+                      
+                        <div class="control-group row-fluid" id="Multiple_Select_Box_with_Filter_Search">
+                            <div class="span3">
+                                <label for="multiFilter" class="control-label">Tags</label>
+                            </div>
+                            <div class="span9">
+                                <div class="controls">
+                                  <select multiple name="multiFilter" id="multiFilter">
+                                        <option value="Beige">Beige</option>
+                                        <option value="Black">Black</option>
+                                        <option value="Blue">Blue</option>
+                                        <option value="Bronze">Bronze</option>
+                                        <option value="Brown">Brown</option>
+                                        <option value="Gold">Gold</option>
+                                        <option value="Gray">Gray</option>
+                                        <option value="Green">Green</option>
+                                        <option value="Orange">Orange</option>
+                                        <option value="Pink">Pink</option>
+                                        <option value="Purple">Purple</option>
+                                        <option value="Red">Red</option>
+                                        <option value="Silver">Silver</option>
+                                        <option selected="" value="Turquoise">Turquoise</option>
+                                        <option value="White">White</option>
+                                        <option value="Yellow">Yellow</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <script>
+                                $().ready(function(){
+                                    $("#multiFilter").select2();
+                                });
+                            </script>
+							
+					 </div>                       
+                        <!--Select Box with Filter Search end-->
+                </div>
+                  
+                  
+                  <div class="container-fluid">
+
+                      <div class="form-legend" id="topics">Topics</div>
+ 						 <!--Topics begin-->
+                        <div  class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label" for="dualMulti" style="width:100%;">Topics</label>
+								<button type="button" class="btn btn-mini btn-inverse" style="margin-left:15px; display:block;">Generate Topics</button>
+								<img src="images/photon/preloader/76.gif" alt="loader" style="width:20%; display:block; margin-left:15px;"/>
+                            </div>
+                            <div class="span9">
+                                <div class="controls">
+                                    <select multiple name="dualMulti" id="dualMulti">
+                                        <option selected="" value="Beige">Beige</option>
+                                        <option value="Black">Black</option>
+                                        <option value="Blue">Blue</option>
+                                        <option value="Bronze">Bronze</option>
+                                        <option value="Brown">Brown</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <script>
+                                $().ready(function(){
+                                    $("#dualMulti").pickList();
+                                });
+                            </script>
+								<div class="span12 span-inset">
+							  <img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;">
+							</div>
+                        </div>
+                        <!--Topics end-->
+					
+                </div>
+                
+                
+                
+			 <div class="container-fluid">
+             	<div class="control-group row-fluid">
+					<div class="span12 span-inset">
+					
+							 <label class="checkbox" >
+                                   <input type="checkbox" class="uniformCheckbox" value="checkbox1">
+                                    <a href="#" target="_blank">This Is  Sponsored</a>
+                                </label>
+								<script>
+                        $().ready(function(){
+                            $(".uniformCheckbox").uniform();
+                        });            
+                    </script>
+						
+					</div>
+				</div>
+                
+				<div class="control-group row-fluid">
+                            <div class="span12 span-inset">
+                                 <button type="button" class="btn btn-warning">Publish</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>	
+                                 <!--                                
+								<button type="button" class="btn btn-success">Publish</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                                 <button type="button" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>-->
+							
+                            </div>
+                        </div>
+                  </div>
+			<!--	end container-->
+			
+            </form>
+        </div>
+        </body>
+        
+        
+        <!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+        </td>
+        <td>
+            {% if (!i && !o.options.autoUpload) { %}
+                <button class="btn btn-primary start" disabled>
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start</span>
+                </button>
+            {% } %}
+            {% if (!i) { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if (file.url) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                {% } else { %}
+                    <span>{%=file.name%}</span>
+                {% } %}
+            </p>
+            {% if (file.error) { %}
+                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            {% if (file.deleteUrl) { %}
+                <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                    <i class="glyphicon glyphicon-trash"></i>
+                    <span>Delete</span>
+                </button>
+                <input type="checkbox" name="delete" value="1" class="toggle">
+            {% } else { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<!--<script src="http:js/vendor/jquery.ui.widget.js"></script>-->
+<!-- The Templates plugin is included to render the upload/download listings -->
+<script src="http://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="http://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+<script src="http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+<!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!-- blueimp Gallery script -->
+<script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<script src="js/jquery.iframe-transport.js"></script>
+<!-- The basic File Upload plugin -->
+<script src="js/jquery.fileupload.js"></script>
+<!-- The File Upload processing plugin -->
+<script src="js/jquery.fileupload-process.js"></script>
+<!-- The File Upload image preview & resize plugin -->
+<script src="js/jquery.fileupload-image.js"></script>
+<!-- The File Upload audio preview plugin -->
+<script src="js/jquery.fileupload-audio.js"></script>
+<!-- The File Upload video preview plugin -->
+<script src="js/jquery.fileupload-video.js"></script>
+<!-- The File Upload validation plugin -->
+<script src="js/jquery.fileupload-validate.js"></script>
+<!-- The File Upload user interface plugin -->
+<script src="js/jquery.fileupload-ui.js"></script>
+<!-- The main application script -->
+<script src="js/main.js"></script>
+
+
+</html>

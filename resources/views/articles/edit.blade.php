@@ -1,0 +1,2281 @@
+@extends('layouts/master')
+
+@section('title', 'Edit Article - BWCMS')
+@section('content')
+<?php //echo count($photos); exit; ?>
+<?php // print_r($article); exit;?>
+<div class="panel">
+    <div class="panel-content filler">
+        <div class="panel-logo"></div>
+        <div class="panel-header">
+            <h1><small>Edit Article</small></h1>
+
+        </div>
+
+        <div class="panel-header">
+            <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
+        </div>
+
+        <script>
+            $(document).ready(function(){
+                    $('#saveSubmit').click(doClick);
+                    $('#pageSubmit').click(doClick);
+                    $('#publishSubmit').click(doClick);
+                    $('#scheduleSubmit').click(doClick);
+                    //$('#scheduleSubmit').click(doClickSchedule);
+                    $('#dumpSubmit').click(doClick);
+                    //$('#pageSubmit','#dumpSubmit','#publishSubmit').click(function() {}
+
+                            function doClickSchedule(){
+                            $("#validation_form").validate({
+                            errorElement: "span",
+                                    errorClass: "error",
+                                    //$("#pageSubmit").onclick: true,
+                                    onclick: true,
+                                    rules: {
+                                    "req1": {
+                                    required: true,
+                                            date: true
+                                    },
+                                            "date": {
+                                            date: true
+                                            },
+                                            "time": {
+                                            time: true
+                                            }
+                                    }
+                            });
+                            }
+//                    function doClick(){
+//                    //$('.btn-success').click(function() {}
+//                    var as = $('#maxi').elrte('val');
+//                            if (as.length ==0){
+//                    alert('Please entter  article Description');
+//                            $('#maxi').focus();
+//                            return false;
+//                    }
+//                    if ($('#channel_sel').val() == '')
+//                    {
+//                    alert('Please Select Channel');
+//                            $('#channel_sel').focus();
+//                            return false;
+//                    }
+//                    if ($('#simpleSelectAuthor').val() === "") {
+//                    alert('Please Select Author Type');
+//                            $('#simpleSelectAuthor').focus();
+//                            return false;
+//                    } else if (($('#simpleSelectAuthor').val() != '1') && $('#simpleSelectBox1').val() === "") {
+//                    alert('Please Select Author Name');
+//                            $('#simpleSelectBox1').focus();
+//                            return false;
+//                    }
+//                    if ($('#selectBoxFilter2').val() == '')
+//                    {
+//                    alert('Please Select Category from DropDown');
+//                            $('#selectBoxFilter2').focus();
+//                            return false;
+//                    }
+//                   
+//                $("#validation_form").validate({
+//                    errorElement: "span",
+//                            errorClass: "error",
+//                            //$("#pageSubmit").onclick: true,
+//                            onclick: true,
+//                            rules: {
+//                            "req": {
+//                            required: true
+//                            },
+//                                    "campaign": {
+//                                    required: true
+//                                    },
+//                                    "numbers": {
+//                                    required: false,
+//                                            digits: true
+//                                    },
+//                                    "numbers_range": {
+//                                    range: [1, 7]
+//                                    },
+//                                    "channel_sel":{
+//                                    required: true
+//                                    },
+//                                    "title":{
+//                                    required: true,
+//                                            rangelength: [10, 200]
+//                                    },
+//                                    "description":{
+//                                    required: true,
+//                                            rangelength: [500, 80000]
+//                                    },
+//                                    "summary":{
+//                                    
+//                                            rangelength: [100, 800]
+//                                    },
+//                                    "email": {
+//                                    email: true
+//                                    },
+//                                    "url": {
+//                                    url: true
+//                                    }
+//                            }
+//                    });
+//                    }
+                    function doClick(){ 
+                                        var checkvalid=1;
+                                        //alert(1);
+                                    //$('.btn-success').click(function() {}
+                                   var as = $('#maxi').elrte('val');
+                                   $('.error.elrte-error').remove();
+                                   $('.error.author-error').remove();
+                                   $('.error.noborder').remove();
+                                    if(as.length==0){
+                                       // alert(1);
+                                        $('.elrte-wrapper').after('<span class="error elrte-error" style="display:block;" >Article description is required. </span>');
+                                        checkvalid=0;
+                                    }
+//                                    else if (as.length < 500 || as.length > 80000){
+//                                         //alert(2);
+//                                                $('.elrte-wrapper').after('<span class="error elrte-error" style="display:block;">Please enter a text between 500 and 80000 characters long in Article Description</span>');
+//                                    //alert('Please enter a text between 500 and 80000 characters long in Article Description');
+//                                            $('#maxi').focus();
+//                                            checkvalid=0;
+//                                            //return false;
+//                                    }   
+//                                    if($('#channel_sel').val() == '')
+//                                     {
+//                                     alert('Please Select Channel');
+//                                     $('#channel_sel').focus();
+//                                     return false;
+//                                     }
+                                    
+//                                    if ($('#simpleSelectAuthor').val() == '') {
+//                                            alert('Please Select Author Type');
+//                                            $('#simpleSelectAuthor').focus();
+//                                            return false;
+//                                    } else 
+                                    if (($('#simpleSelectAuthor').val() != '') && ($('#simpleSelectAuthor').val() != '1') && $('#simpleSelectBox1').val() == '') {
+                                            //alert('Please Select Author Name');
+                                            $('#simpleSelectBox1').after('<span class="error author-error">Author name is required.</span>');
+                                            $('#simpleSelectBox1').siblings('div').addClass('error');
+                                           checkvalid=0;
+                                    }
+//                                    if ($('#selectBoxFilter2').val() == '')
+//                                    {
+//                                    alert('Please Select Category from DropDown');
+//                                            $('#selectBoxFilter2').focus();
+//                                             checkvalid=0;
+//                                    }
+//                                    
+                                   
+                                    
+                                     $("#validation_form").validate({
+                                    errorElement: "span",
+                                            errorClass: "error",
+                                            //$("#pageSubmit").onclick: true,
+                                            onclick: true,
+                                            invalidHandler: function(event, validator) {
+                         
+                                                    for (var i in validator.errorMap) { ///alert(i);
+
+                                                            if($('#'+i).hasClass('formattedelement')){
+                                                                $('#'+i).siblings('.formattedelement').addClass('error');
+
+                                                        }
+
+                                                }
+                                             },
+                                            rules: {
+                                            "req": {
+                                            required: true
+                                            },
+                                                    "category1": {
+                                                    required: true
+                                                    },
+                                                    "channel_sel":{
+                                                    required: true
+                                                    },
+                                                    "authortype":{
+                                                      required: true  
+                                                    },
+                                                    "title":{
+                                                    required: true
+                                                    },
+                                                    "description":{
+                                                    required: true
+                                                    },
+                                                    "summary":{
+                                                    required: true,    
+                                                    rangelength: [100, 800]
+                                                    },
+                                                   
+                                                 
+                                            }
+                                    });
+                                    
+                                    
+                                            if(!$("#validation_form").valid())
+                                                checkvalid=0;
+                                            if(checkvalid==0){
+                                                $('#submitsection').prepend('<div class="error noborder">An error has occured. Please check the above form.</div>');
+                                                return false;
+                                            }   
+                                           // else
+                                                // $("#fileupload").submit();
+
+                                    }
+                    });</script>
+
+        <script type="text/javascript">
+                    $(function () {
+                    $("#jstree").jstree({
+                    "json_data" : {
+                    "data" : [
+                    {
+                    "data" : {
+                    "title" : "Author Detail",
+                            "attr" : { "href" : "#Author-Detail" }
+                    }
+                    },
+                    {
+                    "data" : {
+                    "title" : "Channel",
+                            "attr" : { "href" : "#Channel" }
+                    }
+                    },
+                    {
+                    "data" : {
+                    "title" : "Article-Details",
+                            "attr" : { "href" : "#Article-Details" }
+                    }
+                    },
+                    {
+                    "data" : {
+                    "title" : "Topics And Location",
+                            "attr" : { "href" : "#topics-location" }
+                    }
+                    },
+                    {
+                    "data" : {
+                    "title" : "Categories",
+                            "attr" : { "href" : "#categories" }
+                    }
+                    },
+                    {
+                    "data" : {
+                    "title" : "Assign This Article To An Issue",
+                            "attr" : { "href" : "#assign-article-to-a-Issue" }
+                    }
+                    },
+                    {
+                    "data" : {
+                    "title" : "Assign This Article To An Event",
+                            "attr" : { "href" : "#assign-article-to-a-event" }
+                    }
+                    },
+                    {
+                    "data" : {
+                    "title" : "Assign This Article To A Campaign",
+                            "attr" : { "href" : "#assign-article-to-a-campaign" }
+                    }
+                    },
+                    {
+                    "data" : {
+                    "title" : "Tags",
+                            "attr" : { "href" : "#tags" }
+                    }
+                    },
+                    {
+                    "data" : {
+                    "title" : "Photos And Videos",
+                            "attr" : { "href" : "#photos-videos" }
+                    }
+                    },
+<?php foreach ($rights as $r) {
+    if ($r->label == 'EditPageScheduler') {
+        ?>
+                            {
+                            "data" : {
+                            "title" : "Schedule for Upload",
+                                    "attr" : { "href" : "#schedule-for-upload" }
+                            }
+                            },
+        <?php
+    }
+}
+?>
+
+
+                    ]
+                    },
+                            "plugins" : [ "themes", "json_data", "ui" ]
+                    })
+                            .bind("click.jstree", function (event) {
+                            var node = $(event.target).closest("li");
+                                    document.location.href = node.find('a').attr("href");
+                                    return false;
+                            })
+                            .delegate("a", "click", function (event, data) { event.preventDefault(); });
+                    });</script>
+        <div class="sidebarMenuHolder">
+            <div class="JStree">
+                <div class="Jstree_shadow_top"></div>
+                <div id="jstree"></div>
+                <div class="Jstree_shadow_bottom"></div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-slider">
+        <div class="panel-slider-center">
+            <div class="panel-slider-arrow"></div>
+        </div>
+    </div>
+</div>
+<div class="main-content">
+    <div class="breadcrumb-container">
+        <ul class="xbreadcrumbs">
+            <li>
+                <a href="dashboard.html">
+                    <i class="icon-photon home"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#">Articles</a>
+                <ul class="breadcrumb-sub-nav">
+                    <li>
+                        <a href="new-articles.html">New Article</a>
+                    </li>
+                    <li>
+                        <a href="scheduled-articles.html">Scheduled Articles</a>
+                    </li>
+                    <li>
+                        <a href="published-articles.html">Published Article</a>
+                    </li>
+                    <li>
+                        <a href="saved-articles.html">Saved Articles</a>
+                    </li>
+                    <li>
+                        <a href="feature-box-management.html">Feature Box Management</a>
+                    </li>
+                    <li>
+                        <a href="campaign-managemnet.html">Campaign Managemnet</a>
+                    </li>
+                    <li>
+                        <a href="add-a-magazine-issue.html">Add A Magazine Issue</a>
+                    </li>
+                    <li>
+                        <a href="#">Tips</a>
+                    </li>
+                    <li>
+                        <a href="#">Reports</a>
+                    </li>
+                    <li>
+                        <a href="#">Help</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="current">
+                <a href="javascript:;">Edit Article</a>
+            </li>
+        </ul>
+    </div>            <header>
+        <i class="icon-big-notepad"></i>
+        <h2><small>Article: {{ $article->article_id }}</small></h2>
+        <h3><small>{{ $userTup->name }}</small></h3>
+    </header>
+    {!! Form::open(array('url'=>'article/update/','class'=> 'form-horizontal','id'=>'validation_form')) !!}
+    {!! csrf_field() !!}
+    <div class="container-fluid">
+
+        <div class="form-legend" id="Notifications">Notifications</div>
+
+        <!--Notifications begin-->
+        <div class="control-group row-fluid" style="display:none">
+            <div class="span12 span-inset">
+                <div class="alert alert-success alert-block">
+                    <i class="icon-alert icon-alert-info"></i>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>This is Success Notification</strong>
+                    <span>Your data has been successfully modified.</span>
+                </div>
+                <div class="alert alert-block">
+                    <i class="icon-alert icon-alert-info"></i>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>This is Alert Notification</strong>
+                    <span>No result found.</span>
+                </div>
+                <div class="alert alert-error alert-block">
+                    <i class="icon-alert icon-alert-info"></i>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>This is Error Notification</strong>
+                    <span>Please select a valid search criteria.</span>
+                </div>
+                <div class="alert alert-error alert-block">
+                    <i class="icon-alert icon-alert-info"></i>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>This is Error Notification</strong>
+                    <span>Please enter a valid email id.</span>
+                </div>
+            </div>
+        </div>
+        <!--Notifications end-->
+
+    </div>
+    <input type="hidden" name="id" value="{{$article->article_id}}">
+    <div class="container-fluid">
+        <div class="form-legend" id="Author-Detail">Author Detail
+
+        </div>
+        <div id="Simple_Select_Box" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="simpleSelectBox">Post As</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select style="display: none;" name="authortype" id="simpleSelectAuthor" class="form-control formattedelement">
+                        <option value="">Please Select</option>
+                        @foreach($postAs as $postas1)
+                        @if($postas1->author_type_id == $article->author_type)
+                        <option selected value="{{ $postas1->author_type_id }}">{{ $postas1->label }}</option>
+                        @else
+                        <option value="{{ $postas1->author_type_id }}">{{ $postas1->label }}</option>
+                        @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <script>
+                        $().ready(function(){
+                $("#simpleSelectAuthor").select2({
+                dropdownCssClass: 'noSearch'
+                });
+                });</script>
+        </div>
+
+
+        <div class="bs-docs-example" id="tabarea">
+            <ul class="nav nav-tabs" id="iconsTab">
+                <li class="active"><a data-toggle="tab" href="#existing">Choose From Existing</a></li>
+                <!-- Add Author Section Only if Rights -->
+                <?php //print_r($rights);exit;?>
+                @foreach($rights as $right)
+                @if( $right->label == 'EditPageaddAuthor')
+                <li class=""><a data-toggle="tab" href="#new">Add A New Author</a></li>
+                @endif
+                @endforeach
+            </ul>
+            <div class="tab-content">
+                <div id="existing" class="tab-pane fade  active in">
+
+                    <div id="Simple_Select_Box" class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label" for="simpleSelectBox">Author Name</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <select style="display: none;" name="author_id1" id="simpleSelectBox1" class="">
+                                    @foreach($arrAuth as $arAuth)
+                                    @if($arAuth->article_author_rank == 1)
+                                    <option selected="" value="{{ $arAuth->author_id }}">{{$arAuth->name}}</option>
+                                    @endif
+                                    @endforeach
+                                    <option value="">Please Select</option>
+                                </select>
+                            </div>
+                        </div>
+                        <script>
+                                    $().ready(function(){
+                            $("#simpleSelectBox1").select2({
+                            //dropdownCssClass: 'noSearch'
+                            });
+                            });</script>
+                    </div>
+
+                    <div id="n2" class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label" for="simpleSelectBox">Secondary Author Name 1</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <select name="author_id2" id="simpleSelectBox2">
+                                    <option value="">Please Select</option>
+                                    @foreach($arrAuth as $ar1Auth)
+                                    @if($ar1Auth->article_author_rank == 2)
+                                    <option selected value="{{ $ar1Auth->author_id }}">{{$ar1Auth->name}}</option>
+                                    @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <script>
+                                    $().ready(function(){
+                            $("#simpleSelectBox2").select2({
+                            //dropdownCssClass: 'noSearch'
+                            });
+                            });</script>
+                    </div>
+
+                    <div id="n3" class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label" for="simpleSelectBox">Secondary Author Name 2</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <select name="author_id3" id="simpleSelectBox3">
+                                    <option value="">Please Select</option>
+                                    @foreach($arrAuth as $arAuth)
+                                    @if($arAuth->article_author_rank == 3)
+                                    <option selected="" value="{{ $arAuth->author_id }}">{{$arAuth->name}}</option>
+                                    @endif
+                                    @endforeach
+                                    
+                                </select>
+                            </div>
+                        </div>
+                        <script>
+                                    $().ready(function(){
+                            $("#simpleSelectBox3").select2({
+                            //dropdownCssClass: 'noSearch'
+                            });
+                            });</script>
+                    </div>
+
+                    <script>
+                                $(document).ready(function(e) {
+                        $("#n2,#n3").hide();
+                        });</script>
+
+                    <script type="text/javascript">
+
+                                $(document).ready(function(){
+
+                        $("#simpleSelectAuthor").change(function(){
+
+                        $(this).find("option:selected").each(function(){
+                            //return false
+
+                        if ($(this).attr("value") == "2"){
+                        //If chose BWReporters - get New&Existing DDs
+                        //Populate DDs
+                        $("#tabarea").show();
+                                $("#n2, #n3").show();
+                                $.get("{{ url('/article/authordd/')}}",
+                                { option: $(this).attr("value") },
+                                        function(data) {
+                                                var simpleSelectBox1 = $('#simpleSelectBox1');
+                                                var simpleSelectBox2 = $('#simpleSelectBox2');
+                                                var simpleSelectBox3 = $('#simpleSelectBox3');
+                                                $select1val=simpleSelectBox1.val();
+                                                $select2val=simpleSelectBox2.val();
+                                                $select3val=simpleSelectBox3.val();
+                                                simpleSelectBox1.empty();
+                                                simpleSelectBox2.empty();
+                                                simpleSelectBox3.empty();
+                                                simpleSelectBox1.append("<option  value=''>Please Select</option>");
+                                                simpleSelectBox2.append("<option  value=''>Please Select</option>");
+                                                simpleSelectBox3.append("<option  value=''>Please Select</option>");
+                                                var selected1='';
+                                                var selected2='';
+                                                var selected3='';
+                                                $.each(data, function(index, element) {
+                                                        (element==$select1val)?selected1='selected':selected1='';
+                                                        (element==$select2val)?selected2='selected':selected2='';
+                                                        (element==$select3val)?selected3='selected':selected3='';
+                                                        simpleSelectBox1.append("<option "+selected1+" value='" + element + "'>" + index + "</option>");
+                                                        simpleSelectBox2.append("<option "+selected2+" value='" + element + "'>" + index + "</option>");
+                                                        simpleSelectBox3.append("<option "+selected3+" value='" + element + "'>" + index + "</option>");
+                                                });
+                                                $("#simpleSelectBox1").select2();
+                                                $("#simpleSelectBox2").select2();
+                                                $("#simpleSelectBox3").select2();
+                                        });
+                        }
+
+                        else if ($(this).attr("value") == "1"){
+
+                        $("#tabarea").hide();
+                        }
+//if($(this).attr("value")=="none")
+                        else {
+                        if ($(this).attr("value") != "") {
+                        $("#tabarea").show();
+                                $("#n2, #n3").hide();
+                                $.get("{{ url('/article/authordd/')}}",
+                                {option: $(this).attr("value")},
+                                        function (data) {
+                                                var simpleSelectBox1 = $('#simpleSelectBox1');
+                                                $select1val=simpleSelectBox1.val();                                                var selected1='';
+                                                simpleSelectBox1.empty();
+                                                simpleSelectBox1.append("<option selected='' value=''>Please Select</option>");
+                                                $.each(data, function (index, element) {
+                                                    (element==$select1val)?selected1='selected':selected1='';
+                                                simpleSelectBox1.append("<option "+selected1+" value='" + element + "'>" + index + "</option>");
+                                                });
+                                                $("#simpleSelectBox1").select2();
+                                        });
+                        }
+                        }
+                        });
+                        }).change();
+                        });</script>
+
+                </div>
+
+                <div id="new" class="tab-pane fade entypo ">
+                    <!--<form name="addAuthorForm" method="post" enctype="multipart/form-data" id="addAuthorForm">-->
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label" >&nbsp;</label>
+                        </div>
+                        <div class="span3">
+                            <label class="radio">
+                                <input type="radio" id="author_type" name="author_type" class="uniformRadio" value="4">
+                                Columnist
+                            </label>
+                        </div>
+                        <div class="span3">
+                            <label class="radio">
+                                <input  type="radio" id="author_type"  name="author_type" class="uniformRadio" value="3">
+                                Guest Author
+                            </label>
+                        </div>
+                        <div class="span3">
+                            <label class="radio">
+                                <input  type="radio" id="author_type" name="author_type" class="uniformRadio" value="2" checked>
+                                BW Reporter
+                            </label>
+                        </div>
+
+                        <script>
+                                    $().ready(function(){
+                            $(".uniformRadio").uniform({
+                            radioClass: 'uniformRadio'
+                            });
+                            });</script>
+
+                    </div>
+
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label" for="inputField">Name</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <input id="inputField" id="name" name="Name" type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label" for="inputField">Bio</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <textarea  rows="3" id="Bio" class="" name="Bio"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label" for="inputField">Email</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <input id="inputField" name="email" type="email">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label" for="inputField">Mobile</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <input id="inputField" name="mobile" type="number">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="File_Upload" class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Photo</label>
+                        </div>
+                        <div class="span9">
+                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                <div class="input-append">
+                                    <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" name="photo" id="photo"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label" for="inputField">Twitter</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <input id="inputField" name="twitter" type="text">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div  class="control-group row-fluid" id="ch-reporter">
+                        <div class="span3">
+                            <label class="control-label" for="selectBoxFilter">Choose Column</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <select name="column_id" id="selectBoxFilter221">
+                                    <option value="" >Please Select</option>
+                                    @foreach( $columns as $column)
+                                    <option value="{{ $column->column_id }}">{{ $column->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <script>
+                                    $().ready(function(){
+                            $("#selectBoxFilter221").select2();
+                            });</script>
+                    </div>
+
+                    <div class="control-group row-fluid">
+                        <div class="span12 span-inset">
+                            <button class="btn btn-warning pull-right" id="addabut" type="button" style="display:block;">Add</button>
+                        </div>
+                    </div>
+                    <!--</form>-->
+                </div>
+                <script>
+                            // magic.js
+                            $(document).ready(function() {
+                    //var csrf_token = $('meta[name="csrf-token"]').attr('content');
+                    var token = $('input[name=_token]');
+                            // process the form
+                          
+                    //$("#addAuthorForm").on('click',function(event){}
+                    //  alert('Yay!');
+
+                    // get the form data
+                    // there are many ways to get this data using jQuery (you can use the class or id also)
+                    var formData = new FormData();
+                            formData.append('photo', photo.files[0]);
+                            formData.append('name', $('input[name=Name]').val());
+                            formData.append('author_type', $('input[name=author_type]:checked').val());
+                            formData.append('email', $('input[name=email]').val());
+                            formData.append('bio', $('textarea[id=Bio]').val());
+                            formData.append('mobile', $('input[name=mobile]').val());
+                            formData.append('twitter', $('input[name=twitter]').val());
+                            formData.append('column_id', $('select[name=column_id]').val());
+                            // process the form
+                            $.ajax({
+                            type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                                    //method      : 'POST',
+                                    url         : '/article/addAuthor', // the url where we want to POST
+                                    //files       :  true,
+                                    data        :  formData,
+                                    enctype     : 'multipart/form-data',
+                                    dataType    : 'json', // what type of data do we expect back from the server
+                                    contentType :  false,
+                                    processData :  false,
+                                    //encode      : true,
+                                    headers: {
+                                    'X-CSRF-TOKEN': token.val()
+                                    }
+                            })
+                            // using the done promise callback
+                            .done(function(data) {
+
+                            // log data to the console so we can see
+                            console.log(data);
+                                    //alert('Author Saved');
+                                    // here we will handle errors and validation messages
+                            });
+                            // stop the form from submitting the normal way and refreshing the page
+                            //event.preventDefault();
+                    });
+                    });</script>
+            </div>
+        </div>
+    </div><!-- end container1 -->
+
+    <div class="container-fluid">
+
+        <div class="form-legend" id="Channel">Channel</div>
+
+        <!--Select Box with Filter Search begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="channel_sel">Channel</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="channel_sel" id="channel_sel" class="required channel_sel formattedelement">
+                        <!--<option selected="" value=></option>-->
+                        @foreach($channels as $channel)
+                        <option value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                        @endforeach
+                    </select>
+                    <span for="channel_sel1" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
+                </div>
+            </div>
+            <script>
+                        $().ready(function(){
+                $("#channel_sel").select2();
+                        // Populate Events / Campaign / Magazine / Category Drop Down
+                        $('#channel_sel').change(function(){
+                $.get("{{ url('article/event')}}",
+                { option: $(this).attr("value") },
+                        function(data) {
+                        var eventBox = $('#event_id');
+                                eventBox.empty();
+                                eventBox.append("<option selected='' value=''>All</option>");
+                                $.each(data, function(index, element) {
+                                eventBox.append("<option value='" + element + "'>" + index + "</option>");
+                                });
+                        });
+                        $.get("{{ url('article/campaign')}}",
+                        { option: $(this).attr("value") },
+                                function(data) {
+                                var Box = $('#campaign_id');
+                                        Box.empty();
+                                        Box.append("<option selected='' value=''>All</option>");
+                                        $.each(data, function(index, element) {
+                                        Box.append("<option value='" + element + "'>" + index + "</option>");
+                                        });
+                                });
+                        $.get("{{ url('article/magazine')}}",
+                        { option: $(this).attr("value") },
+                                function(data) {
+                                var Box = $('#magazine_id');
+                                        Box.empty();
+                                        Box.append("<option selected='' value=''>All</option>");
+                                        $.each(data, function(index, element) {
+                                        Box.append("<option value='" + element + "'>" + index + "</option>");
+                                        });
+                                });
+                        $.get("{{ url('article/dropdown1')}}",
+                        { option: $(this).attr("value") + '&level=' },
+                                function(data) {
+                                var Box = $('#selectBoxFilter2');
+                                        Box.empty();
+                                        Box.append("<option selected='' value=''>All</option>");
+                                        $.each(data, function(index, element) {
+                                        Box.append("<option value='" + element + "'>" + index + "</option>");
+                                        });
+                                });
+                });
+                });</script>
+        </div>
+
+        <!--Select Box with Filter Search end-->
+    </div>
+
+    <div class="container-fluid">
+        <div class="form-legend" id="Article-Details">Article Details
+
+        </div>
+        <!--Text Area - No Resize begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="title">Title (200 Characters)</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <textarea  name="title" rows="4" class="no-resize required title_range valid">{{$article->title}}</textarea>
+                    <span for="title" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
+                </div>
+            </div>
+        </div>
+        <!--Text Area - No Resize end-->
+
+        <!--Text Area Resizable begin-->
+        <div id="Text_Area_Resizable" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label">Summary (800 Characters)</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <textarea  name="summary" rows="4" class="">{{$article->summary}}</textarea>
+                </div>
+            </div>
+        </div>
+        <!--Text Area Resizable end-->
+
+        <!--WYSIWYG Editor - Full Options-->
+        <div id="WYSIWYG_Editor_-_Full_Options" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="description">Description</label>
+            </div>
+            <div class="span9">
+                <div class="controls elrte-wrapper">
+                    <textarea name="description" id="maxi" rows="2" class="auto-resize required valid">{{$article->description}}</textarea>
+                    <span for="description" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
+                    <script>
+                     elRTE.prototype.options.panels.web2pyPanel = [
+                            'pastetext','bold', 'italic','underline','justifyleft', 'justifyright',
+                           'justifycenter', 'justifyfull','forecolor','hilitecolor','fontsize','link',
+                           'image', 'insertorderedlist', 'insertunorderedlist'];
+ 
+                        elRTE.prototype.options.toolbars.web2pyToolbar = ['web2pyPanel','tables'];
+                                $('#maxi').elrte({
+                        lang: "en",
+                                styleWithCSS: false,
+                                height: 200,
+                                toolbar: 'web2pyToolbar'
+                        });</script>
+                </div>
+            </div>
+        </div>
+
+        <!--WYSIWYG Editor - Full Options end-->
+
+    </div><!-- end container1 -->
+    <div class="container-fluid">
+
+        <div class="form-legend" id="topics-location">Topics And Location</div>
+        <!--Topics begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="dualMulti" style="width:100%;">Topics</label>
+                <button type="button" name="genTopic" id="genTopic" class="btn btn-mini btn-inverse" style="margin-left:15px; display:block;">Generate Topics</button>
+                <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:20%; display:none; margin-left:15px;"/>
+            </div>
+            <div class="span9">
+                <div class="controls ltopicsparentdiv">
+                    <select multiple name="Ltopics[]" id="Ltopics">
+                        @foreach($arrTopics as $topic)
+                        <option selected value="{{$topic->topic_id}}">{{$topic->topic}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <script>
+                        $().ready(function() {
+                //$("#Ltopics").pickList();
+                //});
+                //if($('#genTopic').click()){}
+                //alert('hete');
+                //$("#Ltopics").pickList.empty();
+                //$('#genTopics').click(GTopics);
+                $("#genTopic").click(function() {
+                //function GTopics() {}
+                var token = $('input[name=_token]');
+                        //alert($('#maxi').elrte('val'));
+                        // process the form
+                        $.ajax({
+                        type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                                url: '/article/generateTopics', // the url where we want to POST
+                                data: {detail: $('#maxi').elrte('val')},
+                                dataType: 'json', // what type of data do we expect back from the server
+                                encode: true,
+                                beforeSend  :function(data){
+                                $('#genTopic').hide();
+                                        $('#genTopic').siblings('img').show();
+                                },
+                                complete    :function(data){
+                                $('#genTopic').show();
+                                        $('#genTopic').siblings('img').hide();
+                                },
+                                success: function (data) {
+
+                                var resplen = (data).length;
+                                        var selectedarray = new Array();
+                                        $('.ltopicsparentdiv').find("#Ltopics option:selected").each(function(){
+                                selectedarray.push($(this).val());
+                                });
+                                        var dataoption = '<select multiple name="Ltopics[]" id="Ltopics">';
+                                        var selectedop = '';
+                                        $.each(data, function (index, element) {
+                                        selectedop = '';
+                                                if (selectedarray.indexOf(element.id) >= 0)
+                                                selectedop = 'selected';
+                                                dataoption += "<option " + selectedop + " value='" + element.id + "'>" + element.topic + "</option>";
+                                        });
+                                        dataoption += '</select>';
+                                        // $( "#myselect option:selected" )
+
+
+                                        $(".ltopicsparentdiv").html(dataoption);
+                                        $("#Ltopics").pickList();
+                                },
+                                headers: {
+                                'X-CSRF-TOKEN': token.val()
+                                }
+                        })
+                        // using the done promise callback
+                        .done(function (data) {
+                        // log data to the console so we can see
+                        //console.log(data);
+                        //alert(data);
+                        //alert('Topic Populated');
+                        // here we will handle errors and validation messages
+                        });
+                        // stop the form from submitting the normal way and refreshing the page
+                        //event.preventDefault();
+                        //});
+                });
+                        //$("#Ltopics").pickList();
+                        //$("#Ltopics").select2();
+                        $('#genTopic').trigger('click');
+                });</script>
+            <div class="span12 span-inset">
+                <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;">
+            </div>
+        </div>
+        <!--Topics end-->
+
+        <!--Select Box with Filter Search begin-->
+        <div id="Simple_Select_Box_with_Filter_Search" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter">Select Location</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="country" id="selectBoxFilter6">
+                        <option  value="">Please Select</option>
+                        @foreach($country as $countrye)
+                        @if($article->country == $countrye->country_id)
+                        <option selected value="{{ $countrye->country_id }}">{{ $countrye->name }}</option>
+                        @else
+                        <option value="{{ $countrye->country_id }}">{{ $countrye->name }}</option>
+                        @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <script>
+                        $(document).ready(function(){
+                $("#selectBoxFilter6").select2();
+                        $("#selectBoxFilter6").change(function(){
+                $(this).find("option:selected").each(function(){
+                if ($(this).attr("value") == "1"){
+                $("#tabState").show();
+                } else{
+                $("#tabState").hide();
+                }
+
+                });
+                }).change();
+                });</script>
+        </div>
+
+        <div id="tabState" class="control-group row-fluid">
+            <div id="Simple_Select_Box_with_Filter_Search" class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="selectBoxFilter"></label>
+                </div>
+                <div class="span9" >
+                    <div class="controls">
+                        <select name="state" id="selectBoxFilter7">
+                             <option  value="">Please Select</option>
+                            @foreach($states as $state)
+                            @if($article->state == $state->state_id)
+                            <option selected value="{{ $state->state_id}}">{{ $state->name }}</option>
+                            @else
+                            <option value="{{ $state->state_id}}">{{ $state->name }}</option>
+                            @endif
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <script>
+                            $().ready(function(){
+                    $("#selectBoxFilter7").select2();
+                    });</script>
+            </div>
+
+        </div>
+        <!--Select Box with Filter Search end-->
+        <!--Simple Select Box begin-->
+        <div id="Simple_Select_Box" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="simpleSelectBox">News Type</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="newstype" id="simpleSelectBox" class="">
+                        @foreach($newstype as $newstypE)
+                        @if($article->news_type == $newstypE->news_type_id)
+                        <option selected value="{{ $newstypE->news_type_id }}"> {{ $newstypE->name }} </option>
+                        @else
+                        <option value="{{ $newstypE->news_type_id }}"> {{ $newstypE->name }} </option>
+                        @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <script>
+                        $().ready(function(){
+                $("#simpleSelectBox").select2({
+                dropdownCssClass: 'noSearch'
+                });
+                });</script>
+        </div>
+        <!--Simple Select Box end-->
+    </div>
+    <div class="container-fluid">
+
+        <div class="form-legend" id="categories">Categories</div>
+
+        <!--Select Box with Filter Search begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter">Categories</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="category1" id="selectBoxFilter2" class="formattedelement">
+                        @if(count($acateg)>0)
+                        <option selected="" value="{{ $acateg[0]['category_id'] }}">{{$acateg[0]['name']}}</option>
+                        @else
+                        <option selected="selected" value="">Please Select</option>
+                        @endif
+                        @foreach($category as $key )
+                        <option value="{{ $key->category_id }}">{{ $key->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <script>
+                        $(document).ready(function(){
+                $("#selectBoxFilter2").select2();
+                        $('#selectBoxFilter2').change(function(){
+                $.get("{{ url('article/dropdown1')}}",
+                { option: $(this).attr("value") + '&level=_two' },
+                        function(data) {
+                        var selectBoxFilter3 = $('#selectBoxFilter3');
+                                selectBoxFilter3.empty();
+                                selectBoxFilter3.append("<option selected='' value=''>Please Select</option>");
+                                $.each(data, function(index, element) {
+                                selectBoxFilter3.append("<option value='" + element + "'>" + index + "</option>");
+                                });
+                                $("#selectBoxFilter3").select2();
+                                $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
+                                $('#selectBoxFilter4').select2();
+                                $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                $('#selectBoxFilter5').select2();
+                        });
+                });
+                });</script>
+        </div>
+        <div id="categories" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter"></label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="category2" id="selectBoxFilter3">
+                        @if(count($acateg)>1)
+                        <option selected="" value="{{ $acateg[1]['category_id'] }}">{{$acateg[1]['name']}}</option>
+                        @endif
+                        <option value="">Please Select</option>
+                    </select>
+                </div>
+            </div>
+            <script>
+                        $(document).ready(function(){
+                $("#selectBoxFilter3").select2();
+                        $('#selectBoxFilter3').change(function(){
+                $.get("{{ url('article/dropdown1')}}",
+                { option: $(this).attr("value") + '&level=_three' },
+                        function(data) {
+                        var selectBoxFilter4 = $('#selectBoxFilter4');
+                                selectBoxFilter4.empty();
+                                selectBoxFilter4.append("<option selected='' value=''>Please Select</option>");
+                                $.each(data, function(index, element) {
+                                selectBoxFilter4.append("<option value='" + element + "'>" + index + "</option>");
+                                });
+                                $('#selectBoxFilter4').select2();
+                                $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                $('#selectBoxFilter5').select2();
+                        });
+                });
+                });</script>
+        </div>
+        <div id="categories" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter"></label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="category3" id="selectBoxFilter4">
+                        @if(count($acateg)>2)
+                        <option selected="" value="{{ $acateg[2]['category_id'] }}">{{ $acateg[2]['name'] }}</option>
+                        @endif
+                        <option value="">Please Select</option>
+                    </select>
+                </div>
+            </div>
+            <script>
+                        $(document).ready(function(){
+                $("#selectBoxFilter4").select2();
+                        $('#selectBoxFilter4').change(function(){
+                $.get("{{ url('article/dropdown1')}}",
+                { option: $(this).attr("value") + '&level=_four' },
+                        function(data) {
+                        var selectBoxFilter5 = $('#selectBoxFilter5');
+                                selectBoxFilter5.empty();
+                                selectBoxFilter5.append("<option selected='' value=''>Please Select</option>");
+                                $.each(data, function(index, element) {
+                                selectBoxFilter5.append("<option value='" + element + "'>" + index + "</option>");
+                                });
+                                 $('#selectBoxFilter5').select2();
+                        });
+                        
+                });
+                });</script>
+        </div>
+        <div id="categories" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter"></label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="category4" id="selectBoxFilter5">
+                        @if(count($acateg)>3)
+                        <option selected="" value="{{ $acateg[3]['category_id'] }}">{{$acateg[3]['name']}}</option>
+                        @endif
+                        <option value="">Please Select</option>
+                    </select>
+                </div>
+            </div>
+            <script>
+                        $().ready(function(){
+                $("#selectBoxFilter5").select2();
+                });</script>
+        </div>
+        <!--Select Box with Filter Search end-->
+
+    </div>
+
+    <div class="container-fluid">
+
+        <div class="form-legend" id="assign-article-to-a-Issue">Assign This Article To A Magazine Issue</div>
+
+        <!--Select Box with Filter Search begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter">Magazine Issue Name</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="magazine" id="magazine_id">
+
+                        @foreach($magazine as $magazines)
+                        @if($article->magazine_id == $magazines->magazine_id)
+                        <option selected value="{{ $magazines->magazine_id }}">{{ $magazines->title }}</option>
+                        @else
+                        <option value="{{ $magazines->magazine_id }}">{{ $magazines->title }}</option>
+                        @endif
+                        @endforeach
+                        <option @if($article->magazine_id ==0) selected @endif value="">Please Select</option>
+                    </select>
+                </div>
+            </div>
+            <script>
+                        $().ready(function(){
+                $("#magazine_id").select2();
+                        //$("#selectBoxFilter20").select2();
+                });</script>
+        </div>
+
+        <!--Select Box with Filter Search end-->
+    </div>
+
+    <div class="container-fluid">
+        <div class="form-legend" id="assign-article-to-a-event">Assign This Article To An Event</div>
+
+        <!--Select Box with Filter Search begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter">Event Name</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="event" id="event_id">
+                        @foreach($event as $events)
+                        @if($article->event_id == $events->event_id)
+                        <option selected value="{{ $events->event_id }}">{{ $events->title }}</option>
+                        @else
+                        <option value="{{ $events->event_id }}">{{ $events->title }}</option>
+                        @endif
+                        @endforeach
+                        <option @if($article->event_id == 0) selected @endif value="">Please Select</option>
+                    </select>
+                </div>
+            </div>
+            <script>
+                        $().ready(function(){
+                $("#event_id").select2();
+                });</script>
+        </div>
+
+        <!--Select Box with Filter Search end-->
+    </div>
+
+    <div class="container-fluid">
+
+        <div class="form-legend" id="assign-article-to-a-campaign">Assign this article to a Campaign</div>
+
+        <!--Select Box with Filter Search begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="campaign">Campaign</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="campaign"  id="campaign_id">
+                        @foreach($campaign as $campaigns)
+                        @if($article->campaign_id == $campaigns->campaign_id)
+                        <option selected value="{{ $campaigns->campaign_id }}">{{ $campaigns->title }}</option>
+                        @else
+                        <option value="{{ $campaigns->campaign_id }}">{{ $campaigns->title }}</option>
+                        @endif
+                        @endforeach
+                        <option @if($article->campaign_id == 0) selected @endif value="">Please Select</option>
+                    </select>
+                    <span for="campaign" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
+                    <!--<div class="control-group row-fluid">
+                                    <div class="span12 span-inset">
+                                    <button class="btn btn-warning" type="button" style="display:block; float:left;">Delete</button>
+                                     <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;"/>
+                                      <button type="button" class="btn btn-primary" style="display:block; float:left; margin-left:5px;">Attach</button>
+                                      <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;"/>
+                                    </div>
+                            </div>-->
+                </div>
+            </div>
+
+            <script>
+                        $().ready(function(){
+                $("#campaign_id").select2();
+                });</script>
+        </div>
+        <!--Select Box with Filter Search end-->
+
+    </div><!--end container-->
+
+    <div class="container-fluid">
+
+        <div class="form-legend" id="tags">Tags</div>
+        <!--Select Box with Filter Search begin-->
+
+        <div  class="control-group row-fluid" id="Multiple_Select_Box_with_Filter_Search">
+            <div class="control-group row-fluid">
+                <div class="span3">
+                    <label for="multiFilter" class="control-label">Tags</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <input type="text" class="valid" name="Taglist" id="Taglist"/>
+                    </div>
+                </div>
+            </div>
+            <div class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="add tags">Add New Tags<br>(Separated by Coma. No spaces)</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <input type="text" name="addtags" class="valid"><span for="add tags" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
+                    </div>
+                </div>
+                <div class="span12 span-inset">
+
+                    <div style="float:right; width:11%; margin-bottom:5px;"><button type="button" class="btn btn-primary" id="attachTag" style="display:block;">Attach</button>
+                        <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:50%; display:block; margin-left:15px;display:none;"></div>
+                </div>
+            </div>
+            <!-- Add Tag to Tags Table - Ajax request -->
+            <script>
+                        $().ready(function() {
+                var token = $('input[name=_token]');
+                        // process the form
+                        $("#attachTag").click(function(){
+                if ($('input[name=addtags]').val().trim().length == 0){
+                alert('Please enter tage'); return false;
+                }
+                //alert(token.val());
+                // process the form
+                $.ajax({
+                type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                        url         : '/article/addTag', // the url where we want to POST
+                        data        :   { tag : $('input[name=addtags]').val() },
+                        dataType    : 'json', // what type of data do we expect back from the server
+                        encode      : true,
+                        beforeSend  :function(data){
+                        $('#attachTag').hide();
+                                $('#attachTag').siblings('img').show();
+                        },
+                        complete    :function(data){
+                        $('#attachTag').show();
+                                $('#attachTag').siblings('img').hide();
+                        },
+                        success     :  function(data){
+                        $.each(data, function(key, val){
+
+                        $("#Taglist").tokenInput("add", val);
+                        });
+                                $('input[name=addtags]').val('');
+                                // alert('Tag Saved');
+                        },
+                        headers: {
+                        'X-CSRF-TOKEN': token.val()
+                        }
+                })
+
+                });
+                        $("#Taglist").tokenInput("/tags/getJson", {
+                theme: "facebook",
+                        searchDelay: 300,
+                        minChars: 4,
+                        preventDuplicates: true,
+                        prePopulate: <?php echo $tags ?>,
+                });
+                });</script>
+        </div>
+        <!--Select Box with Filter Search end-->
+    </div>
+
+
+
+
+
+    <div class="container-fluid">
+
+        <div class="form-legend" id="photos-videos">Photos & Videos</div>
+
+        <!--Tabs begin-->
+        <div  class="control-group row-fluid span-inset">
+            <ul class="nav nav-tabs" id="myTab">
+                
+<!--                <li class="dropdown active"><a data-toggle="dropdown" class="dropdown-toggle" href="#dropdown1">Upload Image<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a data-toggle="tab" href="#dropdown1">Image 1</a></li>
+                        <li><a data-toggle="tab" href="#dropdown2">Image 2</a></li>
+                        <li><a data-toggle="tab" href="#dropdown3">Image 3</a></li>
+                        <li><a data-toggle="tab" href="#dropdown4">Image 4</a></li>
+                    </ul>
+                </li>
+                <li><a data-toggle="tab" href="#tab-example1">Video</a></li>-->
+                <li class="dropdown active"><a data-toggle="tab" href="#dropdown1">Photo</a></li>
+                <li><a data-toggle="tab" href="#tab-example1">Video</a></li>
+<!--                <li><a data-toggle="tab" href="#tab-example4">Current Photos</a></li>-->
+            </ul>
+            <div class="tab-content">
+                <div id="tab-example1" class="tab-pane fade">
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Title</label>
+                        </div>
+                        <input type="hidden" name="videoid" @if(count($arrVideo)>0) value="{{$arrVideo[0]->video_id}}" @endif>
+                               <div class="span9">
+                            <div class="controls">
+                                <input type="text" name="videoTitle" id="inputSpan9" @if(count($arrVideo)>0) value="{{$arrVideo[0]->title}}" @endif>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Code (500/320)</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <textarea  rows="4" name="videoCode" class="no-resize" @if(count($arrVideo)>0) value="{{$arrVideo[0]->code}}" @endif>@if(count($arrVideo)>0) {{$arrVideo[0]->code}} @endif</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Source</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <input type="text" name="videoSource" id="inputSpan9" @if(count($arrVideo)>0) value="{{$arrVideo[0]->source}}" @endif>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">URL</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <input type="text" name="videoURL" id="inputSpan9" @if(count($arrVideo)>0) value="{{$arrVideo[0]->url}}" @endif>
+                            </div>
+                        </div>
+                    </div>
+<!--                    <div class="control-group row-fluid">
+                        <div class="span12 span-inset">
+                            <div style="float:right; width:11%; margin-bottom:5px;"><button class="btn btn-warning" id="addvideobutton" name="addvideobutton" type="button" style="display:block;">Submit</button>
+                                <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:50%; display:block; margin-left:15px;"/></div>
+                        </div>
+                    </div>-->
+                </div>
+
+<!--                <div id="tab-example4" class="tab-pane fade">
+                    <div class="container-fluid">
+
+
+                        
+
+                    </div>
+                </div>-->
+
+                <div id="dropdown1" class="tab-pane fade active in">
+                    <!--Sortable Responsive Media Table begin-->
+                        <div class="row-fluid">
+                            <div class="span12">
+                                @if(count($photos)>0)
+                                <table class="table table-striped table-responsive" id="tableSortableResMed">
+                                    <thead class="cf sorthead">
+                                        <tr>
+                                            <th>Image</th>
+<!--                                            <th>Title</th>
+                                            <th>Source</th>
+                                            <th>Source URL</th>-->
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($photos as $photo)
+                                        <tr id="row{{$photo->photo_id}}">
+                                            <td>
+                                                <img src="{{asset(config('constants.articleimagedir').$photo->photopath)}}" alt="user" style="width:40%;" />
+                                            </td>
+<!--                                            <td>{{ $photo->title }}</td>-->
+                                    <input type="hidden" name="deleteImagel" id="{{ $photo->photo_id }}">
+<!--                                    <td class="center">{{ $photo->source }}</td>
+                                    <td class="center">{{ $photo->source_url }}</td>-->
+                                    <td class="center"><button type="button" onclick="$(this).MessageBox({{ $photo->photo_id }})" name="{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-danger">Dump</button><img  src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:20%; display:block; margin-left:15px;display:none;"/></td>
+                                    </tr>
+                                    @endforeach
+
+                                    </tbody>
+                                </table>
+                                @endif
+                            </div>
+                        </div>
+                        <!--Sortable Responsive Media Table end-->
+                           <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label" for="inputField">
+                                Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos."><i class="icon-photon info-circle"></i></a>
+                            </label>
+                        </div>
+                        <div class="span9 row-fluid" >
+                            <div class=" fileupload-buttonbar">
+                                <div class="col-lg-7">
+                                    <!-- The fileinput-button span is used to style the file input field as button -->
+                                    <span class="btn btn-success fileinput-button">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        <span>Add files...</span>
+                                        <input type="file" name="files[]" multiple>
+                                    </span>
+                                    <button type="submit" class="btn btn-primary start">
+                                        <i class="glyphicon glyphicon-upload"></i>
+                                        <span>Start upload</span>
+                                    </button>
+                                    <button type="reset" class="btn btn-warning cancel">
+                                        <i class="glyphicon glyphicon-ban-circle"></i>
+                                        <span>Cancel upload</span>
+                                    </button>
+                                    <button type="button" class="btn btn-danger delete">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                        <span>Delete</span>
+                                    </button>
+                                    <input type="checkbox" class="toggle">
+                                    <!-- The global file processing state -->
+                                    <span class="fileupload-process"></span>
+                                </div>
+                                <!-- The global progress state -->
+                                <div class="col-lg-5 fileupload-progress fade">
+                                    <!-- The global progress bar -->
+                                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                                    </div>
+                                    <!-- The extended global progress state -->
+                                    <div class="progress-extended">&nbsp;</div>
+                                </div>
+                            </div>
+                            <!-- The table listing the files available for upload/download -->
+                            <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+                        </div>
+<!--                        <script type="text/javascript">
+                            $().ready(function() {
+
+                                var errors="";
+                                
+                                $('#upload').mfupload({
+                                    
+                                    type        : '',   //all types
+                                    maxsize     : 2,
+                                    post_upload : "./file-uploader.html",
+                                    folder      : "./",
+                                    ini_text    : "Drag your file(s) here or click (max: 2MB each)",
+                                    over_text   : "Drop Here",
+                                    over_col    : '#666666',
+                                    over_bkcol  : '#f0f0f0',
+                                    
+                                    init        : function(){       
+                                        $("#uploaded").empty();
+                                    },
+                                    
+                                    start       : function(result){     
+                                        $("#uploaded").append("<div id='FILE"+result.fileno+"' class='files'>"+result.filename+"<div class='progress progress-info progress-thin'><div class='bar' id='PRO"+result.fileno+"'></div></div></div>"); 
+                                    },
+
+                                    loaded      : function(result){
+                                        $("#PRO"+result.fileno).remove();
+                                        $("#FILE"+result.fileno).html("Uploaded: "+result.filename+" ("+result.size+")");           
+                                    },
+
+                                    progress    : function(result){
+                                        $("#PRO"+result.fileno).css("width", result.perc+"%");
+                                    },
+
+                                    error       : function(error){
+                                        
+                                        errors += error.filename+": "+error.err_des+"\n";
+                                    },
+
+                                    completed   : function(){
+                                        if (errors != "") {
+                                            alert(errors);
+                                            errors = "";
+                                        }
+                                    }
+                                });     
+                            })
+                        </script>-->
+                    </div>
+                </div>
+             
+<!--                <div id="dropdown2" class="tab-pane fade">
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Upload Image 2</label>
+                        </div>
+                        <div class="span9">
+                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                <div class="input-append">
+                                    <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" name="albumPhoto2" id="albumPhoto2" /></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid" id="pID" @if(count($photos)>1) value="{{$photos[1]->photo_id}}" @endif>
+                         <div class="span3">
+                            <label class="control-label">Title 2</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <input type="text" name="photoTitle2" id="inputSpan9" @if(count($photos)>1) value="{{$photos[1]->title}}" @endif>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Description 2</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <textarea rows="4" name="photoDesc2" class="" @if(count($photos)>1) value="{{$photos[1]->description}}" @endif>@if(count($photos)>1) {{$photos[1]->description}} @endif</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Source Name</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <input type="text" name="photoSource2" id="inputSpan9" @if(count($photos)>1) value="{{$photos[1]->source}}" @endif>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Source URL</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <input type="text" name="photoSourceURL2" id="inputSpan9" @if(count($photos)>1) value="{{$photos[1]->source_url}}" @endif>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span12 span-inset">
+                            <div data-on-label="Enabled" data-off-label="Disabled" class="switch">
+                                <input type="checkbox" name="photoEnabled2" @if(count($photos)>1) @if($photos[1]->active == 1) checked="checked" @endif @endif>
+                            </div>
+                            <button class="btn btn-warning" type="button" @if(count($photos)>1) value="{{$photos[1]->photo_id}}" @endif id="addphotobutton" onclick="$(this).addPhotoFunc(this.value, this.name)" name="2" style="display:block;">Submit</button>
+                            <img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
+                        </div>
+                    </div>
+                </div>
+                <div id="dropdown3" class="tab-pane fade">
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Upload Image 3</label>
+                        </div>
+                        <div class="span9">
+                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                <div class="input-append">
+                                    <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" name="albumPhoto3" id="albumPhoto3"/></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid" id="pID" @if(count($photos)>2) value="{{$photos[2]->photo_id}}" @endif>
+                         <div class="span3">
+                            <label class="control-label">Title 3</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <input type="text" name="photoTitle3" id="inputSpan9" @if(count($photos)>2) value="{{$photos[2]->title}}" @endif>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Description 3</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <textarea rows="4" name="photoDesc3" class="" @if(count($photos)>2) value="{{$photos[2]->description}}" @endif>@if(count($photos)>2) {{$photos[2]->description}} @endif</textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Source Name</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <input type="text" name="photoSource3" id="inputSpan9" @if(count($photos)>2) value="{{$photos[2]->source}}" @endif>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Source URL</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <input type="text" name="photoSourceURL3" id="inputSpan9" @if(count($photos)>2) value="{{$photos[2]->source_url}}" @endif>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span12 span-inset">
+                            <div data-on-label="Enabled" data-off-label="Disabled" class="switch">
+                                <input type="checkbox" name="photoEnabled3" @if(count($photos)>2) @if($photos[2]->active == 1) checked="checked" @endif @endif>
+                            </div>
+                            <button class="btn btn-warning" type="button" @if(count($photos)>2) value="{{$photos[2]->photo_id}}" @endif id="addphotobutton" onclick="$(this).addPhotoFunc(this.value, this.name)" name="3" style="display:block;">Submit</button>
+                            <img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
+                        </div>
+                    </div>
+                </div>
+                <div id="dropdown4" class="tab-pane fade">
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Upload Image 4</label>
+                        </div>
+                        <div class="span9">
+                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                <div class="input-append">
+                                    <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" name="albumPhoto4" id="albumPhoto4" /></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid" id="pID" @if(count($photos)>3) value="{{$photos[3]->photo_id}}" @endif>
+                         <div class="span3">
+                            <label class="control-label">Title 4</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <input type="text" name="photoTitle4" id="inputSpan9" @if(count($photos)>3) value="{{$photos[3]->title}}" @endif>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Description 4</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <textarea rows="4" name="photoDesc4" class="" @if(count($photos)>3) value="{{$photos[3]->description}}" @endif> @if(count($photos)>3) {{$photos[3]->description}} @endif </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Source Name</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <input type="text" name="photoSource4" id="inputSpan9" @if(count($photos)>3) value="{{$photos[3]->source}}" @endif>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Source URL</label>
+                        </div>
+                        <div class="span9">
+                            <div class="controls">
+                                <input type="text" name="photoSourceURL4" id="inputSpan9" @if(count($photos)>3) value="{{$photos[3]->source_url}}" @endif>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="control-group row-fluid">
+                        <div class="span12 span-inset">
+                            <div data-on-label="Enabled" data-off-label="Disabled" class="switch">
+                                <input type="checkbox" name="photoEnabled4" @if(count($photos)>3) @if($photos[3]->active == 1) checked="checked" @endif @endif>
+                            </div>
+                            <button class="btn btn-warning" type="button" @if(count($photos)>3) value="{{$photos[3]->photo_id}}" @endif id="addphotobutton" onclick="$(this).addPhotoFunc(this.value, this.name)" name="4" style="display:block;">Submit</button>
+                            <img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+        </div>
+        <!-- Uploaded Image and Video Ids -->
+        <input type="hidden" id="uploadedImages" name="uploadedImages">
+<!--        <input type="hidden" id="uploadedVideos" name="uploadedVideos[]">-->
+
+    </div><!--end container-->
+    <script>
+                // magic.js
+                $.fn.MessageBox = function (msg)
+                {
+                var formData = new FormData();
+                        formData.append('photoId', msg);
+                        var token = $('input[name=_token]');
+                        var rowID = 'row' + msg;
+                        var div = document.getElementById(rowID);
+                        div.style.visibility = "hidden";
+                        div.style.display = "none";
+                        // process the form
+                        $.ajax({
+                        type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                                url         : '/article/delPhotos', // the url where we want to POST
+                                data        :  formData,
+                                dataType    : 'json', // what type of data do we expect back from the server
+                                contentType :  false,
+                                processData :  false,
+                                headers: {
+                                'X-CSRF-TOKEN': token.val()
+                                }
+                        })
+                        // using the done promise callback
+                        .done(function(data) {
+
+                        // log data to the console so we can see
+                        console.log(data);
+                                //alert('Author Saved');
+                                // here we will handle errors and validation messages
+                        });
+                };
+                $(document).ready(function() {
+        //var csrf_token = $('meta[name="csrf-token"]').attr('content');
+        var token = $('input[name=_token]');
+                // process the form - For Add Image in Album
+        /*        $("#addvideobutton").click(function(){
+        // get the form data
+        //alert($('input[name=videoid]').val());
+        var formData = new FormData();
+                formData.append('v_id', $('input[name=videoid]').val());
+                formData.append('title', $('input[name=videoTitle]').val());
+                formData.append('code', $('textarea[name=videoCode]').val());
+                formData.append('source', $('input[name=videoSource]').val());
+                formData.append('url', $('input[name=videoURL]').val());
+                formData.append('channel_id', $('select[name=channel_sel]').val());
+                formData.append('owner', 'article');
+                // process the form
+                $.ajax({
+                type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                        //method      : 'POST',
+                        url         : '/article/addVideos', // the url where we want to POST
+                        //files       :  true,
+                        data        :  formData,
+                        dataType    : 'json', // what type of data do we expect back from the server
+                        contentType :  false,
+                        processData :  false,
+                        success     :  function(respText){
+                        theResponse = respText;
+                                alert(theResponse);
+                                //Assign returned ID to hidden array element
+                                $('#uploadedVideos').val(theResponse);
+                                //alert($('#uploadedVideos').val());
+                        },
+                        headers: {
+                        'X-CSRF-TOKEN': token.val()
+                        }
+                })
+                // using the done promise callback
+                .done(function(data) {
+
+                // log data to the console so we can see
+                console.log(data);
+                        // here we will handle errors and validation messages
+                });
+                // stop the form from submitting the normal way and refreshing the page
+                //event.preventDefault();
+        }); */
+                // process the form - For Add Image in Album
+                $.fn.addPhotoFunc = function (add_id, index){
+                //$.fn.function.addPhotoFunc = function(){}
+                //$("#addphotobutton").click(function(){}
+                //$("#addAuthorForm").on('click',function(event){}
+//                     alert('Yay 0 !');
+                alert(index);
+                        alert(add_id);
+                        var albumPhoto = "albumPhoto" + index;
+                        var photoTitle = "photoTitle" + index;
+                        var photoDesc = "photoDesc" + index;
+                        var photoSource = "photoSource" + index;
+                        var photoSourceURL = "photoSourceURL" + index;
+                        var photoEnabled = "photoEnabled" + index;
+                        var pID = add_id;
+                        //alert(albumPhoto2.files.length);
+
+                        // get the form data
+                        // there are many ways to get this data using jQuery (you can use the class or id also)
+                        var formData = new FormData();
+                        if (index == 1)
+                {formData.append('albumphoto', albumPhoto1.files[0]); }
+                else if (index == 2)
+                {formData.append('albumphoto', albumPhoto2.files[0]); }
+                else if (index == 3)
+                {formData.append('albumphoto', albumPhoto3.files[0]); }
+                else if (index == 4)
+                {formData.append('albumphoto', albumPhoto4.files[0]); }
+
+                //formData.append('albumphoto', $('+albumPhoto+').files[0]);
+                formData.append('title', $('input[name=' + photoTitle + ']').val());
+                        formData.append('description', $('textarea[name=' + photoDesc + ']').val());
+                        formData.append('source', $('input[name=' + photoSource + ']').val());
+                        formData.append('sourceurl', $('input[name=' + photoSourceURL + ']').val());
+                        formData.append('active', $('input[name=' + photoEnabled + ']:checked').val());
+                        formData.append('channel_id', $('select[name=channel_sel]').val());
+                        formData.append('p_id', pID);
+                        formData.append('owner', 'article');
+                        // process the form
+                        $.ajax({
+                        type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                                //method      : 'POST',
+                                url         : '/article/addPhotos', // the url where we want to POST
+                                //files       :  true,
+                                data        :  formData,
+                                enctype     : 'multipart/form-data',
+                                dataType    : 'json', // what type of data do we expect back from the server
+                                contentType :  false,
+                                processData :  false,
+                                success     :  function(respText){
+                                theResponse = respText;
+                                        //Assign returned ID to hidden array element
+                                        alert($('#uploadedImages').val());
+                                        var isthere = $('#uploadedImages').val();
+                                        var arrP = isthere.split(',');
+                                        arrP.push(theResponse);
+                                        var newval = arrP.join(',');
+                                        $('#uploadedImages').val(newval);
+                                        //alert($('#uploadedImages').val());
+                                },
+                                //encode      : true,
+                                headers: {
+                                'X-CSRF-TOKEN': token.val()
+                                }
+                        })
+                        // using the done promise callback
+                        .done(function(data) {
+
+                        // log data to the console so we can see
+                        console.log(data);
+                                //alert('Author Saved');
+                                // here we will handle errors and validation messages
+                        });
+                        // stop the form from submitting the normal way and refreshing the page
+                        //event.preventDefault();
+                }//);
+
+        });</script>
+
+    <!--start container-->
+    @foreach($rights as $right)
+    @if( $right->label == 'EditPageScheduler')
+    @if($article->status=='N' || $article->status=='SD') 
+    <div class="container-fluid">
+
+        <div class="form-legend" id="schedule-for-upload">Schedule For Upload</div>
+
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="datepicker">
+                    Date Picker<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Click to choose date."><i class="icon-photon info-circle"></i></a>
+                </label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <input type="text" name="datepicked" id="datepicker" class="span3 req1" value="{{  $article->publish_date }}" />
+                </div>
+            </div>
+        </div>
+
+        <div id="Time_Picker" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="timeEntry">
+                    Time Picker<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Enter time."><i class="icon-photon info-circle"></i></a>
+                </label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <input type="text" name="timepicked" id="timeEntry" class="span3" value="{{ $article->publish_time }}"/>
+                </div>
+            </div>
+        </div>
+        <div class="control-group row-fluid">
+            <div class="span12 span-inset">
+                <button name="status" value="SD" id="saveSchedule" class="btn btn-warning" type="submit" style="display:block;">Schedule</button>
+                <img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
+            </div>
+        </div>
+        <script>
+                    $(function(){
+ 
+                    $("#datepicker").datepicker({
+            minDate: 0,
+            dateFormat: "yy-mm-dd"
+        });
+//                            $("#datepickerInline").datepicker();
+//                            $("#datepickerMulti").datepicker({
+//                            numberOfMonths: 3,
+//                            minDate: 0,
+//                            showButtonPanel: true
+//                    });
+                            $.timeEntry.setDefaults({show24Hours: true,showSeconds: true});   
+                            $('#timeEntry').timeEntry({minTime: '-0 +1m'}).change();
+                    });</script>
+    </div>
+    @endif
+    @endif
+    @endforeach
+
+    <div class="container-fluid">
+
+        <div class="control-group row-fluid">
+            <div class="span12 span-inset">
+
+                <label class="checkbox" >
+                    <input type="checkbox" name="for_homepage" class="uniformCheckbox" value="checkbox1" @if($article->for_homepage == 1) checked @endif>
+                           <a href="#" target="_blank">Publish this to Home Page.</a>
+                </label>
+                <script>
+                            $().ready(function(){
+                    $(".uniformCheckbox").uniform();
+                    });</script>
+
+                <label class="checkbox" >
+                    <input type="checkbox" name="important" class="uniformCheckbox2" value="checkbox1" @if($article->important == 1) checked @endif>
+                           <a href="#" target="_blank">This article is important.</a>
+                </label>
+                <script>
+                            $().ready(function(){
+                    $(".uniformCheckbox2").uniform();
+                    });</script>
+
+                <label class="checkbox" >
+                    <input type="checkbox" name="web_exclusive" class="uniformCheckbox3" value="checkbox1" @if($article->web_exclusive == 1) checked @endif>
+                           <a href="#" target="_blank">Web Exclusive.</a>
+                </label>
+                <script>
+                            $().ready(function(){
+                    $(".uniformCheckbox3").uniform();
+                    });
+
+                </script>
+
+
+            </div>
+        </div>
+
+        <div class="control-group row-fluid" id="submitsection">
+            <div class="span12 span-inset">
+                <!--<button type="submit" name="status" value="S" id="draftSubmit" class="btn btn-default">Draft</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>-->
+                <!--<button type="submit" name="status" value="N" id="pageSubmit" name="N" class="btn btn-warning">Submit</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>-->
+                @if($article->status=='S' )
+                <button type="submit" name="status" value="SV" id="draftSubmit" class="btn btn-info">Save</button>
+                @else
+                <button type="submit" name="status" value="SV" id="saveSubmit" class="btn btn-info">Save</button>
+               @endif
+                @if($article->status=='S' )
+                <button class="btn btn-warning" id="pageSubmit" value="N" name="status" type="submit">Submit</button>
+                @endif
+                @foreach($rights as $right)
+                @if($right->label == 'publishButton')
+                @if($article->status!='P' )
+                <button type="submit" name="status" value="P" id="publishSubmit" class="btn btn-success">Publish</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
+                @endif
+                @endif
+                @if($right->label == 'deleteButton')
+                @if($article->status!='D')
+                <button type="submit" name="status" value="D" id="dumpSubmit" class="btn btn-danger">Dump</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
+                @endif
+                @endif
+                @endforeach
+            </div>
+        </div>
+    </div>
+    <!--	end container-->
+    {!! Form::close() !!}
+
+</div>
+<!--</body>
+</html> -->
+
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+        </td>
+        <td>
+            {% if (!i && !o.options.autoUpload) { %}
+                <button class="btn btn-primary start" disabled>
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start</span>
+                </button>
+            {% } %}
+            {% if (!i) { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if (file.url) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                {% } else { %}
+                    <span>{%=file.name%}</span>
+                {% } %}
+            </p>
+            {% if (file.error) { %}
+                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            {% if (file.deleteUrl) { %}
+                <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                    <i class="glyphicon glyphicon-trash"></i>
+                    <span>Delete</span>
+                </button>
+                <input type="checkbox" name="delete" value="1" class="toggle">
+            {% } else { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<!--<script src="http:js/vendor/jquery.ui.widget.js"></script>-->
+<!-- The Templates plugin is included to render the upload/download listings -->
+<script src="http://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="http://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+<script src="http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+<!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!-- blueimp Gallery script -->
+<script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<!-- <script type="text/javascript" src="{{ elixir('output/fileuploadJS.js') }}"></script> -->
+<script type="text/javascript" src="{{ asset('js/jquery.iframe-transport.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-process.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-image.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-audio.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-video.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-validate.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-ui.js') }}"></script>
+<script>
+    $(document).ready(function(){
+$('#validation_form').fileupload({
+        // Uncomment the following to send cross-domain cookies:
+        //xhrFields: {withCredentials: true},
+        url: '<?php echo url('article/image/upload') ?>',
+        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+        maxFileSize: 10000000
+    });
+     });
+     $('#validation_form').bind('fileuploaddone', function (e, data) {
+    //console.log(e);
+    var dataa=JSON.parse(data.jqXHR.responseText);
+    //console.log(dataa['files']['0']['name']);
+    $.each(dataa['files'], function(index, element) {
+        //console.log(element.name);
+        if($('#uploadedImages').val().trim())
+            $('#uploadedImages').val($('#uploadedImages').val()+','+element.name);
+        else
+            $('#uploadedImages').val(element.name);    
+    });
+     
+    });
+    $('#validation_form').bind('fileuploaddestroyed', function (e, data) {
+    // console.log(data);
+     var file=getArg(data.url,'file');
+     var images= $('#uploadedImages').val().split(',');
+     images.splice(images.indexOf(file),1);
+     $('#uploadedImages').val(images.join());
+      //$('#imagesname').val($('#imagesname').val().replace(','+));
+     
+    });
+    
+
+function getArg(url,name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
+    if (results==null){
+       return null;
+    }
+    else{
+       return results[1] || 0;
+    }
+}
+
+
+</script>
+@stop

@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="utf-8">
+       <title>Tips Tag</title>
+               <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="shortcut icon" href="favicon.ico" />
+        <link rel="apple-touch-icon" href="iosicon.png" />
+<!--    DEVELOPMENT LESS -->
+<!--          <link rel="stylesheet/less" href="css/photon.less" media="all" />
+        <link rel="stylesheet/less" href="css/photon-responsive.less" media="all" /> -->
+<!--    PRODUCTION CSS -->
+        <link rel="stylesheet" href="css/css/photon.css" media="all" />
+<link rel="stylesheet" href="css/css/photon-pt2.css" media="all" />
+<link rel="stylesheet" href="css/css/mn.css" media="all">
+<link rel="stylesheet" href="css/css/photon-responsive.css" media="all" />
+<!--[if IE]>
+        <link rel="stylesheet" type="text/css" href="css/css_compiled/ie-only-min.css" />
+<![endif]-->
+<!--[if lt IE 9]>
+        <link rel="stylesheet" type="text/css" href="css/css_compiled/ie8-only-min.css" />
+        <script type="text/javascript" src="js/plugins/excanvas.js"></script>
+        <script type="text/javascript" src="js/plugins/html5shiv.js"></script>
+        <script type="text/javascript" src="js/plugins/respond.min.js"></script>
+        <script type="text/javascript" src="js/plugins/fixFontIcons.js"></script>
+<![endif]-->
+
+       
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="js/bootstrap/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/plugins/modernizr.custom.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.pnotify.min.js"></script>
+<script type="text/javascript" src="js/plugins/less-1.3.1.min.js"></script>        
+<script type="text/javascript" src="js/plugins/xbreadcrumbs.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.autotab-1.1b.js"></script>
+<script type="text/javascript" src="js/plugins/charCount.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.textareaCounter.js"></script>
+<script type="text/javascript" src="js/plugins/elrte.min.js"></script>
+<script type="text/javascript" src="js/plugins/elrte.en.js"></script>
+<script type="text/javascript" src="js/plugins/select2.js"></script>
+<script type="text/javascript" src="js/plugins/jquery-picklist.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.validate.min.js"></script>
+<script type="text/javascript" src="js/plugins/additional-methods.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.form.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.metadata.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.mockjax.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.uniform.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.tagsinput.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.rating.pack.js"></script>
+<script type="text/javascript" src="js/plugins/farbtastic.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.timeentry.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.jstree.js"></script>
+<script type="text/javascript" src="js/plugins/dataTables.bootstrap.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.mousewheel.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.mCustomScrollbar.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.flot.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.flot.stack.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.flot.pie.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.flot.resize.js"></script>
+<script type="text/javascript" src="js/plugins/raphael.2.1.0.min.js"></script>
+<script type="text/javascript" src="js/plugins/justgage.1.0.1.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.qrcode.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.clock.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.countdown.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.jqtweet.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.cookie.js"></script>
+<script type="text/javascript" src="js/plugins/bootstrap-fileupload.min.js"></script>
+<script type="text/javascript" src="js/plugins/prettify/prettify.js"></script>
+<script type="text/javascript" src="js/plugins/bootstrapSwitch.js"></script>
+<script type="text/javascript" src="js/plugins/mfupload.js"></script>
+
+<script type="text/javascript" src="js/common.js"></script>
+       
+   </head>
+
+   <body class="body-inner light-version">
+           
+    <div class="btn-toolbar btn-mobile-menus">
+        <button class="btn btn-main-menu"></button>
+        <button class="btn btn-user-menu"><i class="icon-logo"></i></button>
+    </div>
+
+  <div class="nav-fixed-left" style="visibility: hidden">
+        <ul class="nav nav-side-menu">
+            <li class="shadow-layer"></li>
+            <li>
+                <a href="dashboard.html" >
+                    <i class="icon-photon home"></i>
+                    <span class="nav-selection">Dashboard</span>
+                                    </a>
+            </li>
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon document_alt_stroke"></i>
+                    <span class="nav-selection">Articles</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="create-new-articles.html">Create New Articles</a>
+                        </li>
+						<li>
+                            <a href="new-articles.html">New Articles</a>
+                        </li>
+						<li>
+                            <a href="scheduled-articles.html">Scheduled Articles</a>
+                        </li>
+                        <li>
+                            <a href="published-articles.html">Published Article</a>
+                        </li>
+						<li>
+                            <a href="saved-articles.html">My Drafts</a>
+                        </li>
+						<li>
+                            <a href="feature-box-management.html">Feature Box Management</a>
+                        </li>
+						<li>
+                            <a href="campaign-management.html">Campaign Management</a>
+                        </li>
+                        <li>
+                            <a href="add-a-magazine-issue.html">Add A Magazine Issue</a>
+                        </li>
+                        <li>
+                            <a href="tips.html">Tips</a>
+                        </li>
+                        <li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon comment_alt2_stroke"></i>
+                    <span class="nav-selection">Tips &amp; Quotes</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="tips.html">Tips</a>
+                        </li>
+                        <li>
+                            <a href="tip-tag.html">Tags</a>
+						<li>
+                            <a href="quotes.html">Quotes</a>
+                        </li>
+                        <li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			<li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon mic"></i>
+                    <span class="nav-selection">Debate</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="published-debates.html">Published Debate</a>
+                        </li>
+                        <li>
+                            <a href="create-new-debate.html">Create New Debates</a>
+                        </li>
+						<li>
+                            <a href="new-comments-for-debate.html">Debate Comments</a>
+                        </li>
+                        <li>
+                            <a href="profanity-filter.html">Profanity Filter</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			   <li>
+			     <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon pen"></i>
+                    <span class="nav-selection">Columnist and Guest Author
+					</span>
+                         <i class="icon-menu-arrow"></i> </a>
+									<div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="add-edit-columnist.html">Add/Edit Columnist</a>
+                        </li>
+						<li>
+                            <a href="add-new-guest-author.html">Add New Guest Author</a>
+                        </li>
+                        <li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			
+			 
+			<li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon movie"></i>
+                    <span class="nav-selection">Events</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="add-new-events.html">Add New Events</a>
+                        </li>
+                        <li>
+                            <a href="published-events.html">Published Events</a>
+                        </li>
+						<li>
+                            <a href="deleted-events.html">Deleted Events</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon steering_wheel"></i>
+                    <span class="nav-selection">Quick Bytes</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="create-new-quickbyte.html">Create New Quick Byte</a>
+                        </li>
+                        <li>
+                            <a href="published-quickbyte.html">Published Quick Bytes</a>
+                        </li>
+						<li>
+                            <a href="deleted-quickbyte.html">Deleted Quick Bytes</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			
+			<li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon document_stroke"></i>
+                    <span class="nav-selection">Sponsored Post</span>
+                   <i class="icon-menu-arrow"></i>     </a>
+                 <div class="sub-nav">
+                 	<ul class="nav">
+                        <li>
+                        	<a href="create-new-sponsored-post.html">Create New Sponsored Post</a>
+                        </li>
+                        <li>
+                            <a href="published-sponsored-posts.html">Published Sponsored Posts</a>
+                        </li>
+						<li>
+                            <a href="deleted-sponsored-posts.html">Deleted Sponsored Posts</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon new_window"></i>
+                    <span class="nav-selection">Photos</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="upload-new-album.html">Upload New Album</a>
+                        </li>
+                        <li>
+                            <a href="published-album.html">Published Album</a>
+                        </li>
+						<li>
+                            <a href="deleted-photos.html">Deleted Photos</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon play"></i>
+                    <span class="nav-selection">Videos</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="upload-new-Video.html">Upload New Video</a>
+                        </li>
+                        <li>
+                            <a href="published-Videos.html">Published Videos</a>
+                        </li>
+						<li>
+                            <a href="deleted-Videos.html">Deleted Videos</a>
+                        </li>
+						<li>
+                            <a href="featured-Videos.html">Featured Videos</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			<li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon cog"></i>
+                    <span class="nav-selection">Site Management</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="category-master.html">Category Master</a>
+                        </li>
+						<li>
+                            <a href="location-master.html">Location Master</a>
+                        </li>
+						<li>
+                            <a href="topic-master.html">Topic Master</a>
+                        </li>
+                        <li>
+                            <a href="tags.html">Tags Master</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon cog"></i>
+                    <span class="nav-selection">Rights Management</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="cms-rights.html">CMS Rights</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			<li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon info"></i>
+                    <span class="nav-selection">Help</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="#">FAQ</a>
+                        </li>
+						<li>
+                            <a href="#">Sitemap</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+           
+           
+         
+         
+            <li class="nav-logout">
+                <a href="index.html">
+                    <i class="icon-photon key_stroke"></i><span class="nav-selection">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+       <div class="panel">
+    <div class="panel-content filler">
+        <div class="panel-logo"></div>
+        <div class="panel-header">
+            <h1><small>Tags</small></h1>
+        </div>		
+		<div class="panel-search container-fluid">
+            <form action="javascript:;" class="form-horizontal">
+                <input type="text" name="panelSearch" placeholder="Search by Tags Name" id="panelSearch" class="ui-autocomplete-input" autocomplete="off"><span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span><span class="ui-helper-hidden-accessible" aria-live="polite" role="status"></span><span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
+                <button class="btn btn-search"></button>
+                <script>
+                    $().ready(function(){
+                        var searchTags = [
+                            "Dashboard",
+                            "Form Elements",
+                            "Graphs and Statistics",
+                            "Typography",
+                            "Grid",
+                            "Tables",
+                            "Maps",
+                            "Sidebar Widgets",
+                            "Error Pages",
+                            "Help",
+                            "Input Fields",
+                            "Masked Input Fields",
+                            "Autotabs",
+                            "Text Areas",
+                            "Select Menus",
+                            "Other Form Elements",
+                            "Form Validation",
+                            "UI Elements",
+                            "Graphs",
+                            "Statistical Elements",
+                            "400 Bad Request",
+                            "401 Unauthorized",
+                            "403 Forbidden",
+                            "404 Page Not Found",
+                            "500 Internal Server Error",
+                            "503 Service Unavailable"
+                        ];
+                        $( "#panelSearch" ).autocomplete({
+                            source: searchTags
+                        });
+                    });            
+                </script>
+            </form>
+        </div>
+        
+					<br><br>
+		
+                    <script type="text/javascript">
+        $(function () {
+            $("#jstree").jstree({ 
+                "json_data" : {
+                    "data" : [
+					
+					 {
+                            "data" : { 
+                                "title" : "Add A New Tag", 
+                                "attr" : { "href" : "#add-new-tag" } 
+                            }
+                        },
+                                            ]
+                },
+                "plugins" : [ "themes", "json_data", "ui" ]
+            })
+            .bind("click.jstree", function (event) {
+                var node = $(event.target).closest("li");
+                document.location.href = node.find('a').attr("href");
+                return false;
+            })
+            .delegate("a", "click", function (event, data) { event.preventDefault(); });
+        });
+    </script>
+        <div class="sidebarMenuHolder mCustomScrollbar _mCS_1" style="height: 268px;"><div class="Jstree_shadow_top"></div><div style="position:relative; height:100%; overflow:hidden; max-width:100%;" id="mCSB_1" class="mCustomScrollBox"><div style="position:relative; top:0;" class="mCSB_container mCS_no_scrollbar"><div class="mCustomScrollBox" id="mCSB_1" style="position:relative; height:100%; overflow:hidden; max-width:100%;"><div class="mCSB_container mCS_no_scrollbar" style="position:relative; top:0;"><div style="position:relative; height:100%; overflow:hidden; max-width:100%;" id="mCSB_1" class="mCustomScrollBox"><div style="position:relative; top:0;" class="mCSB_container mCS_no_scrollbar">
+        <div class="JStree">
+            
+            <div id="jstree" class="jstree jstree-0 jstree-focused jstree-default"><ul><li class="jstree-leaf"><ins class="jstree-icon">&nbsp;</ins><a href="#currently-displayed" class=""><ins class="jstree-icon">&nbsp;</ins>Currently Displayed</a></li><li class="jstree-leaf"><ins class="jstree-icon">&nbsp;</ins><a href="#tableSortableResMed" class=""><ins class="jstree-icon">&nbsp;</ins>Logo Management</a></li><li class="jstree-last jstree-leaf"><ins class="jstree-icon">&nbsp;</ins><a href="#new-logo" class=""><ins class="jstree-icon">&nbsp;</ins>New Logo</a></li></ul></div>
+            
+        </div>
+    </div><div style="position: absolute; display: none;" class="mCSB_scrollTools"><a style="display:block; position:relative;" class="mCSB_buttonUp"></a><div style="position:relative;" class="mCSB_draggerContainer"><div style="position: absolute; top: 0px;" class="mCSB_dragger"><div style="position:relative;" class="mCSB_dragger_bar"></div></div><div class="mCSB_draggerRail"></div></div><a style="display:block; position:relative;" class="mCSB_buttonDown"></a></div></div></div><div class="mCSB_scrollTools" style="position: absolute; display: none;"><a class="mCSB_buttonUp" style="display:block; position:relative;"></a><div class="mCSB_draggerContainer" style="position:relative;"><div class="mCSB_dragger" style="position: absolute; top: 0px;"><div class="mCSB_dragger_bar" style="position:relative;"></div></div><div class="mCSB_draggerRail"></div></div><a class="mCSB_buttonDown" style="display:block; position:relative;"></a></div></div></div><div style="position: absolute; display: none;" class="mCSB_scrollTools"><a style="display:block; position:relative;" class="mCSB_buttonUp"></a><div style="position:relative;" class="mCSB_draggerContainer"><div style="position: absolute; top: 0px;" class="mCSB_dragger"><div style="position:relative;" class="mCSB_dragger_bar"></div></div><div class="mCSB_draggerRail"></div></div><a style="display:block; position:relative;" class="mCSB_buttonDown"></a></div></div><div class="Jstree_shadow_bottom"></div></div>    </div>
+    <div class="panel-slider">
+        <div class="panel-slider-center">
+            <div class="panel-slider-arrow"></div>
+        </div>
+    </div>
+</div>
+	<div class="main-content">
+           <div class="breadcrumb-container">
+    <ul class="xbreadcrumbs">
+        <li>
+            <a href="dashboard.html">
+                <i class="icon-photon home"></i>
+            </a>
+        </li>
+		
+                <li class="current">
+            <a href="javascript:;">Tags</a>
+        </li>
+    </ul>
+</div>           <header>
+               <i class="icon-big-notepad"></i>
+               <h2><small>Tip Tags</small></h2>
+				
+           </header>
+           <form class="form-horizontal">
+		   <div class="container-fluid">
+
+                        <div id="Notifications" class="form-legend">Notifications</div>
+
+                        <!--Notifications begin-->
+                        <div class="control-group row-fluid">
+                            <div class="span12 span-inset">
+                                <div class="alert alert-success alert-block">
+                                    <i class="icon-alert icon-alert-info"></i>
+                                    <button data-dismiss="alert" class="close" type="button">×</button>
+                                    <strong>This is Success Notification</strong>
+                                    <span>Your data has been successfully modified.</span>
+                                </div>
+                                <div class="alert alert-block">
+                                    <i class="icon-alert icon-alert-info"></i>
+                                    <button data-dismiss="alert" class="close" type="button">×</button>
+                                    <strong>This is Alert Notification</strong>
+                                    <span>No result found.</span>
+                                </div>
+                                <div class="alert alert-error alert-block">
+                                    <i class="icon-alert icon-alert-info"></i>
+                                    <button data-dismiss="alert" class="close" type="button">×</button>
+                                    <strong>This is Error Notification</strong>
+                                    <span>Please select a valid search criteria.</span>
+                                </div>
+								<div class="alert alert-error alert-block">
+                                    <i class="icon-alert icon-alert-info"></i>
+                                    <button data-dismiss="alert" class="close" type="button">×</button>
+                                    <strong>This is Error Notification</strong>
+                                    <span>Please enter a valid email id.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Notifications end-->
+                </div>
+
+
+
+                	<div class="container-fluid" >
+                    	<div class="form-legend" >Add A New Tip Tag</div>	
+                    	<!--<div class="control-group row-fluid">
+                            <div class="span12 span-inset">
+                                 <button type="button" class="btn btn-success" id="btn_addnew">Add New Tip</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                            </div>
+                        </div>-->
+                        <div class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label">Add a New Tag </label>
+                            </div>
+                            <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                                </div>
+                            </div>
+                        </div>
+                        
+                          <div class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label"> Sponsored  By </label>
+                            </div>
+                            <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" >
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="control-group row-fluid" >
+									<div class="span3">
+										<label class="control-label">Upload Logo</label>
+									</div>
+									<div class="span9">
+										<div class="fileupload fileupload-new" data-provides="fileupload">
+											<div class="input-append">
+												<div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" /></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+											</div>
+										</div>
+									</div>
+								</div>
+                                
+                         <div class="control-group row-fluid">
+							<div class="span3">
+								<label class="control-label">URL</label>
+							</div>
+							<div class="span9">
+										<div class="controls">
+											<input type="url" name="inputSpan9" id="inputSpan9">
+										</div>
+									</div>
+						</div>
+
+                         
+                        <div class="control-group row-fluid">
+                            <div class="span12 span-inset">
+                                 <button type="button" class="btn btn-success">Add</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                            </div>
+                        </div>
+                     
+                       
+                  </div>
+                  
+                  
+                  <div class="container-fluid" id="tip_list">
+  <div class="row-fluid">
+                           <div class="span12">
+                               <table class="table table-striped" id="tableSortable">
+                                   <thead>
+                                       <tr>
+                                           <th>Tag No.</th>
+                                           <th>Tag Name</th>
+                                           <th>No. of Times Used</th>
+                                           <th>Last Used On</th>
+                                           
+									   </tr>
+                                   </thead>
+                                   <tbody>
+                                       <tr class="gradeX">
+                                           <td>2354</td>
+                                           <td>Health</td>
+                                           <td>45</td>
+                                           <td>21/07/2015</td>
+                                           
+                                       </tr>
+                                       <tr class="gradeX">
+                                           <td>2354</td>
+                                           <td>Health</td>
+                                           <td>45</td>
+                                           <td>21/07/2015</td>
+                                           
+                                       </tr>
+                                       <tr class="gradeX">
+                                           <td>2354</td>
+                                           <td>Health</td>
+                                           <td>45</td>
+                                           <td>21/07/2015</td>
+                                           
+                                       </tr>
+                                       <tr class="gradeX">
+                                           <td>2354</td>
+                                           <td>Health</td>
+                                           <td>45</td>
+                                           <td>21/07/2015</td>
+                                           
+                                       </tr>
+                                       <tr class="gradeX">
+                                           <td>2354</td>
+                                           <td>Health</td>
+                                           <td>45</td>
+                                           <td>21/07/2015</td>
+                                           
+                                       </tr>
+                                       <tr class="gradeX">
+                                           <td>2354</td>
+                                           <td>Health</td>
+                                           <td>45</td>
+                                           <td>21/07/2015</td>
+                                           
+                                       </tr>
+                                       <tr class="gradeX">
+                                           <td>2354</td>
+                                           <td>Health</td>
+                                           <td>45</td>
+                                           <td>21/07/2015</td>
+                                           
+                                       </tr>
+                                       <tr class="gradeX">
+                                           <td>2354</td>
+                                           <td>Health</td>
+                                           <td>45</td>
+                                           <td>21/07/2015</td>
+                                           
+                                       </tr>
+                                       <tr class="gradeX">
+                                           <td>2354</td>
+                                           <td>Health</td>
+                                           <td>45</td>
+                                           <td>21/07/2015</td>
+                                           
+                                       </tr>
+                                       <tr class="gradeX">
+                                           <td>2354</td>
+                                           <td>Health</td>
+                                           <td>45</td>
+                                           <td>21/07/2015</td>
+                                           
+                                       </tr>
+                                       <tr class="gradeX">
+                                           <td>2354</td>
+                                           <td>Health</td>
+                                           <td>45</td>
+                                           <td>21/07/2015</td>
+                                           
+                                       </tr>
+                                       <tr class="gradeX">
+                                           <td>2354</td>
+                                           <td>Health</td>
+                                           <td>45</td>
+                                           <td>21/07/2015</td>
+                                           
+                                       </tr>
+                                   </tbody>
+                               </table>
+                           </div>
+                          
+                       </div>
+                       <!--Sortable Non-responsive Table end-->
+
+
+                   <script>
+                       $(document).ready(function() {
+                           $('#tableSortable, #tableSortableRes, #tableSortableResMed').dataTable( {
+                               "sPaginationType": "bootstrap",
+                               "fnInitComplete": function(){
+                                   $(".dataTables_wrapper select").select2({
+                                       dropdownCssClass: 'noSearch'
+                                   });
+                               }
+                           });
+                           //                            $("#simpleSelectBox").select2({
+                           //                                dropdownCssClass: 'noSearch'
+                           //                            }); 
+                       });
+                   </script>
+               </div>
+
+       </form>
+   </div>
+   </body>
+</html>

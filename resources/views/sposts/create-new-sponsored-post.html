@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Create New Sponsored Post</title>
+                <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="shortcut icon" href="favicon.ico" />
+        <link rel="apple-touch-icon" href="iosicon.png" />
+<!--    DEVELOPMENT LESS -->
+<!--          <link rel="stylesheet/less" href="css/photon.less" media="all" />
+        <link rel="stylesheet/less" href="css/photon-responsive.less" media="all" /> -->
+<!--    PRODUCTION CSS -->
+        <link rel="stylesheet" href="css/css/photon.css" media="all" />
+<link rel="stylesheet" href="css/css/photon-pt2.css" media="all" />
+
+        <link rel="stylesheet" href="css/css/photon-responsive.css" media="all" />
+
+<!--[if IE]>
+        <link rel="stylesheet" type="text/css" href="css/css_compiled/ie-only-min.css" />
+<![endif]-->
+
+<!--[if lt IE 9]>
+        <link rel="stylesheet" type="text/css" href="css/css_compiled/ie8-only-min.css" />
+        <script type="text/javascript" src="js/plugins/excanvas.js"></script>
+        <script type="text/javascript" src="js/plugins/html5shiv.js"></script>
+        <script type="text/javascript" src="js/plugins/respond.min.js"></script>
+        <script type="text/javascript" src="js/plugins/fixFontIcons.js"></script>
+<![endif]-->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="js/bootstrap/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/plugins/modernizr.custom.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.pnotify.min.js"></script>
+<script type="text/javascript" src="js/plugins/less-1.3.1.min.js"></script>        
+<script type="text/javascript" src="js/plugins/xbreadcrumbs.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.autotab-1.1b.js"></script>
+<script type="text/javascript" src="js/plugins/charCount.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.textareaCounter.js"></script>
+<script type="text/javascript" src="js/plugins/elrte.min.js"></script>
+<script type="text/javascript" src="js/plugins/elrte.en.js"></script>
+<script type="text/javascript" src="js/plugins/select2.js"></script>
+<script type="text/javascript" src="js/plugins/jquery-picklist.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.validate.min.js"></script>
+<script type="text/javascript" src="js/plugins/additional-methods.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.form.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.metadata.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.mockjax.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.uniform.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.tagsinput.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.rating.pack.js"></script>
+<script type="text/javascript" src="js/plugins/farbtastic.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.timeentry.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.jstree.js"></script>
+<script type="text/javascript" src="js/plugins/dataTables.bootstrap.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.mousewheel.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.mCustomScrollbar.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.flot.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.flot.stack.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.flot.pie.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.flot.resize.js"></script>
+<script type="text/javascript" src="js/plugins/raphael.2.1.0.min.js"></script>
+<script type="text/javascript" src="js/plugins/justgage.1.0.1.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.qrcode.min.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.clock.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.countdown.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.jqtweet.js"></script>
+<script type="text/javascript" src="js/plugins/jquery.cookie.js"></script>
+<script type="text/javascript" src="js/plugins/bootstrap-fileupload.min.js"></script>
+<script type="text/javascript" src="js/plugins/prettify/prettify.js"></script>
+<script type="text/javascript" src="js/plugins/bootstrapSwitch.js"></script>
+<script type="text/javascript" src="js/plugins/mfupload.js"></script>
+
+<script type="text/javascript" src="js/common.js"></script>
+<script>
+            $(document).ready(function(){
+                $("#validation_form").validate({
+                    errorElement: "span",
+                    errorClass: "error",
+                    onclick: true,
+                    rules: {
+                        "req": {
+                            required: true
+                        },
+                        "numbers": {
+                            required: false,
+                            digits: true
+                        },
+                        "numbers_range": {
+                            range: [1, 7]
+                        },
+                        "email": {
+                            email: true
+                        },
+                        "url": {
+                            url: true
+                        }, 
+                        "date": {
+                            date: true
+                        }
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body class="body-inner light-version">
+            
+    <div class="btn-toolbar btn-mobile-menus">
+        <button class="btn btn-main-menu"></button>
+        <button class="btn btn-user-menu"><i class="icon-logo"></i></button>
+    </div>
+	
+	<div class="nav-fixed-left" style="visibility: hidden">
+        <ul class="nav nav-side-menu">
+            <li class="shadow-layer"></li>
+            <li>
+                <a href="dashboard.html" >
+                    <i class="icon-photon home"></i>
+                    <span class="nav-selection">Dashboard</span>
+                                    </a>
+            </li>
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon document_alt_stroke"></i>
+                    <span class="nav-selection">Articles</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="create-new-articles.html">Create New Articles</a>
+                        </li>
+						<li>
+                            <a href="new-articles.html">New Articles</a>
+                        </li>
+						<li>
+                            <a href="scheduled-articles.html">Scheduled Articles</a>
+                        </li>
+                        <li>
+                            <a href="published-articles.html">Published Article</a>
+                        </li>
+						<li>
+                            <a href="saved-articles.html">My Drafts</a>
+                        </li>
+						<li>
+                            <a href="feature-box-management.html">Feature Box Management</a>
+                        </li>
+						<li>
+                            <a href="campaign-management.html">Campaign Management</a>
+                        </li>
+                        <li>
+                            <a href="add-a-magazine-issue.html">Add A Magazine Issue</a>
+                        </li>
+                        <li>
+                            <a href="tips.html">Tips</a>
+                        </li>
+                        <li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon comment_alt2_stroke"></i>
+                    <span class="nav-selection">Tips &amp; Quotes</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="tips.html">Tips</a>
+                        </li>
+                        <li>
+                            <a href="tip-tag.html">Tags</a>
+						<li>
+                            <a href="quotes.html">Quotes</a>
+                        </li>
+                        <li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			<li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon mic"></i>
+                    <span class="nav-selection">Debate</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="published-debates.html">Published Debate</a>
+                        </li>
+                        <li>
+                            <a href="create-new-debate.html">Create New Debates</a>
+                        </li>
+						<li>
+                            <a href="new-comments-for-debate.html">Debate Comments</a>
+                        </li>
+                        <li>
+                            <a href="profanity-filter.html">Profanity Filter</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			   <li>
+			     <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon pen"></i>
+                    <span class="nav-selection">Columnist and Guest Author
+					</span>
+                         <i class="icon-menu-arrow"></i> </a>
+									<div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="add-edit-columnist.html">Add/Edit Columnist</a>
+                        </li>
+						<li>
+                            <a href="add-new-guest-author.html">Add New Guest Author</a>
+                        </li>
+                        <li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			
+			 
+			<li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon movie"></i>
+                    <span class="nav-selection">Events</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="add-new-events.html">Add New Events</a>
+                        </li>
+                        <li>
+                            <a href="published-events.html">Published Events</a>
+                        </li>
+						<li>
+                            <a href="deleted-events.html">Deleted Events</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon steering_wheel"></i>
+                    <span class="nav-selection">Quick Bytes</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="create-new-quickbyte.html">Create New Quick Byte</a>
+                        </li>
+                        <li>
+                            <a href="published-quickbyte.html">Published Quick Bytes</a>
+                        </li>
+						<li>
+                            <a href="deleted-quickbyte.html">Deleted Quick Bytes</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			
+			<li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon document_stroke"></i>
+                    <span class="nav-selection">Sponsored Post</span>
+                   <i class="icon-menu-arrow"></i>     </a>
+                 <div class="sub-nav">
+                 	<ul class="nav">
+                        <li>
+                        	<a href="create-new-sponsored-post.html">Create New Sponsored Post</a>
+                        </li>
+                        <li>
+                            <a href="published-sponsored-posts.html">Published Sponsored Posts</a>
+                        </li>
+						<li>
+                            <a href="deleted-sponsored-posts.html">Deleted Sponsored Posts</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon new_window"></i>
+                    <span class="nav-selection">Photos</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="upload-new-album.html">Upload New Album</a>
+                        </li>
+                        <li>
+                            <a href="published-album.html">Published Album</a>
+                        </li>
+						<li>
+                            <a href="deleted-photos.html">Deleted Photos</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon play"></i>
+                    <span class="nav-selection">Videos</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="upload-new-Video.html">Upload New Video</a>
+                        </li>
+                        <li>
+                            <a href="published-Videos.html">Published Videos</a>
+                        </li>
+						<li>
+                            <a href="deleted-Videos.html">Deleted Videos</a>
+                        </li>
+						<li>
+                            <a href="featured-Videos.html">Featured Videos</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			<li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon cog"></i>
+                    <span class="nav-selection">Site Management</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="category-master.html">Category Master</a>
+                        </li>
+						<li>
+                            <a href="location-master.html">Location Master</a>
+                        </li>
+						<li>
+                            <a href="topic-master.html">Topic Master</a>
+                        </li>
+                        <li>
+                            <a href="tags.html">Tags Master</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon cog"></i>
+                    <span class="nav-selection">Rights Management</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="cms-rights.html">CMS Rights</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+			<li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon info"></i>
+                    <span class="nav-selection">Help</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        <li>
+                            <a href="#">FAQ</a>
+                        </li>
+						<li>
+                            <a href="#">Sitemap</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+           
+           
+         
+         
+            <li class="nav-logout">
+                <a href="index.html">
+                    <i class="icon-photon key_stroke"></i><span class="nav-selection">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+        
+<div class="panel">
+    <div class="panel-content filler">
+        <div class="panel-logo"></div>
+        <div class="panel-header">
+            <h1><small>Create New Sponsored Post</small></h1>
+            
+        </div>
+       
+		   <div class="panel-header">
+            <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
+        </div>
+        
+                    <script type="text/javascript">
+        $(function () {
+            $("#jstree").jstree({ 
+                "json_data" : {
+                    "data" : [
+												{
+                            "data" : { 
+                                "title" : "Channel", 
+                                "attr" : { "href" : "#Channel" } 
+                            }
+                        },
+												{
+                            "data" : { 
+                                "title" : "Article-Details", 
+                                "attr" : { "href" : "#Article-Details" } 
+                            }
+                        },
+                           
+                                                {
+                            "data" : { 
+                                "title" : "Categories", 
+                                "attr" : { "href" : "#categories" } 
+                            }
+                        },
+							
+												{
+                            "data" : { 
+                                "title" : "Assign This Article To An Event", 
+                                "attr" : { "href" : "#assign-article-to-a-event" } 
+                            }
+                        },
+							 
+                                                {
+                            "data" : { 
+                                "title" : "Photos And Videos", 
+                                "attr" : { "href" : "#photos-videos" } 
+                            }
+                        },
+							
+
+
+                                            ]
+                },
+                "plugins" : [ "themes", "json_data", "ui" ]
+            })
+            .bind("click.jstree", function (event) {
+                var node = $(event.target).closest("li");
+                document.location.href = node.find('a').attr("href");
+                return false;
+            })
+            .delegate("a", "click", function (event, data) { event.preventDefault(); });
+        });
+    </script>
+        <div class="sidebarMenuHolder">
+        <div class="JStree">
+            <div class="Jstree_shadow_top"></div>
+            <div id="jstree"></div>
+            <div class="Jstree_shadow_bottom"></div>
+        </div>
+    </div>    </div>
+    <div class="panel-slider">
+        <div class="panel-slider-center">
+            <div class="panel-slider-arrow"></div>
+        </div>
+    </div>
+</div>
+        <div class="main-content">
+            <div class="breadcrumb-container">
+    <ul class="xbreadcrumbs">
+        <li>
+            <a href="dashboard.html">
+                <i class="icon-photon home"></i>
+            </a>
+        </li>
+                <li class="current">
+            <a href="#">Create New Sponsored Post</a>
+        </li>
+                
+    </ul>
+</div>            <header>
+                <i class="icon-big-notepad"></i>
+                <h2><small>Sponsored Post: 45345</small></h2>
+                <h3><small>BW</small></h3>
+            </header>
+            <form class="form-horizontal">
+			<div class="container-fluid">
+
+                        <div class="form-legend" id="Notifications">Notifications</div>
+
+                        <!--Notifications begin-->
+                        <div class="control-group row-fluid">
+                            <div class="span12 span-inset">
+                                <div class="alert alert-success alert-block">
+                                    <i class="icon-alert icon-alert-info"></i>
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>This is Success Notification</strong>
+                                    <span>Your data has been successfully modified.</span>
+                                </div>
+                                <div class="alert alert-block">
+                                    <i class="icon-alert icon-alert-info"></i>
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>This is Alert Notification</strong>
+                                    <span>No result found.</span>
+                                </div>
+                                <div class="alert alert-error alert-block">
+                                    <i class="icon-alert icon-alert-info"></i>
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>This is Error Notification</strong>
+                                    <span>Please select a valid search criteria.</span>
+                                </div>
+								<div class="alert alert-error alert-block">
+                                    <i class="icon-alert icon-alert-info"></i>
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <strong>This is Error Notification</strong>
+                                    <span>Please enter a valid email id.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Notifications end-->
+
+                </div>
+                
+                <div class="container-fluid">
+
+                        <div class="form-legend" id="Channel">Channel</div>
+
+						<!--Select Box with Filter Search begin-->
+                        <div  class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label" for="selectBoxFilter">Channel</label>
+                            </div>
+							<div class="span9">
+                                <div class="controls">
+                                    <select name="selectBoxFilter" id="selectBoxFilter20">
+                                        <option selected="" value="All">Channel1</option>
+                                        <option value="Beige">Channel2</option>
+                                        <option value="Black">Channel3</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <script>
+                                $().ready(function(){
+                                    $("#selectBoxFilter20").select2();
+                                });
+                            </script>
+                        </div>
+						
+                        <!--Select Box with Filter Search end-->					
+                </div>
+				
+                <div class="container-fluid">
+						<div class="form-legend" id="Article-Details">Article Details
+							
+						</div>
+                        <!--Text Area - No Resize begin-->
+                        <div  class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label">Title (200 Characters)</label>
+                            </div>
+                            <div class="span9">
+                                <div class="controls">
+                                    <textarea  rows="4" class="no-resize"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Text Area - No Resize end-->
+
+                        <!--Text Area Resizable begin-->
+                        <div id="Text_Area_Resizable" class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label">Summary (800 Characters)</label>
+                            </div>
+                            <div class="span9">
+                                <div class="controls">
+                                    <textarea  rows="4" class=""></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Text Area Resizable end-->
+
+                        <!--WYSIWYG Editor - Full Options-->
+                        <div id="WYSIWYG_Editor_-_Full_Options" class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label">Description</label>
+                            </div>
+                            <div class="span9">
+                                <div class="controls elrte-wrapper">
+                                    <textarea id="maxi" rows="2" class="auto-resize"></textarea>
+                                    <script>
+                                        $('#maxi').elrte({
+                                            lang: "en",
+                                            styleWithCSS: false,
+                                            height: 200,
+                                            toolbar: 'maxi'
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                        <!--WYSIWYG Editor - Full Options end-->
+
+                </div><!-- end container1 -->
+
+				<div class="container-fluid">
+
+                        <div class="form-legend" id="categories">Categories</div>
+
+						<!--Select Box with Filter Search begin-->
+                        <div  class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label" for="selectBoxFilter">Categories</label>
+                            </div>
+							<div class="span9">
+                                <div class="controls">
+                                    <select name="selectBoxFilter" id="selectBoxFilter2">
+                                        <option selected="" value="All">All</option>
+                                        <option value="Beige">Beige</option>
+                                        <option value="Black">Black</option>
+                                        <option value="Blue">Blue</option>
+                                        <option value="Bronze">Bronze</option>
+                                        <option value="Brown">Brown</option>
+                                        <option value="Gold">Gold</option>
+                                        <option value="Gray">Gray</option>
+                                        <option value="Green">Green</option>
+                                        <option value="Orange">Orange</option>
+                                        <option value="Pink">Pink</option>
+                                        <option value="Purple">Purple</option>
+                                        <option value="Red">Red</option>
+                                        <option value="Silver">Silver</option>
+                                        <option value="Turquoise">Turquoise</option>
+                                        <option value="White">White</option>
+                                        <option value="Yellow">Yellow</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <script>
+                                $().ready(function(){
+                                    $("#selectBoxFilter2").select2();
+                                });
+                            </script>
+                        </div>
+						<div id="categories" class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label" for="selectBoxFilter"></label>
+                            </div>
+							<div class="span9">
+                                <div class="controls">
+                                    <select name="selectBoxFilter" id="selectBoxFilter3">
+                                        <option selected="" value="All">All</option>
+                                        <option value="Beige">Beige</option>
+                                        <option value="Black">Black</option>
+                                        <option value="Blue">Blue</option>
+                                        <option value="Bronze">Bronze</option>
+                                        <option value="Brown">Brown</option>
+                                        <option value="Gold">Gold</option>
+                                        <option value="Gray">Gray</option>
+                                        <option value="Green">Green</option>
+                                        <option value="Orange">Orange</option>
+                                        <option value="Pink">Pink</option>
+                                        <option value="Purple">Purple</option>
+                                        <option value="Red">Red</option>
+                                        <option value="Silver">Silver</option>
+                                        <option value="Turquoise">Turquoise</option>
+                                        <option value="White">White</option>
+                                        <option value="Yellow">Yellow</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <script>
+                                $().ready(function(){
+                                    $("#selectBoxFilter3").select2();
+                                });
+                            </script>
+                        </div>
+						<div id="categories" class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label" for="selectBoxFilter"></label>
+                            </div>
+							<div class="span9">
+                                <div class="controls">
+                                    <select name="selectBoxFilter" id="selectBoxFilter4">
+                                        <option selected="" value="All">All</option>
+                                        <option value="Beige">Beige</option>
+                                        <option value="Black">Black</option>
+                                        <option value="Blue">Blue</option>
+                                        <option value="Bronze">Bronze</option>
+                                        <option value="Brown">Brown</option>
+                                        <option value="Gold">Gold</option>
+                                        <option value="Gray">Gray</option>
+                                        <option value="Green">Green</option>
+                                        <option value="Orange">Orange</option>
+                                        <option value="Pink">Pink</option>
+                                        <option value="Purple">Purple</option>
+                                        <option value="Red">Red</option>
+                                        <option value="Silver">Silver</option>
+                                        <option value="Turquoise">Turquoise</option>
+                                        <option value="White">White</option>
+                                        <option value="Yellow">Yellow</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <script>
+                                $().ready(function(){
+                                    $("#selectBoxFilter4").select2();
+                                });
+                            </script>
+                        </div>
+						<div id="categories" class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label" for="selectBoxFilter"></label>
+                            </div>
+							<div class="span9">
+                                <div class="controls">
+                                    <select name="selectBoxFilter" id="selectBoxFilter5">
+                                        <option selected="" value="All">All</option>
+                                        <option value="Beige">Beige</option>
+                                        <option value="Black">Black</option>
+                                        <option value="Blue">Blue</option>
+                                        <option value="Bronze">Bronze</option>
+                                        <option value="Brown">Brown</option>
+                                        <option value="Gold">Gold</option>
+                                        <option value="Gray">Gray</option>
+                                        <option value="Green">Green</option>
+                                        <option value="Orange">Orange</option>
+                                        <option value="Pink">Pink</option>
+                                        <option value="Purple">Purple</option>
+                                        <option value="Red">Red</option>
+                                        <option value="Silver">Silver</option>
+                                        <option value="Turquoise">Turquoise</option>
+                                        <option value="White">White</option>
+                                        <option value="Yellow">Yellow</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <script>
+                                $().ready(function(){
+                                    $("#selectBoxFilter5").select2();
+                                });
+                            </script>
+                        </div>
+                        <!--Select Box with Filter Search end-->
+						
+                </div>
+				
+				<div class="container-fluid">
+
+                        <div class="form-legend" id="assign-article-to-a-event">Assign This Article To An Event</div>
+
+						<!--Select Box with Filter Search begin-->
+                        <div  class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label" for="selectBoxFilter">Event Name</label>
+                            </div>
+							<div class="span9">
+                                <div class="controls">
+                                    <select name="selectBoxFilter" id="selectBoxFilter20">
+                                        <option selected="" value="All">All</option>
+                                        <option value="Beige">Beige</option>
+                                        <option value="Black">Black</option>
+                                        <option value="Blue">Blue</option>
+                                        <option value="Bronze">Bronze</option>
+                                        <option value="Brown">Brown</option>
+                                        <option value="Gold">Gold</option>
+                                        <option value="Gray">Gray</option>
+                                        <option value="Green">Green</option>
+                                        <option value="Orange">Orange</option>
+                                        <option value="Pink">Pink</option>
+                                        <option value="Purple">Purple</option>
+                                        <option value="Red">Red</option>
+                                        <option value="Silver">Silver</option>
+                                        <option value="Turquoise">Turquoise</option>
+                                        <option value="White">White</option>
+                                        <option value="Yellow">Yellow</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <script>
+                                $().ready(function(){
+                                    $("#selectBoxFilter20").select2();
+                                });
+                            </script>
+                        </div>
+						
+                        <!--Select Box with Filter Search end-->					
+                </div>
+				<!--end container-->
+				
+				<div class="container-fluid">
+
+                        <div class="form-legend" id="photos-videos">Photos & Videos</div>
+
+                        <!--Tabs begin-->
+                        <div  class="control-group row-fluid span-inset">
+                            <ul class="nav nav-tabs" id="myTab">
+                                <li class="dropdown active"><a data-toggle="dropdown" class="dropdown-toggle" href="javascript:;">Upload Image<b class="caret"></b></a>
+								<ul class="dropdown-menu">
+                                        <li><a data-toggle="tab" href="#dropdown1">Image 1</a></li>
+                                        <li><a data-toggle="tab" href="#dropdown2">Image 2</a></li>
+										<li><a data-toggle="tab" href="#dropdown3">Image 3</a></li>
+										<li><a data-toggle="tab" href="#dropdown4">Image 4</a></li>
+                                    </ul>
+								</li>
+                                <li><a data-toggle="tab" href="#tab-example1">Video</a></li>
+								<li><a data-toggle="tab" href="#tab-example4">Current Photos</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="tab-example1" class="tab-pane fade">
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Title</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                                </div>
+                            </div>
+                </div>
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Code (500/320)</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <textarea  rows="4" class="no-resize"></textarea>
+                                </div>
+                            </div>
+                </div>
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Source</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                                </div>
+                            </div>
+                </div>
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">URL</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                                </div>
+                            </div>
+                </div>
+				<div class="control-group row-fluid">
+					<div class="span12 span-inset">
+						<div style="float:right; width:11%; margin-bottom:5px;"><button class="btn btn-warning" type="button" style="display:block;">Submit</button>
+					 <img src="images/photon/preloader/76.gif" alt="loader" style="width:50%; display:block; margin-left:15px;"/></div>
+					</div>
+				</div> 
+                                </div>
+                                
+								<div id="tab-example4" class="tab-pane fade">
+				<div class="container-fluid">
+
+
+                       <!--Sortable Responsive Media Table begin-->
+                       <div class="row-fluid">
+                           <div class="span12">
+                               <table class="table table-striped table-responsive" id="tableSortableResMed">
+                                   <thead class="cf sorthead">
+                                       <tr>
+                                           <th>Image</th>
+                                           <th>Title</th>
+										   <th>Source</th>
+                                           <th>Source URL</th>
+										   <th>Action</th>                                      
+									   </tr>
+                                   </thead>
+                                   <tbody>
+                                       <tr class="gradeX">
+                                           <td>
+                                               <img src="images/photon/user1.jpg" alt="user" style="width:40%;" />
+                                           </td>
+                                           <td>Celebrate 'Dry Holi' to save water for future</td>
+                                           <td class="center">JPEG image</td>
+                                           <td class="center">PTI</td>
+										   <td class="center"><button type="button" class="btn btn-mini btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:20%; display:block; margin-left:15px;"/></td>
+                                       </tr>
+                                       <tr class="gradeX">
+                                           <td>
+                                               <img src="images/photon/user2.jpg" alt="user" style="width:40%;" />
+                                           </td>
+                                           <td>Celebrate 'Dry Holi' to save water for future</td>
+                                           <td class="center">JPEG image</td>
+                                           <td class="center">PTI</td>
+										   <td class="center"><button type="button" class="btn btn-mini btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:20%; display:block; margin-left:15px;"/></td>
+                                       </tr>
+                                       <tr class="gradeX">
+                                           <td>
+                                               <img src="images/photon/user3.jpg" alt="user" style="width:40%;" />
+                                           </td>
+                                           <td>Celebrate 'Dry Holi' to save water for future</td>
+                                           <td class="center">JPEG image</td>
+                                           <td class="center">PTI</td>
+										   <td class="center"><button type="button" class="btn btn-mini btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:20%; display:block; margin-left:15px;"/></td>
+                                       </tr>
+                                       <tr class="gradeX">
+                                           <td>
+                                               <img src="images/photon/user4.jpg" alt="user" style="width:40%;" />
+                                           </td>
+                                           <td>Celebrate 'Dry Holi' to save water for future</td>
+                                           <td class="center">JPEG image</td>
+                                           <td class="center">PTI</td>
+										   <td class="center"><button type="button" class="btn btn-mini btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:20%; display:block; margin-left:15px;"/></td>
+                                       </tr>
+                                       <tr class="gradeX">
+                                           <td>
+                                               <img src="images/photon/user5.jpg" alt="user" style="width:40%;" />
+                                           </td>
+                                           <td>Celebrate 'Dry Holi' to save water for future</td>
+                                           <td class="center">JPEG image</td>
+                                           <td class="center">PTI</td>
+										   <td class="center"><button type="button" class="btn btn-mini btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:20%; display:block; margin-left:15px;"/></td>
+                                       </tr>
+                                   </tbody>
+                               </table>
+
+                           </div>
+                       </div>
+                       <!--Sortable Responsive Media Table end-->
+							
+           </div>
+                                </div>
+                                <div id="dropdown1" class="tab-pane fade active in">
+                                  <div class="control-group row-fluid">
+									<div class="span3">
+										<label class="control-label">Upload Image 1</label>
+									</div>
+									<div class="span9">
+										<div class="fileupload fileupload-new" data-provides="fileupload">
+											<div class="input-append">
+												<div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" /></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+											</div>
+										</div>
+									</div>
+								</div>
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Title 1</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                                </div>
+                            </div>
+                </div>
+				<div class="control-group row-fluid">
+									<div class="span3">
+										<label class="control-label">Description 1</label>
+									</div>
+									<div class="span9">
+												<div class="controls">
+													<textarea rows="4" class=""></textarea>
+												</div>
+									</div>
+								</div>
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Source Name</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                                </div>
+                            </div>
+                </div>
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Source URL</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                                </div>
+                            </div>
+                </div>
+                
+                <div class="control-group row-fluid">
+					<div class="span12 span-inset">
+					<div data-on-label="Enabled" data-off-label="Disabled" class="switch">
+                                <input type="checkbox" checked="checked">
+                            </div>
+							 
+							
+						<button class="btn btn-warning" type="button" style="display:block;">Submit</button>
+					 <img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+					</div>
+				</div>
+				
+                                </div>
+                                <div id="dropdown2" class="tab-pane fade">
+                                  <div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Upload Image 2</label>
+                    </div>
+                    <div class="span9">
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                            <div class="input-append">
+                                <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" /></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Title 2</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                                </div>
+                            </div>
+                </div>
+				<div class="control-group row-fluid">
+									<div class="span3">
+										<label class="control-label">Description 2</label>
+									</div>
+									<div class="span9">
+												<div class="controls">
+													<textarea rows="4" class=""></textarea>
+									</div>
+									</div>
+								</div>
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Source Name</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                                </div>
+                            </div>
+                </div>
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Source URL</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                            </div>
+                            </div>
+                </div>
+				<div class="control-group row-fluid">
+					<div class="span12 span-inset">
+						<button class="btn btn-warning" type="button" style="display:block;">Submit</button>
+					 <img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+					</div>
+				</div>
+                                </div>
+								<div id="dropdown3" class="tab-pane fade">
+                                  <div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Upload Image 3</label>
+                    </div>
+                    <div class="span9">
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                            <div class="input-append">
+                                <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" /></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Title 3</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                                </div>
+                            </div>
+                </div>
+				<div class="control-group row-fluid">
+									<div class="span3">
+										<label class="control-label">Description 3</label>
+									</div>
+									<div class="span9">
+												<div class="controls">
+													<textarea rows="4" class=""></textarea>
+												</div>
+									</div>
+								</div>
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Source Name</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                                </div>
+                            </div>
+                </div>
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Source URL</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                                </div>
+                            </div>
+                </div>
+				<div class="control-group row-fluid">
+					<div class="span12 span-inset">
+						<button class="btn btn-warning" type="button" style="display:block;">Submit</button>
+					 <img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+					</div>
+				</div>
+                                </div>
+								<div id="dropdown4" class="tab-pane fade">
+                                  <div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Upload Image 4</label>
+                    </div>
+                    <div class="span9">
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                            <div class="input-append">
+                                <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" /></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Title 4</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                                </div>
+                            </div>
+                </div>
+				<div class="control-group row-fluid">
+									<div class="span3">
+										<label class="control-label">Description 4</label>
+									</div>
+									<div class="span9">
+												<div class="controls">
+													<textarea rows="4" class=""></textarea>
+												</div>
+									</div>
+								</div>
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Source Name</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                                </div>
+                            </div>
+                </div>
+				<div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Source URL</label>
+                    </div>
+                    <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                                </div>
+                            </div>
+                </div>
+				<div class="control-group row-fluid">
+					<div class="span12 span-inset">
+						<button class="btn btn-warning" type="button" style="display:block;">Submit</button>
+					 <img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+					</div>
+				</div>
+                                </div>
+                            </div>
+                        </div>
+                </div><!--end container-->
+				
+				<!--start container-->				
+				<div class="container-fluid">
+                
+                <div class="control-group row-fluid">
+					<div class="span12 span-inset">
+					
+							 <label class="checkbox" >
+                                   <input type="checkbox" class="uniformCheckbox" value="checkbox1">
+                                    <a href="#" target="_blank">Feature This</a>
+                                </label>
+								<script>
+                        $().ready(function(){
+                            $(".uniformCheckbox").uniform();
+                        });            
+                    </script>
+                    
+                    </div>
+				</div>
+                		
+				<div class="control-group row-fluid">
+                            <div class="span12 span-inset">
+                                <!-- <button type="button" class="btn btn-default">Draft</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                                 <button type="button" class="btn btn-warning">Submit</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                                 <button type="button" class="btn btn-info">Save</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>-->
+                                 <button type="button" class="btn btn-success">Publish</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                                 <button type="button" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+								
+                            </div>
+                        </div>
+                        </div>
+			<!--	end container-->
+			
+            </form>
+        </div>
+        </body>
+</html>
