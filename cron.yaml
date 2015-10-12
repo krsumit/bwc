@@ -1,0 +1,8 @@
+version: 1
+cron:
+ - name: "Article"          
+   url: "/public/cronscript/cronjob.php?section=article"              
+   schedule: "0 * * * *"   
+ - name: "Category"
+   url: "/public/cronscript/cronjob.php?section=category"
+   schedule: "0 * * * *"
