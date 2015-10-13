@@ -1,6 +1,6 @@
 @extends('layouts/master')
 
-@section('title', 'Quotes - BWCMS')
+@section('title', 'Tips - BWCMS')
 
 
 @section('content')
@@ -9,7 +9,7 @@
         <div class="panel-content filler">
             <div class="panel-logo"></div>
             <div class="panel-header">
-                <h1><small>Quotes</small></h1>
+                <h1><small>Tips</small></h1>
             </div>
             <div class="panel-search container-fluid">
                 <form action="javascript:;" class="form-horizontal">
@@ -79,21 +79,69 @@
                             .delegate("a", "click", function (event, data) { event.preventDefault(); });
                 });
 
-                function getEditQuote(id) {
+                function getTipsList(cid) {
+                    //alert(cid);
+                    //alert($('#selectEdit').val());
+                    $.get("{{ url('/tips/list/')}}",
+                            {option: cid},
+                            function (data) {
+                                //add to relevant fields
+                                //alert(data);
+                                //var response = jQuery.parseJSON(data);
+                                //alert(data.length);
+                                var response=jQuery.parseJSON(data);
+                                //alert(response);
+                                var r;
+                                //var response=jQuery.parseJSON(data);
+                                $.each(data, function (ind, elem) {
+                                    //Each Row
+
+                                    r = "<tr class=gradeX id='+ind+'>";
+                                    //alert(elem.length);
+                                    //alert(ind);
+                                    //alert(elem);
+                                    $.each(elem, function(index, element) {
+                                        //Column
+
+                                        //alert(element);
+                                        if(index == 'tip'){
+                                            r+= "<td>" + element + "</td>";
+                                        }
+                                        if(index == 'tip_id'){
+                                            r+= "<td>" + element + "</td>";
+                                        }
+                                        if(index == 't_category_id'){
+                                            r+= "<td>" + element + "</td>";
+                                        }
+                                        if(index == 't_tags'){
+                                            r+= "<td>" + element + "</td>";
+                                        }
+                                        //alert(elem);
+                                        //$('#channel_sel').append("<option value='"+ element +"'>"+ index +"</option>");
+                                    });
+                                    r += "</tr>";
+                                });
+                                $('#tiprows').append(r);
+                            });
+                }
+
+                function getEditTip(id) {
                     //alert(id);
-                    $.get("{{ url('/quotes/edit/')}}",
+                    //alert($('#selectEdit').val());
+                    $.get("{{ url('/tips/edit/')}}",
                             {option: id},
                             function (data) {
                                 //add to relevant fields
                                 //alert(data);
+                                //var result = $.parseJSON(data);
                                 $("#add_new").show();
                                 $("#btn_addnew").hide();
                                 var result = jQuery.parseJSON(data);
-                                
                                 var one;
                                 var two;
+                                //alert(result.length);
                                 $.each(result, function(index, element) {
-                                   // alert(index);
+                                    //alert(index);
                                     //alert(element);
                                     if(index == 0) {
                                         one = element;
@@ -101,43 +149,26 @@
                                         two = element;
                                     }
                                 });
+                                //alert(one);
+                                //alert(two);
+                                //one = jQuery.parseJSON(one);
+                                //two = jQuery.parseJSON(two);
                                 $.each(one, function(ind, ele) {
                                     $.each(ele, function(index, element) {
-                                      
-                                        //alert(index);
-                                          //alert(element);
                                         //alert(element);
-                                        if (index == 'quote_id') {
-                                           
-                                            $('#qid').val(element);
+                                        //alert(element);
+                                        if (index == 'tip_id') {
+                                            $('#tid').val(element);
                                         }
-                                        if (index == 'quote') {
-                                            
-                                            $('#quote').val(element);
+                                        if (index == 'tip') {
+                                            $('#tip').val(element);
                                         }
                                         if (index == 'description') {
-                                            
                                             $('#description').val(element);
                                         }
-                                        if (index == 'q_author_id') {
-                                            $('#authors').val(element);
-                                            $("#authors").select2();
-                                        }
-                                       if (index == 'tag') {  
-                                             //var p="";
-                                             $.each(element, function(index, element2) {
-                                                 //alert(element2.toSource());
-                                                 $("#Taglist").tokenInput("add", element2);
-                                               //if(p==''){p=element2.name;}else{
-                                                // p = p+','+element2.name;
-                                             //}
-                                              
- 
-                                             });
-                                            
-                                             
-                                            $('#token-input-Taglist').val(p);
-                                     
+                                        if (index == 't_category_id') {
+                                            $('#t_category').val(element);
+                                            $("#t_category").select2();
                                         }
                                     });
                                 });
@@ -145,15 +176,21 @@
                                 var lst = '';
                                 $.each(two, function (inx, el) {
                                     //for each field
-                                    //alert(el);
-                                    lst += el + ',';
+                                    $.each(el, function (i, e) {
+                                        //alert(e);
+                                        if (i == 'ttag_id') {
+                                            lst += e + ',';
+                                        }
+                                    });
                                 });
+                                //var res = lst.substr(-1);
                                 //$("#tiptag").val([res]);
-                                $('#quotetag').val(lst.split(','));
-                                $("#quotetag").select2();
+                                //var res = lst.substring(0,lst.length-1);
+                                $('#tiptag').val(lst.split(','));
+                                $("#tiptag").select2();
                             });
                 }
-                function deleteQuote(){
+                function deleteTip(){
                     //alert($('#selectEdit').val());
                     var ids = '';
                     var checkedVals = $('.uniformCheckbox:checkbox:checked').map(function() {
@@ -163,7 +200,9 @@
                     }).get();
                     var ids = checkedVals.join(",");
                     //alert(ids);
-                    $.get("{{ url('/quotes/delete/')}}",
+                    //alert($('input[type="checkbox"]:checked').not(":disabled"));
+                    //var id = $('#selectEdit').val();
+                    $.get("{{ url('/tips/delete/')}}",
                             { option: ids },
                             function(data) {
                                 $.each(checkedVals, function (i, e) {
@@ -172,137 +211,8 @@
                                 });
                             });
                 }
-                function addTags(){
-                    var ids = $('#tagadded').val();
-                    alert(ids);
-                    //alert($('#selectEdit').val());
-                    $.get("{{ url('/quotes/addTag/')}}",
-                            { option: ids },
-                            function(data) {
-
-                                var resplen = (data).length;
-                                var lst = '';
-                                var existing = $( "#quotetag" ).val();
-                                $.each(data, function(index, element) {
-                                    if((resplen > 1)){
-                                        $.each(element, function(ind, ele){
-                                            $("#quotetag").append($('<option>', {
-                                                value: ele.tag_id,
-                                                text: ele.tag
-                                            }));
-                                            lst += ele.tag_id + ',';
-                                        });
-                                    }else{
-                                        $("#quotetag").append($('<option>', {
-                                            value: element.tag_id,
-                                            text: element.tag
-                                        }));
-                                        lst = element.tag_id + ',';
-                                    }
-                                });
-                                lst +=existing;
-                                $('#quotetag').val(lst.split(','));
-                                $("#quotetag").select2();
-                            });
-                }
 
             </script>
-            <!-- Add Tag to Tags Table - Ajax request -->
-            <script>
-            function addqueatsfunction(){
-            var valid=1
-            $('.author_error').remove();
-            $('#add_new input').removeClass('error');
-            $('#add_new select').removeClass('error');
-             $('#add_new textarea').removeClass('error');
-            if(!($('#description').val())){
-            valid=0;
-            $('#description').addClass('error');
-            $('#description').after(errorMessage('Please fill description'));
-            }
-             if(!($('#authors').val())){
-                //alert(1);
-                 valid=0;
-                $('#authors').addClass('error');
-                $('#authors').after(errorMessage('Choose From Existing Tags'));
-              
-            }
-            
-            if(!($('#Taglist').val())){
-                //alert(1);
-                 valid=0;
-                $('#Taglist').addClass('error');
-                $('#Taglist').after(errorMessage('Choose From Existing Tags'));
-              
-            }
-            if(valid==0)
-                return false;
-            else
-            return true;
-            }
-            function errorMessage($msg){
-             return '<span class="error author_error" style="clear:both;display:inline-block">'+$msg+'</span>';
-            }
-                
-                
-                $().ready(function() {
-                        var token = $('input[name=_token]');
-                                // process the form
-                        $("#attachTag").click(function(){
-                        if ($('input[name=tagadded]').val().trim().length == 0){
-                        alert('Please enter tage'); return false;
-                        }
-
-                        $.ajax({
-                        type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                                url         : '/quotes/addTag', // the url where we want to POST
-                                data        :   { tag : $('input[name=tagadded]').val() },
-                                dataType    : 'json', // what type of data do we expect back from the server
-                                encode      : true,
-                                beforeSend  :function(data){
-                                $('#attachTag').hide();
-                                        $('#attachTag').siblings('img').show();
-                                },
-                                complete    :function(data){
-                                $('#attachTag').show();
-                                        $('#attachTag').siblings('img').hide();
-                                },
-                                success     :  function(data){
-
-                                $.each(data, function(key, val){
-
-                                $("#Taglist").tokenInput("add", val);
-                                });
-                                        $('input[name=tagadded]').val('');
-                                        //alert('Tag Saved');
-//                                        $("#Taglist").tokenInput("add", [{"id":"2","name":"Coal Scam"},{"id":"4","name":"Cuisine"},{"id":"7","name":"Education"},{"id":"15","name":"Election"},{"id":"208","name":"testtag1"},{"id":"1","name":"Modi"},{"id":"207","name":"tagtest"},{"id":"210","name":"ankita"}]);
-//                                         //$("#Taglist").tokenInput("add", {id: 9992, name: "test22"});
-                                },
-                                headers: {
-                                'X-CSRF-TOKEN': token.val()
-                                }
-                        })
-                        });
-                                $("#Taglist").tokenInput("/quotes/tags/getJson", {
-                                theme: "facebook",
-                                searchDelay: 300,
-                                minChars: 4,
-                                preventDuplicates: true,
-                                
-                                
-                        });
-                         $("#authors").tokenInput("/author/getJson", {
-                                theme: "facebook",
-                                searchDelay: 300,
-                                minChars: 2,
-                                preventDuplicates: true,
-                                
-                                
-                        });
-                        });
-                               
-            </script>
-            
             <div class="sidebarMenuHolder mCustomScrollbar _mCS_1" style="height: 268px;"><div class="Jstree_shadow_top"></div><div style="position:relative; height:100%; overflow:hidden; max-width:100%;" id="mCSB_1" class="mCustomScrollBox"><div style="position:relative; top:0;" class="mCSB_container mCS_no_scrollbar"><div class="mCustomScrollBox" id="mCSB_1" style="position:relative; height:100%; overflow:hidden; max-width:100%;"><div class="mCSB_container mCS_no_scrollbar" style="position:relative; top:0;"><div style="position:relative; height:100%; overflow:hidden; max-width:100%;" id="mCSB_1" class="mCustomScrollBox"><div style="position:relative; top:0;" class="mCSB_container mCS_no_scrollbar">
                                         <div class="JStree">
 
@@ -320,21 +230,21 @@
         <div class="breadcrumb-container">
             <ul class="xbreadcrumbs">
                 <li>
-                    <a href="dashboard.html">
+                    <a href="/dashboard">
                         <i class="icon-photon home"></i>
                     </a>
                 </li>
 
                 <li class="current">
-                    <a href="javascript:;">Quotes</a>
+                    <a href="javascript:;">Tips</a>
                 </li>
             </ul>
         </div>           <header>
             <i class="icon-big-notepad"></i>
-            <h2><small>Quotes</small></h2>
+            <h2><small>Tips</small></h2>
 
         </header>
-        {!! Form::open(array('url'=>'quotes/','class'=> 'form-horizontal','id'=>'validation_form','onsubmit'=>'return addqueatsfunction()')) !!}
+        {!! Form::open(array('url'=>'tips/','class'=> 'form-horizontal','id'=>'validation_form')) !!}
         {!! csrf_field() !!}
             <div class="container-fluid">
 
@@ -373,9 +283,10 @@
             </div>
 
 
-        <input type="hidden" name="id" value="{{$uid}}">
-        <input type="hidden" id="qid" name="qid" value="">
+
             <div class="container-fluid">
+                <input type="hidden" name="id" value="{{$uid}}">
+                <input type="hidden" id="tid" name="tid" value="">
                 <div class="form-legend" id="channel">Channel</div>
 
                 <!--Select Box with Filter Search begin-->
@@ -388,14 +299,19 @@
                             <select name="channel_sel" id="channel_sel">
                                 <option selected="" value="none">---- Please Select ----</option>
                                 @foreach($channels as $c)
-                                    <option value="{{$c->channel_id}}">{{$c->channel}}</option>
-                                @endforeach
+                                <option value="{{$c->channel_id}}">{{$c->channel}}</option>
+                                    @endforeach
                             </select>
                         </div>
                     </div>
                     <script>
                         $().ready(function(){
                             $("#channel_sel").select2();
+                            $('#channel_sel').on('click', function() {
+                                //alert($(this).val());
+                                //getTipsList( this.value ); // or $(this).val()
+                            });
+
                         });
                     </script>
                 </div>
@@ -403,21 +319,21 @@
 
             </div>
 
-            <div class="container-fluid" id="new">
-                <div class="form-legend" >Add A New Quote</div>
+            <div class="container-fluid" >
+                <div class="form-legend" >Add A New Tip</div>
                 <div class="control-group row-fluid">
                     <div class="span12 span-inset">
-                        <button type="button" class="btn btn-success" id="btn_addnew">Add New Quote</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                        <button type="button" class="btn btn-success" id="btn_addnew">Add New Tip</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
                     </div>
                 </div>
                 <div id="add_new">
                     <div class="control-group row-fluid">
                         <div class="span3">
-                            <label class="control-label">Quote </label>
+                            <label class="control-label">Tip </label>
                         </div>
                         <div class="span9">
-                            <div class="controls" id="quotenew">
-                                <input type="text" name="quote" id="quote">
+                            <div class="controls">
+                                <input type="text" name="tip" id="tip" required>
                             </div>
                         </div>
                     </div>
@@ -438,26 +354,21 @@
                     <!--Select Box with Filter Search begin-->
                     <div  class="control-group row-fluid">
                         <div class="span3">
-                            <label class="control-label" for="category">Authors</label>
+                            <label class="control-label" for="t_category">Category</label>
                         </div>
                         <div class="span9">
                             <div class="controls">
-                                 <input type="text" class="valid" name="authors" id="authors"/>
-                            </div>
-                        </div>
-                        <!---<div class="span9">
-                            <div class="controls">
-                                <select name="authors" id="authors">
+                                <select name="t_category" id="t_category" >
                                     <option selected="" value="">---- Please Select ----</option>
-                                    @foreach($qtauthor as $tc)
-                                        <option value="{{$tc->author_id}}">{{$tc->author_name}}</option>
+                                    @foreach($tipcategory as $tc)
+                                        <option value="{{$tc->tcate_id}}">{{$tc->tcategory}}</option>
                                     @endforeach
                                 </select>
                             </div>
-                        </div>-->
+                        </div>
                         <script>
                             $().ready(function(){
-                                $("#category").select2();
+                                $("#t_category").select2();
                             });
                         </script>
                     </div>
@@ -466,43 +377,29 @@
 
                     <div class="control-group row-fluid" id="Multiple_Select_Box_with_Filter_Search">
                         <div class="span3">
-                            <label for="quotetag" class="control-label">Choose From Existing Tags</label>
+                            <label for="tiptag" class="control-label">Choose From Existing Tags</label>
                         </div>
                         <div class="span9">
                             <div class="controls">
-                                 <input type="text" class="valid" name="Taglist" id="Taglist"/>
+                                <select multiple name="tiptag[]" id="tiptag"required>
+                                    @foreach($tiptags as $ttag)
+                                    <option value="{{$ttag->ttag_id}}">{{$ttag->tag}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <script>
                             $().ready(function(){
-                                $("#quotetag").select2();
+                                $("#tiptag").select2();
                             });
                         </script>
-                        </div>
-
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label" for="add tags">Add New Tags<br>(Separated by Coma)</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="tagadded" id="tagadded" class=""><span for="add tags" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
-                                </div>
-                            </div>
-
-							<div class="span12 span-inset">
-							  <div style="float:right; width:11%; margin-bottom:5px;"><button type="button" id="attachTag"  class="btn btn-primary" style="display:block;">Attach</button>
-							  <img src="images/photon/preloader/76.gif" alt="loader" style="width:50%; display:block; margin-left:15px; display:none;""></div>
-                       
-							</div>
-                       </div>
-                    <!--</div>-->
+                    </div>
                     <!--Select Box with Filter Search end-->
 
 
                     <div class="control-group row-fluid">
                         <div class="span12 span-inset">
-                            <button type="submit" name="addQuote" class="btn btn-success">Add</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                            <button type="submit" name="addTip" class="btn btn-success">Add</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
                         </div>
                     </div>
                 </div>
@@ -512,37 +409,39 @@
 
 
 
-            <div class="container-fluid" id="quote_list">
+            <div class="container-fluid" id="tip_list">
                 <div class="row-fluid">
                     <div class="span12">
                         <table class="table table-striped" id="tableSortable">
                             <thead>
                             <tr>
-                                <th>Quote No.</th>
+                                <th>Tip No.</th>
                                 <th>Category</th>
-                                <th>Quotes</th>
+                                <th>Tip</th>
                                 <th>Tag</th>
                                 <th>Action</th>
                             </tr>
                             </thead>
-                            @foreach($quoteArr as $q => $arr)
-                                <tbody id="{{$q}}">
+
+                            @foreach($tipArr as $t => $arr)
+                                <tbody id="{{$t}}">
                                 @foreach($arr as $a)
-                                    <tr class="gradeX" id="rowCur{{$a->quote_id}}">
-                                        <td>{{$a->quote_id}}</td>
-                                        <td>{{$a->category}}</td>
-                                        <td><a href="#" onclick="getEditQuote({{$a->quote_id}});">{{$a->quote}}</a></td>
-                                        <td>@if($tagArr[$a->quote_id]) {{$tagArr[$a->quote_id]}} @endif</td>
-                                        <td class="center"><input type="checkbox" name="delTip" class="uniformCheckbox" value="{{$a->quote_id}}"></td>
-                                    </tr>
+                                <tr class="gradeX" id="rowCur{{$a->tip_id}}">
+                                    <td>{{$a->tip_id}}</td>
+                                    <td>{{$a->tcategory}}</td>
+                                    <td><a href="#" onclick="getEditTip({{$a->tip_id}});">{{$a->tip}}</a></td>
+                                    <td>@if($tagArr[$a->tip_id]) {{$tagArr[$a->tip_id]}} @endif</td>
+                                    <td class="center"><input type="checkbox" name="delTip" class="uniformCheckbox" value="{{$a->tip_id}}"></td>
+                                </tr>
                                 @endforeach
                                 </tbody>
-                            @endforeach
+                             @endforeach
+
                         </table>
                     </div>
                     <div class="control-group row-fluid">
                         <div class="span12 span-inset">
-                            <button type="button" onclick="deleteQuote();" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                            <button type="button" onclick="deleteTip();" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
                         </div>
                     </div>
                 </div>
@@ -569,7 +468,7 @@
 
             <script>
                 $(document).ready(function(e) {
-                    $("#quote_list").hide();
+                    $("#tip_list").hide();
                     $("#add_new").hide();
                     $("#btn_addnew").click(function(e) {
                         $("#add_new").show();
@@ -587,32 +486,24 @@
                         $(this).find("option:selected").each(function(){
                             //alert($(this).attr("value"));
                             if($(this).attr("value") != "none"){
-
+                                //alert($('#' + v));
                                 $('#channel_sel option').each(function(index,element){
-                              //      alert($("#" + element.value));
                                     $("#" + element.value).hide();
                                 });
                                 var v = $(this).attr("value");
-                                $("#quote_list").show();
+                                $("#tip_list").show();
                                 $("#" + v).show();
-                                //$("#quote_list").show();
-
                             }
 
                             else if($(this).attr("value")=="none"){
-
-                                $("#quote_list").hide();
-
+    //                           // alert('NOne - hide');
+                                $("#tip_list").hide();
                             }
-
                         });
-
                     }).change();
-
                 });
-
             </script>
-
         {!! Form::close() !!}
     </div>
+
     @stop

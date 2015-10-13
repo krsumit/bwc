@@ -46,8 +46,7 @@
 <script type="text/javascript" src="{{ asset('js/plugins/jquery.textareaCounter.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/elrte.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/elrte.en.js') }}"></script>
-<script type="text/javascript" src="{{ asset('js/plugins/select2.js') }}"></script> 
-<!-- <script type="text/javascript" src="https://select2.github.io/dist/js/select2.full.js"></script> -->
+<script type="text/javascript" src="{{ asset('js/plugins/select2.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/jquery-picklist.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/jquery.validate.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/additional-methods.min.js') }}"></script>

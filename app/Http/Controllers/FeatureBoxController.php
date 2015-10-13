@@ -170,7 +170,9 @@ class FeatureBoxController extends Controller
             //$file->move($destination_path, $filename);
             $request->file('photo')->move($destination_path, $filename);
 
-            $photo->photopath = $destination_path . $filename;
+            $photo->photopath = url($destination_path . $filename);
+            
+            
             $photo->channel_id = $request->channel_id;
             $photo->owned_by = 'featurebox';
             $photo->owner_id = $fid;
@@ -197,7 +199,7 @@ class FeatureBoxController extends Controller
             $fBEdit->video_id = $vid;
             $fBEdit->update();
         }
-        fclose($asd);
+       /// fclose($asd);
 
         return redirect('/featurebox');
     }

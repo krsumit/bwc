@@ -38,7 +38,7 @@
                             <a href="/featurebox">Feature Box Management</a>
                         </li>
 						<li>
-                            <a href="campaign-management.html">Campaign Management</a>
+                            <a href="/campaing/add-management">Campaign Management</a>
                         </li>
                         <li>
                             <a href="add-a-magazine-issue.html">Add A Magazine Issue</a>
@@ -116,13 +116,13 @@
 									<div class="sub-nav">
                     <ul class="nav">
                         <li>
-                            <a href="add-edit-columnist.html">Add/Edit Columnist</a>
+                            <a href="/article/add-edit-author">Add/Edit Columnist</a>
                         </li>
 						<li>
-                            <a href="add-new-guest-author.html">Add New Guest Author</a>
+                            <a href="/guestauthor/add-edit-gustauthor">Add New Guest Author</a>
                         </li>
                         <li>
-                            <a href="#">Reports</a>
+                            <a href="/bwreporters/add-edit-bw-reporters">Reports</a>
                         </li>
 						<li>
                             <a href="#">Help</a>
@@ -140,14 +140,12 @@
                 <div class="sub-nav">
                     <ul class="nav">
                         <li>
-                            <a href="add-new-events.html">Add New Events</a>
+                            <a href="{{url('event/add-event-management')}}">Add New Events</a>
                         </li>
                         <li>
-                            <a href="published-events.html">Published Events</a>
+                            <a href="{{url('event/published')}}">Published Events</a>
                         </li>
-						<li>
-                            <a href="deleted-events.html">Deleted Events</a>
-                        </li>
+						
 						<li>
                             <a href="#">Reports</a>
                         </li>
@@ -209,21 +207,21 @@
                 </div>
             </li>
 			
-         <li>
+            <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon new_window"></i>
                     <span class="nav-selection">Photos</span>
                     <i class="icon-menu-arrow"></i>                </a>
                 <div class="sub-nav">
                     <ul class="nav">
-                        <li>
-                            <a href="<?php echo url('album/create')?>">Upload New Album</a>
+                       <li>
+                            <a href="{{url('album/create')}}">Upload New Album</a>
                         </li>
                         <li>
-                            <a href="<?php echo url('album/list/published')?>">Published Album</a>
+                            <a href="{{url('album/list/published')}}">Published Album</a>
                         </li>
 						<li>
-                            <a href="<?php echo url('album/list/deleted')?>">Deleted Photos</a>
+                            <a href="{{url('album/list/deleted')}}">Deleted Photos</a>
                         </li>
 						<li>
                             <a href="#">Reports</a>
@@ -272,7 +270,7 @@
                 <div class="sub-nav">
                     <ul class="nav">
                         <li>
-                            <a href="category-master.html">Category Master</a>
+                            <a href="/category/add-master-category">Category Master</a>
                         </li>
 						<li>
                             <a href="location-master.html">Location Master</a>
@@ -295,7 +293,7 @@
                 <div class="sub-nav">
                     <ul class="nav">
                         <li>
-                            <a href="/rights">CMS Rights</a>
+                            <a href="cms-rights.html">CMS Rights</a>
                         </li>
 						<li>
                             <a href="#">Reports</a>

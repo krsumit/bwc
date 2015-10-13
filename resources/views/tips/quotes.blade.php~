@@ -119,9 +119,9 @@
                                             
                                             $('#description').val(element);
                                         }
-                                        if (index == 'q_author_id') {
-                                            $('#authors').val(element);
-                                            $("#authors").select2();
+                                        if (index == 'q_category_id') {
+                                            $('#category').val(element);
+                                            $("#category").select2();
                                         }
                                        if (index == 'tag') {  
                                              //var p="";
@@ -211,23 +211,17 @@
             <script>
             function addqueatsfunction(){
             var valid=1
-            $('.author_error').remove();
-            $('#add_new input').removeClass('error');
-            $('#add_new select').removeClass('error');
-             $('#add_new textarea').removeClass('error');
-            if(!($('#description').val())){
+            $('#new input').removeClass('error');
+            if($('input[name=quote]').val().trim()==0){
             valid=0;
-            $('#description').addClass('error');
-            $('#description').after(errorMessage('Please fill description'));
+            $('input[name=quote]').addClass('error');
+            $('input[name=quote]').after(errorMessage('Please fill Quote'));
             }
-             if(!($('#authors').val())){
-                //alert(1);
-                 valid=0;
-                $('#authors').addClass('error');
-                $('#authors').after(errorMessage('Choose From Existing Tags'));
-              
+            if($('select[name=category]').val().trim()==0){
+            valid=0;
+            $('select[name=category]').addClass('error');
+            $('select[name=category]').after(errorMessage('Please select category'));
             }
-            
             if(!($('#Taglist').val())){
                 //alert(1);
                  valid=0;
@@ -241,7 +235,7 @@
             return true;
             }
             function errorMessage($msg){
-             return '<span class="error author_error" style="clear:both;display:inline-block">'+$msg+'</span>';
+             return '<div class="error author_error">'+$msg+'</div>';
             }
                 
                 
@@ -287,14 +281,6 @@
                                 theme: "facebook",
                                 searchDelay: 300,
                                 minChars: 4,
-                                preventDuplicates: true,
-                                
-                                
-                        });
-                         $("#authors").tokenInput("/author/getJson", {
-                                theme: "facebook",
-                                searchDelay: 300,
-                                minChars: 2,
                                 preventDuplicates: true,
                                 
                                 
@@ -403,7 +389,7 @@
 
             </div>
 
-            <div class="container-fluid" id="new">
+            <div class="container-fluid" >
                 <div class="form-legend" >Add A New Quote</div>
                 <div class="control-group row-fluid">
                     <div class="span12 span-inset">
@@ -416,7 +402,7 @@
                             <label class="control-label">Quote </label>
                         </div>
                         <div class="span9">
-                            <div class="controls" id="quotenew">
+                            <div class="controls">
                                 <input type="text" name="quote" id="quote">
                             </div>
                         </div>
@@ -438,23 +424,18 @@
                     <!--Select Box with Filter Search begin-->
                     <div  class="control-group row-fluid">
                         <div class="span3">
-                            <label class="control-label" for="category">Authors</label>
+                            <label class="control-label" for="category">Category</label>
                         </div>
                         <div class="span9">
                             <div class="controls">
-                                 <input type="text" class="valid" name="authors" id="authors"/>
-                            </div>
-                        </div>
-                        <!---<div class="span9">
-                            <div class="controls">
-                                <select name="authors" id="authors">
+                                <select name="category" id="category">
                                     <option selected="" value="">---- Please Select ----</option>
-                                    @foreach($qtauthor as $tc)
-                                        <option value="{{$tc->author_id}}">{{$tc->author_name}}</option>
+                                    @foreach($qtcategory as $tc)
+                                        <option value="{{$tc->cate_id}}">{{$tc->category}}</option>
                                     @endforeach
                                 </select>
                             </div>
-                        </div>-->
+                        </div>
                         <script>
                             $().ready(function(){
                                 $("#category").select2();
