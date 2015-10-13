@@ -21,26 +21,8 @@
                         rules: {
                             "req": {
                                 required: true
-                            },
-                            "numbers": {
-                                required: false,
-                                digits: true
-                            },
-                            "numbers_range": {
-                                range: [1, 7]
-                            },
-                            "email": {
-                                email: true
-                            },
-                            "url": {
-                                url: true
-                            },
-                            "channel_id": {
-                                channel_id: true
-                            },
-                            "date": {
-                                date: true
                             }
+                            
                         }
                     });
                 });
@@ -140,6 +122,24 @@
 
                      $('#selectEdit').prop('checked', false);
                 }
+            function addfeaturefunction(){
+            var valid=1
+            $('#new input').removeClass('error');
+            if($('#channel_id').val().trim()==0){
+            valid=0;
+            $('#channel_id').addClass('error');
+            $('#channel_id').after(errorMessage('Please select channel'));
+            }
+            
+            if(valid==0)
+                return false;
+            else
+            return true;
+            }
+            function errorMessage($msg){
+             return '<div class="error">'+$msg+'</div>';
+            }
+                
                 </script>
             <div class="panel-header">
                 <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
@@ -221,7 +221,7 @@
         </header>
 
         <!--<form class="form-horizontal" id="validation_form">-->
-            {!! Form::open(array('url'=>'featurebox/','class'=> 'form-horizontal','id'=>'validation_form', 'files' => true)) !!}
+            {!! Form::open(array('url'=>'featurebox/','class'=> 'form-horizontal','id'=>'validation_form', 'files' => true,'onsubmit'=>'return addfeaturefunction()')) !!}
             {!! csrf_field() !!}
             <div class="container-fluid">
                 <input type="hidden" name="id" value="{{$uid}}">
@@ -269,8 +269,8 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <select name="channel_id" id="channel_id" class="req">
-                                <option selected="" value="All">All</option>
+                            <select name="channel_id" id="channel_id" class="req" required>
+                                <option selected="" value="">All</option>
                                 @foreach($channels as $channel)
                                     <option value="{{$channel->channel_id}}">{{$channel->channel}}</option>
                                 @endforeach
@@ -299,7 +299,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="text" name="title" id="title">
+                            <input type="text" name="title" id="title" required>
                         </div>
                     </div>
                 </div>
@@ -311,7 +311,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <textarea  rows="4" name="description" id="description" class=""></textarea>
+                            <textarea  rows="4" name="description" id="description" class="" required></textarea>
                         </div>
                     </div>
                 </div>
@@ -391,7 +391,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="url" name="url" id="url">
+                            <input type="url" name="url" id="url" required>
                         </div>
                     </div>
                 </div>

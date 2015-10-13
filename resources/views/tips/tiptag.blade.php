@@ -105,7 +105,25 @@
 
                             });
                 }
-
+                    
+        function addtipstagfunction(){
+            var valid=1;
+             $('.author_error').remove();
+            $('#new input').removeClass('error');
+            if($('input[name=ttag]').val().trim()==0){
+            valid=0;
+            $('input[name=ttag]').addClass('error');
+            $('input[name=ttag]').after(errorMessage('Please fill Tag'));
+            }
+           
+            if(valid==0)
+                return false;
+            else
+            return true;
+            }
+            function errorMessage($msg){
+             return '<span class="error author_error">'+$msg+'</span>';
+            }
             </script>
             <div class="sidebarMenuHolder mCustomScrollbar _mCS_1" style="height: 268px;"><div class="Jstree_shadow_top"></div><div style="position:relative; height:100%; overflow:hidden; max-width:100%;" id="mCSB_1" class="mCustomScrollBox"><div style="position:relative; top:0;" class="mCSB_container mCS_no_scrollbar"><div class="mCustomScrollBox" id="mCSB_1" style="position:relative; height:100%; overflow:hidden; max-width:100%;"><div class="mCSB_container mCS_no_scrollbar" style="position:relative; top:0;"><div style="position:relative; height:100%; overflow:hidden; max-width:100%;" id="mCSB_1" class="mCustomScrollBox"><div style="position:relative; top:0;" class="mCSB_container mCS_no_scrollbar">
                                         <div class="JStree">
@@ -138,7 +156,7 @@
             <h2><small>Tip Tags</small></h2>
 
         </header>
-        {!! Form::open(array('url'=>'tip-tags/','class'=> 'form-horizontal','id'=>'validation_form', 'files' => true )) !!}
+        {!! Form::open(array('url'=>'tip-tags/','class'=> 'form-horizontal','id'=>'validation_form', 'files' => true , 'onsubmit'=>'return addtipstagfunction()')) !!}
         {!! csrf_field() !!}
         <!--<form class="form-horizontal">-->
             <div class="container-fluid">
@@ -188,8 +206,11 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="text" name=ttag id="ttag">
+                            <input type="text" name=ttag id="ttag" >
                         </div>
+                        @if (Session::has('message'))
+                        <span class="error author_error">{{ Session::get('message') }}</span>
+                        @endif
                     </div>
                 </div>
 

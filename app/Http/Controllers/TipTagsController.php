@@ -63,24 +63,30 @@ class TipTagsController extends Controller
         }else {
             $TipTag = new TipTag();
         }
-
-        $TipTag->tag = $request->ttag;
-        $TipTag->sponsored_by = $request->sponsoredby;
-        if($request->logofile !='') {
-            $destination_path = 'uploads/';
-            $filename = str_random(6) . '_' . $request->file('logofile')->getClientOriginalName();
-            //fwrite($asd, " File name:".$filename."  \n");
-            $request->file('logofile')->move($destination_path, $filename);
-            $TipTag->logopath = $destination_path . $filename;
+        $matchText= $request->ttag;
+        $rstcount = DB::table('tiptags')->where('tag', "=", $matchText )->select('ttag_id as id', 'tag as name')->count();
+       if($rstcount>0){
+             Session::flash('message', 'This tag already seem to exist! Please check list.');
+           
+        }else{
+            $TipTag->tag = $matchText; 
+            $TipTag->sponsored_by = $request->sponsoredby;
+            if($request->logofile !='') {
+                $destination_path = 'uploads/';
+                $filename = str_random(6) . '_' . $request->file('logofile')->getClientOriginalName();
+                //fwrite($asd, " File name:".$filename."  \n");
+                $request->file('logofile')->move($destination_path, $filename);
+                $TipTag->logopath = $destination_path . $filename;
+            }
+            $TipTag->url = $request->url;
+            $TipTag->save();
         }
-        $TipTag->url = $request->url;
-        $TipTag->save();
-
         $tiptagArr = TipTag::where('valid','1')->get();
 
-//fclose($asd);
+    //fclose($asd);
 
         return view('tips.tiptag', compact('tiptagArr','uid'));
+        
     }
 
     /**

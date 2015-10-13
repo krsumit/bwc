@@ -194,13 +194,58 @@ Route::post('article/addAuthor1', function(){
  */
 Route::match(['get', 'post'], 'article/addAuthor', ['as' => 'article/addAuthor', 'uses' => 'AuthorsController@store']);
 
+Route::match(['get', 'post'], 'article/add-edit-author', ['as' => 'article/add-edit-author', 'uses' => 'AuthorsController@index']);
+Route::match(['get', 'post'], 'columnist/edit', ['as' => 'columnist/edit', 'uses' => 'AuthorsController@edit']);
+
+Route::match(['get', 'post'], 'guestauthor/add-edit-gustauthor', ['as' => 'guestauthor/add-edit-gustauthor', 'uses' => 'AuthorsController@gustauthor']);
+Route::match(['get', 'post'], 'bwreporters/add-edit-bw-reporters', ['as' => 'bwreporters/add-edit-bw-reporters', 'uses' => 'AuthorsController@bwreporters']);
+Route::match(['get', 'post'], 'author/delete', ['as' => 'author/delete', 'uses' => 'AuthorsController@destroy']);
 /*
+ *  Adds category from Createcategory to category Table 
+ */
+
+Route::match(['get', 'post'], 'category/add-master-category', ['as' => 'category/add-master-category', 'uses' => 'categoryController@index']);
+Route::match(['get', 'post'], 'category/add', ['as' => 'category/add', 'uses' => 'categoryController@store']);
+
+Route::match(['get', 'post'], 'mastercategory/delete', ['as' => 'mastercategory/delete', 'uses' => 'categoryController@destroy']);
+
+Route::match(['get', 'post'], 'sub-category-master/add/', ['as' => 'sub-category-master/add/', 'uses' => 'categoryController@subcategoryindex']);
+Route::match(['get', 'post'], 'secondcategory/delete', ['as' => 'secondcategory/delete', 'uses' => 'categoryController@destroysecond']);
+Route::match(['get', 'post'], 'sub-category_second_master/add/', ['as' => 'sub-category_second_master/add/', 'uses' => 'categoryController@subcategorythirdindex']);
+Route::match(['get', 'post'], 'thirdcategory/delete', ['as' => 'thirdcategory/delete', 'uses' => 'categoryController@destroysthird']);
+Route::match(['get', 'post'], 'sub-category_third_master/add/', ['as' => 'sub-category_third_master/add/', 'uses' => 'categoryController@subcategoryfourindex']);
+Route::match(['get', 'post'], 'fourcategory/delete', ['as' => 'fourcategory/delete', 'uses' => 'categoryController@destroysfour']);
+/*
+ *  Adds campaing from campaing-management to campaing Table 
+ */
+Route::match(['get', 'post'], 'campaing/add-management', ['as' => 'campaing/add-management', 'uses' => 'campaingController@index']);
+Route::match(['get', 'post'], 'campaing/add', ['as' => 'campaing/add', 'uses' => 'campaingController@store']);
+
+Route::match(['get', 'post'], 'campaing/edit', ['as' => 'campaing/edit', 'uses' => 'campaingController@edit']);
+Route::match(['get', 'post'], 'campaing/delete', ['as' => 'campaing/delete', 'uses' => 'campaingController@destroy']);
+
+/*
+ *  Adds events from add-new-events to events Table 
+ */
+
+Route::match(['get', 'post'], 'event/add-event-management', ['as' => 'event/add-event-management', 'uses' => 'eventController@index']);
+Route::match(['get', 'post'], 'event/add', ['as' => 'event/add', 'uses' => 'eventController@store']);
+Route::match(['get', 'post'], 'event/published', ['as' => 'event/published', 'uses' => 'eventController@published']);
+Route::match(['get', 'post'], 'event/edit', ['as' => 'event/edit', 'uses' => 'eventController@edit']);
+Route::match(['get', 'post'], 'event/delete', ['as' => 'event/delete', 'uses' => 'eventController@destroy']);
+
+
+
+
+/*
+ * 
  *  Adds Tag from CreateArticle to Tags Table - Ajax Request
  */
 //Route::post('article/addTag','TagsController@store');
 Route::match(['get', 'post'], 'article/addTag', ['as' => 'article/addTag', 'uses' => 'TagsController@store']);
 
 Route::get('tags/getJson','TagsController@returnJson');
+
 
 /*
  *  Adds Images from CreateArticle to Images Table - Ajax Request
@@ -211,15 +256,6 @@ Route::match(['get', 'post'], 'article/addPhotos', ['as' => 'article/addPhotos',
  *  Delete Image from Create Article Form - Ajax Request
  */
 Route::match(['get', 'post'], 'article/delPhotos', ['as' => 'article/delPhotos', 'uses' => 'PhotosController@destroy']);
-/*
- *  Delete article using ajax
- */
-Route::match(['get', 'post'], 'article/delete', ['as' => 'article/delete', 'uses' => 'ArticlesController@destroy']);
-
-/*
- *  Publish image using ajax
- */
-Route::match(['get', 'post'], 'article/publish', ['as' => 'article/publish', 'uses' => 'ArticlesController@publishBulk']);
 
 /*
  *  Adds Video from CreateArticle to Images Table - Ajax Request

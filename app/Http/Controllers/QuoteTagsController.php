@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\QuoteTag;
 use Illuminate\Http\Request;
-
+use DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
@@ -36,49 +36,55 @@ class QuoteTagsController extends Controller
      * @param  Request  $request
      * @return Response
      */
-    public function store()
-    {
+    public function store(Request $request)
+    { 
         //Save passed string in Table - Validate First
-
         $count = 0;
-        if (isset($_GET['option'])) {
-            $tagString = $_GET['option'];
-        }
-//        $l = fopen('/home/sudipta/log.log', 'a+');
-        //$tagString = $request->tag;
+        $tagString = $request->tag;
         $arrTags = explode(',', $tagString);
         $count = sizeof($arrTags);
-
-        //For Response
         $returnTag1 = new QuoteTag();
-        $returnArr = new QuoteTag();
+        $returnArr = array();//new Tag();
         $returnTag = new QuoteTag();
-
-        //For more than 1 Tag Added (Comma separated list)
+       
         if($count >= 1) {
             if ($count > 1) {
                 for ($i = 0; $i < $count; $i++) {
                     $tag = new QuoteTag;
                     $tag->tag = trim($arrTags[$i]);
-                    $tag->save();
-                    $cond = $tag->tag_id;
-  //                  fwrite($l,"\ni:".$i." File :".$cond." ID: ".$tag->tag_id);
-                    $returnArr[$i] = $returnTag->all()->where('tag_id',"$cond");
+                    if($tagrow=$returnTag->where('tag',trim($arrTags[$i]))->select('tag_id as id', 'tag as name')->first()){
+                        $returnArr[]=$tagrow;
+                    }
+                    
+                    else{
+                         if(trim($arrTags[$i])){
+                        $tag->save();
+                        //print_r($tag);exit;
+                        $returnArr[]=array('id'=>$tag->tag_id,'name'=>$tag->tag);
+                         }
+                    }
+                   
                 }
                 $returnTag1 = $returnArr;
             } else if ($count == 1) {
+                // $l = fopen('/home/sudipta/check.log', 'a+');
                 $tag = new QuoteTag;
                 $tag->tag = trim($tagString);
-                $tag->save();
-    //            fwrite($l," ID ADDED :".$tag->tag_id);
-                $cond = $tag->tag_id;
-                //$returnTag1 = $returnTag->all()->where(['tags_id'=>"$cond",'tags_id'=>'2']);
-                $returnTag1 = $returnTag->all()->where('tag_id',"$cond");
+                if($tagrow=$returnTag->where('tag',trim($tagString))->select('tag_id as id', 'tag as name')->first()){
+                        $returnArr[]=$tagrow;
+                    }else{
+                          $tag->save();
+                           //print_r($tag);exit;
+                          $returnArr[]=array('id'=>$tag->tag_id,'name'=>$tag->tag);
+                       
+                    }
+              
+             
             }
-            //fwrite($l,"File :".$returnTag->all()->get('1'));
+          
         }
-      //  fclose($l);
-        return $returnTag1;
+        return $returnArr;
+
     }
 
     /**
@@ -90,6 +96,24 @@ class QuoteTagsController extends Controller
     public function show($id)
     {
         //
+    }
+    
+    public function returnJson() {
+        //DB::enableQueryLog();
+        $matchText = $_GET['q'];
+        $tag = new QuoteTag;
+        //->all()
+        $rst = $tag->where('tag', "like", $matchText . '%')->select('tag_id as id', 'tag as name')->get();
+          return response()->json($rst);
+    }
+    
+    public function returnauthorJson() {
+        //DB::enableQueryLog();
+        $matchText = $_GET['q'];
+       
+        //->all()
+        $rst = DB::table('quotesauthor')->where('author_name', "like", $matchText . '%')->select('author_id as id', 'author_name as name')->get();
+          return response()->json($rst);
     }
 
     /**

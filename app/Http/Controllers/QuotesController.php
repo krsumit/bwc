@@ -42,11 +42,11 @@ class QuotesController extends Controller
         $quoteArr = QuotesController::getQuotesforUser($channels);
         $tagArr = QuotesController::getTagsforQuotes($quoteArr);
         $quotetags = DB::table('quotetags')->where('valid','1')->get();
-        $qtcategory = DB::table('quotescategory')->where('valid','1')->get();
+        $qtauthor = DB::table('quotesauthor')->where('valid','1')->get();
 
   //      fwrite($asd, " Values of Q Arr: ".count($quoteArr)." Data: \n\n");
     //    fclose($asd);
-        return view('tips.quotes', compact('uid','channels','quoteArr','qtcategory','quotetags','tagArr'));
+        return view('tips.quotes', compact('uid','channels','quoteArr','qtauthor','quotetags','tagArr'));
     }
 
     /**
@@ -112,9 +112,9 @@ class QuotesController extends Controller
 
         foreach ($channels as $ch) {
             $channelQuotes = Quote::where('channel_id', $ch->channel_id)
-                ->join('quotescategory', 'quotes.q_category_id', '=', 'quotescategory.cate_id')
+                ->join('quotesauthor', 'quotes.q_author_id', '=', 'quotesauthor.author_id')
                 ->where('quotes.valid', '1')
-                ->select('quotes.*', 'quotescategory.category')
+                ->select('quotes.*', 'quotesauthor.author_name')
                 ->get();
 
             $quoteArr[$ch->channel_id] = $channelQuotes;
@@ -146,16 +146,10 @@ class QuotesController extends Controller
 
         $Quote->quote = $request->quote;
         $Quote->description = $request->description;
-        $Quote->q_category_id = $request->category;
+        $Quote->q_author_id = $request->authors;
         $Quote->channel_id = $request->channel_sel;
         $Quote->valid = '1';
-        $quotetag = '';
-        //Serializing TipTags
-        foreach($request->quotetag as $qt){
-            $quotetag.=$qt.",";
-        }
-        $quotetag = substr($quotetag,0,-1);
-        $Quote->q_tags = $quotetag;
+        $Quote->q_tags = $request->Taglist;
 
         $Quote->save();
 
@@ -163,11 +157,11 @@ class QuotesController extends Controller
         // To Reload Quote Page -
         $channels = QuotesController::getUserChannels($uid);
         $quoteArr = QuotesController::getQuotesforUser($channels);
-        $qtcategory = DB::table('quotescategory')->where('valid','1')->get();
+        $qtauthor = DB::table('quotesauthor')->where('valid','1')->get();
         $tagArr = QuotesController::getTagsforQuotes($quoteArr);
         $quotetags = DB::table('quotetags')->where('valid','1')->get();
 
-        return view('tips.quotes', compact('uid','channels','quoteArr','qtcategory','quotetags','tagArr'));
+        return view('tips.quotes', compact('uid','channels','quoteArr','qtauthor','quotetags','tagArr'));
     }
 
     /**
@@ -196,8 +190,8 @@ class QuotesController extends Controller
         }
         //fwrite($asd, " EDIT ID Passed ::" .$id  . "\n\n");
         $editQuote = Quote::where('quote_id',$id)
-            ->join('quotescategory','quotes.q_category_id','=','quotescategory.cate_id')
-            ->select('quotes.*','quotescategory.category')
+            ->join('quotesauthor','quotes.q_author_id','=','quotesauthor.author_id')
+            ->select('quotes.*','quotesauthor.author_name')
             ->get();
 
         //fwrite($asd, " Total Array QTAG: ".$editQuote[0]." \n\n");
@@ -210,12 +204,12 @@ class QuotesController extends Controller
             foreach($q1tag as $TT => $v) {
                 //fwrite($asd, " QTAG ARR: " . $v->tag_id . " Value: ".$v->tag." \n\n");
                 //$tagStr .= $v->tag . ", ";
-                $qtag[] = $v->tag_id;
+                $qtag[] = array('id'=>$v->tag_id,'name'=>$v->tag);
             }
             //fwrite($asd, " TTAG Data: ".$qtag[0]->tag_id." Data \n\n");
         }
-
-        echo json_encode(array($editQuote, $qtag));
+        $editQuote[0]->tag=$qtag;
+        echo json_encode(array($editQuote));
     }
 
     /**
