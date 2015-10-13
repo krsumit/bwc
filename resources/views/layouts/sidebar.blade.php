@@ -152,7 +152,7 @@
                             <a href="#">Reports</a>
                         </li>
 						<li>
-                            <a href="#">Help</a>
+                            <a href="#">Help</a> 
                         </li>
                     </ul>
                 </div>
