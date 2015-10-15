@@ -113,30 +113,15 @@
             <!--Notifications begin-->
             <div class="control-group row-fluid">
                 <div class="span12 span-inset">
+                    @if (Session::has('message'))
                     <div class="alert alert-success alert-block">
                         <i class="icon-alert icon-alert-info"></i>
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                         <strong>This is Success Notification</strong>
-                        <span>Your data has been successfully modified.</span>
+                        <span>{{ Session::get('message') }}</span>
                     </div>
-                    <div class="alert alert-block">
-                        <i class="icon-alert icon-alert-info"></i>
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>This is Alert Notification</strong>
-                        <span>No result found.</span>
-                    </div>
-                    <div class="alert alert-error alert-block">
-                        <i class="icon-alert icon-alert-info"></i>
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>This is Error Notification</strong>
-                        <span>Please select a valid search criteria.</span>
-                    </div>
-                    <div class="alert alert-error alert-block">
-                        <i class="icon-alert icon-alert-info"></i>
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>This is Error Notification</strong>
-                        <span>Please enter a valid email id.</span>
-                    </div>
+                      @endif  
+                    
                 </div>
             </div>
             <!--Notifications end-->

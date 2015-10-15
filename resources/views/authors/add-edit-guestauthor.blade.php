@@ -123,7 +123,7 @@
     </header>
     <form class="form-horizontal" onsubmit="return validateAuthorData()" method="POST" enctype= "multipart/form-data" action="/article/addAuthor">
        {!! csrf_field() !!}
-       <input id="author_type" class="uniformRadio" type="hidden" value="4" name="author_type" style="opacity: 0;">
+       <input id="author_type" class="uniformRadio" type="hidden" value="3" name="author_type" style="opacity: 0;">
        <input id="is_columnist" class="uniformRadio" type="hidden" value="0" name="is_columnist" style="opacity: 0;">
        <input id="photo" class="uniformRadio" type="hidden" value="" name="photoset" style="opacity: 0;">
         <input id="isertedbyauthordata" class="uniformRadio" type="hidden" value="isertedbyguestauthordata" name="isertedbyguestauthordata" style="opacity: 0;">
