@@ -3,6 +3,6 @@ Homestead.yaml
 composer.json
 /database
 .elasticbeanstalk/
-
+.env
 
 
