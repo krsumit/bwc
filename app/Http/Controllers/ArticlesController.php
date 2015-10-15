@@ -29,6 +29,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use App\Classes\UploadHandler;
+use App\Classes\Zebra_Image;
 class ArticlesController extends Controller
 {
     
@@ -41,6 +42,7 @@ class ArticlesController extends Controller
         //$this->middleware('auth');
 
     }
+      
     
     public function index($option)
     {
@@ -809,6 +811,27 @@ class ArticlesController extends Controller
                 $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
                 $dest=$_SERVER['DOCUMENT_ROOT'].'/'.config('constants.articleimagedir').$image;
                 if(@copy($source,$dest)){
+    
+                    
+                       $imaged = new Zebra_Image();
+
+                        // indicate a source image
+                        $imaged->source_path = $dest;
+                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.articleimagethambtdir') . $image;
+                         
+                        if (!$imaged->resize(90, 76, ZEBRA_IMAGE_BOXED, -1)) ;
+                        $imaged->source_path = $dest;
+                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.articleimagemediumdir') . $image;
+                        
+                         if (!$imaged->resize(160, 90, ZEBRA_IMAGE_BOXED, -1)) ;
+                        $imaged->source_path = $dest;
+                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.articleimagelargedir') . $image;
+                         if (!$imaged->resize(500, 270, ZEBRA_IMAGE_BOXED, -1));
+                         $imaged->source_path = $dest;
+                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.articleimageextralargedir') . $image;
+                         
+                         if (!$imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)) ;
+                        
                         unlink($source);
                         unlink($source_thumb);
                         $articleImage=new Photo();
@@ -1037,6 +1060,25 @@ class ArticlesController extends Controller
                 $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
                 $dest=$_SERVER['DOCUMENT_ROOT'].'/'.config('constants.articleimagedir').$image;
                 if(@copy($source,$dest)){
+                    
+                    $imaged = new Zebra_Image();
+
+                        // indicate a source image
+                         $imaged->source_path = $dest;
+                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.articleimagethambtdir') . $image;
+                         
+                        if (!$imaged->resize(90, 76, ZEBRA_IMAGE_BOXED, -1)) ;
+                        $imaged->source_path = $dest;
+                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.articleimagemediumdir') . $image;
+                        
+                         if (!$imaged->resize(160, 90, ZEBRA_IMAGE_BOXED, -1)) ;
+                        $imaged->source_path = $dest;
+                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.articleimagelargedir') . $image;
+                         if (!$imaged->resize(500, 270, ZEBRA_IMAGE_BOXED, -1)) ;
+                         $imaged->source_path = $dest;
+                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.articleimageextralargedir') . $image;
+                         
+                         if (!$imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)) ;
                         unlink($source);
                         unlink($source_thumb);
                         $articleImage=new Photo();

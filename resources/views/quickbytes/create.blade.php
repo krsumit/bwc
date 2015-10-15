@@ -751,7 +751,8 @@
 
         <div class="control-group row-fluid">
             <div class="span12 span-inset">
-                <button type="submit" class="btn btn-warning">Publish</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>	
+                <button value="P" name="status" class="btn btn-warning" type="submit">Publish</button>
+                <img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>	
                 <!--                                
                                                <button type="button" class="btn btn-success">Publish</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
                 <button type="button" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>-->

@@ -15,6 +15,8 @@ use App\Http\Controllers\AuthorsController;
 use App\Http\Controllers\Controller;
 use App\Photo;
 use App\QuickbyteCategory;
+use App\Classes\Zebra_Image;
+use App\Classes\UploadHandler;
 
 class QuickBytesController extends Controller
 {
@@ -172,7 +174,7 @@ class QuickBytesController extends Controller
         if($request->author_type==1)
             $quickbyte->author_id = 1;
         else 
-            $quickbyte->author_id = $request->author_name;
+        $quickbyte->author_id = $request->author_name;
         $quickbyte->title = $request->title;
         $quickbyte->description = $request->featuredesc;
         $quickbyte->tags = $request->Taglist;
@@ -194,9 +196,9 @@ class QuickBytesController extends Controller
 //        $article->status = $request->status;
 
         $quickbyte->save();
-
+        $id = $quickbyte->id;
         //Get Article_id
-         $id = $quickbyte->id;
+       
          
           //Quickbyte Category - Save
             for ($i = 1; $i <= 4; $i++) {
@@ -211,8 +213,10 @@ class QuickBytesController extends Controller
                 $quick_category->save();
             }
             
+         
             
         $images = explode(',', $request->uploadedImages);
+       
             //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
             $c=0;
             foreach ($images as $image) {
@@ -220,6 +224,21 @@ class QuickBytesController extends Controller
                 $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
                 $dest=$_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbyteimagedir').$image;
                 if(@copy($source,$dest)){
+                     $imaged = new Zebra_Image();
+
+                        // indicate a source image
+                        $imaged->source_path = $dest;
+                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimagethambtdir') . $image;
+                         
+                        if (!$imaged->resize(90, 76, ZEBRA_IMAGE_BOXED, -1)) ;
+                        $imaged->source_path = $dest;
+                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimagemediumdir') . $image;
+                        
+                         if (!$imaged->resize(500, 270, ZEBRA_IMAGE_BOXED, -1)) ;
+                        $imaged->source_path = $dest;
+                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimageextralargedir') . $image;
+                         if (!$imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1));
+                         
                         unlink($source);
                         unlink($source_thumb);
                         $imageEntry=new Photo();
@@ -238,7 +257,9 @@ class QuickBytesController extends Controller
                 }
         
             }
+             
         //If has been Saved by Editor
+           
         if($request->status == 'P') {
             Session::flash('message', 'Your Quickbte has been Published successfully.');
             return redirect('/quickbyte/list/published');
@@ -406,6 +427,21 @@ class QuickBytesController extends Controller
                 $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
                 $dest=$_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbyteimagedir').$image;
                 if(@copy($source,$dest)){
+                     $imaged = new Zebra_Image();
+
+                        // indicate a source image
+                        $imaged->source_path = $dest;
+                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimagethambtdir') . $image;
+                         
+                        if (!$imaged->resize(90, 76, ZEBRA_IMAGE_BOXED, -1)) ;
+                        $imaged->source_path = $dest;
+                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimagemediumdir') . $image;
+                        
+                         if (!$imaged->resize(500, 270, ZEBRA_IMAGE_BOXED, -1)) ;
+                        $imaged->source_path = $dest;
+                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimageextralargedir') . $image;
+                         if (!$imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1));
+                         
                         unlink($source);
                         unlink($source_thumb);
                         $imageEntry=new Photo();
