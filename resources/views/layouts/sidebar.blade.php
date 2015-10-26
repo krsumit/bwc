@@ -293,7 +293,7 @@
                 <div class="sub-nav">
                     <ul class="nav">
                         <li>
-                            <a href="cms-rights.html">CMS Rights</a>
+                            <a href="{{url('rights')}}">CMS Rights</a>
                         </li>
 						<li>
                             <a href="#">Reports</a>

@@ -210,6 +210,7 @@ class Cron {
                             //print_r($photoshootUpdateStmt);exit;
                             if ($photoshootUpdateStmt->affected_rows)
                             $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                            $this->migratePhotoshootPhoto($id,0,$condition);
                             
                         }else{
                             $delStmt = $this->conn2->prepare("delete from photo_shoot where id=?");
@@ -239,7 +240,7 @@ class Cron {
                                 foreach($tags as $tag){
                                     $this->conn2->query("insert into photo_shoot_tags set photo_shoot_id=$iid,tag_id=$tag");
                                 }
-                                $this->migratePhotoshootPhoto($iid, 1);
+                                $this->migratePhotoshootPhoto($iid, 1,$condition);
                                 $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
                                 
                             }
@@ -259,18 +260,37 @@ class Cron {
         
 
     }
-    function migratePhotoshootPhoto($id,$is_new=0){
-       if($is_new){
-           $photos= $this->conn->query("select * from photos where owned_by='album' and owner_id=$id");
-           while ($photo = $photos->fetch_object()) {
-              //print_r($photo);exit;
-               $photoInsStmt=$this->conn2->prepare("insert into photo_shoot_photos set photo_shoot_id=?,photo_shoot_photo_name=?,photo_shoot_photo_url=?"
-                       . ",photo_shoot_photo_title,photo_shoot_photo_description=?");
-               $photoInsStmt->bind_param('issss',$id,$photo->photopath,$photo->imagefullPath,$photo->title,$photo->description);
-               $photoInsStmt->execute();
-           }
-       }
-        
+    function migratePhotoshootPhoto($id,$is_new=0,$condition){
+       if ($is_new) {
+            $photos = $this->conn->query("select * from photos where owned_by='album' and owner_id=$id");
+            while ($photo = $photos->fetch_object()) {
+                //print_r($photo);exit;
+                $photoInsStmt = $this->conn2->prepare("insert into photo_shoot_photos set photo_shoot_id=?,photo_shoot_photo_name=?,photo_shoot_photo_url=?"
+                        . ",photo_shoot_photo_title=?,photo_shoot_photo_description=?");
+                $photoInsStmt->bind_param('issss', $id, $photo->photopath, $photo->imagefullPath, $photo->title, $photo->description);
+                $photoInsStmt->execute();
+            }
+        } else {
+           
+            $checkImResult = $this->conn->query("select * from photos where owned_by='album' and owner_id=$id $condition");
+
+            //$checkImResult = $this->conn->query("select * from photos where owned_by='article' and owner_id=$articleId $condition");
+            //echo $checkImResult->num_rows; echo '<br>'; exit;
+            if ($checkImResult->num_rows > 0) {
+                $checkImResult->close();
+                $this->conn2->query("delete from photo_shoot_photos where photo_shoot_id=$id");
+
+                $photos = $this->conn->query("select * from photos where owned_by='album' and owner_id=$id");
+                //echo $photos->num_rows; exit;
+                while ($photo = $photos->fetch_object()) {
+                    //print_r($photo);exit;
+                    $photoInsStmt = $this->conn2->prepare("insert into photo_shoot_photos set photo_shoot_id=?,photo_shoot_photo_name=?,photo_shoot_photo_url=?"
+                            . ",photo_shoot_photo_title=?,photo_shoot_photo_description=?") or die($this->conn2->error);;
+                    $photoInsStmt->bind_param('issss', $id, $photo->photopath, $photo->imagefullPath, $photo->title, $photo->description) or die($this->conn2->error);
+                    $photoInsStmt->execute() or die($this->conn2->error);
+                }
+            }
+        }
     }
    
    function deletePhotoshootRelatedRelated($id){

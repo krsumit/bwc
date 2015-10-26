@@ -360,6 +360,10 @@ class ArticlesController extends Controller
             //fwrite($asd, " Category IDs ::".$ac->category_id." Str: \n");            
             //$cateStr.="\"c$ac->level\":\"$ac->category_id\",";
         }
+        
+        if(!isset($acateg[0])){unset($acateg[1]);unset($acateg[2]);unset($acateg[3]);}
+        elseif(!isset($acateg[1])){unset($acateg[2]);unset($acateg[3]);}
+        elseif(!isset($acateg[2])){unset($acateg[3]);}
         //print_r($acateg);
         //exit;
         //Get Tags, Topics, .. array

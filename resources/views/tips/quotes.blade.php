@@ -88,11 +88,7 @@
                                             
                                             $('#description').val(element);
                                         }
-                                        if (index == 'category') {
-                                          
-                                             $("#authors").tokenInput("add", element);
-                                           
-                                        }
+                                       
                                        if (index == 'tag') {  
                                              //var p="";
                                              $.each(element, function(index, element2) {
@@ -190,13 +186,7 @@
             $('#description').addClass('error');
             $('#description').after(errorMessage('Please fill description'));
             }
-             if(!($('#authors').val())){
-                //alert(1);
-                 valid=0;
-                $('#authors').addClass('error');
-                $('#authors').after(errorMessage('Choose From Existing Tags'));
-              
-            }
+             
             
             if(!($('#Taglist').val())){
                 //alert(1);
@@ -406,7 +396,7 @@
                     <!--Text Area Resizable end-->
 
                     <!--Select Box with Filter Search begin-->
-                    <div  class="control-group row-fluid">
+                    <!--<div  class="control-group row-fluid">
                         <div class="span3">
                             <label class="control-label" for="category">Category</label>
                         </div>
@@ -421,7 +411,7 @@
                                 $("#category").select2();
                             });
                         </script>
-                    </div>
+                    </div>-->
                     <!--Select Box with Filter Search end-->
 
 

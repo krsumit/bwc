@@ -814,7 +814,7 @@
                             	<ul style="list-style:none;">
                                 	<li>							
                                     <label class="checkbox">
-                                        <input  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="71">
+                                        <input  type="checkbox" checked="checked" class="uniformCheckbox" name="rightArr[]" value="71">
                                        CMS Rights
                                     </label>
                                     </li>
