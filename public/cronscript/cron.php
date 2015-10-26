@@ -13,10 +13,11 @@ class Cron {
         $this->conn2 = new mysqli(LHOST, LUSER, LPASS, LDATABASE) or die($this->conn2->connect_errro);
     }
 
-    function migrateData() {
+    function migrateData($section) {
 		//$this->migrateArticleAuthor('1','2');exit;
         // print_r($arr);exit;
-        switch ($_GET['section']):
+       // echo $section;
+        switch ($section):
             case 'author':
                 $this->migrateAuthor();
                 break;
@@ -42,7 +43,7 @@ class Cron {
                 $this->migratePhotoshoot();
                 break;
             case 'quotesauthor':
-                $this-> migratequotesAuthor();
+                $this-> migratequotesCategory();
                 break;
            
             case 'tipstagcombinations':
@@ -408,11 +409,11 @@ class Cron {
                 $checkEventExistResultSet = $this->conn2->query("select event_id,title from event where event_id=$eventId");
                 if ($checkEventExistResultSet->num_rows > 0) { //echo 'test';exit;
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
-                    $eventUpdateStmt = $this->conn2->prepare("update event set title=?,description=?,imagepath=?,"
-                            . "start_date=?,end_date=?,start_time=?,end_time=?,venue=?,valid=?,created_at=?,"
+                    $eventUpdateStmt = $this->conn2->prepare("update event set title=?,description=?,imagepath=?,image_url=?,"
+                            . "start_date=?,end_date=?,start_time=?,end_time=?,	state=?, country=?,category=?,valid=?,created_at=?,"
                             . "updated_at=? where event_id=?") or die($this->conn->error);
-                    $eventUpdateStmt->bind_param('ssssssssissi', $eventRow['title'], $eventRow['description'], $eventRow['imagepath'], $eventRow['start_date'], 
-                            $eventRow['end_date'], $eventRow['start_time'], $eventRow['end_time'],$eventRow['venue'],$eventRow['valid'],
+                    $eventUpdateStmt->bind_param('ssssssssiisissi', $eventRow['title'], $eventRow['description'], $eventRow['imagepath'],$eventRow['image_url'], $eventRow['start_date'], 
+                            $eventRow['end_date'], $eventRow['start_time'], $eventRow['end_time'],$eventRow['state'],$eventRow['country'],$eventRow['category'],$eventRow['valid'],
                             $eventRow['created_at'],$eventRow['updated_at'],$eventId) or die($this->conn->error);
                     //echo $this->conn2->error;exit;
                     $eventUpdateStmt->execute()or die($this->conn->error);
@@ -421,9 +422,9 @@ class Cron {
                     if ($eventUpdateStmt->affected_rows)    
                         $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                 }else {//echo 'goint to insert';exit;
-                    $eventInsertStmt = $this->conn2->prepare("insert into event set event_id=?,title=?,description=?,imagepath=?,start_date=?,end_date=?,start_time=?,end_time=?,venue=?,valid=?,created_at=?,updated_at=?");
+                    $eventInsertStmt = $this->conn2->prepare("insert into event set event_id=?,title=?,description=?,imagepath=?,image_url=?,start_date=?,end_date=?,start_time=?,end_time=?,state=?,country=?,category=?,valid=?,created_at=?,updated_at=?");
                     //echo $this->conn2->error; exit;
-                    $eventInsertStmt->bind_param('issssssssiss', $eventRow['event_id'],$eventRow['title'], $eventRow['description'], $eventRow['imagepath'], $eventRow['start_date'], $eventRow['end_date'], $eventRow['start_time'], $eventRow['end_time'],$eventRow['venue'],$eventRow['valid'],$eventRow['created_at'],$eventRow['updated_at']);
+                    $eventInsertStmt->bind_param('issssssssiisiss', $eventRow['event_id'],$eventRow['title'], $eventRow['description'], $eventRow['imagepath'],$eventRow['image_url'], $eventRow['start_date'], $eventRow['end_date'], $eventRow['start_time'], $eventRow['end_time'],$eventRow['state'],$eventRow['country'],$eventRow['category'],$eventRow['valid'],$eventRow['created_at'],$eventRow['updated_at']);
                     $eventInsertStmt->execute();
                     if ($eventInsertStmt->affected_rows) {
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
@@ -437,7 +438,7 @@ class Cron {
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' author(s) inserted and ' . $_SESSION['noofupd'] . ' author(s) updated.</h5>';
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' event(s) inserted and ' . $_SESSION['noofupd'] . ' event(s) updated.</h5>';
     }
     function migrateTips() {
 	
@@ -629,7 +630,7 @@ function migratetipCategory() {
     
 function migrateQuotes() {
 	$this->migratequotesTage();
-	$this-> migratequotesAuthor();
+	$this-> migratequotesCategory();
 	//echo 'test';
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
@@ -653,7 +654,7 @@ function migrateQuotes() {
                 if ($checkQuotesExistResultSet->num_rows > 0) { //echo 'test';exit;
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
                     $quotesUpdateStmt = $this->conn2->prepare("update channel_quote set quote=?,quote_description=?,q_author_id=?,q_tags=?,valid=?,quote_update_at=?,quote_created_at=? where quote_id=?") or die($this->conn->error);
-                    $quotesUpdateStmt->bind_param('ssisissi', $quotesRow['quote'],$quotesRow['description'],$quotesRow['q_author_id'],$quotesRow['q_tags'],$quotesRow['valid'],$quotesRow['updated_at'],$quotesRow['created_at'],$quotesId) or die($this->conn->error);
+                    $quotesUpdateStmt->bind_param('ssisissi', $quotesRow['quote'],$quotesRow['description'],$quotesRow['q_category_id'],$quotesRow['q_tags'],$quotesRow['valid'],$quotesRow['updated_at'],$quotesRow['created_at'],$quotesId) or die($this->conn->error);
                     //echo $this->conn2->error;exit;
                     $quotesUpdateStmt->execute()or die($this->conn->error);
                     //print_r($tagUpdateStmt);exit;
@@ -663,7 +664,7 @@ function migrateQuotes() {
                 }else {//echo 'goint to insert';exit;
                     $quotesInsertStmt = $this->conn2->prepare("insert into channel_quote set quote_id=?,quote=?,quote_description=?,q_author_id=?,q_tags=?,valid=?,quote_update_at=?,quote_created_at=?");
                     //echo $this->conn2->error; exit;
-                    $quotesInsertStmt->bind_param('issisiss', $quotesRow['quote_id'],$quotesRow['quote'],$quotesRow['description'],$quotesRow['q_author_id'],$quotesRow['q_tags'],$quotesRow['valid'],$quotesRow['updated_at'],$quotesRow['created_at']);                   
+                    $quotesInsertStmt->bind_param('issisiss', $quotesRow['quote_id'],$quotesRow['quote'],$quotesRow['description'],$quotesRow['q_category_id'],$quotesRow['q_tags'],$quotesRow['valid'],$quotesRow['updated_at'],$quotesRow['created_at']);                   
                     //print_r($tipstagcombInsertStmt);exit;
                     //echo $tipstagcombInsertStmt->affected_rows;exit;
                      $quotesInsertStmt->execute();
@@ -685,31 +686,31 @@ function migrateQuotes() {
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' quotes(s) inserted and ' . $_SESSION['noofupd'] . ' quotes(s) updated.</h5>';
     }
 
-    function migratequotesAuthor() {
+    function migratequotesCategory() {
 	///echo 'test';
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='quotesauthor' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='quotescategory' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
         //echo "SELECT * FROM event  WHERE 1 $condition";exit;
-        $quotescategoryrResults = $this->conn->query("SELECT * FROM quotesauthor  WHERE 1 $condition");
+        $quotescategoryrResults = $this->conn->query("SELECT * FROM quotescategory  WHERE 1 $condition");
         //echo $quotescategoryrResults->num_rows;exit;
         if ($quotescategoryrResults->num_rows > 0) {
 
             while ($quotescategoryRow = $quotescategoryrResults->fetch_assoc()) {
                  //print_r($quotescategoryRow);exit;
-                $quotescategoryId = $quotescategoryRow['author_id'];
+                $quotescategoryId = $quotescategoryRow['cate_id'];
                // exit;
                 $checkquotesCategoryExistResultSet = $this->conn2->query("select author_id,author_name from quotesauthor where author_id=$tipscategoryId");
                 if ($checkquotesCategoryExistResultSet->num_rows > 0) { //echo 'test';exit;
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
                     $quotescategoryUpdateStmt = $this->conn2->prepare("update quotesauthor set author_name=?,valid=? where author_id=?") or die($this->conn->error);
-                    $quotescategoryUpdateStmt->bind_param('sii', $quotescategoryRow['author_name'],$quotescategoryRow['valid'],$tipscategoryId) or die($this->conn->error);
+                    $quotescategoryUpdateStmt->bind_param('sii', $quotescategoryRow['category'],$quotescategoryRow['valid'],$tipscategoryId) or die($this->conn->error);
                     //echo $this->conn2->error;exit;
                     $quotescategoryUpdateStmt->execute()or die($this->conn->error);
                     //print_r($tagUpdateStmt);exit;
@@ -719,7 +720,7 @@ function migrateQuotes() {
                 }else {//echo 'goint to insert';exit;
                     $quotescategoryInsertStmt = $this->conn2->prepare("insert into quotesauthor set author_id=?,author_name=?,valid=?");
                     //echo $this->conn2->error; exit;
-                    $quotescategoryInsertStmt->bind_param('isi', $quotescategoryRow['author_id'],$quotescategoryRow['author_name'],$quotescategoryRow['valid']);                   
+                    $quotescategoryInsertStmt->bind_param('isi', $quotescategoryRow['cate_id'],$quotescategoryRow['category'],$quotescategoryRow['valid']);                   
                     //print_r($tipstagcombInsertStmt);exit;
                     //echo $tipstagcombInsertStmt->affected_rows;exit;
                      $quotescategoryInsertStmt->execute();
@@ -734,11 +735,11 @@ function migrateQuotes() {
         }      
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='quotesauthor',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='quotescategory',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' quotesauthor(s) inserted and ' . $_SESSION['noofupd'] . ' quotesauthor(s) updated.</h5>';
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' quotescategory(s) inserted and ' . $_SESSION['noofupd'] . ' quotescategory(s) updated.</h5>';
     }
 function migratequotesTage() {
 	///echo 'test';
@@ -1038,7 +1039,7 @@ function migratequotesTage() {
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' author(s) inserted and ' . $_SESSION['noofupd'] . ' author(s) updated.</h5>';
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' magazine(s) inserted and ' . $_SESSION['noofupd'] . ' magazine(s) updated.</h5>';
     
     }
     
@@ -1118,14 +1119,14 @@ function migratequotesTage() {
         if ($quickBytesResults->num_rows > 0) {
                while ($quickBytesRow = $quickBytesResults->fetch_assoc()) {
                    $id=$quickBytesRow['id'];
-                   $checkResult = $this->conn2->query("select quick_byte_title from quick_bytes where quick_byte_id=$id");
+                   $checkResult = $this->conn2->query("select quick_byte_title from quick_bytes where quick_byte_id=$id") or die($this->conn2->error);
                     if ($checkResult->num_rows > 0) {
                         if($quickBytesRow['status']=='P'){
                              // updating quickbyte
                         }else{
                              // deleting quickbyte
-                                $delStmt = $this->conn2->prepare("delete from quickbyte where id=?");
-                                $delStmt->bind_param('i', $id);
+                                $delStmt = $this->conn2->prepare("delete from quick_bytes where quick_byte_id=?") or die ($this->conn2->error);
+                                $delStmt->bind_param('i', $id) or die ($this->conn2->error);
                                 $delStmt->execute();
                                 if ($delStmt->affected_rows) {
                                     $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
@@ -1142,10 +1143,10 @@ function migratequotesTage() {
                             //echo '<pre>';
                             //print_r($quickBytesRow);exit;
                              $insertStmt = $this->conn2->prepare("insert into quick_bytes set quick_byte_id=?,quick_byte_author_type=?,	"
-                                     . "quick_byte_author_id=?,quick_byte_title=?,quick_byte_description=?,quick_byte_sponsered=?,quick_byte_published_date=?");
+                                     . "quick_byte_author_id=?,quick_byte_title=?,quick_byte_description=?,quick_byte_sponsered=?,quick_byte_published_date=?") or die ($this->conn2->error) ;
                             $insertStmt->bind_param('iiissis',$quickBytesRow['id'],$quickBytesRow['author_type'],$quickBytesRow['author_id']
-                                    ,$quickBytesRow['title'],$quickBytesRow['description'],$quickBytesRow['sponsored'],$quickBytesRow['publish_date']);
-                            $insertStmt->execute();
+                                    ,$quickBytesRow['title'],$quickBytesRow['description'],$quickBytesRow['sponsored'],$quickBytesRow['publish_date']) or die ($this->conn2->error);
+                            $insertStmt->execute() or die ($this->conn2->error);
                             //print_r($articleInsertStmt);exit;
                             // echo $articleInsertStmt->insert_id;exit;    
                             if ($insertStmt->insert_id) {
@@ -1171,7 +1172,7 @@ function migratequotesTage() {
         }
         
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='article',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='quickbyte',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -1205,6 +1206,7 @@ function migratequotesTage() {
         $this->migrateCategory();
         $this->migrateTag();
         $this->migrateTopics();
+        $this->migrateMagazine();
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
@@ -1268,9 +1270,9 @@ function migratequotesTage() {
                         $status = 'published';
                         $articleInsertStmt = $this->conn2->prepare("insert articles set article_id=?,article_title=?,article_description=?,article_summary=?,"
                                 . "article_type=?,article_published_date=?,article_slug=?,article_status=?,important_article=?,display_to_homepage=?,is_exclusive=?,"
-                                . "magzine_issue_name=?,article_location_country=?,article_location_state=?");
-                        $articleInsertStmt->bind_param('isssisssiiiiii', $articleRow['article_id'], $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
-                                , $pubDate, $articleRow['slug'], $status, $articleRow['important'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'], $articleRow['country'], $articleRow['state']);
+                                . "magzine_issue_name=?,article_location_country=?,article_location_state=?,is_old=?");
+                        $articleInsertStmt->bind_param('isssisssiiiiiii', $articleRow['article_id'], $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
+                                , $pubDate, $articleRow['slug'], $status, $articleRow['important'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'], $articleRow['country'], $articleRow['state'],$articleRow['is_old']);
                         $articleInsertStmt->execute();
                         //print_r($articleInsertStmt);exit;
                         // echo $articleInsertStmt->insert_id;exit;    
@@ -1443,8 +1445,8 @@ function migrateFeaturImage($featurId,  $condition) {
     }
 
     function migrateArticleCategory($articleId, $isNew = 0, $condition) {
-        //$this->categoryMapping
-        //echo $articleId; 
+       // $this->categoryMapping
+       // echo $articleId.'   '.$isNew; exit;
         $catResultSet = '';
         if ($isNew == '1') {
             $articleCatRst = $this->conn->query("SELECT concat(`category_id`,'_',`level`) as catlevel,level FROM `article_category` WHERE  `article_id`='$articleId'");
@@ -1455,7 +1457,7 @@ function migrateFeaturImage($featurId,  $condition) {
                 $insertArticleCategoryStmt->close();
             }
         } else { 
-            $checkCatResult = $this->conn->query("select * from article_tags where article_id=$articleId $condition");
+            $checkCatResult = $this->conn->query("select * from article_category where article_id=$articleId $condition");
             if ($checkCatResult->num_rows > 0) {
                 $checkCatResult->close();
                 $this->conn2->query("delete from article_category where article_id=$articleId");
@@ -1539,10 +1541,10 @@ function migrateFeaturImage($featurId,  $condition) {
         if ($isNew == '1') {
             $articleImageResultset = $this->conn->query("select * from photos where owned_by='article' and owner_id=$articleId and valid='1'");
             while ($imageRow = $articleImageResultset->fetch_assoc()) {
-                $imInsertStmt = $this->conn2->prepare("insert into article_images set article_id=?,image_url=?,image_title=?"
+                $imInsertStmt = $this->conn2->prepare("insert into article_images set article_id=?,photopath=?,image_url=?,image_title=?"
                         . ",image_source_name=?,image_source_url=?,image_status=?");
                 $status = ($imageRow['active'] == '1') ? 'enabled' : 'disabled';
-                $imInsertStmt->bind_param('isssss', $imageRow['owner_id'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $status);
+                $imInsertStmt->bind_param('issssss', $imageRow['owner_id'],$imageRow['photopath'],$imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $status);
                 $imInsertStmt->execute();
                 $imInsertStmt->close();
             }
@@ -1557,10 +1559,10 @@ function migrateFeaturImage($featurId,  $condition) {
 
                 $articleImageResultset = $this->conn->query("select * from photos where owned_by='article' and owner_id=$articleId and valid='1'");
                 while ($imageRow = $articleImageResultset->fetch_assoc()) {
-                    $imInsertStmt = $this->conn2->prepare("insert into article_images set article_id=?,image_url=?,image_title=?"
+                    $imInsertStmt = $this->conn2->prepare("insert into article_images set article_id=?,photopath=?,image_url=?,image_title=?"
                             . ",image_source_name=?,image_source_url=?,image_status=?");
                     $status = ($imageRow['active'] == '1') ? 'enabled' : 'disabled';
-                    $imInsertStmt->bind_param('isssss', $imageRow['owner_id'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $status);
+                    $imInsertStmt->bind_param('issssss', $imageRow['owner_id'],$imageRow['photopath'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $status);
                     $imInsertStmt->execute();
                     $imInsertStmt->close();
                 }

@@ -88,25 +88,7 @@
     </header>
     <form class="form-horizontal" action="" method="get">
 
-        <div class="container-fluid">
-            <div class="form-legend" id="Notifications">Notifications</div>
-            <!--Notifications begin-->
-            <div class="control-group row-fluid">
-                <div class="span12 span-inset">
-                    @if (Session::has('message'))
-                    <div class="alert alert-success alert-block">
-                        <i class="icon-alert icon-alert-info"></i>
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>This is Success Notification</strong>
-                        <span>{{ Session::get('message') }}</span>
-                    </div>
-                      @endif  
-                    
-                </div>
-            </div>
-            <!--Notifications end-->
-
-        </div>
+       
 
         <div class="container-fluid">
 
@@ -246,11 +228,11 @@
                         <tbody>
                             @foreach($posts as $a)
                             <tr class="gradeX" id="rowCur{{$a->event_id}}">
-                                <td><a href="add-new-events.html">{{$a->event_id}}</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted by: Harish Dido Harish DidoDido. Submitted on: 11-03-2013."><i class="icon-photon info-circle"></i></a></td>
+                                <td><a href="/event/edit/?id={{$a->event_id}}">{{$a->event_id}}</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted by: Harish Dido Harish DidoDido. Submitted on: 11-03-2013."><i class="icon-photon info-circle"></i></a></td>
                                 <td><a href="/event/edit/?id={{$a->event_id}}">{{$a->title}}</a>
                                 </td>
-                                <td><a href="add-new-events.html"><input type="checkbox" class="uniformCheckbox" value="1" name="sponsored"></a></td>
-                                <td class="center"><a href="add-new-events.html">{{$a->name}}</a></td>
+                                <td><a href="/event/edit/?id={{$a->event_id}}">{{$a->category}}</a></td>
+                                <td class="center"><a href="/event/edit/?id={{$a->event_id}}">{{$a->name}}</a></td>
                                 <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$a->event_id}}" name="checkItem[]"></td>
                             </tr>
                             @endforeach
@@ -261,9 +243,9 @@
             </div>
             <!--Sortable Non-responsive Table end-->
 
-<div class="dataTables_paginate paging_bootstrap pagination">
+ <div class="dataTables_paginate paging_bootstrap pagination">
                     
-                
+                 {!! $posts->appends(Input::get())->render() !!}
                 </div>
             <script>
                $(document).ready(function () {

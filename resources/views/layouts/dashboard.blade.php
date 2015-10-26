@@ -34,45 +34,42 @@
         <div class="widget-area widget-general-stats widget-front">
             <div class="widget-head">
                 Content Stats
-                <div>
-                    <a href="javascript:;" onClick="flipit(this)"><i class='icon-photon cog'></i></a>
-                    <img src="images/photon/w_arrows@2x.png" alt="Arrows"/>
-                </div>
+                
             </div>
             <ul>
                 <li>
-                    <span>3,000</span>&nbsp;Articles Published
+                    Articles Published
                     <div>
-                        <span>+0.6%</span>
-                        <img src="images/photon/w_arrow_green@2x.png" alt="Arrow up"/>
+                        <span>{{$article_publish}}</span>
+                       
                     </div>
                 </li>
                 <li>
-                    <span>2,000 </span>&nbsp;Quick Bytes Published
+                    Quick Bytes Published
                     <div>
-                        <span>+1.4%</span>
-                        <img src="images/photon/w_arrow_green@2x.png" alt="Arrow up"/>
+                        <span>{{$quickbyte_publish}}</span>
+                        
                     </div>
                 </li>
                 <li>
-                    <span>1,000</span>&nbsp;Videos Published
+                    Videos Published
                     <div>
-                        <span>-0.9%</span>
-                        <img src="images/photon/w_arrow_red@2x.png" alt="Arrow up"/>
+                        <span>{{$videos_publish}}</span>
+                       
                     </div>
                 </li>
                 <li>
-                    <span>200</span>&nbsp;Photos Published
+                   Photos Published
                     <div>
-                        <span>+2.8%</span>
-                        <img src="images/photon/w_arrow_green@2x.png" alt="Arrow up"/>
+                        <span>{{$photos_publish}}</span>
+                        
                     </div>
                 </li>
                 <li>
-                    <span>100</span>&nbsp;Columns Published
+                   Columns Published
                     <div>
-                        <span>-0.6%</span>
-                        <img src="images/photon/w_arrow_red@2x.png" alt="Arrow up"/>
+                        <span>{{$columns_publish}}</span>
+                       
                     </div>
                 </li>
             </ul>
@@ -249,6 +246,7 @@
                 <div class='avatar-section'>
                     <img class='avatar-big' src='images/photon/user2.jpg' alt='profile' />
                 </div>
+               
                 <div class='text-section'>
                     <span class='user-name'>Lakshman</span>
                     <span class='user-location'>Chennai, India</span>
@@ -260,47 +258,24 @@
 
             <div class="widget-head">
                 Top Writers
-                <div>
-                    <a href="javascript:;" onClick="flipit(this)"><i class='icon-photon cog'></i></a>
-                    <img src="images/photon/w_latest@2x.png" alt="latest users"/>
-                </div>
+                
             </div>
             <ul>
+                @foreach($posts as $writers)
                 <li  >
                     <div class="avatar-image"  >
-                        <img src="images/photon/user1.jpg" alt="profile"/>
+                       @if($writers->photo)
+                        <img src="{{$writers->photo}}" alt="profile"/>
+                        @else
+                         <img src="images/photon/author_dummy.png" alt="profile"/>
+                        @endif
                     </div>
-                    <span>Vaibhav Kumar</span> 
+                    <span>{{$writers->name}}</span> 
+                    <span style="display: none">{{$writers->email}}</br>{{$writers->mobile}}<br/>Registred: {{$writers->created_at}}</span> 
                     <!--<div>5 mins</div>-->
                 </li>
-                <li  >
-                    <div class="avatar-image" >
-                        <img src="images/photon/user2.jpg" alt="profile"/>
-                    </div>
-                    <span>Rajesh Partap</span> 
-                  <!--  <div>17 mins</div>-->
-                </li>
-                <li >
-                    <div class="avatar-image" >
-                        <img src="images/photon/user3.jpg" alt="profile"/>
-                    </div>
-                    <span>Ravinder Ganesh Prasad</span> 
-                   <!-- <div>25 mins</div>-->
-                </li>
-                <li >
-                    <div class="avatar-image" >
-                        <img src="images/photon/user4.jpg" alt="profile"/>
-                    </div>
-                    <span>Ramesh Gupta</span> 
-                   <!-- <div>2 hrs</div>-->
-                </li>
-                <li onMouseOver="show5()" onMouseOut="hide5()">
-                    <div class="avatar-image" >
-                        <img src="images/photon/user5.jpg" alt="profile"/>
-                    </div>
-                    <span>Arun Kumar</span> 
-                  <!--  <div>4 hrs</div>-->
-                </li>
+                @endforeach
+                
             </ul>
         </div>
                

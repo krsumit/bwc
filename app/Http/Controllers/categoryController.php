@@ -49,7 +49,7 @@ public function subcategoryindex()
            $queryed = $_GET['keyword'];
             $posts = DB::table('category_two')
                 ->join('category', 'category.category_id', '=', 'category_two.category_id')
-                ->join('users', 'users.id', '=', 'category.user_id')
+                ->join('users', 'users.id', '=', 'category_two.user_id')
 		->select('category_two.*','category.category_id','users.id','users.name as userssname')
                 ->where('category_two.valid', '=', '1')  
                 ->where('category_two.name', 'LIKE', '%'.$queryed.'%')
@@ -59,7 +59,7 @@ public function subcategoryindex()
         else{
         $posts = DB::table('category_two')
                 ->join('category', 'category.category_id', '=', 'category_two.category_id')
-                ->join('users', 'users.id', '=', 'category.user_id')
+                ->join('users', 'users.id', '=', 'category_two.user_id')
 		->select('category_two.*','category.category_id','users.id','users.name as userssname')
                 ->where('category_two.valid', '=', '1')   
 		->get();
@@ -76,7 +76,7 @@ public function subcategoryindex()
             $posts = DB::table('category_three')
                 ->join('category_two', 'category_two.category_two_id', '=', 'category_three.category_two_id')
                 ->join('category', 'category.category_id', '=', 'category_two.category_id')
-                ->join('users', 'users.id', '=', 'category.user_id')
+                ->join('users', 'users.id', '=', 'category_three.user_id')
 		->select('category_three.*','category_two.category_two_id','category.category_id','users.id','users.name as userssname')
                 ->where('category_three.valid', '=', '1')  
                 ->where('category_three.name', 'LIKE', '%'.$queryed.'%')
@@ -88,7 +88,7 @@ public function subcategoryindex()
          $posts = DB::table('category_three')
                 ->join('category_two', 'category_two.category_two_id', '=', 'category_three.category_two_id')
                 ->join('category', 'category.category_id', '=', 'category_two.category_id')
-                ->join('users', 'users.id', '=', 'category.user_id')
+                ->join('users', 'users.id', '=', 'category_three.user_id')
 		->select('category_three.*','category_two.category_two_id','category.category_id','users.id','users.name as userssname')
                 ->where('category_three.valid', '=', '1') 
 		->get();
@@ -106,7 +106,7 @@ public function subcategoryindex()
                 ->join('category_three', 'category_three.category_three_id', '=', 'category_four.category_three_id')     
                 ->join('category_two', 'category_two.category_two_id', '=', 'category_three.category_two_id')
                 ->join('category', 'category.category_id', '=', 'category_two.category_id')
-                ->join('users', 'users.id', '=', 'category.user_id')
+                ->join('users', 'users.id', '=', 'category_four.user_id')
 		->select('category_four.*','category_three.category_three_id','category_two.category_two_id','category.category_id','users.id','users.name as userssname')
                 ->where('category_four.valid', '=', '1')  
                 ->where('category_four.name', 'LIKE', '%'.$queryed.'%')
@@ -118,7 +118,7 @@ public function subcategoryindex()
                 ->join('category_three', 'category_three.category_three_id', '=', 'category_four.category_three_id')     
                 ->join('category_two', 'category_two.category_two_id', '=', 'category_three.category_two_id')
                 ->join('category', 'category.category_id', '=', 'category_two.category_id')
-                ->join('users', 'users.id', '=', 'category.user_id')
+                ->join('users', 'users.id', '=', 'category_four.user_id')
 		->select('category_four.*','category_three.category_three_id','category_two.category_two_id','category.category_id','users.id','users.name as userssname')
                 ->where('category_four.valid', '=', '1')
 		->get();
@@ -153,27 +153,28 @@ public function subcategoryindex()
         
         $category_id = $request->pt_id;
         $name = $request->addsubcategory;
+         $id = Auth::id();
         $valid = '1';
         $created_at=date('Y-m-d H:i:s');
         $updated_at=date('Y-m-d H:i:s');
        DB::table('category_four')->insert(
-        ['category_three_id' => $category_id, 'name' => $name,'valid'=>$valid,'created_at'=>$created_at,'updated_at'=>$updated_at ]
+        ['category_three_id' => $category_id, 'name' => $name,'user_id'=>$id,'valid'=>$valid,'created_at'=>$created_at,'updated_at'=>$updated_at ]
         );
 
         Session::flash('message', 'Your data has been successfully add.');
         $url= 'sub-category_third_master/add/?name='.$parantname.'&id='.$category_id;
         return Redirect::to($url);
-       }
-        if($request->ps_id){
+       }elseif($request->ps_id){
         $parantname = $request->ps_name ; 
         
         $category_id = $request->ps_id;
         $name = $request->addsubcategory;
+        $id = Auth::id();
         $valid = '1';
         $created_at=date('Y-m-d H:i:s');
         $updated_at=date('Y-m-d H:i:s');
        DB::table('category_three')->insert(
-        ['category_two_id' => $category_id, 'name' => $name,'valid'=>$valid,'created_at'=>$created_at,'updated_at'=>$updated_at ]
+        ['category_two_id' => $category_id, 'name' => $name, 'user_id'=>$id,'valid'=>$valid,'created_at'=>$created_at,'updated_at'=>$updated_at ]
         );
 
         Session::flash('message', 'Your data has been successfully add.');
@@ -184,11 +185,12 @@ public function subcategoryindex()
         
         $category_id = $request->p_id;
         $name = $request->addsubcategory;
+        $id = Auth::id();
         $valid = '1';
         $created_at=date('Y-m-d H:i:s');
         $updated_at=date('Y-m-d H:i:s');
        DB::table('category_two')->insert(
-        ['category_id' => $category_id, 'name' => $name,'valid'=>$valid,'created_at'=>$created_at,'updated_at'=>$updated_at ]
+        ['category_id' => $category_id, 'name' => $name,'user_id'=>$id,'valid'=>$valid,'created_at'=>$created_at,'updated_at'=>$updated_at ]
         );
 
         Session::flash('message', 'Your data has been successfully add.');

@@ -76,8 +76,13 @@ class campaingController extends Controller
         if($request->cid){
             $channel_id = $request->channel;
             $title = $request->title;
-             $description = $request->description;
-            $imageurled =$request->p_photo;
+            $description = $request->description;
+            if(! empty($imageurl)){
+               $imageurled  = $imageurl;
+               }else{
+                  $imageurled  = $request->p_photo; 
+               }
+           
             $valid = '1';
             $postdata = [
 			'channel_id' => $channel_id ,
@@ -92,13 +97,18 @@ class campaingController extends Controller
         DB::table('campaign')
             ->where('campaign_id',$request->cid)
             ->update($postdata);
-            
+             Session::flash('message', 'Your data has been successfully modiffy.');
         }else{
         
         $channel_id = $request->channel;
         $title = $request->title;
         $description = $request->description;
-        $imageurled =$imageurl;
+        if(! empty($imageurl)){
+               $imageurled  = $imageurl;
+               }else{
+                  $imageurled  = $request->p_photo; 
+               }
+           
         $valid = '1';
         $created_at=date('Y-m-d H:i:s');
         $updated_at=date('Y-m-d H:i:s');

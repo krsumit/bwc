@@ -32,7 +32,7 @@
                 </form>
             </div>
              <label class="radio">
-                <input type="radio" id="seacrchname" @if(isset($_GET['keyword'])) @if($_GET['keyword']!='') checked @endif @endif required name="searchin"  class="uniformRadio">
+                <input type="radio" id="seacrchname" checked @if(isset($_GET['keyword'])) @if($_GET['keyword']!='') checked @endif @endif required name="searchin"  class="uniformRadio">
                 Search by Columnist Name
             </label>
             <label class="radio">

@@ -213,7 +213,7 @@ class AuthorsController extends Controller
         $bio = $request->bio;
         $email = $request->email;
         $mobile = $request->mobile;
-        if($imageurl!=''){
+        if(! empty($imageurl)){
         $photo = $imageurl;
         }else{
             $photo = $request->photoset; 
@@ -304,6 +304,11 @@ class AuthorsController extends Controller
         $author->email = $request->email;
         $author->mobile = $request->mobile;
         $author->photo = $imageurl;
+        if(! empty($imageurl)){
+        $author->photo = $imageurl;
+        }else{
+            $author->photo = $request->photoset; 
+        }
         //$author->photo = $request->photo;
         $author->twitter = $request->twitter;
 

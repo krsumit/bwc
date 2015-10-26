@@ -39,10 +39,12 @@ class QuotesController extends Controller
         //$asd = fopen("/home/sudipta/log.log", 'a+');
 
         $channels = QuotesController::getUserChannels($uid);
+        
+        $quotetags = DB::table('quotetags')->where('valid','1')->get();
+        $qtauthor = DB::table('quotescategory')->where('valid','1')->get();
+        
         $quoteArr = QuotesController::getQuotesforUser($channels);
         $tagArr = QuotesController::getTagsforQuotes($quoteArr);
-        $quotetags = DB::table('quotetags')->where('valid','1')->get();
-        $qtauthor = DB::table('quotesauthor')->where('valid','1')->get();
 
   //      fwrite($asd, " Values of Q Arr: ".count($quoteArr)." Data: \n\n");
     //    fclose($asd);
@@ -112,9 +114,9 @@ class QuotesController extends Controller
 
         foreach ($channels as $ch) {
             $channelQuotes = Quote::where('channel_id', $ch->channel_id)
-                ->join('quotesauthor', 'quotes.q_author_id', '=', 'quotesauthor.author_id')
-                ->where('quotes.valid', '1')
-                ->select('quotes.*', 'quotesauthor.author_name')
+                ->join('quotescategory', 'quotes.q_category_id', '=', 'quotescategory.cate_id')             
+                ->select('quotes.*', 'quotescategory.category')
+                 ->where('quotes.valid', '1')
                 ->get();
 
             $quoteArr[$ch->channel_id] = $channelQuotes;
@@ -146,7 +148,7 @@ class QuotesController extends Controller
 
         $Quote->quote = $request->quote;
         $Quote->description = $request->description;
-        $Quote->q_author_id = $request->authors;
+        $Quote->q_category_id = $request->category;
         $Quote->channel_id = $request->channel_sel;
         $Quote->valid = '1';
         $Quote->q_tags = $request->Taglist;
@@ -157,7 +159,7 @@ class QuotesController extends Controller
         // To Reload Quote Page -
         $channels = QuotesController::getUserChannels($uid);
         $quoteArr = QuotesController::getQuotesforUser($channels);
-        $qtauthor = DB::table('quotesauthor')->where('valid','1')->get();
+        $qtauthor = DB::table('quotescategory')->where('valid','1')->get();
         $tagArr = QuotesController::getTagsforQuotes($quoteArr);
         $quotetags = DB::table('quotetags')->where('valid','1')->get();
 
@@ -190,8 +192,8 @@ class QuotesController extends Controller
         }
         //fwrite($asd, " EDIT ID Passed ::" .$id  . "\n\n");
         $editQuote = Quote::where('quote_id',$id)
-            ->join('quotesauthor','quotes.q_author_id','=','quotesauthor.author_id')
-            ->select('quotes.*','quotesauthor.author_name')
+            ->join('quotescategory','quotes.q_category_id','=','quotescategory.cate_id')
+            ->select('quotes.*','quotescategory.category')
             ->get();
 
         //fwrite($asd, " Total Array QTAG: ".$editQuote[0]." \n\n");

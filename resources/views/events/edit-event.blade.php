@@ -105,7 +105,7 @@
 
     </header>
    @foreach($posts as $a)
-    <form class="form-horizontal" action="/event/add" method="POST"enctype= "multipart/form-data"  onsubmit="return validateEventData()">
+    <form class="form-horizontal" action="/event/update" method="POST"enctype= "multipart/form-data"  onsubmit="return validateEventData()">
         <div class="container-fluid">
             {!! csrf_field() !!}
             <div class="form-legend" id="Notifications">Notifications</div>
@@ -120,7 +120,7 @@
                         <strong>This is Success Notification</strong>
                         <span>{{ Session::get('message') }}</span>
                     </div>
-                      @endif  
+                      @endif 
                     
                 </div>
             </div>
@@ -203,7 +203,7 @@
                 </div>
                 <div class="span9">
                     <div class="controls">
-                        <input id="url" type="text" name="url"value="{{$a->image_url}}" />
+                        <input id="url" type="text" name="url" value="{{$a->image_url}}" />
                     </div>
                 </div>
             </div>
@@ -212,6 +212,7 @@
                     <label class="control-label">Event Type</label>
                 </div>
                 <input type="hidden" name="p_photo" value="{{$a->imagepath}}">
+                <input type="hidden" name="editevent_id" value="{{$a->event_id}}">
             <div class="span9">
                     <div class="controls">
                         <select name="category" id="selectBoxFilter20">

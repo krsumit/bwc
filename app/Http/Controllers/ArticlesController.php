@@ -229,21 +229,25 @@ class ArticlesController extends Controller
             $canAccess = 1;
             //fwrite($asd, " Has no right ::" . $uid . " user_id :" . $article_userid . " \n");
         }else{
-            foreach($rights as $right) {
+			//echo '<pre>';
+			//print_r($rights);
+			$canAccess = 0;
+			            foreach($rights as $right) {
                 //Check if has right for Edit Article
                 //fwrite($asd, "TWO Has no right ::" . $uid . " user_id :" . $right->label . " \n");
-                if ($right->label == 'editArticle') {
+                if ($right->label == 'editArticle') { //echo 'passed';; exit;
                     //If has right - Continue
                     $canAccess = 1;
                     //fwrite($asd, " Has  ::" . $uid . " user_id :" . $article_userid . " \n");
-                }else{
-                    $canAccess = 0;
                 }
+                /*else{
+                    $canAccess = 0;
+                }*/
             }
         }
         //fwrite($asd, " Return value ::" . $uid . " user_id :" . $canAccess . " \n");
        // fclose($asd);
-
+	//echo $canAccess;exit;
         return $canAccess;
     }
 

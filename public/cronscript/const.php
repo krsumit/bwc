@@ -1,7 +1,7 @@
 <?php
 define('HOST','cmsdb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com');
 define('USER','bwcms');
-define('PASS','bwpassword');
+define('PASS','bwpassword2015');
 define('DATABASE','bwcms');
 
 

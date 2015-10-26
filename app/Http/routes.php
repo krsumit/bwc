@@ -19,8 +19,38 @@ Route::get('/', function () {
 });
 */
 Route::get('/dashboard', function () {
-    // return view('welcome');
-    return view('layouts.dashboard');
+ $posts = DB::table('articles')
+        ->join('article_author', 'article_author.article_id', '=', 'articles.article_id')
+        ->join('authors', 'article_author.author_id', '=', 'authors.author_id')
+        ->select('articles.article_id','article_author.author_id','article_author.article_id','authors.*'  ) 
+        ->where('articles.status', '=', 'p')  
+        ->orderBy('articles.article_id', 'desc')
+        ->groupBy('authors.author_id')
+        ->take(5)->get();
+ 
+ $article_publish = DB::table('articles')
+         ->select('articles.*')
+         ->where('articles.status', '=', 'p')  
+         ->count();
+ $quickbyte_publish = DB::table('quickbyte')
+         ->select('quickbyte.*')
+         ->where('quickbyte.status', '=', 'p')  
+         ->count();
+ 
+ $columns_publish = DB::table('columns')
+         ->select('columns.*')
+         ->where('columns.valid', '=', '1')  
+         ->count();
+ $photos_publish = DB::table('photos')
+         ->select('photos.*')
+         ->where('photos.valid', '=', '1')  
+         ->count();
+ $videos_publish = DB::table('videos')
+         ->select('videos.*')
+         ->where('videos.valid', '=', '1')  
+         ->count();
+ 
+    return view('layouts.dashboard',compact('posts','article_publish','quickbyte_publish','columns_publish','photos_publish','videos_publish') );
 });
 
 Route::get('/notlog', function () {
@@ -233,6 +263,7 @@ Route::match(['get', 'post'], 'event/add', ['as' => 'event/add', 'uses' => 'even
 Route::match(['get', 'post'], 'event/published', ['as' => 'event/published', 'uses' => 'eventController@published']);
 Route::match(['get', 'post'], 'event/edit', ['as' => 'event/edit', 'uses' => 'eventController@edit']);
 Route::match(['get', 'post'], 'event/delete', ['as' => 'event/delete', 'uses' => 'eventController@destroy']);
+Route::match(['get', 'post'], 'event/update', ['as' => 'event/update', 'uses' => 'eventController@update']);
 
 
 

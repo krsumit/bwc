@@ -12,45 +12,14 @@
                 <h1><small>Quotes</small></h1>
             </div>
             <div class="panel-search container-fluid">
-                <form action="javascript:;" class="form-horizontal">
-                    <input type="text" name="panelSearch" placeholder="Search by Tags Name" id="panelSearch" class="ui-autocomplete-input" autocomplete="off"><span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span><span class="ui-helper-hidden-accessible" aria-live="polite" role="status"></span><span role="status" aria-live="polite" class="ui-helper-hidden-accessible"></span>
-                    <button class="btn btn-search"></button>
-                    <script>
-                        $().ready(function(){
-                            var searchTags = [
-                                "Dashboard",
-                                "Form Elements",
-                                "Graphs and Statistics",
-                                "Typography",
-                                "Grid",
-                                "Tables",
-                                "Maps",
-                                "Sidebar Widgets",
-                                "Error Pages",
-                                "Help",
-                                "Input Fields",
-                                "Masked Input Fields",
-                                "Autotabs",
-                                "Text Areas",
-                                "Select Menus",
-                                "Other Form Elements",
-                                "Form Validation",
-                                "UI Elements",
-                                "Graphs",
-                                "Statistical Elements",
-                                "400 Bad Request",
-                                "401 Unauthorized",
-                                "403 Forbidden",
-                                "404 Page Not Found",
-                                "500 Internal Server Error",
-                                "503 Service Unavailable"
-                            ];
-                            $( "#panelSearch" ).autocomplete({
-                                source: searchTags
-                            });
-                        });
-                    </script>
-                </form>
+               <form class="form-horizontal" method="get" action="">
+                    <input id="panelSearch" required  placeholder="Search" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">
+                    <button class="btn btn-search" type="submit"></button>
+                     @if(isset($_GET['keyword'])) 
+                     <a href="quotes"><button class="btn btn-default" type="button">Reset</button></a>
+                   @endif
+
+             </form>
             </div>
 
             <br><br>
@@ -104,8 +73,8 @@
                                 $.each(one, function(ind, ele) {
                                     $.each(ele, function(index, element) {
                                       
-                                        //alert(index);
-                                          //alert(element);
+                                        alert(index);
+                                          alert(element);
                                         //alert(element);
                                         if (index == 'quote_id') {
                                            
@@ -119,9 +88,10 @@
                                             
                                             $('#description').val(element);
                                         }
-                                        if (index == 'q_author_id') {
-                                            $('#authors').val(element);
-                                            $("#authors").select2();
+                                        if (index == 'category') {
+                                          
+                                             $("#authors").tokenInput("add", element);
+                                           
                                         }
                                        if (index == 'tag') {  
                                              //var p="";
@@ -438,23 +408,14 @@
                     <!--Select Box with Filter Search begin-->
                     <div  class="control-group row-fluid">
                         <div class="span3">
-                            <label class="control-label" for="category">Authors</label>
+                            <label class="control-label" for="category">Category</label>
                         </div>
                         <div class="span9">
                             <div class="controls">
-                                 <input type="text" class="valid" name="authors" id="authors"/>
+                                 <input type="text" class="valid" name="category" id="authors"/>
                             </div>
                         </div>
-                        <!---<div class="span9">
-                            <div class="controls">
-                                <select name="authors" id="authors">
-                                    <option selected="" value="">---- Please Select ----</option>
-                                    @foreach($qtauthor as $tc)
-                                        <option value="{{$tc->author_id}}">{{$tc->author_name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>-->
+                       
                         <script>
                             $().ready(function(){
                                 $("#category").select2();
@@ -490,11 +451,11 @@
                                 </div>
                             </div>
 
-							<div class="span12 span-inset">
-							  <div style="float:right; width:11%; margin-bottom:5px;"><button type="button" id="attachTag"  class="btn btn-primary" style="display:block;">Attach</button>
-							  <img src="images/photon/preloader/76.gif" alt="loader" style="width:50%; display:block; margin-left:15px; display:none;""></div>
+			<div class="span12 span-inset">
+                            <div style="float:right; width:11%; margin-bottom:5px;"><button type="button" id="attachTag"  class="btn btn-primary" style="display:block;">Attach</button>
+                            <img src="images/photon/preloader/76.gif" alt="loader" style="width:50%; display:block; margin-left:15px; display:none;""></div>
                        
-							</div>
+			</div>
                        </div>
                     <!--</div>-->
                     <!--Select Box with Filter Search end-->

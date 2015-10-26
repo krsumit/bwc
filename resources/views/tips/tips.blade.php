@@ -453,7 +453,7 @@
             </div>
         </div>
         <!--Sortable Non-responsive Table end-->
-        {!! $tipArr->appends(['sort' => 'votes'])->render() !!}
+       
 
         <script>
                     $(document).ready(function() {

@@ -112,7 +112,7 @@ class QuoteTagsController extends Controller
         $matchText = $_GET['q'];
        
         //->all()
-        $rst = DB::table('quotesauthor')->where('author_name', "like", $matchText . '%')->select('author_id as id', 'author_name as name')->get();
+        $rst = DB::table('quotescategory')->where('category', "like", $matchText . '%')->select('cate_id as id', 'category as name')->get();
           return response()->json($rst);
     }
 

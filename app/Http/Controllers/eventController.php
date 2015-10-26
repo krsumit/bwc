@@ -22,24 +22,7 @@ class eventController extends Controller
     public function index()
     {
         
-       if(isset($_GET['keyword'])){
-            $queryed = $_GET['keyword'];
-            $posts = DB::table('category')
-                ->join('users', 'users.id', '=', 'category.user_id')
-		->select('category.*','category.category_id','users.id','users.name as userssname'  )
-                ->where('category.valid', '=', '1')
-                ->where('category.name', 'LIKE', '%'.$queryed.'%')
-		->get();
-          
-        }
-        else{
-        $posts = DB::table('category')
-                ->join('users', 'users.id', '=', 'category.user_id')
-		->select('category.*','category.category_id','users.id','users.name as userssname'  )
-                ->where('category.valid', '=', '1')   
-		->get();
-        //print_r($posts);
-        } 
+       
         $country = Country::where('valid','=','1')->get();
         $states = State::where('valid','=','1')->orderBy('name')->get();
         return view('events.add-new-events',compact('states','country'));
@@ -82,17 +65,19 @@ class eventController extends Controller
         $channel_id = $request->channel;
         $title = $request->title;
         $description = $request->descripation;
+        if(! empty($imageurl)){
         $photo = $imageurl;
+        }else{
+           $photo = ''; 
+        }
         $start_date = date("Y-m-d", strtotime($request->startdate));
         $end_date = date("Y-m-d", strtotime($request->enddate));
         $url = $request->url;
         $country=$request->country;
         $state= $request->state;
-        if(!empty($request->category)){
+        
         $sponsored = $request->category;
-        }else{
-           $sponsored = '0'; 
-        }
+        
         $start_time = $request->hours.':'.$request->minutes;
         $end_time = $request->endhours.':'.$request->endminutes;
         $venue=$request->venue;
@@ -125,7 +110,7 @@ class eventController extends Controller
                ->select('event.*','country_states.name'  )
                 ->where('event.valid', '=', '1')
                 ->where('event.title', 'LIKE', '%'.$queryed.'%')
-		->get();
+		->paginate(10);
             //print_r($posts);die;
           
         }elseif(isset($_GET['country'])||isset($_GET['state'])||isset($_GET['startdate'])||isset($_GET['enddate'])) { 
@@ -158,7 +143,7 @@ class eventController extends Controller
                
                   }
                  //echo $q->count();
-		$posts= $q->get();
+		$posts= $q->paginate(10);
                 // print_r($posts); die;
                   }else{
         
@@ -167,7 +152,7 @@ class eventController extends Controller
                ->join('country_states', 'country_states.state_id', '=', 'event.state')
                ->select('event.*','country_states.name'  )
                 ->where('event.valid', '=', '1')   
-		->get();
+		->paginate(10);
         //print_r($posts);die;
                   }
         $country = Country::where('valid','=','1')->get();
@@ -210,9 +195,64 @@ class eventController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        
+       $validation = Validator::make($request->all(), [
+            //'caption'     => 'required|regex:/^[A-Za-z ]+$/',
+            //'description' => 'required',
+            'photo'     => 'image|mimes:jpeg,png|min:1|max:250'
+        ]);
+       if($request->file('photo')){ // echo 'test';exit;
+        $file = $request->file('photo');
+       // echo $file; exit;
+        //$is_it = '1';
+        //$is_it = is_file($file);
+        //$is_it = '1';
+        $filename = str_random(6).'_'.$request->file('photo')->getClientOriginalName();
+        //$name = $request->title;
+        //var_dump($file);
+        //$l = fopen('/home/sudipta/check.log','a+');
+        //fwrite($l,"File :".$filename." Name: ".$name);
+
+        $destination_path = 'uploads/';
+
+        //$filename = str_random(6).'_'.$request->file('photo')->getClientOriginalName();
+        //$filename = "PHOTO";
+        $file->move($destination_path, $filename);
+        $imageurl=url($destination_path . $filename);
+        } 
+        $channel_id = $request->channel;
+        $title = $request->title;
+        $description = $request->descripation;
+        if(! empty($imageurl)){
+        $photo = $imageurl;
+        }else{
+           $photo = $request->p_photo; 
+        }
+        $start_date = date("Y-m-d", strtotime($request->startdate));
+        $end_date = date("Y-m-d", strtotime($request->enddate));
+        $url = $request->url;
+        $country=$request->country;
+        $state= $request->state;
+        
+        $sponsored = $request->category;
+        
+        $start_time = $request->hours.':'.$request->minutes;
+        $end_time = $request->endhours.':'.$request->endminutes;
+        $venue=$request->venue;
+        $valid = '1';
+        $created_at=date('Y-m-d H:i:s');
+        $updated_at=date('Y-m-d H:i:s');
+         $postdata = ['title' => $title, 'description' => $description,'channel_id'=>$channel_id,'imagepath'=>$photo,'start_date'=>$start_date,'end_date'=>$end_date,'start_time'=>$start_time,'end_time'=>$end_time,'country'=>$country,'state'=>$state,'image_url'=>$url,'category'=>$sponsored,'valid'=>$valid,'created_at'=>$created_at,'updated_at'=>$updated_at ];
+        DB::table('event')
+            ->where('event_id',$request->editevent_id)
+            ->update($postdata);
+            $url ='/event/edit/?id='.$request->editevent_id;
+
+        Session::flash('message', 'Your data has been successfully modiffy.');
+        return Redirect::to( $url);
+ 
     }
 
     /**
