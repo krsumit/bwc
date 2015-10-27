@@ -73,17 +73,14 @@
                                 $.each(one, function(ind, ele) {
                                     $.each(ele, function(index, element) {
                                       
-                                        alert(index);
-                                          alert(element);
+                                        //alert(index);
+                                         // alert(element);
                                         //alert(element);
                                         if (index == 'quote_id') {
                                            
                                             $('#qid').val(element);
                                         }
-                                        if (index == 'quote') {
-                                            
-                                            $('#quote').val(element);
-                                        }
+                                        
                                         if (index == 'description') {
                                             
                                             $('#description').val(element);
@@ -187,7 +184,6 @@
             $('#description').after(errorMessage('Please fill description'));
             }
              
-            
             if(!($('#Taglist').val())){
                 //alert(1);
                  valid=0;
@@ -247,18 +243,12 @@
                                 theme: "facebook",
                                 searchDelay: 300,
                                 minChars: 4,
+                                tokenLimit:1,
                                 preventDuplicates: true,
                                 
                                 
                         });
-                         $("#authors").tokenInput("/author/getJson", {
-                                theme: "facebook",
-                                searchDelay: 300,
-                                minChars: 2,
-                                preventDuplicates: true,
-                                
-                                
-                        });
+                         
                         });
                                
             </script>
@@ -371,21 +361,12 @@
                     </div>
                 </div>
                 <div id="add_new">
-                    <div class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label">Quote </label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls" id="quotenew">
-                                <input type="text" name="quote" id="quote">
-                            </div>
-                        </div>
-                    </div>
+                    
 
                     <!--Text Area Resizable begin-->
                     <div id="Text_Area_Resizable" class="control-group row-fluid">
                         <div class="span3">
-                            <label class="control-label">Description</label>
+                            <label class="control-label">Quote</label>
                         </div>
                         <div class="span9">
                             <div class="controls">
@@ -396,22 +377,7 @@
                     <!--Text Area Resizable end-->
 
                     <!--Select Box with Filter Search begin-->
-                    <!--<div  class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label" for="category">Category</label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls">
-                                 <input type="text" class="valid" name="category" id="authors"/>
-                            </div>
-                        </div>
-                       
-                        <script>
-                            $().ready(function(){
-                                $("#category").select2();
-                            });
-                        </script>
-                    </div>-->
+                  
                     <!--Select Box with Filter Search end-->
 
 
@@ -470,7 +436,7 @@
                             <thead>
                             <tr>
                                 <th>Quote No.</th>
-                                <th>Category</th>
+                                
                                 <th>Quotes</th>
                                 <th>Tag</th>
                                 <th>Action</th>
@@ -481,8 +447,8 @@
                                 @foreach($arr as $a)
                                     <tr class="gradeX" id="rowCur{{$a->quote_id}}">
                                         <td>{{$a->quote_id}}</td>
-                                        <td>{{$a->category}}</td>
-                                        <td><a href="#" onclick="getEditQuote({{$a->quote_id}});">{{$a->quote}}</a></td>
+                                       
+                                        <td><a href="#" onclick="getEditQuote({{$a->quote_id}});">{{$a->description}}</a></td>
                                         <td>@if($tagArr[$a->quote_id]) {{$tagArr[$a->quote_id]}} @endif</td>
                                         <td class="center"><input type="checkbox" name="delTip" class="uniformCheckbox" value="{{$a->quote_id}}"></td>
                                     </tr>

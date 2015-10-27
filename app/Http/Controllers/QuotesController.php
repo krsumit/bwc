@@ -114,8 +114,8 @@ class QuotesController extends Controller
 
         foreach ($channels as $ch) {
             $channelQuotes = Quote::where('channel_id', $ch->channel_id)
-                ->join('quotescategory', 'quotes.q_category_id', '=', 'quotescategory.cate_id')             
-                ->select('quotes.*', 'quotescategory.category')
+                            
+                ->select('quotes.*')
                  ->where('quotes.valid', '1')
                 ->get();
 
@@ -146,9 +146,9 @@ class QuotesController extends Controller
             $Quote->add_date = date('Y-m-d H:i:s');
         }
 
-        $Quote->quote = $request->quote;
+        $Quote->quote = 'quote';
         $Quote->description = $request->description;
-        $Quote->q_category_id = $request->category;
+        $Quote->q_category_id = 'category';
         $Quote->channel_id = $request->channel_sel;
         $Quote->valid = '1';
         $Quote->q_tags = $request->Taglist;
@@ -192,8 +192,7 @@ class QuotesController extends Controller
         }
         //fwrite($asd, " EDIT ID Passed ::" .$id  . "\n\n");
         $editQuote = Quote::where('quote_id',$id)
-            ->join('quotescategory','quotes.q_category_id','=','quotescategory.cate_id')
-            ->select('quotes.*','quotescategory.category')
+            ->select('quotes.*')
             ->get();
 
         //fwrite($asd, " Total Array QTAG: ".$editQuote[0]." \n\n");
