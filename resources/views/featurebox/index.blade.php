@@ -496,6 +496,7 @@
                     $(document).ready(function() {
                         $('#tableSortable2, #tableSortableRes, #tableSortableResMed').dataTable( {
                             "sPaginationType": "bootstrap",
+                            "aaSorting":[],
                             "fnInitComplete": function(){
                                 $(".dataTables_wrapper select").select2({
                                     dropdownCssClass: 'noSearch'

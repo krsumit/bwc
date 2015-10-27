@@ -105,7 +105,7 @@ class FeatureBoxController extends Controller
             ->select('featuredarticle.*','users.name')
             ->where('featuredarticle.featured','=','0')
             ->where('featuredarticle.valid','=','1')
-            ->orderBy('featured_on','desc')
+            ->orderBy('updated_at','desc')
             ->get();
 
         return $old;
