@@ -213,7 +213,7 @@ class Cron {
                             $this->migratePhotoshootPhoto($id,0,$condition);
                             
                         }else{
-                            $delStmt = $this->conn2->prepare("delete from photo_shoot where id=?");
+                            $delStmt = $this->conn2->prepare("delete from photo_shoot where photo_shoot_id=?");
                             $delStmt->bind_param('i', $id);
                             $delStmt->execute();
                             if ($delStmt->affected_rows) {
