@@ -147,7 +147,7 @@
                                        @foreach($qbytes as $qb)
                                        <tr class="gradeX" id="rowCur{{$qb->id}}">
                                             <td>{{$qb->id}}<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="No. of Photos"><i class="icon-photon info-circle"></i></a></td>
-                                            <td style="width:160px;"><img src="{{ url(config('constants.quickbyteimagedir').$qb->photopath) }}" alt="quickbyte" style="width:70%;" /></td>
+                                            <td style="width:160px;"><img src="{{ config('constants.awsbaseurl').config('constants.awquickbytesimagethumbtdir').$qb->photopath}}" alt="quickbyte" style="width:70%;" /></td>
                                             <td><a href="/quickbyte/{{$qb->id}}">{{$qb->title}} </a></td>
                                             <td>{{$qb->publish_date}}</td>
                                             <td class="center"><input type="checkbox" name="checkItem[]" class="uniformCheckbox" value="{{$qb->id}}"></td>

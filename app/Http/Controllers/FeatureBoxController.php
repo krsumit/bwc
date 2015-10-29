@@ -15,6 +15,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Aws\Laravel\AwsFacade as AWS;
+use Aws\Laravel\AwsServiceProvider;
 
 class FeatureBoxController extends Controller
 {
@@ -170,7 +172,26 @@ class FeatureBoxController extends Controller
             //$file->move($destination_path, $filename);
             $request->file('photo')->move($destination_path, $filename);
 
-            $photo->photopath = url($destination_path . $filename);
+            $photo->photopath = $filename;
+            
+            $s3 = AWS::createClient('s3');
+            $oldPhotos=Photo::where('owned_by','featurebox')->where('owner_id',$fid)->get();
+            foreach($oldPhotos as $ph){
+                $s3->deleteObject(array(
+			'Bucket'     => config('constants.awbucket'),
+			'Key'    => config('constants.awfeaturebox').$ph->photopath
+                        ));
+            }
+            Photo::where('owned_by','featurebox')->where('owner_id',$fid)->delete();
+            $result=$s3->putObject(array(
+                                'ACL'=>'public-read',
+                                'Bucket'     => config('constants.awbucket'),
+                                'Key'    => config('constants.awfeaturebox').$filename,
+                                'SourceFile'   => $destination_path.$filename,
+                        ));
+                  if($result['@metadata']['statusCode']==200){
+                        unlink($destination_path . $filename);
+                }
             
             
             $photo->channel_id = $request->channel_id;

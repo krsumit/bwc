@@ -276,7 +276,7 @@
                         <tbody>
                              @foreach($posts as $a)
                             <tr class="gradeX" id="rowCur{{$a->author_id}}">
-                                <td style="width:160px;"><img src="{{$a->photo}}" alt="user" style="width:70%;" /></td>
+                                <td style="width:160px;"><img src="{{ config('constants.awsbaseurl').config('constants.awauthordir').$a->photo}}" alt="Author image" style="width:70%;" /></td>
                                 <td ><a href="#"onclick="getEditcolumnist({{$a->author_id}})">{{$a->name}}</a></td>
                                 <td >{{$a->email}}</td>
                                 <td  class="center">{{$a->mobile}}</td>

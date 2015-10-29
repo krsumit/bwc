@@ -1466,48 +1466,9 @@ foreach ($rights as $r) {
                     </div> -->
                 </div>
 
-                <div id="tab-example4" class="tab-pane fade">
-                    <div class="container-fluid">
-
-
-                        <!--Sortable Responsive Media Table begin-->
-                        <div class="row-fluid">
-                            <div class="span12">
-                                <table class="table table-striped table-responsive" id="tableSortableResMed">
-                                    <thead class="cf sorthead">
-                                        <tr>
-                                            <th>Image</th>
-                                            <th>Title</th>
-                                            <th>Source</th>
-                                            <th>Source URL</th>
-                                            <th>Action</th>                                      
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                        @foreach($photos as $photo)
-                                        <tr id="row{{$photo->photo_id}}">
-                                            <td>
-                                                <img src="{{ asset($photo->photopath)}}" alt="user" style="width:40%;" />
-                                            </td>
-                                            <td>{{ $photo->title }}</td>
-                                    <input type="hidden" name="deleteImagel" id="{{ $photo->photo_id }}">
-                                    <td class="center">{{ $photo->source }}</td>
-                                    <td class="center">{{ $photo->source_url }}</td>
-                                    <td class="center"><button type="button" onclick="$(this).MessageBox({{ $photo->photo_id }})" name="{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-danger">Dump</button><img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:20%; display:block; margin-left:15px;"/></td>
-                                    </tr>
-                                    @endforeach
-
-                                    </tbody>
-                                </table>
-
-                            </div>
-                        </div>
-                        <!--Sortable Responsive Media Table end-->
-
-                    </div>
-                </div>
+              
                 <div id="dropdown1" class="tab-pane fade active in">
+                     
                     <!--                    <div class="control-group row-fluid">
                                             <div class="span3">
                                                 <label class="control-label">Upload Image 1</label>
@@ -1585,7 +1546,7 @@ foreach ($rights as $r) {
                                     <span class="btn btn-success fileinput-button">
                                         <i class="glyphicon glyphicon-plus"></i>
                                         <span>Add files...</span>
-                                        <input type="file" name="files[]" id="articleimage" multiple>
+                                        <input type="file" name="files[]" id="articleimage" multiple />
                                     </span>
                                     <button type="submit" class="btn btn-primary start">
                                         <i class="glyphicon glyphicon-upload"></i>
@@ -1615,6 +1576,8 @@ foreach ($rights as $r) {
                             </div>
                             <!-- The table listing the files available for upload/download -->
                             <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+                            <input type="hidden" id="uploadedImages" name="uploadedImages">
+
                         </div>
 <!--                        <script type="text/javascript">
                             $().ready(function() {
@@ -1670,7 +1633,7 @@ foreach ($rights as $r) {
             </div>
         </div>
         <!-- Uploaded Image and Video Ids -->
-        <input type="hidden" id="uploadedImages" name="uploadedImages">
+        
 <!--        <input type="hidden" id="uploadedVideos" name="uploadedVideos[]">-->
 
     </div><!--end container-->

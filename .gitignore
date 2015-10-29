@@ -3,6 +3,8 @@ Homestead.yaml
 composer.json
 /database
 .elasticbeanstalk/
+composer.json
+composer.phar
 
 
 

@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Author;
 use App\Tag;
 use Illuminate\Http\Request;
@@ -14,6 +12,8 @@ use App\Http\Controllers\Auth;
 use App\Http\Controllers\AuthorsController;
 use App\Http\Controllers\Controller;
 use App\Photo;
+use Aws\Laravel\AwsFacade as AWS;
+use Aws\Laravel\AwsServiceProvider;
 
 class AlbumController extends Controller
 {
@@ -87,6 +87,7 @@ class AlbumController extends Controller
      */
     public function create()
     {
+		
         //Authenticate User
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
@@ -183,11 +184,18 @@ class AlbumController extends Controller
         $images = explode(',', $request->uploadedImages);
             $c=0;
             // Copy uploaded from temporary location to specific location
+            $s3 = AWS::createClient('s3');
             foreach ($images as $image) {
                 $source=$_SERVER['DOCUMENT_ROOT'].'/files/'.$image;
                 $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
                 $dest=$_SERVER['DOCUMENT_ROOT'].'/'.config('constants.albumimagedir').$image;
-                if(@copy($source,$dest)){
+                $result=$s3->putObject(array(
+                                        'ACL'=>'public-read',
+					'Bucket'     => config('constants.awbucket'),
+					'Key'    => config('constants.awalbumimagedir').$image,
+					'SourceFile'   => $source,
+				));
+                if($result['@metadata']['statusCode']==200){
                         unlink($source);
                         unlink($source_thumb);
                         $imageEntry=new Photo();
@@ -276,12 +284,19 @@ class AlbumController extends Controller
        $images = explode(',', $request->uploadedImages);
             $c=0;
             // Copy uploaded from temporary location to specific location
+            $s3 = AWS::createClient('s3');
             foreach ($images as $image) {
                 $fname=time().rand(1,100).$image;
                 $source=$_SERVER['DOCUMENT_ROOT'].'/files/'.$image;
                 $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
                 $dest=$_SERVER['DOCUMENT_ROOT'].'/'.config('constants.albumimagedir').$fname;
-                if(@copy($source,$dest)){
+                $result=$s3->putObject(array(
+                                'ACL'=>'public-read',
+                                'Bucket'     => config('constants.awbucket'),
+                                'Key'    => config('constants.awalbumimagedir').$image,
+                                'SourceFile'   => $source,
+                        ));
+                if($result['@metadata']['statusCode']==200){
                         unlink($source);
                         unlink($source_thumb);
                         $imageEntry=new Photo();

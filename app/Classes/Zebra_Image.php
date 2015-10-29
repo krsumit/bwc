@@ -1587,6 +1587,7 @@ class Zebra_Image
      */
     private function _write_image($identifier)
     {
+       // echo $identifier;exit;
 
         // sharpen image if it's required
         $this->_sharpen_image($identifier);

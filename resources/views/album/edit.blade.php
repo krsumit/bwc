@@ -207,7 +207,7 @@
                                         @foreach($photos as $photo)
                                         <tr id="row{{$photo->photo_id}}">
                                             <td width="20%">
-                                                <img src="{{asset(config('constants.albumimagedir').$photo->photopath)}}" alt="user" style="width:40%;" />
+                                                <img src="{{ config('constants.awsbaseurl').config('constants.awalbumimagedir').$photo->photopath}}" alt="user" style="width:40%;" />
                                             </td>
                                             <td width="25%">{{$photo->title}}</td>
                                              <td width="35%" class="tdimagedesc">{{$photo->description}}</td>

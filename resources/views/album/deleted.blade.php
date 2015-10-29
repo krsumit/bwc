@@ -149,8 +149,10 @@
                     <tbody>
                         @foreach($albums as $qb)
                         <tr class="gradeX" id="rowCur{{$qb->id}}">
-                            <td>{{$qb->id}}<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="No. of Photos"><i class="icon-photon info-circle"></i></a></td>
-                            <td style="width:160px;"><img src="{{ url(config('constants.albumimagedir').$qb->photopath) }}" alt="Album Image" style="width:70%;" /></td>
+                            <td>{{$qb->id}}
+                                <!-- <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="No. of Photos"><i class="icon-photon info-circle"></i></a> -->
+                            </td>
+                            <td style="width:160px;"><img src="{{ config('constants.awsbaseurl').config('constants.awalbumimagedir').$qb->photopath}}" alt="Album Image" style="width:70%;" /></td>
                             <td><a href="/album/{{$qb->id}}">{{$qb->title}} </a></td>
                             <td>{{$qb->updated_at}}</td>
                             <td class="center"><input type="checkbox" name="checkItem[]" class="uniformCheckbox" value="{{$qb->id}}"></td>

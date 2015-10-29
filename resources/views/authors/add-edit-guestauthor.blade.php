@@ -123,7 +123,7 @@
     </header>
     <form class="form-horizontal" onsubmit="return validateAuthorData()" method="POST" enctype= "multipart/form-data" action="/article/addAuthor">
        {!! csrf_field() !!}
-       <input id="author_type" class="uniformRadio" type="hidden" value="4" name="author_type" style="opacity: 0;">
+       <input id="author_type" class="uniformRadio" type="hidden" value="3" name="author_type" style="opacity: 0;">
        <input id="is_columnist" class="uniformRadio" type="hidden" value="0" name="is_columnist" style="opacity: 0;">
        <input id="photo" class="uniformRadio" type="hidden" value="" name="photoset" style="opacity: 0;">
         <input id="isertedbyauthordata" class="uniformRadio" type="hidden" value="isertedbyguestauthordata" name="isertedbyguestauthordata" style="opacity: 0;">
@@ -256,7 +256,7 @@
                         <tbody>
                              @foreach($posts as $a)
                             <tr class="gradeX" id="rowCur{{$a->author_id}}">
-                                <td style="width:160px;"><img src="{{$a->photo}}" alt="user" style="width:70%;" /></td>
+                                <td style="width:160px;"><img src="{{ config('constants.awsbaseurl').config('constants.awauthordir').$a->photo}}" alt="User Image" style="width:70%;" /></td>
                                 <td ><a href="#"onclick="getEditcolumnist({{$a->author_id}})">{{$a->name}}</a></td>
                                 <td >{{$a->email}}</td>
                                 <td  class="center">{{$a->mobile}}</td>

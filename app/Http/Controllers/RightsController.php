@@ -178,7 +178,14 @@ class RightsController extends Controller
         $mobile = $user->mobile;
         $roleO = $user->user_type_id;        
         $roles = DB::table('user_types')->where('valid','1')->get();
-        
+        $old = DB::table('rights')
+            ->join('user_rights','rights.rights_id','=','user_rights.rights_id')
+            ->select(array(DB::raw('group_concat(rights.rights_id) as allrights')))
+            ->where('user_rights.user_id','=',$id)
+            ->first();
+       // print_r($old);exit;
+          $delArrcheck = explode(',', $old->allrights);
+         //print_r($delArrcheck);die;
         //Get Channels
         $BW = $BWH = 0;
         $bw = UserRight::where('rights_id','4')->where('user_id',$id)->get();
@@ -186,7 +193,7 @@ class RightsController extends Controller
         if(count($bw) > 0){$BW =1;}
         if(count($bwh) > 0){$BWH =1;}
         
-        return view('rights.manage',compact('roles','name','email','mobile','roleO','BW','BWH','userid'));
+        return view('rights.manage',compact('roles','name','email','mobile','roleO','BW','BWH','userid','delArrcheck'));
     }
 
     /**

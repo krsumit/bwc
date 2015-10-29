@@ -268,31 +268,36 @@
                             	<ul style="list-style:none;">
                                 	<li>							
                                     <label class="checkbox">
-                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="1">
+                                        <input @if(in_array('1', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="1">
                                         Create New Article
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="11">
+                                        <input @if(in_array('11', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="11">
                                         New Article
                                     </label>
                                     		<ul style="list-style:none; margin-left:80px;">
                                             	<li>
                                                 	<label class="checkbox">
-                                                        <input checked="checked" type="checkbox" class="uniformCheckbox" value="checkbox2">
+                                                        <input @if(in_array('checkbox2', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" value="checkbox2">
                                                         Choose Author
                                                     </label>
                                                 </li>
                                                 <li>
                                                 	<label class="checkbox">
-                                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="3">
+                                                        <input @if(in_array('3', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="3">
                                                         Add Author
                                                     </label>
                                                 </li>
                                                 <li>
                                                 	<label class="checkbox">
-                                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="2">
+                                                        <input @if(in_array('2', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="2">
                                                         Schedule Article
                                                     </label>
                                                 </li>
@@ -300,37 +305,43 @@
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="8">
+                                        <input @if(in_array('8', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="8">
                                         Edit Article
                                     </label>
                                         <ul style="list-style:none; margin-left:80px;">
                                             	<li>
                                                 	<label class="checkbox">
-                                                        <input checked="checked" type="checkbox" class="uniformCheckbox" value="checkbox2">
+                                                        <input @if(in_array('checkbox2', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" value="checkbox2">
                                                         Choose Author
                                                     </label>
                                                 </li>
                                                 <li>
                                                 	<label class="checkbox">
-                                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="9">
+                                                        <input @if(in_array('9', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="9">
                                                         Add Author
                                                     </label>
                                                 </li>
                                                 <li>
                                                 	<label class="checkbox">
-                                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="10">
+                                                        <input @if(in_array('10', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="10">
                                                         Schedule Article
                                                     </label>
                                                 </li>
                                                 <li>
                                                 	<label class="checkbox">
-                                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="13">
+                                                        <input @if(in_array('13', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="13">
                                                         Delete Article
                                                     </label>
                                                 </li>
                                                 <li>
                                                 	<label class="checkbox">
-                                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="12">
+                                                        <input @if(in_array('12', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="12">
                                                         Publish Direct
                                                     </label>
                                                 </li>
@@ -338,31 +349,36 @@
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="15">
+                                        <input @if(in_array('15', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="15">
                                         Scheduled Article
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="16">
+                                        <input @if(in_array('16', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="16">
                                         Published Article
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="17">
+                                        <input @if(in_array('17', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="17">
                                         Deleted Article
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="18">
+                                        <input @if(in_array('18', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="18">
                                         My Drafts
                                     </label>
                                     		<ul style="list-style:none; margin-left:80px;">
                                             	<li>
                                                 	<label class="checkbox">
-                                                        <input checked="checked" type="checkbox" class="uniformCheckbox" value="">
+                                                        <input @if(in_array('', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" value="">
                                                         Publish Direct
                                                     </label>
                                                 </li>
@@ -370,37 +386,43 @@
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="19">
+                                        <input @if(in_array('19', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="19">
                                         Feature Box Management
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="30">
+                                        <input @if(in_array('30', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="30">
                                         Campaign Management
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="31">
+                                        <input @if(in_array('31', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="31">
                                         Add A Magazine Issue
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="">
+                                        <input @if(in_array('', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="">
                                         Tips
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="32">
+                                        <input @if(in_array('32', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="32">
                                         Report
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="33">
+                                        <input @if(in_array('33', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="33">
                                         Help
                                     </label>
                                     </li>
@@ -411,7 +433,8 @@
                         <div class="control-group row-fluid">
                             <div class="span3">
                                 <label class="checkbox">
-                                    <input checked="checked" type="checkbox" class="uniformCheckbox" value="checkbox1">
+                                    <input @if(in_array('checkbox1', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" value="checkbox1">
                                     Tips &amp; Quotes
                                 </label>
 							</div>
@@ -419,31 +442,36 @@
                             	<ul style="list-style:none;">
                                 	<li>							
                                     <label class="checkbox">
-                                        <input checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="20">
+                                        <input @if(in_array('20', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="20">
                                         Tips
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="21">
+                                        <input  @if(in_array('21', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="21">
                                         Tags
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="34">
+                                        <input  @if(in_array('34', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="34">
                                         Quotes
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="35">
+                                        <input @if(in_array('35', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="35">
                                         Report
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="36">
+                                        <input @if(in_array('36', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="36">
                                         Help
                                     </label>
                                     </li>
@@ -454,7 +482,8 @@
                         <div class="control-group row-fluid">
                             <div class="span3">
                                 <label class="checkbox">
-                                    <input checked="checked" type="checkbox" class="uniformCheckbox" value="checkbox1">
+                                    <input @if(in_array('checkbox1', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" value="checkbox1">
                                     Debate
                                 </label>
 							</div>
@@ -462,37 +491,43 @@
                             	<ul style="list-style:none;">
                                 	<li>							
                                     <label class="checkbox">
-                                        <input  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="38">
+                                        <input @if(in_array('38', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="38">
                                         Published Debate
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="37">
+                                        <input  @if(in_array('37', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="37">
                                         Create New Debate
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="39">
+                                        <input @if(in_array('39', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="39">
                                         Debate Comments
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="40">
+                                        <input   @if(in_array('40', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="40">
                                         Profanity Filter
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="41">
+                                        <input @if(in_array('41', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="41">
                                         Report
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input  checked="checked" type="checkbox" class="uniformCheckbox" name="rightArr[]" value="42">
+                                        <input  @if(in_array('42', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="42">
                                         Help
                                     </label>
                                     </li>
@@ -503,7 +538,8 @@
                         <div class="control-group row-fluid">
                             <div class="span3">
                                 <label class="checkbox">
-                                    <input checked="checked" type="checkbox" class="uniformCheckbox" value="checkbox1">
+                                    <input @if(in_array('checkbox1', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" value="checkbox1">
                                     Columnist and Guest Author
                                 </label>
 							</div>
@@ -511,25 +547,29 @@
                             	<ul style="list-style:none;">
                                 	<li>							
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="43">
+                                        <input @if(in_array('43', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="43">
                                        Add/Edit Columnist
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="44">
+                                        <input  @if(in_array('44', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="44">
                                        Add New Guest Author
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="45">
+                                        <input @if(in_array('45', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="45">
                                         Report
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="46">
+                                        <input @if(in_array('46', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="46">
                                         Help
                                     </label>
                                     </li>
@@ -540,7 +580,8 @@
                         <div class="control-group row-fluid">
                             <div class="span3">
                                 <label class="checkbox">
-                                    <input checked="checked" type="checkbox" class="uniformCheckbox" value="checkbox1">
+                                    <input @if(in_array('checkbox1', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" value="checkbox1">
                                     Events
                                 </label>
 							</div>
@@ -548,31 +589,36 @@
                             	<ul style="list-style:none;">
                                 	<li>							
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="47">
+                                        <input @if(in_array('47', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="47">
                                        Add New Event
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="48">
+                                        <input  @if(in_array('48', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="48">
                                        Published Events
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="49">
+                                        <input @if(in_array('49', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="49">
                                        Deleted Events
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="50">
+                                        <input @if(in_array('50', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="50">
                                         Report
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="51">
+                                        <input @if(in_array('51', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="51">
                                         Help
                                     </label>
                                     </li>
@@ -583,7 +629,8 @@
                         <div class="control-group row-fluid">
                             <div class="span3">
                                 <label class="checkbox">
-                                    <input checked="checked" type="checkbox" class="uniformCheckbox" value="checkbox1">
+                                    <input @if(in_array('checkbox1', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" value="checkbox1">
                                     Quick Bytes
                                 </label>
 							</div>
@@ -591,13 +638,15 @@
                             	<ul style="list-style:none;">
                                 	<li>							
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="22">
+                                        <input @if(in_array('22', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="22">
                                        Add New Quick Byte
                                     </label>
                                     		<ul style="list-style:none; margin-left:80px;">
                                             	<li>
                                                 	<label class="checkbox">
-                                                        <input checked="checked" type="checkbox" class="uniformCheckbox" value="checkbox2">
+                                                        <input @if(in_array('checkbox2', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" value="checkbox2">
                                                         Choose Author
                                                     </label>
                                                 </li>
@@ -605,25 +654,29 @@
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="24">
+                                        <input @if(in_array('24', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="24">
                                        Published Quick Bytes
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="25">
+                                        <input type="checkbox"@if(in_array('25', $delArrcheck))
+  {{'checked="checked"'}} @endif class="uniformCheckbox" name="rightArr[]" value="25">
                                        Deleted Quick Bytes
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="52">
+                                        <input @if(in_array('52', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="52">
                                         Report
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="53">
+                                        <input @if(in_array('53', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="53">
                                         Help
                                     </label>
                                     </li>
@@ -634,7 +687,8 @@
                         <div class="control-group row-fluid">
                             <div class="span3">
                                 <label class="checkbox">
-                                    <input checked="checked" type="checkbox" class="uniformCheckbox" value="checkbox1">
+                                    <input @if(in_array('checkbox1', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" value="checkbox1">
                                     Sponsored Post
                                 </label>
 							</div>
@@ -642,31 +696,35 @@
                             	<ul style="list-style:none;">
                                 	<li>							
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="26">
+                                        <input @if(in_array('26', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="26">
                                        Add New Sponsored Post
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="28">
+                                        <input type="checkbox"@if(in_array('28', $delArrcheck))
+  {{'checked="checked"'}} @endif class="uniformCheckbox" name="rightArr[]" value="28">
                                        Published Sponsored Post
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="29">
+                                        <input type="checkbox" @if(in_array('29', $delArrcheck))
+  {{'checked="checked"'}} @endif class="uniformCheckbox" name="rightArr[]" value="29">
                                        Deleted Sponsored Post
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="54">
+                                        <input @if(in_array('54', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="54">
                                         Report
                                     </label>
-                                    </li>checkbox2
-                                     <li>												
+                                    												
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="55">
+                                        <input @if(in_array('55', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="55">
                                         Help
                                     </label>
                                     </li>
@@ -677,7 +735,8 @@
                         <div class="control-group row-fluid">
                             <div class="span3">
                                 <label class="checkbox">
-                                    <input checked="checked" type="checkbox" class="uniformCheckbox" value="checkbox1">
+                                    <input @if(in_array('checkbox1', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" value="checkbox1">
                                     Photos
                                 </label>
 							</div>
@@ -685,31 +744,36 @@
                             	<ul style="list-style:none;">
                                 	<li>							
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="56">
+                                        <input @if(in_array('56', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="56">
                                        Upload New Album
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="57">
+                                        <input @if(in_array('57', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="57">
                                        Published Album
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="58">
+                                        <input  @if(in_array('58', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="58">
                                        Deleted Photos
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="59">
+                                        <input @if(in_array('59', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="59">
                                         Edit Album
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="60">
+                                        <input @if(in_array('60', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="60">
                                         Report
                                     </label>
                                     </li>
@@ -720,7 +784,8 @@
                         <div class="control-group row-fluid">
                             <div class="span3">
                                 <label class="checkbox">
-                                    <input  type="checkbox" class="uniformCheckbox" value="checkbox1">
+                                    <input  @if(in_array('checkbox1', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" value="checkbox1">
                                     Videos
                                 </label>
 							</div>
@@ -728,37 +793,43 @@
                             	<ul style="list-style:none;">
                                 	<li>							
                                     <label class="checkbox">
-                                        <input  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="61">
+                                        <input  type="checkbox" @if(in_array('61', $delArrcheck))
+  {{'checked="checked"'}} @endif class="uniformCheckbox" name="rightArr[]" value="61">
                                        Upload New Video
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="62">
+                                        <input type="checkbox" @if(in_array('62', $delArrcheck))
+  {{'checked="checked"'}} @endif class="uniformCheckbox" name="rightArr[]" value="62">
                                        Published Video
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="63">
+                                        <input type="checkbox"@if(in_array('63', $delArrcheck))
+  {{'checked="checked"'}} @endif class="uniformCheckbox" name="rightArr[]" value="63">
                                        Deleted Video
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="64">
+                                        <input type="checkbox" @if(in_array('64', $delArrcheck))
+  {{'checked="checked"'}} @endif class="uniformCheckbox" name="rightArr[]" value="64">
                                        Featured Video
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="65">
+                                        <input @if(in_array('65', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="65">
                                         Report
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input checked="checked"  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="66">
+                                        <input @if(in_array('66', $delArrcheck))
+  {{'checked="checked"'}} @endif  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="66">
                                         Help
                                     </label>
                                     </li>
@@ -769,7 +840,8 @@
                         <div class="control-group row-fluid">
                             <div class="span3">
                                 <label class="checkbox">
-                                    <input  type="checkbox" class="uniformCheckbox" value="checkbox1">
+                                    <input @if(in_array('checkbox1', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" value="checkbox1">
                                     Site Management
                                 </label>
 							</div>
@@ -777,25 +849,29 @@
                             	<ul style="list-style:none;">
                                 	<li>							
                                     <label class="checkbox">
-                                        <input  type="checkbox" class="uniformCheckbox" name="rightArr[]" value="67">
+                                        <input  type="checkbox" @if(in_array('67', $delArrcheck))
+  {{'checked="checked"'}} @endif class="uniformCheckbox" name="rightArr[]" value="67">
                                        Category Master
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="68">
+                                        <input type="checkbox" @if(in_array('68', $delArrcheck))
+  {{'checked="checked"'}} @endif class="uniformCheckbox" name="rightArr[]" value="68">
                                        Location Master
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="69">
+                                        <input type="checkbox" @if(in_array('69', $delArrcheck))
+  {{'checked="checked"'}} @endif class="uniformCheckbox" name="rightArr[]" value="69">
                                        Topic Master
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="70">
+                                        <input type="checkbox" @if(in_array('70', $delArrcheck))
+  {{'checked="checked"'}} @endif class="uniformCheckbox" name="rightArr[]" value="70">
                                        Tag Master
                                     </label>
                                     </li>
@@ -806,7 +882,8 @@
                         <div class="control-group row-fluid">
                             <div class="span3">
                                 <label class="checkbox">
-                                    <input  type="checkbox" class="uniformCheckbox" value="checkbox1">
+                                    <input  type="checkbox" @if(in_array('checkbox1', $delArrcheck))
+  {{'checked="checked"'}} @endif class="uniformCheckbox" value="checkbox1">
                                     Rights Management
                                 </label>
 							</div>
@@ -814,19 +891,22 @@
                             	<ul style="list-style:none;">
                                 	<li>							
                                     <label class="checkbox">
-                                        <input  type="checkbox" checked="checked" class="uniformCheckbox" name="rightArr[]" value="71">
+                                        <input  type="checkbox"@if(in_array('71', $delArrcheck))
+  {{'checked="checked"'}} @endif class="uniformCheckbox" name="rightArr[]" value="71">
                                        CMS Rights
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="72">
+                                        <input type="checkbox" @if(in_array('72', $delArrcheck))
+  {{'checked="checked"'}} @endif class="uniformCheckbox" name="rightArr[]" value="72">
                                        Report
                                     </label>
                                     </li>
                                      <li>												
                                     <label class="checkbox">
-                                        <input type="checkbox" class="uniformCheckbox" name="rightArr[]" value="73">
+                                        <input type="checkbox" @if(in_array('73', $delArrcheck))
+  {{'checked="checked"'}} @endif class="uniformCheckbox" name="rightArr[]" value="73">
                                        Help
                                     </label>
                                     </li>
@@ -837,7 +917,8 @@
                         <div class="control-group row-fluid">
                             <div class="span3">
                                 <label class="checkbox">
-                                    <input checked type="checkbox" class="uniformCheckbox" value="checkbox1">
+                                    <input @if(in_array('checkbox1', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" value="checkbox1">
                                     Help
                                 </label>
 							</div>
@@ -845,13 +926,15 @@
                             	<ul style="list-style:none;">
                                 	<li>							
                                     <label class="checkbox">
-                                        <input checked type="checkbox" class="uniformCheckbox" name="rightArr[]" value="74">
+                                        <input @if(in_array('74', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="74">
                                        FAQs
                                     </label>
                                     </li>
                                     <li>												
                                     <label class="checkbox">
-                                        <input checked type="checkbox" class="uniformCheckbox" name="rightArr[]" value="75">
+                                        <input @if(in_array('75', $delArrcheck))
+  {{'checked="checked"'}} @endif type="checkbox" class="uniformCheckbox" name="rightArr[]" value="75">
                                        Sitemap
                                     </label>
                                     </li>

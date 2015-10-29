@@ -17,7 +17,8 @@ use App\Photo;
 use App\QuickbyteCategory;
 use App\Classes\Zebra_Image;
 use App\Classes\UploadHandler;
-
+use Aws\Laravel\AwsFacade as AWS;
+use Aws\Laravel\AwsServiceProvider;
 class QuickBytesController extends Controller
 {
     /**
@@ -44,13 +45,20 @@ class QuickBytesController extends Controller
                 $rightLabel = "deletedQBs";
                 break;
         }
-        //Get QB Array
+         //Get QB Array
+         //DB::enableQueryLog();
+        
         $q = QuickByte::where('status',$status)
                 ->select('quickbyte.id','quickbyte.title','quickbyte.publish_date','photos.photopath')
-                ->leftJoin('photos','quickbyte.id','=','photos.owner_id')
-                ->where(function($qbytes){
+                ->leftJoin('photos',function($leftjoin){
+                    $leftjoin->on('quickbyte.id','=','photos.owner_id')
+                            ->where('photos.owned_by','=','quickbyte');
+                        
+                });
+                //->leftJoin(DB::raw('count(*) as user_count'), 'photos','quickbyte.id','=','photos.owner_id')
+                /*->where(function($qbytes){
                     $qbytes->whereNull('photos.owned_by')->orWhere('photos.owned_by','quickbyte') ;
-                }) ;
+                }) ;*/
         
             if (isset($_GET['searchin'])) {
                 if ($_GET['searchin'] == 'title') {
@@ -65,7 +73,11 @@ class QuickBytesController extends Controller
 
         $qbytes=$q->groupby('quickbyte.id')->paginate(config('constants.recordperpage'));
         //qbytes = QuickByte::where('status',$status)->get();
-       // echo count($qbytes);exit;
+        
+        //$query = DB::getQueryLog();
+        //$lastQuery = end($query);
+       // print_r($lastQuery);exit;
+        //echo count($qbytes);exit;
         $arrRights = QuickBytesController::getRights($uid);
         
         foreach($arrRights as $eachRight) {
@@ -219,6 +231,7 @@ class QuickBytesController extends Controller
        
             //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
             $c=0;
+            $s3 = AWS::createClient('s3');
             foreach ($images as $image) {
                 $source=$_SERVER['DOCUMENT_ROOT'].'/files/'.$image;
                 $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
@@ -230,14 +243,45 @@ class QuickBytesController extends Controller
                         $imaged->source_path = $dest;
                          $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimagethambtdir') . $image;
                          
-                        if (!$imaged->resize(90, 76, ZEBRA_IMAGE_BOXED, -1)) ;
+                        if ($imaged->resize(90, 76, ZEBRA_IMAGE_BOXED, -1)) {
+                            $result = $s3->putObject(array(
+                                'ACL'=>'public-read',
+                                'Bucket' => config('constants.awbucket'),
+                                'Key' => config('constants.awquickbytesimagethumbtdir') . $image,
+                                'SourceFile' => $imaged->target_path,
+                            ));
+                            if ($result['@metadata']['statusCode'] == 200) {
+                                unlink($imaged->target_path);
+                            }
+                        }
                         $imaged->source_path = $dest;
                          $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimagemediumdir') . $image;
                         
-                         if (!$imaged->resize(500, 270, ZEBRA_IMAGE_BOXED, -1)) ;
+                         if ($imaged->resize(500, 270, ZEBRA_IMAGE_BOXED, -1)){
+                             $result = $s3->putObject(array(
+                                'ACL'=>'public-read',
+                                'Bucket' => config('constants.awbucket'),
+                                'Key' => config('constants.awquickbytesimagemediumdir') . $image,
+                                'SourceFile' => $imaged->target_path,
+                            ));
+                            if ($result['@metadata']['statusCode'] == 200) {
+                                unlink($imaged->target_path);
+                            }
+                         }
                         $imaged->source_path = $dest;
                          $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimageextralargedir') . $image;
-                         if (!$imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1));
+                         
+                         if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)){
+                             $result = $s3->putObject(array(
+                                'ACL'=>'public-read',
+                                'Bucket' => config('constants.awbucket'),
+                                'Key' => config('constants.awquickbytesimageextralargedir') . $image,
+                                'SourceFile' => $imaged->target_path,
+                            ));
+                            if ($result['@metadata']['statusCode'] == 200) {
+                                unlink($imaged->target_path);
+                            }
+                         }
                          
                         unlink($source);
                         unlink($source_thumb);
@@ -422,6 +466,7 @@ class QuickBytesController extends Controller
         $images = explode(',', $request->uploadedImages);
             //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
             $c=0;
+            $s3 = AWS::createClient('s3');
             foreach ($images as $image) {
                 $source=$_SERVER['DOCUMENT_ROOT'].'/files/'.$image;
                 $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
@@ -433,17 +478,48 @@ class QuickBytesController extends Controller
                         $imaged->source_path = $dest;
                          $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimagethambtdir') . $image;
                          
-                        if (!$imaged->resize(90, 76, ZEBRA_IMAGE_BOXED, -1)) ;
+                        if ($imaged->resize(90, 76, ZEBRA_IMAGE_BOXED, -1)) {
+                            $result = $s3->putObject(array(
+                                'ACL'=>'public-read',
+                                'Bucket' => config('constants.awbucket'),
+                                'Key' => config('constants.awquickbytesimagethumbtdir') . $image,
+                                'SourceFile' => $imaged->target_path,
+                            ));
+                            if ($result['@metadata']['statusCode'] == 200) {
+                                unlink($imaged->target_path);
+                            }
+                        }
                         $imaged->source_path = $dest;
                          $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimagemediumdir') . $image;
                         
-                         if (!$imaged->resize(500, 270, ZEBRA_IMAGE_BOXED, -1)) ;
+                         if ($imaged->resize(500, 270, ZEBRA_IMAGE_BOXED, -1)) {
+                               $result = $s3->putObject(array(
+                                'ACL'=>'public-read',
+                                'Bucket' => config('constants.awbucket'),
+                                'Key' => config('constants.awquickbytesimagemediumdir') . $image,
+                                'SourceFile' => $imaged->target_path,
+                            ));
+                            if ($result['@metadata']['statusCode'] == 200) {
+                                unlink($imaged->target_path);
+                            }
+                         }
                         $imaged->source_path = $dest;
                          $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimageextralargedir') . $image;
-                         if (!$imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1));
+                         if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)){
+                              $result = $s3->putObject(array(
+                                'ACL'=>'public-read',
+                                'Bucket' => config('constants.awbucket'),
+                                'Key' => config('constants.awquickbytesimageextralargedir') . $image,
+                                'SourceFile' => $imaged->target_path,
+                            ));
+                            if ($result['@metadata']['statusCode'] == 200) {
+                                unlink($imaged->target_path);
+                            }
+                         }
                          
                         unlink($source);
                         unlink($source_thumb);
+                        unlink($dest);
                         $imageEntry=new Photo();
                         $imageEntry->title=$request->imagetitle[$c];
                         $imageEntry->description=$request->imagedesc[$c];;

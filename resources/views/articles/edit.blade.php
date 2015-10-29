@@ -1539,7 +1539,7 @@
                                         @foreach($photos as $photo)
                                         <tr id="row{{$photo->photo_id}}">
                                             <td>
-                                                <img src="{{asset(config('constants.articleimagedir').$photo->photopath)}}" alt="user" style="width:40%;" />
+                                                <img src="{{ config('constants.awsbaseurl').config('constants.awarticleimagethumbtdir').$photo->photopath}}" alt="article" />
                                             </td>
 <!--                                            <td>{{ $photo->title }}</td>-->
                                     <input type="hidden" name="deleteImagel" id="{{ $photo->photo_id }}">
@@ -1841,7 +1841,7 @@
             </div>
         </div>
         <!-- Uploaded Image and Video Ids -->
-        <input type="hidden" id="uploadedImages" name="uploadedImages">
+        <input type="hidden" id="uploadedImages" name="uploadedImages"/>
 <!--        <input type="hidden" id="uploadedVideos" name="uploadedVideos[]">-->
 
     </div><!--end container-->
