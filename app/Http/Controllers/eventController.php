@@ -11,6 +11,8 @@ use Session;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use Aws\Laravel\AwsFacade as AWS;
+use Aws\Laravel\AwsServiceProvider;
 
 class eventController extends Controller
 {
@@ -43,6 +45,7 @@ class eventController extends Controller
             //'description' => 'required',
             'photo'     => 'image|mimes:jpeg,png|min:1|max:250'
         ]);
+        $imageurl = '';
        if($request->file('photo')){ // echo 'test';exit;
         $file = $request->file('photo');
        // echo $file; exit;
@@ -60,7 +63,19 @@ class eventController extends Controller
         //$filename = str_random(6).'_'.$request->file('photo')->getClientOriginalName();
         //$filename = "PHOTO";
         $file->move($destination_path, $filename);
-        $imageurl=url($destination_path . $filename);
+        $s3 = AWS::createClient('s3');
+        $imageurl = $filename;
+         
+                    $result=$s3->putObject(array(
+                                'ACL'=>'public-read',
+                                'Bucket'     => config('constants.awbucket'),
+                                'Key'    => config('constants.awaevent').$filename,
+                                'SourceFile'   => $destination_path.$filename,
+                        ));
+                    if($result['@metadata']['statusCode']==200){
+                        unlink($destination_path . $filename);
+                    }
+        
         } 
         $channel_id = $request->channel;
         $title = $request->title;
@@ -203,6 +218,10 @@ class eventController extends Controller
             //'description' => 'required',
             'photo'     => 'image|mimes:jpeg,png|min:1|max:250'
         ]);
+      $eventdetais = DB::table('event')
+               ->select('event.imagepath')
+                ->where('event.event_id', '=', $request->editevent_id)
+		->get();
        if($request->file('photo')){ // echo 'test';exit;
         $file = $request->file('photo');
        // echo $file; exit;
@@ -220,7 +239,24 @@ class eventController extends Controller
         //$filename = str_random(6).'_'.$request->file('photo')->getClientOriginalName();
         //$filename = "PHOTO";
         $file->move($destination_path, $filename);
-        $imageurl=url($destination_path . $filename);
+       $s3 = AWS::createClient('s3');
+                $imageurl = $filename;
+                if(trim($eventdetais->imagepath)){
+                    $result=$s3->deleteObject(array(
+			'Bucket'     => config('constants.awbucket'),
+			'Key'    => config('constants.awaevent').$eventdetais->imagepath,
+			
+                        ));
+                }
+                $result=$s3->putObject(array(
+                                'ACL'=>'public-read',
+                                'Bucket'     => config('constants.awbucket'),
+                                'Key'    => config('constants.awaevent').$filename,
+                                'SourceFile'   => $destination_path.$filename,
+                        ));
+                  if($result['@metadata']['statusCode']==200){
+                        unlink($destination_path . $filename);
+                  }
         } 
         $channel_id = $request->channel;
         $title = $request->title;

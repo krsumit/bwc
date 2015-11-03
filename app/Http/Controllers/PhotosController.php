@@ -9,7 +9,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-
+use Aws\Laravel\AwsFacade as AWS;
+use Aws\Laravel\AwsServiceProvider;
 class PhotosController extends Controller
 {
     /**
@@ -144,15 +145,64 @@ class PhotosController extends Controller
      */
     public function destroy(Request $request)
     {
-
         //Delete passed Id's row from DB - Deprecated to Invalidate Row
-        $id = $request->photoId;
-        //$l = fopen('/home/sudipta/log.log','a+');
-        //fwrite($l," ID  :".$id);
-        DB::table('photos')->where('photo_id',$id)
-            ->update(['valid' => 0]);
-        //$photo = new Photo();
-        //$photo->destroy($id);
-
+        $photo=Photo::find($request->photoId);
+        $s3 = AWS::createClient('s3');
+        switch ($photo->owned_by):
+        case 'article':
+           // echo config('constants.awbucket').config('constants.awarticleimagethumbtdir').$photo->photopath;exit;
+            $s3->deleteObjects(array(
+			'Bucket'     => config('constants.awbucket'),
+                        'Delete'=>array(
+                            'Objects'    => array(
+                                array(
+                                    'Key' =>  config('constants.awarticleimagethumbtdir').$photo->photopath
+                                ),
+                                array(
+                                   'Key' =>  config('constants.awarticleimagemediumdir').$photo->photopath
+                               ),
+                                array(
+                                   'Key' =>  config('constants.awarticleimagelargedir').$photo->photopath
+                               ),
+                                array(
+                                   'Key' =>  config('constants.awarticleimageextralargedir').$photo->photopath
+                               )
+                            ) 
+                        )			
+            ));
+           break;
+        case 'quickbyte':
+            $s3->deleteObjects(array(
+			'Bucket'     => config('constants.awbucket'),
+                        'Delete'=>array(
+                            'Objects'    => array(
+                                array(
+                                    'Key' =>  config('constants.awquickbytesimagethumbtdir').$photo->photopath,
+                                ),
+                                 array(
+                                    'Key' =>  config('constants.awquickbytesimagemediumdir').$photo->photopath,
+                                ),
+                                 array(
+                                    'Key' =>  config('constants.awquickbytesimageextralargedir').$photo->photopath,
+                                )
+                            ) 
+                        )
+			
+                  ));
+            break;
+        case 'album':
+            $s3->deleteObjects(array(
+			'Bucket'     => config('constants.awbucket'),
+                        'Delete'=>array(
+                            'Objects'    => array(
+                                array(
+                                    'Key' =>  config('constants.awalbumimagedir').$photo->photopath,
+                                )
+                            ) 
+                        )
+                  ));
+            break;
+        endswitch;
+        $photo->delete();
     }
 }

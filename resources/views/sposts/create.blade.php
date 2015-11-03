@@ -98,12 +98,62 @@
     </ul>
 </div>            <header>
                 <i class="icon-big-notepad"></i>
-                <h2><small>Sponsored Post: 45345</small></h2>
-                <h3><small>BW</small></h3>
+                <h2><small>Create Post</small></h2>
+               
             </header>
-            {!! Form::open(array('url'=>'sposts/','class'=> 'form-horizontal','id'=>'validation_form', 'files' => true)) !!}
+      <script>
+            function addsponsoredfunction(){
+            var valid=1
+            $('.author_error').remove();
+            $('#add_new input').removeClass('error');
+            $('#add_new select').removeClass('error');
+            $('#add_new textarea').removeClass('error');
+            if(!($('#title').val())){
+            valid=0;
+            $('#title').addClass('error');
+            $('#title').after(errorMessage('Please fill title'));
+            }
+            if(!($('#summary').val())){
+            valid=0;
+            $('#summary').addClass('error');
+            $('#summary').after(errorMessage('Please fill summary'));
+            }
+            if(!($('#maxi').val())){
+            valid=0;
+            $('#maxi').addClass('error');
+            $('.elrte-wrapper').after(errorMessage('Please enter description.'));
+            //$('#maxi').after(errorMessage('Please fill maxi'));
+            }
+            if(!($('input[name=photoSourceURL]').val())){
+                //alert(1);
+                 valid=0;
+                $('input[name=photoSourceURL]').addClass('error');
+                $('input[name=photoSourceURL]').after(errorMessage('Please choose tag from existing Tags'));
+              
+            }
+            if(!($('select[name=channel_sel]').val())){
+                //alert(1);
+                 valid=0;
+                $('select[name=channel_sel]').addClass('error');
+                $('select[name=channel_sel]').after(errorMessage('Please select chennal'));
+              
+            }
+            if(valid==0)
+                return false;
+            else
+            return true;
+            }
+            function errorMessage($msg){
+             return '<span class="error author_error" style="clear:both;display:inline-block">'+$msg+'</span>';
+            }
+                
+               
+                               
+            </script>
+                
+            {!! Form::open(array('url'=>'sposts/','class'=> 'form-horizontal','id'=>'validation_form22','onsubmit'=>'return addsponsoredfunction()', 'files' => true)) !!}
             {!! csrf_field() !!}
-			<div class="container-fluid">
+			<div class="container-fluid" style="display:none">
 
                         <div class="form-legend" id="Notifications">Notifications</div>
 
@@ -139,7 +189,7 @@
                         <!--Notifications end-->
 
                 </div>
-                
+      
                 <div class="container-fluid">
 
                         <div class="form-legend" id="Channel">Channel</div>
@@ -152,7 +202,7 @@
                             <div class="span9">
                                 <div class="controls">
                                     <select name="channel_sel" id="selectBoxFilter20">
-                                        <option selected="" value="All">Select</option>
+                                        <option selected="" value="">Select</option>
                                         @foreach($channel_arr as $ch)                                        
                                             <option value="{{$ch->channel_id}}">{{$ch->channel}}</option>
                                         @endforeach 
@@ -207,11 +257,21 @@
                                 <div class="controls elrte-wrapper">
                                     <textarea id="maxi" name="description" rows="2" class="auto-resize"></textarea>
                                     <script>
+                                        
+                                        elRTE.prototype.options.panels.web2pyPanel = [
+                                            'pastetext','bold', 'italic','underline','justifyleft', 'justifyright',
+                                           'justifycenter', 'justifyfull','forecolor','hilitecolor','fontsize','link',
+                                           'image', 'insertorderedlist', 'insertunorderedlist'];
+ 
+                                       elRTE.prototype.options.toolbars.web2pyToolbar = ['web2pyPanel','tables'];
+                                       
+                                       
+                        
                                         $('#maxi').elrte({
                                             lang: "en",
                                             styleWithCSS: false,
                                             height: 200,
-                                            toolbar: 'maxi'
+                                            toolbar: 'web2pyToolbar',
                                         });
                                     </script>
                                 </div>

@@ -28,7 +28,7 @@ class QuotesController extends Controller
      *
      * @return Response
      */
-    public function create()
+    public function create(Request $request)
     {
         //Authenticate User
         if (!Session::has('users')) {
@@ -38,17 +38,44 @@ class QuotesController extends Controller
         $uid = Session::get('users')->id;
         //$asd = fopen("/home/sudipta/log.log", 'a+');
 
+        
         $channels = QuotesController::getUserChannels($uid);
+        $quoteArr='';
+         //B::enableQueryLog();
+        if($request->channel){
+            $query=Quote::where('channel_id', $request->channel)
+                ->select('quotes.*','quotetags.tag')
+                ->join('quotetags','quotes.q_tags','=','quotetags.tag_id')    
+                ->where('quotes.valid', '1');
+            if($request->keyword){
+                $keyword=$request->keyword;
+                $query->where(function($q) use ($keyword) {
+                    $q->where('quotes.description', 'like', '%' .trim($keyword) . '%')
+                      ->orWhere('quotetags.tag', 'like', '%' .trim($keyword) . '%');
+                });
+                
+            }
+           $quoteArr=$query->paginate(config('constants.recordperpage'));
+           
+//                   $query = DB::getQueryLog();
+//        $lastQuery = end($query);
+//        print_r($lastQuery);exit;
+            //echo count($quoteArr);exit;
+        }else{
+            //echo 'test1'; exit;
+        }
+        //$quotetags = DB::table('quotetags')->where('valid','1')->get();
+        //$qtauthor = DB::table('quotescategory')->where('valid','1')->get();
+       // print_r($qtauthor);exit;
         
-        $quotetags = DB::table('quotetags')->where('valid','1')->get();
-        $qtauthor = DB::table('quotescategory')->where('valid','1')->get();
-        
-        $quoteArr = QuotesController::getQuotesforUser($channels);
-        $tagArr = QuotesController::getTagsforQuotes($quoteArr);
+        //$quoteArr = QuotesController::getQuotesforUser($channels);
+        //$tagArr = QuotesController::getTagsforQuotes($quoteArr);
 
   //      fwrite($asd, " Values of Q Arr: ".count($quoteArr)." Data: \n\n");
     //    fclose($asd);
-        return view('tips.quotes', compact('uid','channels','quoteArr','qtauthor','quotetags','tagArr'));
+        //        return view('tips.quotes', compact('uid','channels','quoteArr','qtauthor','quotetags','tagArr'));
+
+        return view('tips.quotes', compact('uid','channels','quoteArr'));
     }
 
     /**
@@ -108,24 +135,24 @@ class QuotesController extends Controller
      * @param Channels Array
      * @return Array
      */
-    public function getQuotesforUser($channels){
-        //$asd = fopen("/home/sudipta/log.log", 'a+');
-        $tipArr = array();
-
-        foreach ($channels as $ch) {
-            $channelQuotes = Quote::where('channel_id', $ch->channel_id)
-                            
-                ->select('quotes.*')
-                 ->where('quotes.valid', '1')
-                ->get();
-
-            $quoteArr[$ch->channel_id] = $channelQuotes;
-            // fwrite($asd, " Channel ID ::" .$ch->channel_id  . " Values of Arr: ".count($tipArr)." Data: ".$channelTips. "\n\n");
-
-        }
-
-        return $quoteArr;
-    }
+//    public function getQuotesforUser($channels){
+//        //$asd = fopen("/home/sudipta/log.log", 'a+');
+//        $tipArr = array();
+//
+//        foreach ($channels as $ch) {
+//            $channelQuotes = Quote::where('channel_id', $ch->channel_id)
+//                            
+//                ->select('quotes.*')
+//                 ->where('quotes.valid', '1')
+//                ->get();
+//
+//            $quoteArr[$ch->channel_id] = $channelQuotes;
+//            // fwrite($asd, " Channel ID ::" .$ch->channel_id  . " Values of Arr: ".count($tipArr)." Data: ".$channelTips. "\n\n");
+//
+//        }
+//
+//        return $quoteArr;
+//    }
     /**
      * Store a newly created resource in storage.
      *
@@ -155,15 +182,15 @@ class QuotesController extends Controller
 
         $Quote->save();
 
-
+        return redirect($_SERVER['HTTP_REFERER']);
         // To Reload Quote Page -
-        $channels = QuotesController::getUserChannels($uid);
-        $quoteArr = QuotesController::getQuotesforUser($channels);
-        $qtauthor = DB::table('quotescategory')->where('valid','1')->get();
-        $tagArr = QuotesController::getTagsforQuotes($quoteArr);
-        $quotetags = DB::table('quotetags')->where('valid','1')->get();
-
-        return view('tips.quotes', compact('uid','channels','quoteArr','qtauthor','quotetags','tagArr'));
+//        $channels = QuotesController::getUserChannels($uid);
+//        $quoteArr = QuotesController::getQuotesforUser($channels);
+//        $qtauthor = DB::table('quotescategory')->where('valid','1')->get();
+//        $tagArr = QuotesController::getTagsforQuotes($quoteArr);
+//        $quotetags = DB::table('quotetags')->where('valid','1')->get();
+//
+//        return view('tips.quotes', compact('uid','channels','quoteArr','qtauthor','quotetags','tagArr'));
     }
 
     /**

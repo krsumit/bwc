@@ -21,7 +21,9 @@ return [
 'awquickbytesimageextralargedir' => 'quickbyte/quickbytes_extralarge_image/',
 'awalbumimagedir' => 'album/', 
 'awauthordir'=> 'author/', 
-'awfeaturebox'=>'featurebox/',    
+'awaevent'=> 'event/',
+'awatipstag'=> 'tipstag/',
+'awfeaturebox'=>'featurebox/',   
 'awbucket'=>'bwmedia',
 'awsbaseurl'=>'https://s3-ap-southeast-1.amazonaws.com/bwmedia/',    
 'recordperpage' => '10'    

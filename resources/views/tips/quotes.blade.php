@@ -1,9 +1,11 @@
 @extends('layouts/master')
 
 @section('title', 'Quotes - BWCMS')
-
-
 @section('content')
+<?php
+//print_r($input = Request::input('channel'));exit;
+
+?>
 
     <div class="panel">
         <div class="panel-content filler">
@@ -12,14 +14,16 @@
                 <h1><small>Quotes</small></h1>
             </div>
             <div class="panel-search container-fluid">
-               <form class="form-horizontal" method="get" action="">
+                @if(Request::input('channel'))
+               <form class="form-horizontal" method="get" action="{{url('quotes')}}">
+                     <input type="text" name="channel" id="channel" value="{{Request::input('channel')}}" style="display: none;"/>
                     <input id="panelSearch" required  placeholder="Search" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">
                     <button class="btn btn-search" type="submit"></button>
                      @if(isset($_GET['keyword'])) 
-                     <a href="quotes"><button class="btn btn-default" type="button">Reset</button></a>
+                     <a href="{{url('quotes')}}?channel={{Request::input('channel')}}"><button class="btn btn-default" type="button">Reset</button></a>
                    @endif
-
              </form>
+                @endif
             </div>
 
             <br><br>
@@ -183,12 +187,18 @@
             $('#description').addClass('error');
             $('#description').after(errorMessage('Please fill description'));
             }
-             
-            if(!($('#Taglist').val())){
+              if(!($('#Taglist').val())){
                 //alert(1);
                  valid=0;
                 $('#Taglist').addClass('error');
-                $('#Taglist').after(errorMessage('Choose From Existing Tags'));
+                $('#Taglist').after(errorMessage('Please choose existing Tags'));
+              
+            }
+            if(!($('select[name=channel_sel]').val())){
+                //alert(1);
+                 valid=0;
+                $('select[name=channel_sel]').addClass('error');
+                $('select[name=channel_sel]').after(errorMessage('Please select chennal'));
               
             }
             if(valid==0)
@@ -286,37 +296,30 @@
         </header>
         {!! Form::open(array('url'=>'quotes/','class'=> 'form-horizontal','id'=>'validation_form','onsubmit'=>'return addqueatsfunction()')) !!}
         {!! csrf_field() !!}
-            <div class="container-fluid">
+            <div class="container-fluid"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
-                <div id="Notifications" class="form-legend">Notifications</div>
+                <div id="Notifications" class="form-legend" >Notifications</div>
 
                 <!--Notifications begin-->
-                <div class="control-group row-fluid" style="display: none">
+                <div class="control-group row-fluid" >
                     <div class="span12 span-inset">
-                        <div class="alert alert-success alert-block">
+                       @if (Session::has('message'))
+                        <div class="alert alert-success alert-block" style="">
                             <i class="icon-alert icon-alert-info"></i>
-                            <button data-dismiss="alert" class="close" type="button">×</button>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <strong>This is Success Notification</strong>
-                            <span>Your data has been successfully modified.</span>
+                            <span>{{ Session::get('message') }}</span>
                         </div>
-                        <div class="alert alert-block">
-                            <i class="icon-alert icon-alert-info"></i>
-                            <button data-dismiss="alert" class="close" type="button">×</button>
-                            <strong>This is Alert Notification</strong>
-                            <span>No result found.</span>
-                        </div>
+                        @endif
+                        
+                        @if (Session::has('error'))
                         <div class="alert alert-error alert-block">
                             <i class="icon-alert icon-alert-info"></i>
-                            <button data-dismiss="alert" class="close" type="button">×</button>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <strong>This is Error Notification</strong>
-                            <span>Please select a valid search criteria.</span>
+                            <span>{{ Session::get('error') }}</span>
                         </div>
-                        <div class="alert alert-error alert-block">
-                            <i class="icon-alert icon-alert-info"></i>
-                            <button data-dismiss="alert" class="close" type="button">×</button>
-                            <strong>This is Error Notification</strong>
-                            <span>Please enter a valid email id.</span>
-                        </div>
+                        @endif
                     </div>
                 </div>
                 <!--Notifications end-->
@@ -336,9 +339,9 @@
                     <div class="span9">
                         <div class="controls">
                             <select name="channel_sel" id="channel_sel">
-                                <option selected="" value="none">---- Please Select ----</option>
+                                <option selected="" value="">---- Please Select ----</option>
                                 @foreach($channels as $c)
-                                    <option value="{{$c->channel_id}}">{{$c->channel}}</option>
+                                    <option @if(Request::input('channel')==$c->channel_id) selected="selected" @endif; value="{{$c->channel_id}}">{{$c->channel}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -425,10 +428,7 @@
                 </div>
 
             </div>
-
-
-
-
+            @if(trim(Request::input('channel')))
             <div class="container-fluid" id="quote_list">
                 <div class="row-fluid">
                     <div class="span12">
@@ -442,21 +442,27 @@
                                 <th>Action</th>
                             </tr>
                             </thead>
-                            @foreach($quoteArr as $q => $arr)
-                                <tbody id="{{$q}}">
-                                @foreach($arr as $a)
-                                    <tr class="gradeX" id="rowCur{{$a->quote_id}}">
-                                        <td>{{$a->quote_id}}</td>
+                            <tbody id="{{trim(Request::input('channel'))}}">
+                            @foreach($quoteArr as  $arr)
+                            <?php 
+                            //print_r($arr);exit;
+                            ?>
+                                    <tr class="gradeX" id="rowCur{{$arr->quote_id}}">
+                                        <td>{{$arr->quote_id}}</td>
                                        
-                                        <td><a href="#" onclick="getEditQuote({{$a->quote_id}});">{{$a->description}}</a></td>
-                                        <td>@if($tagArr[$a->quote_id]) {{$tagArr[$a->quote_id]}} @endif</td>
-                                        <td class="center"><input type="checkbox" name="delTip" class="uniformCheckbox" value="{{$a->quote_id}}"></td>
+                                        <td><a href="#" onclick="getEditQuote({{$arr->quote_id}});">{{$arr->description}}</a></td>
+                                        <td> {{$arr->tag}} </td>
+                                        <td class="center"><input type="checkbox" name="delTip" class="uniformCheckbox" value="{{$arr->quote_id}}"></td>
                                     </tr>
-                                @endforeach
-                                </tbody>
                             @endforeach
+                             </tbody>
                         </table>
                     </div>
+                     <div class="dataTables_paginate paging_bootstrap pagination">
+                    
+                {!! $quoteArr->appends(Input::get())->render() !!}
+                </div>
+                    
                     <div class="control-group row-fluid">
                         <div class="span12 span-inset">
                             <button type="button" onclick="deleteQuote();" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
@@ -469,7 +475,10 @@
                 <script>
                     $(document).ready(function() {
                         $('#tableSortable, #tableSortableRes, #tableSortableResMed').dataTable( {
-                            "sPaginationType": "bootstrap",
+                             bInfo: false,
+                              bPaginate:false,
+                              "aaSorting": [] ,
+                              "aoColumnDefs": [ { "bSortable": false, "aTargets": [3] } ],
                             "fnInitComplete": function(){
                                 $(".dataTables_wrapper select").select2({
                                     dropdownCssClass: 'noSearch'
@@ -482,13 +491,18 @@
                     });
                 </script>
             </div>
+            @endif
             <!-- end container -->
 
             <script>
                 $(document).ready(function(e) {
-                    $("#quote_list").hide();
+                    //$("#quote_list").hide();
                     $("#add_new").hide();
                     $("#btn_addnew").click(function(e) {
+                        if($('#channel_sel').attr("value").trim().length==0){
+                            alert('Please select channel');
+                            return false;
+                        }
                         $("#add_new").show();
                         $(this).hide();
                     });
@@ -500,18 +514,22 @@
                 $(document).ready(function(){
 
                     $("#channel_sel").change(function(){
+                        //alert(1);
 
                         $(this).find("option:selected").each(function(){
-                            //alert($(this).attr("value"));
-                            if($(this).attr("value") != "none"){
-
-                                $('#channel_sel option').each(function(index,element){
-                              //      alert($("#" + element.value));
-                                    $("#" + element.value).hide();
-                                });
-                                var v = $(this).attr("value");
-                                $("#quote_list").show();
-                                $("#" + v).show();
+                           //alert($(this).attr("value").trim().length);
+                            if($(this).attr("value").trim().length != 0){
+                                // alert($(this).attr("value"));
+                               // $('#channel_sel option').each(function(index,element){
+                                
+                                //      alert($("#" + element.value));
+                                
+                                   // $("#" + element.value).hide();
+                                    window.location='{{url("quotes")}}'+'?channel='+$(this).attr("value").trim();
+                              //  });
+                                //var v = $(this).attr("value");
+                                //$("#quote_list").show();
+                               // $("#" + v).show();
                                 //$("#quote_list").show();
 
                             }
@@ -524,7 +542,7 @@
 
                         });
 
-                    }).change();
+                    });
 
                 });
 
