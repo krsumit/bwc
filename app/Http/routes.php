@@ -368,6 +368,8 @@ Route::post('sposts/update', ['middleware' => 'auth',   'uses' => 'SponsoredPost
 Route::post('sposts', ['middleware' => 'auth',   'uses' => 'SponsoredPostsController@store' ]);
 Route::match(['get', 'post'], '/sposts/delete', ['as' => '/sposts/delete', 'uses' => 'SponsoredPostsController@destroy']);
 Route::get('sposts/{id}','SponsoredPostsController@show');
+Route::post('sposts/image/upload', ['middleware' => 'auth',   'uses' => 'SponsoredPostsController@imageUpload' ]);
+Route::get('sposts/image/upload','SponsoredPostsController@imageUpload');
 
 /*
  * CMS Rights - Management

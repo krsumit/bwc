@@ -103,42 +103,7 @@
             </header>
             {!! Form::open(array('url'=>'sposts/update','class'=> 'form-horizontal','id'=>'validation_form', 'files' => true)) !!}
             {!! csrf_field() !!}
-			<div class="container-fluid">
-
-                        <div class="form-legend" id="Notifications">Notifications</div>
-
-                        <!--Notifications begin-->
-                        <div class="control-group row-fluid" style="display:none">
-                            <div class="span12 span-inset">
-                                <div class="alert alert-success alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Success Notification</strong>
-                                    <span>Your data has been successfully modified.</span>
-                                </div>
-                                <div class="alert alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Alert Notification</strong>
-                                    <span>No result found.</span>
-                                </div>
-                                <div class="alert alert-error alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Error Notification</strong>
-                                    <span>Please select a valid search criteria.</span>
-                                </div>
-								<div class="alert alert-error alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Error Notification</strong>
-                                    <span>Please enter a valid email id.</span>
-                                </div>
-                            </div>
-                        </div>
-                        <!--Notifications end-->
-
-                </div>
+			
                 
                 <div class="container-fluid">
 
@@ -396,23 +361,13 @@
 			<div class="container-fluid">
 
                         <div class="form-legend" id="photos-videos">Photos & Videos</div>
-                    <!-- Uploaded Image and Video Ids -->
-                    <input type="hidden" id="uploadedImages" name="uploadedImages[]">
-                    <input type="hidden" id="uploadedVideos" name="uploadedVideos[]">
-                    
+                 
                         <!--Tabs begin-->
                         <div  class="control-group row-fluid span-inset">
                             <ul class="nav nav-tabs" id="myTab">
-                                <li class="dropdown active"><a data-toggle="dropdown" class="dropdown-toggle" href="javascript:;">Upload Image<b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a data-toggle="tab" href="#dropdown1">Image 1</a></li>
-                                        <li><a data-toggle="tab" href="#dropdown2">Image 2</a></li>
-					<li><a data-toggle="tab" href="#dropdown3">Image 3</a></li>
-					<li><a data-toggle="tab" href="#dropdown4">Image 4</a></li>
-                                    </ul>
-				</li>
+                                 <li><a data-toggle="tab" class="active" href="#dropdown1">Upload Image</a></li>
                                 <li><a data-toggle="tab" href="#tab-example1">Video</a></li>
-				<li><a data-toggle="tab" href="#tab-example4">Current Photos</a></li>
+				
                             </ul>
             <div class="tab-content">
                 <div id="tab-example1" class="tab-pane fade">
@@ -457,12 +412,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="control-group row-fluid">
+<!--                        <div class="control-group row-fluid">
                             <div class="span12 span-inset">
                                 <div style="float:right; width:11%; margin-bottom:5px;"><button class="btn btn-warning" id="addvideobutton" name="addvideobutton" type="button" style="display:block;">Submit</button>
                                     <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:50%; display:block; margin-left:15px;"/></div>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                <script>
                 // Delete / Save Photos - Video
@@ -662,260 +617,56 @@
            </div>
         </div>
                     <div id="dropdown1" class="tab-pane fade active in">
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Upload Image 1</label>
-                            </div>
-                            <div class="span9">
-                                <div class="fileupload fileupload-new" data-provides="fileupload">
-                                    <div class="input-append">
-                                        <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" name="albumPhoto1" id="albumPhoto1"/></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                             <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label" for="inputField">
+                                Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos."><i class="icon-photon info-circle"></i></a>
+                            </label>
+                        </div>
+                        <div class="span9 row-fluid" >
+                            <div class=" fileupload-buttonbar">
+                                <div class="col-lg-7">
+                                    <!-- The fileinput-button span is used to style the file input field as button -->
+                                    <span class="btn btn-success fileinput-button">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        <span>Add files...</span>
+                                        <input type="file" name="files[]" id="articleimage" multiple />
+                                    </span>
+                                    <button type="submit" class="btn btn-primary start">
+                                        <i class="glyphicon glyphicon-upload"></i>
+                                        <span>Start upload</span>
+                                    </button>
+                                    <button type="reset" class="btn btn-warning cancel">
+                                        <i class="glyphicon glyphicon-ban-circle"></i>
+                                        <span>Cancel upload</span>
+                                    </button>
+                                    <button type="button" class="btn btn-danger delete">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                        <span>Delete</span>
+                                    </button>
+                                    <input type="checkbox" class="toggle">
+                                    <!-- The global file processing state -->
+                                    <span class="fileupload-process"></span>
+                                </div>
+                                <!-- The global progress state -->
+                                <div class="col-lg-5 fileupload-progress fade">
+                                    <!-- The global progress bar -->
+                                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar progress-bar-success" style="width:0%;"></div>
                                     </div>
+                                    <!-- The extended global progress state -->
+                                    <div class="progress-extended">&nbsp;</div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="control-group row-fluid" id="pID" @if(count($photos)>0) value="{{$photos[0]->photo_id}}" @endif>
-                            <div class="span3">
-                                <label class="control-label">Title 1</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="photoTitle1" name="inputSpan9" id="inputSpan9" @if(count($photos)>0) value="{{$photos[0]->title}}" @endif>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Description 1</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <textarea rows="4" name="photoDesc1" class="" @if(count($photos)>0) value="{{$photos[0]->description}}" @endif>@if(count($photos)>0) {{$photos[0]->description}} @endif</textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Source Name</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="photoSource1" id="inputSpan9" @if(count($photos)>0) value="{{$photos[0]->source}}" @endif>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Source URL</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="photoSourceURL1" id="inputSpan9" @if(count($photos)>0) value="{{$photos[0]->source_url}}" @endif>
-                                </div>
-                            </div>
-                        </div>
+                            <!-- The table listing the files available for upload/download -->
+                            <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+                            <input type="hidden" id="uploadedImages" name="uploadedImages">
 
-                        <div class="control-group row-fluid">
-                            <div class="span12 span-inset">
-                                <div data-on-label="Enabled" data-off-label="Disabled" class="switch">
-                                    <input type="checkbox" name="photoEnabled1" @if(count($photos)>0) @if($photos[0]->active == 1) checked="checked" @endif @endif>
-                                </div>
-
-                                <button class="btn btn-warning" type="button" @if(count($photos)>0) value="{{$photos[0]->photo_id}}" @endif id="addphotobutton" onclick="$(this).addPhotoFunc(this.value, this.name)" name="1" style="display:block;">Submit</button>
-                                <img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
-                            </div>
                         </div>
 
                     </div>
-                    <div id="dropdown2" class="tab-pane fade">
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Upload Image 2</label>
-                            </div>
-                            <div class="span9">
-                                <div class="fileupload fileupload-new" data-provides="fileupload">
-                                    <div class="input-append">
-                                        <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" name="albumPhoto2" id="albumPhoto2" /></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid" id="pID" @if(count($photos)>1) value="{{$photos[1]->photo_id}}" @endif>
-                            <div class="span3">
-                                <label class="control-label">Title 2</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="photoTitle2" id="inputSpan9" @if(count($photos)>1) value="{{$photos[1]->title}}" @endif>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Description 2</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <textarea rows="4" name="photoDesc2" class="" @if(count($photos)>1) value="{{$photos[1]->description}}" @endif>@if(count($photos)>1) {{$photos[1]->description}} @endif</textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Source Name</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="photoSource2" id="inputSpan9" @if(count($photos)>1) value="{{$photos[1]->source}}" @endif>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Source URL</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="photoSourceURL2" id="inputSpan9" @if(count($photos)>1) value="{{$photos[1]->source_url}}" @endif>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid">
-                            <div class="span12 span-inset">
-                                <div data-on-label="Enabled" data-off-label="Disabled" class="switch">
-                                    <input type="checkbox" name="photoEnabled2" @if(count($photos)>1) @if($photos[1]->active == 1) checked="checked" @endif @endif>
-                                </div>
-                                <button class="btn btn-warning" type="button" @if(count($photos)>1) value="{{$photos[1]->photo_id}}" @endif id="addphotobutton" onclick="$(this).addPhotoFunc(this.value, this.name)" name="2" style="display:block;">Submit</button>
-                                <img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="dropdown3" class="tab-pane fade">
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Upload Image 3</label>
-                            </div>
-                            <div class="span9">
-                                <div class="fileupload fileupload-new" data-provides="fileupload">
-                                    <div class="input-append">
-                                        <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" name="albumPhoto3" id="albumPhoto3"/></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid" id="pID" @if(count($photos)>2) value="{{$photos[2]->photo_id}}" @endif>
-                            <div class="span3">
-                                <label class="control-label">Title 3</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="photoTitle3" id="inputSpan9" @if(count($photos)>2) value="{{$photos[2]->title}}" @endif>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Description 3</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <textarea rows="4" name="photoDesc3" class="" @if(count($photos)>2) value="{{$photos[2]->description}}" @endif>@if(count($photos)>2) {{$photos[2]->description}} @endif</textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Source Name</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="photoSource3" id="inputSpan9" @if(count($photos)>2) value="{{$photos[2]->source}}" @endif>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Source URL</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="photoSourceURL3" id="inputSpan9" @if(count($photos)>2) value="{{$photos[2]->source_url}}" @endif>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid">
-                            <div class="span12 span-inset">
-                                <div data-on-label="Enabled" data-off-label="Disabled" class="switch">
-                                    <input type="checkbox" name="photoEnabled3" @if(count($photos)>2) @if($photos[2]->active == 1) checked="checked" @endif @endif>
-                                </div>
-                                <button class="btn btn-warning" type="button" @if(count($photos)>2) value="{{$photos[2]->photo_id}}" @endif id="addphotobutton" onclick="$(this).addPhotoFunc(this.value, this.name)" name="3" style="display:block;">Submit</button>
-                                <img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="dropdown4" class="tab-pane fade">
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Upload Image 4</label>
-                            </div>
-                            <div class="span9">
-                                <div class="fileupload fileupload-new" data-provides="fileupload">
-                                    <div class="input-append">
-                                        <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" name="albumPhoto4" id="albumPhoto4" /></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid" id="pID" @if(count($photos)>3) value="{{$photos[3]->photo_id}}" @endif>
-                            <div class="span3">
-                                <label class="control-label">Title 4</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="photoTitle4" id="inputSpan9" @if(count($photos)>3) value="{{$photos[3]->title}}" @endif>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Description 4</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <textarea rows="4" name="photoDesc4" class="" @if(count($photos)>3) value="{{$photos[3]->description}}" @endif> @if(count($photos)>3) {{$photos[3]->description}} @endif </textarea>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Source Name</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="photoSource4" id="inputSpan9" @if(count($photos)>3) value="{{$photos[3]->source}}" @endif>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Source URL</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="photoSourceURL4" id="inputSpan9" @if(count($photos)>3) value="{{$photos[3]->source_url}}" @endif>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="control-group row-fluid">
-                            <div class="span12 span-inset">
-                                <div data-on-label="Enabled" data-off-label="Disabled" class="switch">
-                                    <input type="checkbox" name="photoEnabled4" @if(count($photos)>3) @if($photos[3]->active == 1) checked="checked" @endif @endif>
-                                </div>
-                                <button class="btn btn-warning" type="button" @if(count($photos)>3) value="{{$photos[3]->photo_id}}" @endif id="addphotobutton" onclick="$(this).addPhotoFunc(this.value, this.name)" name="4" style="display:block;">Submit</button>
-                                <img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
-                            </div>
-                        </div>
-                    </div>
+		</div>
+                  
                 </div>
             </div>
                 </div><!--end container-->
@@ -926,7 +677,7 @@
                     <div class="control-group row-fluid">
                         <div class="span12 span-inset">
                             <label class="checkbox" >
-                                <input type="checkbox" name="feature" class="uniformCheckbox" value="is">
+                                <input type="checkbox" name="feature" @if($spost->feature_this =='1') checked="checked" @endif  class="uniformCheckbox" value="">
                                     <a href="#" target="_blank">Feature This</a>
                             </label>
                             <script>
@@ -948,4 +699,137 @@
             	{!! Form::close() !!}
         </div>
 
+
+
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+        </td>
+        <td>
+            {% if (!i && !o.options.autoUpload) { %}
+                <button class="btn btn-primary start" disabled>
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start</span>
+                </button>
+            {% } %}
+            {% if (!i) { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if (file.url) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                {% } else { %}
+                    <span>{%=file.name%}</span>
+                {% } %}
+            </p>
+            {% if (file.error) { %}
+                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            {% if (file.deleteUrl) { %}
+                <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                    <i class="glyphicon glyphicon-trash"></i>
+                    <span>Delete</span>
+                </button>
+                <input type="checkbox" name="delete" value="1" class="toggle">
+            {% } else { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+<script type="text/javascript" src="{{ asset('js/tmpl.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/load-image.all.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.iframe-transport.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-process.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-image.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-audio.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-video.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-validate.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-ui.js') }}"></script>
+<script>
+    $(document).ready(function(){
+$('#validation_form').fileupload({
+        // Uncomment the following to send cross-domain cookies:
+        //xhrFields: {withCredentials: true},
+        url: '<?php echo url('sposts/image/upload') ?>',
+        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+        maxFileSize: 10000000
+    });
+    });
+     $('#validation_form').bind('fileuploaddone', function (e, data) {
+    //console.log(e);
+    var dataa=JSON.parse(data.jqXHR.responseText);
+    //console.log(dataa['files']['0']['name']);
+    $.each(dataa['files'], function(index, element) {
+        //console.log(element.name);
+        if($('#uploadedImages').val().trim())
+            $('#uploadedImages').val($('#uploadedImages').val()+','+element.name);
+        else
+            $('#uploadedImages').val(element.name);    
+    });
+     
+    });
+    $('#validation_form').bind('fileuploaddestroyed', function (e, data) {
+    // console.log(data);
+     var file=getArg(data.url,'file');
+     var images= $('#uploadedImages').val().split(',');
+     images.splice(images.indexOf(file),1);
+     $('#uploadedImages').val(images.join());
+      //$('#imagesname').val($('#imagesname').val().replace(','+));
+     
+    });
+    
+
+function getArg(url,name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
+    if (results==null){
+       return null;
+    }
+    else{
+       return results[1] || 0;
+    }
+}
+
+
+</script>
 @stop

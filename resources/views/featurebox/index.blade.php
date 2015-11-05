@@ -137,7 +137,7 @@
             return true;
             }
             function errorMessage($msg){
-             return '<div class="error">'+$msg+'</div>';
+             return '<span class="error">'+$msg+'</span>';
             }
                 
                 </script>

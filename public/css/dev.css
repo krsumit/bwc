@@ -8,8 +8,9 @@ label.error,div.error{
     font-weight:normal !important;
 }
 select.formattedelement{display:inline-block!important;width: 0;height:0;visibility: hidden;}
-div.error{border: 1px solid red;}
+div.error{border: 1px solid red!important;}
 div.error .select2-choice{background-color: #f4c8c5!important;background-image:none!important;}
 .error.elrte-error,.error.author-error{display:block!important;}
-.noborder{border:none!important;}
+.error.noborder{border:none!important;}
 .authorimagespn input{margin-top: 10px;}
+

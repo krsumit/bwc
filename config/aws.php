@@ -17,8 +17,8 @@ return [
     |
     */
 	 'credentials' => [
-        'key'    => 'AKIAJ2N5WNFZSYKJKHHQ',
-        'secret' => '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',
+        'key'    => 'AKIAJP2II2APBMWFVR3Q',
+        'secret' => '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',
     ],
     'region' => 'ap-southeast-1',
     'version' => 'latest',

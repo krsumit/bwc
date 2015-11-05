@@ -880,7 +880,7 @@ class ArticlesController extends Controller {
                 unlink($dest);
                 $articleImage = new Photo();
                 $articleImage->photopath = $image;
-                $articleImage->imagefullPath = url(config('constants.articleimagedir') . $image);
+                $articleImage->imagefullPath = '';
                 $articleImage->channel_id = $request->channel_sel;
                 $articleImage->owned_by = 'article';
                 $articleImage->owner_id = $id;
@@ -1161,7 +1161,7 @@ class ArticlesController extends Controller {
                 unlink($dest);
                 $articleImage = new Photo();
                 $articleImage->photopath = $image;
-                $articleImage->imagefullPath = url(config('constants.articleimagedir') . $image);
+                $articleImage->imagefullPath = '';
                 $articleImage->channel_id = $request->channel_sel;
                 $articleImage->owned_by = 'article';
                 $articleImage->owner_id = $id;
@@ -1171,11 +1171,6 @@ class ArticlesController extends Controller {
                 $articleImage->save();
             }
 
-           // echo 'exit end'; exit;
-
-            //fwrite($asd, "Each Photo Being Updated".$arrIds[$i]." Articl ID:".$id." \n");
-            //DB::table('photos')->where('photo_id', $arrIds[$i])
-            //   ->update(['owner_id' => $id, 'channel_id' => $request->channel_sel]);
         }
 
         //}

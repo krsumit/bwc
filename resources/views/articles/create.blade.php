@@ -35,8 +35,10 @@
                                    $('.error.elrte-error').remove();
                                    $('.error.author-error').remove();
                                    $('.error.noborder').remove();
+                                   $('#maxi').parent('div').removeClass('error');
                                     if(as.length==0){
                                        // alert(1);
+                                       $('#maxi').parent('div').addClass('error');
                                         $('.elrte-wrapper').after('<span class="error elrte-error" style="display:block;" >Article description is required. </span>');
                                         checkvalid=0;
                                     }
@@ -1576,7 +1578,7 @@ foreach ($rights as $r) {
                             </div>
                             <!-- The table listing the files available for upload/download -->
                             <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
-                            <input type="hidden" id="uploadedImages" name="uploadedImages">
+                            <input type="hidden1" id="uploadedImages" name="uploadedImages">
 
                         </div>
 <!--                        <script type="text/javascript">
@@ -1963,21 +1965,8 @@ foreach ($rights as $r) {
     </tr>
 {% } %}
 </script>
-<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
-<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
-<!--<script src="http:js/vendor/jquery.ui.widget.js"></script>-->
-<!-- The Templates plugin is included to render the upload/download listings -->
-<script src="http://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
-<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-<script src="http://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
-<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-<script src="http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
-<!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
-<script src="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<!-- blueimp Gallery script -->
-<script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
-<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-<!-- <script type="text/javascript" src="{{ elixir('output/fileuploadJS.js') }}"></script> -->
+<script type="text/javascript" src="{{ asset('js/tmpl.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/load-image.all.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/jquery.iframe-transport.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-process.js') }}"></script>

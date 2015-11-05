@@ -105,9 +105,10 @@
             function addsponsoredfunction(){
             var valid=1
             $('.author_error').remove();
-            $('#add_new input').removeClass('error');
-            $('#add_new select').removeClass('error');
-            $('#add_new textarea').removeClass('error');
+            $('#title').removeClass('error');
+            $('#summary').removeClass('error');
+            //$('#maxi').removeClass('error');
+            $('#maxi').parent('div').removeClass('error');
             if(!($('#title').val())){
             valid=0;
             $('#title').addClass('error');
@@ -118,19 +119,15 @@
             $('#summary').addClass('error');
             $('#summary').after(errorMessage('Please fill summary'));
             }
-            if(!($('#maxi').val())){
-            valid=0;
-            $('#maxi').addClass('error');
-            $('.elrte-wrapper').after(errorMessage('Please enter description.'));
-            //$('#maxi').after(errorMessage('Please fill maxi'));
+            if($('#maxi').elrte('val').length == 0){
+             valid=0;
+             $('#maxi').parent('div').addClass('error');
+            //$('#maxi').addClass('error');
+             $('.elrte-wrapper').after(errorMessage('Please enter description.'));
             }
-            if(!($('input[name=photoSourceURL]').val())){
-                //alert(1);
-                 valid=0;
-                $('input[name=photoSourceURL]').addClass('error');
-                $('input[name=photoSourceURL]').after(errorMessage('Please choose tag from existing Tags'));
-              
-            }
+            
+        //alert($('#maxi').elrte('val').length);return false;
+        
             if(!($('select[name=channel_sel]').val())){
                 //alert(1);
                  valid=0;
@@ -153,43 +150,6 @@
                 
             {!! Form::open(array('url'=>'sposts/','class'=> 'form-horizontal','id'=>'validation_form22','onsubmit'=>'return addsponsoredfunction()', 'files' => true)) !!}
             {!! csrf_field() !!}
-			<div class="container-fluid" style="display:none">
-
-                        <div class="form-legend" id="Notifications">Notifications</div>
-
-                        <!--Notifications begin-->
-                        <div class="control-group row-fluid" style="display:none">
-                            <div class="span12 span-inset">
-                                <div class="alert alert-success alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Success Notification</strong>
-                                    <span>Your data has been successfully modified.</span>
-                                </div>
-                                <div class="alert alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Alert Notification</strong>
-                                    <span>No result found.</span>
-                                </div>
-                                <div class="alert alert-error alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Error Notification</strong>
-                                    <span>Please select a valid search criteria.</span>
-                                </div>
-								<div class="alert alert-error alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Error Notification</strong>
-                                    <span>Please enter a valid email id.</span>
-                                </div>
-                            </div>
-                        </div>
-                        <!--Notifications end-->
-
-                </div>
-      
                 <div class="container-fluid">
 
                         <div class="form-legend" id="Channel">Channel</div>
@@ -225,7 +185,7 @@
                         <!--Text Area - No Resize begin-->
                         <div  class="control-group row-fluid">
                             <div class="span3">
-                                <label class="control-label">Title (200 Characters)</label>
+                                <label class="control-label">Title </label>
                             </div>
                             <div class="span9">
                                 <div class="controls">
@@ -238,7 +198,7 @@
                         <!--Text Area Resizable begin-->
                         <div id="Text_Area_Resizable" class="control-group row-fluid">
                             <div class="span3">
-                                <label class="control-label">Summary (800 Characters)</label>
+                                <label class="control-label">Summary</label>
                             </div>
                             <div class="span9">
                                 <div class="controls">
@@ -434,21 +394,11 @@
 			<div class="container-fluid">
 
                         <div class="form-legend" id="photos-videos">Photos & Videos</div>
-                    <!-- Uploaded Image and Video Ids -->
-                    <input type="hidden" id="uploadedImages" name="uploadedImages[]">
-                    <input type="hidden" id="uploadedVideos" name="uploadedVideos[]">
-                    
+                   
                         <!--Tabs begin-->
                         <div  class="control-group row-fluid span-inset">
                             <ul class="nav nav-tabs" id="myTab">
-                                <li class="dropdown active"><a data-toggle="dropdown" class="dropdown-toggle" href="javascript:;">Upload Image<b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a data-toggle="tab" href="#dropdown1">Image 1</a></li>
-                                    <!--    <li><a data-toggle="tab" href="#dropdown2">Image 2</a></li>
-					<li><a data-toggle="tab" href="#dropdown3">Image 3</a></li>
-					<li><a data-toggle="tab" href="#dropdown4">Image 4</a></li>-->
-                                    </ul>
-				</li>
+                                <li><a data-toggle="tab" class="active" href="#dropdown1">Upload Image</a></li>
                                 <li><a data-toggle="tab" href="#tab-example1">Video</a></li>
 				<!--<li><a data-toggle="tab" href="#tab-example4">Current Photos</a></li>-->
                             </ul>
@@ -494,14 +444,6 @@
                                 </div>
                             </div>
                 </div>
-		<div class="control-group row-fluid">
-                    <div class="span12 span-inset">
-                        	<div style="float:right; width:11%; margin-bottom:5px;">
-                                    <button class="btn btn-warning" id="addvideobutton" name="addvideobutton" type="button" style="display:block;">Submit</button>
-                                    <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:50%; display:block; margin-left:15px;"/>
-                                </div>
-                            </div>
-		</div> 
                 </div>
                <script>
                 // Delete / Save Photos - Video
@@ -577,62 +519,6 @@
                         // stop the form from submitting the normal way and refreshing the page
                         //event.preventDefault();
                     });
-
-                    // process the form - For Add Image in Album
-                    $("#addphotobutton").click(function(){
-                        //$("#addAuthorForm").on('click',function(event){}
-                        //  alert('Yay!');
-
-                        // get the form data
-                        // there are many ways to get this data using jQuery (you can use the class or id also)
-                        var formData = new FormData();
-                        formData.append('albumphoto', albumPhoto.files[0]);
-                        formData.append('title', $('input[name=photoTitle]').val());
-                        formData.append('description',$('textarea[name=photoDesc]').val());
-                        formData.append('source', $('input[name=photoSource]').val());
-                        formData.append('sourceurl', $('input[name=photoSourceURL]').val());
-                        formData.append('active', $('input[name=photoEnabled]:checked').val());
-                        formData.append('channel_id', $('select[name=channel_sel]').val());
-                        formData.append('owner', 'sponsoredpost');
-
-                        // process the form
-                        $.ajax({
-                            type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                            //method      : 'POST',
-                            url         : '/article/addPhotos', // the url where we want to POST
-                            //files       :  true,
-                            data        :  formData,
-                            enctype     : 'multipart/form-data',
-                            dataType    : 'json', // what type of data do we expect back from the server
-                            contentType :  false,
-                            processData :  false,
-                            success     :  function(respText){
-                                theResponse = respText;
-                                alert(theResponse);
-                                //Assign returned ID to hidden array element
-                                alert($('#uploadedImages').val());
-                                var isthere = $('#uploadedImages').val();
-                                var arrP = isthere.split(',');
-                                arrP.push(theResponse);
-                                var newval = arrP.join(',');
-                                $('#uploadedImages').val(newval);
-                                //alert($('#uploadedImages').val());
-                            },
-                            //encode      : true,
-                            headers: {
-                                'X-CSRF-TOKEN': token.val()
-                            }
-                        })
-                            // using the done promise callback
-                                .done(function(data) {
-
-                                    // log data to the console so we can see
-                                    console.log(data);
-                                    // here we will handle errors and validation messages
-                                });
-                        // stop the form from submitting the normal way and refreshing the page
-                        //event.preventDefault();
-                    });
                 });
             </script>
             
@@ -672,249 +558,56 @@
                 </div>
                 </div>
                         <div id="dropdown1" class="tab-pane fade active in">
-                            <div class="control-group row-fluid">
-				<div class="span3">
-                                    <label class="control-label">Upload Image 1</label>
-				</div>
-                                <div class="span9">
-                                    <div class="fileupload fileupload-new" data-provides="fileupload">
-                                        <div class="input-append">
-                                            <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" name="albumPhoto" id="albumPhoto" /></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-			<div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Title 1</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="photoTitle" id="inputSpan9">
-                                </div>
-                            </div>
-                        </div>
-			<div class="control-group row-fluid">
-                            <div class="span3">
-				<label class="control-label">Description 1</label>
-                            </div>
-                            <div class="span9">
-                		<div class="controls">
-                                	<textarea rows="4" name="photoDesc" class=""></textarea>
-				</div>
-                            </div>
-			</div>
-			<div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Source Name</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="photoSource" id="inputSpan9">
-                                </div>
-                            </div>
-                        </div>
-			<div class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Source URL</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="photoSourceURL" id="inputSpan9">
-                                </div>
-                            </div>
-                        </div>
-                
-                    <div class="control-group row-fluid">
-        		<div class="span12 span-inset">
-			<div data-on-label="Enabled" data-off-label="Disabled" class="switch">
-                                <input type="checkbox" name="photoEnabled" checked="checked">
-                        </div>
-				<button class="btn btn-warning" id="addphotobutton" name="addphotobutton" type="button" style="display:block;">Submit</button>
-				 <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;"/>
-			</div>
-                    </div>
-		</div>
-                <div id="dropdown2" class="tab-pane fade">
-                    <div class="control-group row-fluid">
+                             <div class="control-group row-fluid">
                         <div class="span3">
-                            <label class="control-label">Upload Image 2</label>
+                            <label class="control-label" for="inputField">
+                                Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos."><i class="icon-photon info-circle"></i></a>
+                            </label>
                         </div>
-                    <div class="span9">
-                        <div class="fileupload fileupload-new" data-provides="fileupload">
-                            <div class="input-append">
-                                <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" /></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-		<div class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Title 2</label>
-                    </div>
-                    <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="inputSpan9" id="inputSpan9">
+                        <div class="span9 row-fluid" >
+                            <div class=" fileupload-buttonbar">
+                                <div class="col-lg-7">
+                                    <!-- The fileinput-button span is used to style the file input field as button -->
+                                    <span class="btn btn-success fileinput-button">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        <span>Add files...</span>
+                                        <input type="file" name="files[]" id="articleimage" multiple />
+                                    </span>
+                                    <button type="submit" class="btn btn-primary start">
+                                        <i class="glyphicon glyphicon-upload"></i>
+                                        <span>Start upload</span>
+                                    </button>
+                                    <button type="reset" class="btn btn-warning cancel">
+                                        <i class="glyphicon glyphicon-ban-circle"></i>
+                                        <span>Cancel upload</span>
+                                    </button>
+                                    <button type="button" class="btn btn-danger delete">
+                                        <i class="glyphicon glyphicon-trash"></i>
+                                        <span>Delete</span>
+                                    </button>
+                                    <input type="checkbox" class="toggle">
+                                    <!-- The global file processing state -->
+                                    <span class="fileupload-process"></span>
+                                </div>
+                                <!-- The global progress state -->
+                                <div class="col-lg-5 fileupload-progress fade">
+                                    <!-- The global progress bar -->
+                                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                                    </div>
+                                    <!-- The extended global progress state -->
+                                    <div class="progress-extended">&nbsp;</div>
                                 </div>
                             </div>
-                </div>
-		<div class="control-group row-fluid">
-                    <div class="span3">
-			<label class="control-label">Description 2</label>
-                    </div>
-                    <div class="span9">
-                        <div class="controls">
-                            <textarea rows="4" class=""></textarea>
-			</div>
+                            <!-- The table listing the files available for upload/download -->
+                            <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+                            <input type="hidden" id="uploadedImages" name="uploadedImages">
+
+                        </div>
+
                     </div>
 		</div>
-		<div class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Source Name</label>
-                    </div>
-                    <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="inputSpan9" id="inputSpan9">
-                                </div>
-                            </div>
-                </div>
-		<div class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Source URL</label>
-                    </div>
-                    <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="inputSpan9" id="inputSpan9">
-                            </div>
-                            </div>
-                </div>
-				<div class="control-group row-fluid">
-					<div class="span12 span-inset">
-						<button class="btn btn-warning" type="button" style="display:block;">Submit</button>
-					 <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;"/>
-					</div>
-				</div>
-                                </div>
-		<div id="dropdown3" class="tab-pane fade">
-                    <div class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Upload Image 3</label>
-                    </div>
-                    <div class="span9">
-                        <div class="fileupload fileupload-new" data-provides="fileupload">
-                            <div class="input-append">
-                                <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" /></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-				<div class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Title 3</label>
-                    </div>
-                    <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="inputSpan9" id="inputSpan9">
-                                </div>
-                            </div>
-                </div>
-				<div class="control-group row-fluid">
-									<div class="span3">
-										<label class="control-label">Description 3</label>
-									</div>
-									<div class="span9">
-												<div class="controls">
-													<textarea rows="4" class=""></textarea>
-												</div>
-									</div>
-								</div>
-				<div class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Source Name</label>
-                    </div>
-                    <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="inputSpan9" id="inputSpan9">
-                                </div>
-                            </div>
-                </div>
-				<div class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Source URL</label>
-                    </div>
-                    <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="inputSpan9" id="inputSpan9">
-                                </div>
-                            </div>
-                </div>
-				<div class="control-group row-fluid">
-					<div class="span12 span-inset">
-						<button class="btn btn-warning" type="button" style="display:block;">Submit</button>
-					 <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;"/>
-					</div>
-				</div>
-                                </div>
-								<div id="dropdown4" class="tab-pane fade">
-                                  <div class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Upload Image 4</label>
-                    </div>
-                    <div class="span9">
-                        <div class="fileupload fileupload-new" data-provides="fileupload">
-                            <div class="input-append">
-                                <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" /></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-				<div class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Title 4</label>
-                    </div>
-                    <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="inputSpan9" id="inputSpan9">
-                                </div>
-                            </div>
-                </div>
-				<div class="control-group row-fluid">
-									<div class="span3">
-										<label class="control-label">Description 4</label>
-									</div>
-									<div class="span9">
-												<div class="controls">
-													<textarea rows="4" class=""></textarea>
-												</div>
-									</div>
-								</div>
-				<div class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Source Name</label>
-                    </div>
-                    <div class="span9">
-                                <div class="controls">
-                                    <input type="text" name="inputSpan9" id="inputSpan9">
-                                </div>
-                            </div>
-                    </div>
-		<div class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Source URL</label>
-                    </div>
-                    <div class="span9">
-                        <div class="controls">
-                            <input type="text" name="inputSpan9" id="inputSpan9">
-                        </div>
-                    </div>
-                </div>
-				<div class="control-group row-fluid">
-					<div class="span12 span-inset">
-						<button class="btn btn-warning" type="button" style="display:block;">Submit</button>
-					 <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;"/>
-					</div>
-				</div>
-                                </div>
+              
                             </div>
                         </div>
                 </div><!--end container-->
@@ -925,7 +618,7 @@
                     <div class="control-group row-fluid">
                         <div class="span12 span-inset">
                             <label class="checkbox" >
-                                <input type="checkbox" name="feature" class="uniformCheckbox" value="is">
+                                <input type="checkbox" name="feature" class="uniformCheckbox" value="1">
                                     <a href="#" target="_blank">Feature This</a>
                             </label>
                             <script>
@@ -947,4 +640,135 @@
             	{!! Form::close() !!}
         </div>
 
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+        <td>
+            <span class="preview"></span>
+        </td>
+        <td>
+            <p class="name">{%=file.name%}</p>
+            <strong class="error text-danger"></strong>
+        </td>
+        <td>
+            <p class="size">Processing...</p>
+            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+        </td>
+        <td>
+            {% if (!i && !o.options.autoUpload) { %}
+                <button class="btn btn-primary start" disabled>
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start</span>
+                </button>
+            {% } %}
+            {% if (!i) { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+        <td>
+            <span class="preview">
+                {% if (file.thumbnailUrl) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+                {% } %}
+            </span>
+        </td>
+        <td>
+            <p class="name">
+                {% if (file.url) { %}
+                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+                {% } else { %}
+                    <span>{%=file.name%}</span>
+                {% } %}
+            </p>
+            {% if (file.error) { %}
+                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+            {% } %}
+        </td>
+        <td>
+            <span class="size">{%=o.formatFileSize(file.size)%}</span>
+        </td>
+        <td>
+            {% if (file.deleteUrl) { %}
+                <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                    <i class="glyphicon glyphicon-trash"></i>
+                    <span>Delete</span>
+                </button>
+                <input type="checkbox" name="delete" value="1" class="toggle">
+            {% } else { %}
+                <button class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel</span>
+                </button>
+            {% } %}
+        </td>
+    </tr>
+{% } %}
+</script>
+<script type="text/javascript" src="{{ asset('js/tmpl.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/load-image.all.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.iframe-transport.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-process.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-image.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-audio.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-video.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-validate.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-ui.js') }}"></script>
+<script>
+    $(document).ready(function(){
+$('#validation_form22').fileupload({
+        // Uncomment the following to send cross-domain cookies:
+        //xhrFields: {withCredentials: true},
+        url: '<?php echo url('sposts/image/upload') ?>',
+        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+        maxFileSize: 10000000
+    });
+    });
+     $('#validation_form22').bind('fileuploaddone', function (e, data) {
+    //console.log(e);
+    var dataa=JSON.parse(data.jqXHR.responseText);
+    //console.log(dataa['files']['0']['name']);
+    $.each(dataa['files'], function(index, element) {
+        //console.log(element.name);
+        if($('#uploadedImages').val().trim())
+            $('#uploadedImages').val($('#uploadedImages').val()+','+element.name);
+        else
+            $('#uploadedImages').val(element.name);    
+    });
+     
+    });
+    $('#validation_form22').bind('fileuploaddestroyed', function (e, data) {
+    // console.log(data);
+     var file=getArg(data.url,'file');
+     var images= $('#uploadedImages').val().split(',');
+     images.splice(images.indexOf(file),1);
+     $('#uploadedImages').val(images.join());
+      //$('#imagesname').val($('#imagesname').val().replace(','+));
+     
+    });
+    
+
+function getArg(url,name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
+    if (results==null){
+       return null;
+    }
+    else{
+       return results[1] || 0;
+    }
+}
+
+
+</script>
 @stop
