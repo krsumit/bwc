@@ -40,7 +40,7 @@ class Cron {
                  //print_r($authorRow); exit;
                 $articleId = $authorRow['article_id'];
               $result = $this->sendMail($articleId);
-             if($result){
+              if($result){
                   $send_mail_status='1';
                   $articlesUpdateStmt = $this->conn->prepare("update articles set send_mail_status=?"
                                 . "where article_id=?");
@@ -207,16 +207,16 @@ class Cron {
         $return_html .= '</table>';
         $return_html .= '<table width="590" border="0" cellpadding="0" cellspacing="0" align="center" class="scaleForMobile">';
         $return_html .= '<tr><td width="590" height="12"></td></tr>';
-        $return_html .= '<tr><td width="590" style="font-size: 22px; color: #2f2f36; text-align: left; font-weight: bold; font-family: Helvetica, Arial, sans-serif; line-height: 30px;"><singleline>Dear'.$name .'</singleline></td></tr>';
+        $return_html .= '<tr><td width="590" style="font-size: 22px; color: #2f2f36; text-align: left; font-weight: bold; font-family: Helvetica, Arial, sans-serif; line-height: 30px;"><singleline>Dear&nbsp;'.$name .'</singleline></td></tr>';
         $return_html .= '<tr><td width="590" height="10"></td></tr>';
-        $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline>Your article titled <a href="'.$url.'" target="_blank">'.$articletitle.'(click here)</a> has been published on BW Businessworld.</singleline></td></tr>';
+        $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline>Your article titled <a href="'.$url.'" target="_blank">'.$articletitle.'&nbsp;(click here)</a> has been published on BW Businessworld.</singleline></td></tr>';
         $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline>Click on the article title to read and share it with your circle.</singleline></td></tr>';
         $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline>Looking forward to many such enriching contribution from you.</singleline></td></tr>';
         $return_html .= '<tr><td width="590" height="30"></td></tr>';
         $return_html .= '<tr><td style="font-family:Segoe,Segoe UI,DejaVu Sans,Trebuchet MS,Verdana,sans-serif !important;"><strong >Regards</strong></td> </tr>';
         $return_html .= '<tr><td style="font-family:Segoe,Segoe UI,DejaVu Sans,Trebuchet MS,Verdana,sans-serif !important;"><strong >BW Businessworld Editorial</strong></td> </tr>';
         $return_html .= '<tr><td width="590" height="30"></td></tr>';
-        $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline>This is a system generated email. Please do not reply to this mail. For any feedback about the article/process or otherwise, <a href="'.$urlcontact.'" target="_blank">(click here) to contact</a> us.</singleline></td></tr>';
+        $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline><i>This is a system generated email. Please do not reply to this mail. For any feedback about the article/process or otherwise, <a href="'.$urlcontact.'" target="_blank">(click here)</a> &nbsp;to contact us.</i></singleline></td></tr>';
         
         $return_html .= '<tr><td width="590" height="30"></td></tr>';
         $return_html .= '<tr><td style="font-family:Segoe,Segoe UI,DejaVu Sans,Trebuchet MS,Verdana,sans-serif !important;"><strong >Think <span style="color:#d92e35;">Business.</span> Think <span style="color:#d92e35;">BW Businessworld.</span></strong></td> </tr>';
