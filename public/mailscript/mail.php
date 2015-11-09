@@ -40,14 +40,14 @@ class Cron {
                  //print_r($authorRow); exit;
                 $articleId = $authorRow['article_id'];
               $result = $this->sendMail($articleId);
-              /*if($result){
+             if($result){
                   $send_mail_status='1';
                   $articlesUpdateStmt = $this->conn->prepare("update articles set send_mail_status=?"
                                 . "where article_id=?");
                         $articlesUpdateStmt->bind_param('ii', $send_mail_status,   $articleId);
                         $articlesUpdateStmt->execute();
                         
-              }*/
+              }
              
               
             }
