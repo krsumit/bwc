@@ -5,7 +5,7 @@ composer.json
 .elasticbeanstalk/
 composer.json
 composer.phar
-
+.env
 
 
 
