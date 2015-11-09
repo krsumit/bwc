@@ -190,6 +190,21 @@ class PhotosController extends Controller
 			
                   ));
             break;
+        case 'sponsoredpost':
+            $s3->deleteObjects(array(
+			'Bucket'     => config('constants.awbucket'),
+                        'Delete'=>array(
+                            'Objects'    => array(
+                                array(
+                                    'Key' =>  config('constants.aw_sponsored_image_thumb_dir').$photo->photopath,
+                                ),
+                                 array(
+                                    'Key' =>  config('constants.aw_sponsored_image_extralarge_dir').$photo->photopath,
+                                )
+                            ) 
+                        )
+                  ));
+            break;
         case 'album':
             $s3->deleteObjects(array(
 			'Bucket'     => config('constants.awbucket'),

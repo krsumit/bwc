@@ -30,17 +30,17 @@ class SponsoredPostsController extends Controller {
         $rightLabel = "";
         switch ($option) {
             case "published":
-                $status = 'P';
+                $valid = '1';
                 $rightLabel = "publishedSPosts";
                 break;
             case "deleted":
-                $status = 'D';
+                $valid = '0';
                 $rightLabel = "deletedSPosts";
                 break;
         }
         //Get QB Array
         //$qbytes = QuickByte::where('status',$status);
-        $sposts = SponsoredPost::where('status', $status)->where('valid', '1')->get();
+        $sposts = SponsoredPost::where('valid',$valid)->paginate(config('constants.recordperpage'));
         $arrRights = SponsoredPostsController::getRights($uid);
 
         //fwrite($asd, " CHANNEL SELECTED ::" . $uid . " user_id :" . count($sposts) . " status:".$status."\n");
@@ -248,18 +248,7 @@ class SponsoredPostsController extends Controller {
             return redirect('/auth/login');
         }
         $spost = SponsoredPost::find($id);
-        $arty = DB::table('articles')
-                ->join('article_author', 'article_author.article_id', '=', 'articles.article_id')
-                ->join('authors', 'authors.author_id', '=', 'article_author.author_id')
-                ->select('articles.*', 'authors.name', 'authors.author_id')
-                ->where('articles.article_id', $id)
-                ->where('article_author.article_author_rank', '1')
-                ->get();
-
-        foreach ($arty as $arty1) {
-            //$article = $arty1;
-        }
-
+       
         //fwrite($asd, "EDIT ARTICLE ID::".$article->article_id." \n");                
 
         $event = DB::table('event')->where('valid', '1')->get();
@@ -489,6 +478,26 @@ class SponsoredPostsController extends Controller {
             $deleteSP = SponsoredPost::find($d);
             $deleteSP->valid = 0;
             $deleteSP->save();
+        }
+        return;
+    }
+    
+     public function publishBulk() {
+        if (isset($_GET['option'])) {
+            $id = $_GET['option'];
+        }
+        $uid = Session::get('users')->id;
+        $delArr = explode(',', $id);
+        //fwrite($asd, " Del Arr Count: ".count($delArr)." \n\n");
+        foreach ($delArr as $d) {
+            //fwrite($asd, " Delete Id : ".$d." \n\n");
+            $deleteS = SponsoredPost::find($d);
+            $deleteS->status = 'P';
+            $deleteS->valid='1';
+            $deleteS->published_by=$uid;
+            $deleteS->publish_date = date('Y-m-d');
+            $deleteS->publish_time = date('H:i:s');
+            $deleteS->save();
         }
         return;
     }

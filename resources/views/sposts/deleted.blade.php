@@ -129,46 +129,35 @@
               
            </header>
            <form class="form-horizontal">
-		   <div class="container-fluid">
+		<div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
-                        <div class="form-legend" id="Notifications">Notifications</div>
+                <div class="form-legend" id="Notifications">Notifications</div>
 
-                        <!--Notifications begin-->
-                        <div class="control-group row-fluid">
-                            <div class="span12 span-inset">
-                                @if (Session::has('message'))
-                                <div class="alert alert-success alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Success Notification</strong>
-                                    <span>{{ Session::get('message') }}</span>
-                                </div>
-                                @endif
-                                <div class="alert alert-block" style="display:none">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Alert Notification</strong>
-                                    <span>No result found.</span>
-                                </div>
-                                @if (Session::has('error'))
-                                <div class="alert alert-error alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Error Notification</strong>
-                                    <span>{{ Session::get('error') }}</span>
-                                </div>
-                                @endif
-				<div class="alert alert-error alert-block" style="display:none">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Error Notification</strong>
-                                    <span>Please enter a valid email id.</span>
-                                </div>
-                            </div>
+                <!--Notifications begin-->
+                <div class="control-group row-fluid" >
+                    <div class="span12 span-inset">
+                       @if (Session::has('message'))
+                        <div class="alert alert-success alert-block" style="">
+                            <i class="icon-alert icon-alert-info"></i>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>This is Success Notification</strong>
+                            <span>{{ Session::get('message') }}</span>
                         </div>
-                        <!--Notifications end-->
-
+                        @endif
+                        
+                        @if (Session::has('error'))
+                        <div class="alert alert-error alert-block">
+                            <i class="icon-alert icon-alert-info"></i>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>This is Error Notification</strong>
+                            <span>{{ Session::get('error') }}</span>
+                        </div>
+                        @endif
+                    </div>
                 </div>
+                <!--Notifications end-->
+
+            </div>	
               <div class="container-fluid">
 
 
@@ -182,20 +171,10 @@
                                            <th>Title</th>
                                            <th>Views</th>
                                            <th>Date,Time</th>
-                                           <th><input type="checkbox" class="uniformCheckbox" value="checkbox1"></th>
+                                           <th><input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectall" ></th>
 									   </tr>
                                    </thead>
                                    <tbody>
-                                       <tr class="gradeX">
-                                           <td><a href="create-new-sponsored-post.html">234567890987654</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: Sharabani Mukherjee."><i class="icon-photon info-circle"></i></a></td>
-                                           <td><a href="create-new-sponsored-post.html">English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay</a>
-                                           </td>
-                                           <td><a href="create-new-sponsored-post.html">2546</a></td>
-                                           <td class="center"><a href="create-new-sponsored-post.html">11/03/2013</a>
-										   					  <a href="create-new-sponsored-post.html">12:13 pm</a>
-										   </td>
-                                           <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
-                                       </tr>
                                        @foreach($sposts as $s)
                                        <tr class="gradeX">
                                            <td>{{$s->id}} <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: Sharabani Mukherjee."><i class="icon-photon info-circle"></i></a></td>
@@ -205,7 +184,7 @@
                                            <td class="center">{{$s->publish_date}}
                                                {{$s->publish_time}}
                                            </td>
-                                           <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
+                                           <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1" value="{{$s->id}}" name="checkItem[]"></td>
                                        </tr>
                                        @endforeach                                       
                                    </tbody>
@@ -214,18 +193,39 @@
                            </div>
                        </div>
                        <!--Sortable Responsive Media Table end-->
-
+                       <div class="dataTables_paginate paging_bootstrap pagination">
+                    
+                {!! $sposts->appends(Input::get())->render() !!}
+                </div>
            </div><!-- end container -->
 		   <script>
                        $(document).ready(function() {
                            $('#tableSortable, #tableSortableRes, #tableSortableResMed').dataTable( {
-                               "sPaginationType": "bootstrap",
-                               "fnInitComplete": function(){
+                                bInfo: false,
+                              bPaginate:false,
+                              "aaSorting": [] ,
+                              "aoColumnDefs": [ { "bSortable": false, "aTargets": [4] } ],
+                              "fnInitComplete": function(){
                                    $(".dataTables_wrapper select").select2({
                                        dropdownCssClass: 'noSearch'
                                    });
                                }
                            });
+                           
+                           $('#selectall').click(function(){
+                            if($(this).is(':checked')) {
+                                $('input[name="checkItem[]"]').each(function(){
+                                    $(this).attr('checked','checked');
+                                });
+                            }else{
+                                 $('input[name="checkItem[]"]').each(function(){
+                                    $(this).removeAttr('checked');
+                                });
+                            }
+                         });
+                         
+                         
+                         
                            //                            $("#simpleSelectBox").select2({
                            //                                dropdownCssClass: 'noSearch'
                            //                            }); 

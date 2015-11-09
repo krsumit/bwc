@@ -890,20 +890,9 @@ class ArticlesController extends Controller {
                 $articleImage->save();
             }
 
-
-
-            //fwrite($asd, "Each Photo Being Updated".$arrIds[$i]." Articl ID:".$id." \n");
-            //DB::table('photos')->where('photo_id', $arrIds[$i])
-            //   ->update(['owner_id' => $id, 'channel_id' => $request->channel_sel]);
         }
 
-//exit;
-        //Add article_id to Relational Tables;
-        //     exit;
-        //$asd = fopen("/home/sudipta/log.log", 'a+');
-        //fwrite($asd, "Step 3.1 In Article POST Function END ING \n");
-        //fclose($asd);
-        //$article->status;exit;
+
         if ($article->status == 'P') {
             Session::flash('message', 'Your Article has been Published successfully. It will appear on website shortly.');
             return redirect('/article/list/published');
@@ -1264,11 +1253,6 @@ class ArticlesController extends Controller {
     }
 
     public function publishScheduledArticle() {
-        //echo date('h:i:s');exit;
-        //  DB::enableQueryLog();
-//        $query = DB::getQueryLog();
-//        $lastQuery = end($query);
-//        print_r($lastQuery);
         $articles = DB::table('articles')
                 ->where('status', 'SD')
                 ->where('publish_date', '<=', date('Y-m-d'))
@@ -1280,12 +1264,8 @@ class ArticlesController extends Controller {
             $updatearticle->status = 'P';
             $updatearticle->update();
         }
-
-//        $query = DB::getQueryLog();
-//        $lastQuery = end($query);
-//        print_r($lastQuery);
-        //print_r(couont($articles));exit;
-        exit;
     }
+    
+    
 
 }

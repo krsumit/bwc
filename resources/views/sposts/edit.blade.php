@@ -176,11 +176,19 @@
                                 <div class="controls elrte-wrapper">
                                     <textarea id="maxi" name="description" rows="2" class="auto-resize">{{$spost->description}}</textarea>
                                     <script>
+                                        
+                                        elRTE.prototype.options.panels.web2pyPanel = [
+                                            'pastetext','bold', 'italic','underline','justifyleft', 'justifyright',
+                                           'justifycenter', 'justifyfull','forecolor','hilitecolor','fontsize','link',
+                                           'image', 'insertorderedlist', 'insertunorderedlist'];
+ 
+                                       elRTE.prototype.options.toolbars.web2pyToolbar = ['web2pyPanel','tables'];
+                                       
                                         $('#maxi').elrte({
                                             lang: "en",
                                             styleWithCSS: false,
                                             height: 200,
-                                            toolbar: 'maxi'
+                                            toolbar: 'web2pyToolbar'
                                         });
                                     </script>
                                 </div>
@@ -577,46 +585,39 @@
                 });
             </script>
             
-		<div id="tab-example4" class="tab-pane fade">
-                    <div class="container-fluid">
-
-
-                       <!--Sortable Responsive Media Table begin-->
-                       <div class="row-fluid">
-                           <div class="span12">
-                               <table class="table table-striped table-responsive" id="tableSortableResMed">
-                                   <thead class="cf sorthead">
-                                       <tr>
-                                           <th>Image</th>
-                                           <th>Title</th>
-					   <th>Source</th>
-                                           <th>Source URL</th>
-					   <th>Action</th>                                      
-                                        </tr>
-                                   </thead>
-                                   <tbody>
-                                       @foreach($photos as $photo)
-                                            <tr id="row{{$photo->photo_id}}">
-                                                <td>
-                                                    <img src="{{ asset($photo->photopath)}}" alt="user" style="width:40%;" />
-                                                </td>
-                                                <td>{{ $photo->title }}</td>
-                                                <input type="hidden" name="deleteImagel" id="{{ $photo->photo_id }}">
-                                                <td class="center">{{ $photo->source }}</td>
-                                                <td class="center">{{ $photo->source_url }}</td>
-                                                <td class="center"><button type="button" onclick="$(this).MessageBox({{ $photo->photo_id }})" name="{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-danger">Dump</button><img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:20%; display:block; margin-left:15px;"/></td>
-                                            </tr>
-                                       @endforeach
-                                   </tbody>
-                               </table>
-
-                           </div>
-                       </div>
-                       <!--Sortable Responsive Media Table end-->
-							
-           </div>
-        </div>
                     <div id="dropdown1" class="tab-pane fade active in">
+                        <div class="row-fluid">
+                            <div class="span12">
+                                @if(count($photos)>0)
+                                <table class="table table-striped table-responsive" id="tableSortableResMed">
+                                    <thead class="cf sorthead">
+                                        <tr>
+                                            <th>Image</th>
+<!--                                            <th>Title</th>
+                                            <th>Source</th>
+                                            <th>Source URL</th>-->
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($photos as $photo)
+                                        <tr id="row{{$photo->photo_id}}">
+                                            <td>
+                                                <img src="{{ config('constants.awsbaseurl').config('constants.aw_sponsored_image_thumb_dir').$photo->photopath}}" alt="spost" />
+                                            </td>
+<!--                                            <td>{{ $photo->title }}</td>-->
+                                    <input type="hidden" name="deleteImagel" id="{{ $photo->photo_id }}">
+<!--                                    <td class="center">{{ $photo->source }}</td>
+                                    <td class="center">{{ $photo->source_url }}</td>-->
+                                    <td class="center"><button type="button" onclick="$(this).MessageBox({{ $photo->photo_id }})" name="{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-danger">Dump</button><img  src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:20%; display:block; margin-left:15px;display:none;"/></td>
+                                    </tr>
+                                    @endforeach
+
+                                    </tbody>
+                                </table>
+                                @endif
+                            </div>
+                        </div>
                              <div class="control-group row-fluid">
                         <div class="span3">
                             <label class="control-label" for="inputField">
