@@ -32,7 +32,7 @@ class Cron {
         //exit;
        
 
-        $articlesResults = $this->conn->query("SELECT * FROM articles where send_mail_status='0' AND status ='p' $condition");
+        $articlesResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date,article_author.*,authors.* FROM articles  JOIN article_author ON  article_author.article_id = articles.article_id JOIN  authors ON  authors.author_id = article_author.author_id where send_mail_status='0' AND status ='P'");
 
         if ($articlesResults->num_rows > 0) {
 
@@ -41,10 +41,10 @@ class Cron {
                 $articleId = $authorRow['article_id'];
               $result = $this->sendMail($articleId);
               if($result){
+                  
                   $send_mail_status='1';
-                  $articlesUpdateStmt = $this->conn->prepare("update articles set send_mail_status=?"
-                                . "where article_id=?");
-                        $articlesUpdateStmt->bind_param('ii', $send_mail_status,   $articleId);
+                  $articlesUpdateStmt = $this->conn->prepare("update articles set send_mail_status=? where article_id=?");
+                        $articlesUpdateStmt->bind_param('ii', $send_mail_status,$articleId);
                         $articlesUpdateStmt->execute();
                         
               }
@@ -236,7 +236,7 @@ class Cron {
         //$SMTPChat = $SMTPMail->SendMail();
         mail("$email","Your article on BW has been published",$return_html,$headers);
     }
-
+    return true;
 }
 
 }

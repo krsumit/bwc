@@ -1578,7 +1578,7 @@ foreach ($rights as $r) {
                             </div>
                             <!-- The table listing the files available for upload/download -->
                             <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
-                            <input type="hidden1" id="uploadedImages" name="uploadedImages">
+                            <input type="hidden" id="uploadedImages" name="uploadedImages">
 
                         </div>
 <!--                        <script type="text/javascript">
