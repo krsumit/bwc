@@ -4,7 +4,7 @@
 
 
 @section('content')
-
+<?php //echo '<pre>';print_r($delArrcheck); exit; ?>
 <div class="panel">
     <div class="panel-content filler">
         <div class="panel-logo"></div>
@@ -219,18 +219,15 @@
                                                     <div class="span3">
                                                         <label class="control-label">Channel</label>
                                                     </div>
+                                                   @foreach($allchannel as $channel)
                                                     <div class="span3">
                                                         <label class="radio">
-                                                            <input type="checkbox" @if($BW == 1) checked @endif name="BW" class="uniformRadio" value="1">
-                                                            BW Businessworld
+                                                            <input type="checkbox"  @if(in_array($rightChannels[$channel->channel_id], $delArrcheck))  {{'checked="checked"'}} @endif   name="rightArr[]" class="uniformRadio" value="{{$rightChannels[$channel->channel_id]}}">
+                                                           {{$channel->channel}}
                                                         </label>
                                                     </div>
-                                                    <div class="span3">
-                                                        <label class="radio">
-                                                            <input   type="checkbox"@if($BWH == 1) checked @endif name="BWH" class="uniformRadio" value="2">
-                                                            BW Hotelier
-                                                        </label>
-                                                    </div>
+                                                 @endforeach
+                                                 
                                                 </div>
                                             
                                             <div class="control-group row-fluid">
@@ -243,7 +240,7 @@
                 </div>
 				  
 				  
-			<div class="container-fluid">
+	<div class="container-fluid">
 
                         <div class="form-legend" id="rights">CMS Rights</div>
                         

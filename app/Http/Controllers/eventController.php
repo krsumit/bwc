@@ -27,7 +27,16 @@ class eventController extends Controller
        
         $country = Country::where('valid','=','1')->get();
         $states = State::where('valid','=','1')->orderBy('name')->get();
-        return view('events.add-new-events',compact('states','country'));
+        $uid = Session::get('users')->id;
+        $channels = DB::table('channels')
+                ->join('rights', 'rights.pagepath', '=', 'channels.channel_id')
+                ->join('user_rights', 'user_rights.rights_id', '=', 'rights.rights_id')
+                ->select('channels.*')
+                ->where('rights.label', '=', 'channel')
+                ->where('user_rights.user_id', '=', $uid)
+                ->orderBy('channel')
+                ->get();
+        return view('events.add-new-events',compact('states','country','channels'));
     }
  
 
@@ -199,7 +208,16 @@ class eventController extends Controller
 		->get();
         $country = Country::where('valid','=','1')->get();
         $states = State::where('valid','=','1')->orderBy('name')->get();
-        return view('events.edit-event',compact('states','country','posts'));
+        $uid = Session::get('users')->id;
+        $channels = DB::table('channels')
+                ->join('rights', 'rights.pagepath', '=', 'channels.channel_id')
+                ->join('user_rights', 'user_rights.rights_id', '=', 'rights.rights_id')
+                ->select('channels.*')
+                ->where('rights.label', '=', 'channel')
+                ->where('user_rights.user_id', '=', $uid)
+                ->orderBy('channel')
+                ->get();
+        return view('events.edit-event',compact('states','country','posts','channels'));
     }
 
 

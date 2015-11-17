@@ -32,6 +32,6 @@ return [
 'awfeaturebox'=>'featurebox/',   
 'awbucket'=>'bwmedia',
 'awsbaseurl'=>'https://s3-ap-southeast-1.amazonaws.com/bwmedia/',    
-'recordperpage' => '10'    
+'recordperpage' => '20'    
 ];
 ?>

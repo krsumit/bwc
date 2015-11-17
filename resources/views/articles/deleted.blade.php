@@ -136,7 +136,7 @@
         </header>
         <form class="form-horizontal">
 
-            <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif>
+            <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
                 <div class="form-legend" id="Notifications">Notifications</div>
 

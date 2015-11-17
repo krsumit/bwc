@@ -10,10 +10,12 @@ class Cron {
 
     function __construct() {
         $this->conn = new mysqli(HOST, USER, PASS, DATABASE) or die($this->conn->connect_errno);
+        mysqli_set_charset($this->conn,"utf8");
         $this->conn2 = new mysqli(LHOST, LUSER, LPASS, LDATABASE) or die($this->conn2->connect_errro);
+        mysqli_set_charset($this->conn2,"utf8");
     }
 
-    function migrateData($section) {
+    function migrateData($section) { 
 		//$this->migrateArticleAuthor('1','2');exit;
         // print_r($arr);exit;
        // echo $section;
@@ -931,7 +933,7 @@ function migratequotesTage() {
         }
 
         $tagResults = $this->conn->query("SELECT tags_id as id,tag,valid  FROM tags where 1 $condition");
-        //ho $tagResults->num_rows;exit;
+        //echo $tagResults->num_rows;exit;
         if ($tagResults->num_rows > 0) {
             while ($tagrow = $tagResults->fetch_assoc()) {
                 $tid = $tagrow['id'];
@@ -1222,11 +1224,21 @@ function migratequotesTage() {
     }
     
     function migrateArticle() {
+		//echo 'test'; exit;
+        // updating scheduled articles
+         $this->conn->query("update articles set status='P' where status='SD' and concat(publish_date,' ',publish_time) <= '".date('Y-m-d h:i:s')."'") or die($this->conn->error);; 
+        //echo date('Y-m-d h:i:s'); exit;
+        //exit;
         $this->migrateAuthor();
         $this->migrateCategory();
-        $this->migrateTag();
+        //$this->migrateTag();
         $this->migrateTopics();
         $this->migrateMagazine();
+        
+       // if(){
+            
+       // }
+		//echo 'test'; exit;
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;

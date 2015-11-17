@@ -107,38 +107,41 @@
 
             <div class="container-fluid">
 
-                <div class="form-legend" id="Notifications">Notifications</div>
+               <div class="form-legend" id="Notifications">Notifications</div>
 
-                <!--Notifications begin-->
-                <div class="control-group row-fluid" style="display: none">
+                <div class="control-group row-fluid">
                     <div class="span12 span-inset">
-                        <div class="alert alert-success alert-block">
+                        @if (Session::has('message'))
+                        <div class="alert alert-success alert-block" style="">
                             <i class="icon-alert icon-alert-info"></i>
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <strong>This is Success Notification</strong>
-                            <span>Your data has been successfully modified.</span>
+                            <span>{{ Session::get('message') }}</span>
                         </div>
-                        <div class="alert alert-block">
+                        @endif
+                        <div class="alert alert-block" style="display:none">
                             <i class="icon-alert icon-alert-info"></i>
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <strong>This is Alert Notification</strong>
                             <span>No result found.</span>
                         </div>
+                        @if (Session::has('error'))
                         <div class="alert alert-error alert-block">
                             <i class="icon-alert icon-alert-info"></i>
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <strong>This is Error Notification</strong>
-                            <span>Please select a valid search criteria.</span>
+                            <span>{{ Session::get('error') }}</span>
                         </div>
-                        <div class="alert alert-error alert-block">
+                        @endif
+                        <div class="alert alert-error alert-block"style="display:none">
                             <i class="icon-alert icon-alert-info"></i>
                             <button type="button" class="close" data-dismiss="alert">&times;</button>
                             <strong>This is Error Notification</strong>
                             <span>Please enter a valid email id.</span>
                         </div>
+
                     </div>
                 </div>
-                <!--Notifications end-->
 
             </div>
 

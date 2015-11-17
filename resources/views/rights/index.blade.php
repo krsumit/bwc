@@ -143,47 +143,36 @@
            </header>
             {!! Form::open(array('url'=>'rights/','class'=> 'form-horizontal','id'=>'form1')) !!}
             {!! csrf_field() !!}
-		   <div class="container-fluid">
+                
+                <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
-                        <div class="form-legend" id="Notifications">Notifications</div>
+                <div class="form-legend" id="Notifications">Notifications</div>
 
-                        <!--Notifications begin-->
-                        <div class="control-group row-fluid">
-                            <div class="span12 span-inset">
-                                <div class="alert alert-success alert-block" style="display:none">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Success Notification</strong>
-                                    <span>Your data has been successfully modified.</span>
-                                </div>
-                                <div class="alert alert-block" style="display:none">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Alert Notification</strong>
-                                    <span>No result found.</span>
-                                </div>
-                                @if (count($errors) > 0)
-                                <div class="alert alert-error alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Error Notification</strong>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                    <!--<span>Please select a valid search criteria.</span>-->
-                                </div>
-                                @endif
-				<div class="alert alert-error alert-block" style="display:none">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Error Notification</strong>
-                                    <span>Please enter a valid email id.</span>
-                                </div>
-                            </div>
+                <!--Notifications begin-->
+                <div class="control-group row-fluid" >
+                    <div class="span12 span-inset">
+                        @if (Session::has('message'))
+                        <div class="alert alert-success alert-block" style="">
+                            <i class="icon-alert icon-alert-info"></i>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>This is Success Notification</strong>
+                            <span>{{ Session::get('message') }}</span>
                         </div>
-                        <!--Notifications end-->
-
+                        @endif
+                        
+                        @if (Session::has('error'))
+                        <div class="alert alert-error alert-block">
+                            <i class="icon-alert icon-alert-info"></i>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>This is Error Notification</strong>
+                            <span>{{ Session::get('error') }}</span>
+                        </div>
+                        @endif
+                    </div>
                 </div>
+                <!--Notifications end-->
+
+            </div>
                 
                 <div class="container-fluid">
 						<div class="form-legend" id="new">Create A New Admin Profile</div>
@@ -265,7 +254,7 @@
                                             </div>
                                             <!--Simple Select Box end-->
                                              
-                                               <div class="control-group row-fluid">
+<!--                                               <div class="control-group row-fluid">
                                                     <div class="span3">
                                                         <label class="control-label">Channel</label>
                                                     </div>
@@ -281,8 +270,23 @@
                                                             BW Hotelier
                                                         </label>
                                                     </div>
-                                                </div>
+                                                </div>-->
                                             
+                                                 <div class="control-group row-fluid">
+                                                    <div class="span3">
+                                                        <label class="control-label">Channel</label>
+                                                    </div>
+                                                   @foreach($allchannel as $channel)
+                                                    <div class="span3">
+                                                        <label class="radio">
+                                                            <input type="checkbox"    name="rightArr[]" class="uniformRadio" value="{{$rightChannels[$channel->channel_id]}}">
+                                                           {{$channel->channel}}
+                                                        </label>
+                                                    </div>
+                                                 @endforeach
+                                                 
+                                                </div>
+
                                             <div class="control-group row-fluid">
                                             <div class="span12 span-inset">
                                                 <button class="btn btn-warning pull-right" type="submit" name="add" style="display:block;">Add</button>
@@ -348,6 +352,8 @@
                        $(document).ready(function() {
                            $('#tableSortable, #tableSortableRes, #tableSortableResMed').dataTable( {
                                "sPaginationType": "bootstrap",
+                               "aaSorting": [] ,
+                              "aoColumnDefs": [ { "bSortable": false, "aTargets": [4] } ],
                                "fnInitComplete": function(){
                                    $(".dataTables_wrapper select").select2({
                                        dropdownCssClass: 'noSearch'

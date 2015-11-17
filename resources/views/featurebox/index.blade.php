@@ -325,7 +325,6 @@
                         <label class="radio">
                             <input id="p_url" type="radio" checked name="mediaSel" class="uniformRadio" value="photo">
                             Photo
-                        </label>
                     </div>
                     <div class="span3">
                         <label class="radio">
@@ -361,7 +360,7 @@
 
                 <div class="control-group row-fluid" id="photourl">
                     <div class="span3">
-                        <label class="control-label">Photo</label>
+                        <label class="control-label">Photo (Size: 870px X 400px)</label>
                     </div>
                     <div class="span9">
                         <div class="fileupload fileupload-new" data-provides="fileupload">

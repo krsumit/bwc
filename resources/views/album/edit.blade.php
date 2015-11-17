@@ -228,7 +228,7 @@
                         <div id="Drag_And_Drop_Upload" class="control-group row-fluid">
                             <div class="span3">
                                 <label class="control-label" for="inputField">
-                                    Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos."><i class="icon-photon info-circle"></i></a>
+                                    Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: 1200px X 600px)."><i class="icon-photon info-circle"></i></a>
                                 </label>
                             </div>
                             <div class="span9 row-fluid" >

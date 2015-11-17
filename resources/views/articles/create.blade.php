@@ -1538,7 +1538,7 @@ foreach ($rights as $r) {
                     <div class="control-group row-fluid">
                         <div class="span3">
                             <label class="control-label" for="inputField">
-                                Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos."><i class="icon-photon info-circle"></i></a>
+                                Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: 680px X 372px)."><i class="icon-photon info-circle"></i></a>
                             </label>
                         </div>
                         <div class="span9 row-fluid" >
@@ -1779,7 +1779,7 @@ foreach ($rights as $r) {
                 });</script>
 
     <!--start container-->
-    @foreach($rights as $right)
+<!--    @foreach($rights as $right)
     @if( $right->label == 'articleScheduler')
 
     <div class="container-fluid">
@@ -1830,7 +1830,7 @@ foreach ($rights as $r) {
     </div>
 
     @endif
-    @endforeach
+    @endforeach-->
 
     <div class="container-fluid">
 

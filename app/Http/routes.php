@@ -4,7 +4,6 @@
 |--------------------------------------------------------------------------
 | Application Routes
 |--------------------------------------------------------------------------
-|
 | Here is where you can register all of the routes for an application.
 | It's a breeze. Simply tell Laravel the URIs it should respond to
 | and give it the controller to call when that URI is requested.
@@ -77,7 +76,19 @@ Route::get('article/image/upload','ArticlesController@imageUpload');
 Route::post('article', ['middleware' => 'auth',   'uses' => 'ArticlesController@store' ]);
 Route::get('article/publishscheduled','ArticlesController@publishScheduledArticle');
 Route::get('profile', ['middleware' => 'auth',   'uses' => 'ArticlesController@create' ]);
+/*
+ *  Delete Image from Create Article Form - Ajax Request
+ */
+Route::match(['get', 'post'], 'article/delPhotos', ['as' => 'article/delPhotos', 'uses' => 'PhotosController@destroy']);
+/*
+ *  Delete article using ajax
+ */
+Route::match(['get', 'post'], 'article/delete', ['as' => 'article/delete', 'uses' => 'ArticlesController@destroy']);
 
+/*
+ *  Publish image using ajax
+ */
+Route::match(['get', 'post'], 'article/publish', ['as' => 'article/publish', 'uses' => 'ArticlesController@publishBulk']);
 /*
 Route::controllers([
     'auth'  =>  'Auth\AuthController',

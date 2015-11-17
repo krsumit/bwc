@@ -1,9 +1,6 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
-
 use DB;
 use App\User;
 use App\UserRight;
@@ -35,7 +32,7 @@ class RightsController extends Controller
         //print_r($roles);
         
         //Existing Users
-        $users = User::where('valid','1')->get();
+        $users = User::where('valid','1')->orderBy('updated_at','desc')->get();
             $ucArr = array();
             //Get Their Channels
             foreach($users as $u){
@@ -55,7 +52,22 @@ class RightsController extends Controller
                 $ucArr[$u['id']] = $str;                
             }
             
-        return view('rights.index',compact('roles','users','ucArr'));
+        $allchannel=DB::table('channels')->where('valid','1')->get();
+        $rightChannels=DB::table('rights')->where('label','channel')->get();
+        if( count($rightChannels)>0){
+            $tempchannels=array();
+        foreach($rightChannels as $rightchannel){
+            //print_r($rightchannel); exit;
+            $tempchannels[$rightchannel->pagepath]=$rightchannel->rights_id;
+        }
+        $rightChannels=$tempchannels;
+        }else{
+            $rightChannels=array();
+        }
+        
+        
+            
+        return view('rights.index',compact('roles','users','ucArr','allchannel','rightChannels'));
     }
 
     /*
@@ -123,6 +135,16 @@ class RightsController extends Controller
         $user->save();
         $userid = $user->id;
         
+        foreach($request->rightArr as $right){
+            if($right == 0){continue;}
+            $ur = new UserRight();
+            $ur->user_id = $userid;
+            $ur->rights_id = $right;
+            $ur->save();
+        }
+        Session::flash('message', 'User added successfully.');
+        return redirect('/rights');
+        exit;
         $BW = 0;
         $BWH = 0;
         //Add Channel(s) on ID
@@ -188,12 +210,20 @@ class RightsController extends Controller
          //print_r($delArrcheck);die;
         //Get Channels
         $BW = $BWH = 0;
-        $bw = UserRight::where('rights_id','4')->where('user_id',$id)->get();
-        $bwh = UserRight::where('rights_id','5')->where('user_id',$id)->get();
-        if(count($bw) > 0){$BW =1;}
-        if(count($bwh) > 0){$BWH =1;}
+        $allchannel=DB::table('channels')->where('valid','1')->get();
+        $rightChannels=DB::table('rights')->where('label','channel')->get();
+        if( count($rightChannels)>0){
+            $tempchannels=array();
+        foreach($rightChannels as $rightchannel){
+            //print_r($rightchannel); exit;
+            $tempchannels[$rightchannel->pagepath]=$rightchannel->rights_id;
+        }
+        $rightChannels=$tempchannels;
+        }else{
+            $rightChannels=array();
+        }
         
-        return view('rights.manage',compact('roles','name','email','mobile','roleO','BW','BWH','userid','delArrcheck'));
+        return view('rights.manage',compact('roles','name','email','mobile','roleO','userid','delArrcheck','allchannel','rightChannels'));
     }
 
     /**
@@ -205,7 +235,7 @@ class RightsController extends Controller
      */
     public function update(Request $request)
     {        
-        print_r($_POST);
+        //print_r($_POST);
         //Validation
         $this->validate($request,[
             'email' => 'required|email',      
@@ -247,7 +277,7 @@ class RightsController extends Controller
         $user->user_type_id = $request->role;
                 
         $user->save();
-        
+         Session::flash('message', 'User updated successfully.');
         return redirect('/rights/');
     }
 

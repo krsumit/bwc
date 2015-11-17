@@ -39,7 +39,16 @@ class categoryController extends Controller
 		->get();
         //print_r($posts);
         } 
-        return view('categorymaster.categorymaster',compact('posts'));
+        $uid = Session::get('users')->id;
+        $channels = DB::table('channels')
+                ->join('rights', 'rights.pagepath', '=', 'channels.channel_id')
+                ->join('user_rights', 'user_rights.rights_id', '=', 'rights.rights_id')
+                ->select('channels.*')
+                ->where('rights.label', '=', 'channel')
+                ->where('user_rights.user_id', '=', $uid)
+                ->orderBy('channel')
+                ->get();
+        return view('categorymaster.categorymaster',compact('posts','channels'));
     }
  
 public function subcategoryindex()

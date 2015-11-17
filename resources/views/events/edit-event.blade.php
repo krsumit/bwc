@@ -140,10 +140,10 @@
                 <div class="span9">
                     <div class="controls">
                         <select name="channel" id="selectBoxFilter20">
-                           
-                            <option value="{{$a->channel_id}}">@if($a->channel_id =='1'){{'BW'}}@endif</option>
-                            <option value="1">BW</option>
-                            <option value="0">Channel3</option>
+                            <option value="">Please select </option>
+                             @foreach($channels as $channel)
+								<option value="{{ $channel->channel_id }}" @if($channel->channel_id == $a->channel_id) selected="selected" @endif >{{ $channel->channel }}</option>
+							@endforeach
                         </select>
                     </div>
                 </div>

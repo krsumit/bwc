@@ -217,8 +217,8 @@
                                 </td>
                                 <td>{{$article->username}}</td>
                                 <td>{{$article->name}}</td>
-                                <td class="center">{{$article->publish_date}}
-                                    {{$article->publish_time}}</td>
+                                <td class="center">{{$article->created_at}}
+                                    </td>
                                 <td class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="{{ $article->article_id }}" ></td>
                             </tr>
                             @endforeach

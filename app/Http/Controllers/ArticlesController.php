@@ -54,6 +54,7 @@ class ArticlesController extends Controller {
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
+        //fdfdffttttttt tt fdf  fdf fdf fd d d
         $uid = Session::get('users')->id;
         $rightLabel = "";
         switch ($option) {
@@ -130,9 +131,12 @@ class ArticlesController extends Controller {
                     ->Leftjoin('authors', 'article_author.author_id', '=', 'authors.author_id');
             if ($option == 'new') {
                 $q->join('users', 'articles.user_id', '=', 'users.id');
-                $q->select(DB::raw('articles.article_id,articles.title,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.channel_id,articles.locked_by,users.name as username'));
+                $q->select(DB::raw('articles.article_id,articles.title,articles.created_at,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.channel_id,articles.locked_by,users.name as username'));
+                $q->orderBy('articles.created_at', 'desc');
             } else {
                 $q->select(DB::raw('articles.article_id,articles.title,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.channel_id,articles.locked_by'));
+                $q->orderBy('articles.publish_date', 'desc');
+                $q->orderBy('articles.publish_time', 'desc');
             }
             $q->whereIn('articles.channel_id', $cArr)
                     ->where('status', $status);
@@ -147,9 +151,9 @@ class ArticlesController extends Controller {
                     $q->where('authors.name', 'like', '%' . $_GET['keyword'] . '%');
                 }
             }
-            $q->orderBy('articles.publish_date', 'desc');
-            $q->orderBy('articles.publish_time', 'desc');
-            $q->orderBy('articles.updated_at', 'desc');
+            
+            
+            
             // $articlesE[$i]
             $articles = $q->groupBy('articles.article_id')->paginate(config('constants.recordperpage'));
             /*
@@ -245,7 +249,7 @@ class ArticlesController extends Controller {
     }
 
     /*
-     * Edit Article Display Process
+     * Edit Article Display Proces
      *
      * @passes Article ID     *
      * @returns to Edit Article View

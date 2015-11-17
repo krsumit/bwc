@@ -127,11 +127,10 @@
                 <div class="span9">
                     <div class="controls">
                         <select name="channel" id="selectBoxFilter20">
-                            <option selected="" value="">-select channel-</option>
-                            <option value="1">BW</option>
-                            
-                            <option value="Beige">Channel2</option>
-                           
+                            <option selected="" value="">Please select </option>
+                            @foreach($channels as $channel)
+								<option value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+							@endforeach
                         </select>
                     </div>
                 </div>

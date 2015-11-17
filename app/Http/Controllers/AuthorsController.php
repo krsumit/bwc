@@ -152,7 +152,7 @@ class AuthorsController extends Controller {
         if ($request->column_id > 0) {
             $isCol = '1';
         } else {
-            $isCol = $request->is_columnist;
+            $isCol = 0;
         }
         $author->is_columnist = $isCol;
         $author->column_id = $request->column_id;
@@ -239,7 +239,7 @@ class AuthorsController extends Controller {
             if ($request->column_id > 0) {
                 $isCol = '1';
             } else {
-                $isCol = $request->is_columnist;
+                $isCol = 0;
             }
             $is_columnist = $isCol;
             if (!empty($request->column_id)) {
@@ -335,7 +335,7 @@ class AuthorsController extends Controller {
                 if ($request->column_id > 0) {
                     $isCol = '1';
                 } else {
-                    $isCol = $request->is_columnist;
+                    $isCol = 0;
                 }
                 $author->is_columnist = $isCol;
                 if (!empty($request->column_id)) {
