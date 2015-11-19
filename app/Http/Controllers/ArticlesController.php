@@ -323,44 +323,53 @@ class ArticlesController extends Controller {
         //$asd = fopen("/home/sudipta/log.log", 'a+');
         //fwrite($asd, " COUNT OF ARR ::" . count($acateg) . " \n");
         //fclose($asd);
-
+       // echo '<pre>';
+       //  print_r($acateg2); exit;
         foreach ($acateg2 as $ac) {
             $lable = 'c' . $ac->level;
             $cateStr[$lable] = $ac->category_id;
             //fwrite($asd, " Category Level ::" . $ac->level . " \n");            
             switch ($ac->level) {
                 case "1":
+                    //echo $ac->category_id; exit;
                     $catlbl = DB::table('category')->where('category_id', '=', $ac->category_id)->get();
+                    //print_r($catlbl);exit;
+                    if(isset($catlbl[0])) {
                     $acateg[0]['level'] = 1;
                     $acateg[0]['category_id'] = $ac->category_id;
                     $acateg[0]['name'] = $catlbl[0]->name;
+                    }
                     break;
                 case "2":
                     $catlbl = DB::table('category_two')->where('category_two_id', '=', $ac->category_id)->get();
+                     if(isset($catlbl[0])) {
                     $acateg[1]['level'] = 2;
                     $acateg[1]['category_id'] = $ac->category_id;
                     $acateg[1]['name'] = $catlbl[0]->name;
-                    ;
+                     }
                     break;
                 case "3":
                     $catlbl = DB::table('category_three')->where('category_three_id', '=', $ac->category_id)->get();
+                    if(isset($catlbl[0])) {
                     $acateg[2]['level'] = 3;
                     $acateg[2]['category_id'] = $ac->category_id;
                     $acateg[2]['name'] = $catlbl[0]->name;
+                    }
                     break;
                 case "4":
                     $catlbl = DB::table('category_four')->where('category_four_id', '=', $ac->category_id)->get();
+                    if(isset($catlbl[0])) {
                     $acateg[3]['level'] = 4;
                     $acateg[3]['category_id'] = $ac->category_id;
                     $acateg[3]['name'] = $catlbl[0]->name;
-                    ;
+                    }
                     break;
             }
             //$asd = fopen("/home/sudipta/log.log", 'a+');
             //fwrite($asd, " Category IDs ::".$ac->category_id." Str: \n");            
             //$cateStr.="\"c$ac->level\":\"$ac->category_id\",";
         }
-
+       
         if (!isset($acateg[0])) {
             unset($acateg[1]);
             unset($acateg[2]);

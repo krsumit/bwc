@@ -56,24 +56,29 @@ public function subcategoryindex()
         
        if(isset($_GET['keyword'])){
            $queryed = $_GET['keyword'];
+            $id = $_GET['id'];
             $posts = DB::table('category_two')
                 ->join('category', 'category.category_id', '=', 'category_two.category_id')
                 ->join('users', 'users.id', '=', 'category_two.user_id')
 		->select('category_two.*','category.category_id','users.id','users.name as userssname')
                 ->where('category_two.valid', '=', '1')  
+                ->where('category_two.category_id', '=', $id )
                 ->where('category_two.name', 'LIKE', '%'.$queryed.'%')
 		->get();
 
         }
         else{
+         $id = $_GET['id'];   
         $posts = DB::table('category_two')
                 ->join('category', 'category.category_id', '=', 'category_two.category_id')
                 ->join('users', 'users.id', '=', 'category_two.user_id')
 		->select('category_two.*','category.category_id','users.id','users.name as userssname')
-                ->where('category_two.valid', '=', '1')   
+                ->where('category_two.valid', '=', '1') 
+                ->where('category_two.category_id', '=',$id ) 
 		->get();
         //print_r($posts);
         } 
+        
         return view('categorymaster.sub_category_master',compact('posts'));
     }
     
@@ -82,27 +87,32 @@ public function subcategoryindex()
         
        if(isset($_GET['keyword'])){
            $queryed = $_GET['keyword'];
+           $id=$_GET['id']; 
             $posts = DB::table('category_three')
                 ->join('category_two', 'category_two.category_two_id', '=', 'category_three.category_two_id')
                 ->join('category', 'category.category_id', '=', 'category_two.category_id')
                 ->join('users', 'users.id', '=', 'category_three.user_id')
 		->select('category_three.*','category_two.category_two_id','category.category_id','users.id','users.name as userssname')
                 ->where('category_three.valid', '=', '1')  
+                 ->where('category_three.category_two_id', '=', $id)
                 ->where('category_three.name', 'LIKE', '%'.$queryed.'%')
 		->get();
             //print_r($posts);
 
         }
         else{
+         $id=$_GET['id']; 
          $posts = DB::table('category_three')
                 ->join('category_two', 'category_two.category_two_id', '=', 'category_three.category_two_id')
                 ->join('category', 'category.category_id', '=', 'category_two.category_id')
                 ->join('users', 'users.id', '=', 'category_three.user_id')
 		->select('category_three.*','category_two.category_two_id','category.category_id','users.id','users.name as userssname')
-                ->where('category_three.valid', '=', '1') 
+                ->where('category_three.valid', '=', '1')
+                ->where('category_three.category_two_id', '=', $id)
 		->get();
         //print_r($posts);
         } 
+        
         return view('categorymaster.sub_category_thirdlable',compact('posts'));
     }
      public function subcategoryfourindex()
@@ -110,6 +120,7 @@ public function subcategoryindex()
         
        if(isset($_GET['keyword'])){
            $queryed = $_GET['keyword'];
+            $id=$_GET['id'];
            //echo $queryed ;
             $posts = DB::table('category_four')
                 ->join('category_three', 'category_three.category_three_id', '=', 'category_four.category_three_id')     
@@ -118,11 +129,13 @@ public function subcategoryindex()
                 ->join('users', 'users.id', '=', 'category_four.user_id')
 		->select('category_four.*','category_three.category_three_id','category_two.category_two_id','category.category_id','users.id','users.name as userssname')
                 ->where('category_four.valid', '=', '1')  
+                ->where('category_four.category_three_id', '=', $id)
                 ->where('category_four.name', 'LIKE', '%'.$queryed.'%')
 		->get();
             //print_r($posts); exit();
         }
         else{
+             $id=$_GET['id'];
          $posts = DB::table('category_four')
                 ->join('category_three', 'category_three.category_three_id', '=', 'category_four.category_three_id')     
                 ->join('category_two', 'category_two.category_two_id', '=', 'category_three.category_two_id')
@@ -130,6 +143,7 @@ public function subcategoryindex()
                 ->join('users', 'users.id', '=', 'category_four.user_id')
 		->select('category_four.*','category_three.category_three_id','category_two.category_two_id','category.category_id','users.id','users.name as userssname')
                 ->where('category_four.valid', '=', '1')
+                ->where('category_four.category_three_id', '=', $id)
 		->get();
         
         } 

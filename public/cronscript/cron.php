@@ -1123,9 +1123,9 @@ function migratequotesTage() {
     }
     
     function migrateQuickByte(){
-        $this->migrateAuthor();
-        $this->migrateTag();
-        $this->migrateTopics();
+        //$this->migrateAuthor();
+        //$this->migrateTag();
+        //$this->migrateTopics();
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
@@ -1143,7 +1143,38 @@ function migratequotesTage() {
                    $id=$quickBytesRow['id'];
                    $checkResult = $this->conn2->query("select quick_byte_title from quick_bytes where quick_byte_id=$id") or die($this->conn2->error);
                     if ($checkResult->num_rows > 0) {
-                        if($quickBytesRow['status']=='P'){
+                        if($quickBytesRow['status']=='P'){                            
+                            $updateStmt = $this->conn2->prepare("update quick_bytes set quick_byte_author_type=?,"
+                                     . "quick_byte_author_id=?,quick_byte_title=?,quick_byte_description=?,quick_byte_sponsered=?,quick_byte_published_date=? where quick_byte_id=?") or die ($this->conn2->error) ;
+                            $updateStmt->bind_param('iissisi',$quickBytesRow['author_type'],$quickBytesRow['author_id']
+                                    ,$quickBytesRow['title'],$quickBytesRow['description'],$quickBytesRow['sponsored'],$quickBytesRow['publish_date'],$quickBytesRow['id']) or die ($this->conn2->error);
+                            $updateStmt->execute() or die ($this->conn2->error);
+                            //print_r($articleInsertStmt);exit;
+                            // echo $articleInsertStmt->insert_id;exit;    
+                          //  if ($insertStmt->insert_id) {
+                                $iid=$quickBytesRow['id'];
+                                $updateStmt->close();
+                                $topics=  explode(',', $quickBytesRow['topics']);
+                                $tags=  explode(',', $quickBytesRow['tags']);
+                                
+                                $this->conn2->query("delete from quick_bytes_topic where quick_byte_id=$iid");
+                                
+                                foreach($topics as $topic){
+                                    $this->conn2->query("insert into quick_bytes_topic set quick_byte_id=$iid,topic_id=$topic");
+                                }
+                                
+                                $this->conn2->query("delete from quick_bytes_tags where quick_byte_id=$iid");
+                                
+                                foreach($tags as $tag){
+                                    $this->conn2->query("insert into quick_bytes_tags set quick_byte_id=$iid,tag_id=$tag");
+                                }
+                                
+                                $this->migrateQuickBytePhoto($iid, 0);
+                                $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                                
+                         //   }
+                            
+                            
                              // updating quickbyte
                         }else{
                              // deleting quickbyte
@@ -1164,7 +1195,7 @@ function migratequotesTage() {
                             
                             //echo '<pre>';
                             //print_r($quickBytesRow);exit;
-                             $insertStmt = $this->conn2->prepare("insert into quick_bytes set quick_byte_id=?,quick_byte_author_type=?,	"
+                            $insertStmt = $this->conn2->prepare("insert into quick_bytes set quick_byte_id=?,quick_byte_author_type=?,	"
                                      . "quick_byte_author_id=?,quick_byte_title=?,quick_byte_description=?,quick_byte_sponsered=?,quick_byte_published_date=?") or die ($this->conn2->error) ;
                             $insertStmt->bind_param('iiissis',$quickBytesRow['id'],$quickBytesRow['author_type'],$quickBytesRow['author_id']
                                     ,$quickBytesRow['title'],$quickBytesRow['description'],$quickBytesRow['sponsored'],$quickBytesRow['publish_date']) or die ($this->conn2->error);
@@ -1210,11 +1241,22 @@ function migratequotesTage() {
            $photos= $this->conn->query("select * from photos where owned_by='quickbyte' and owner_id=$id");
            while ($photo = $photos->fetch_object()) {
               //print_r($photo);exit;
-               $photoInsStmt=$this->conn2->prepare("insert into quick_bytes_photos set quick_byte_id=?,quick_byte_photo_name=?,quick_byte_photo_url=?"
+               $photoInsStmt=$this->conn2->prepare("insert into quick_bytes_photos set quick_byte_id=?,quick_byte_photo_name=?"
                        . ",quick_byte_photo_title=?,quick_byte_photo_description=?");
-               $photoInsStmt->bind_param('issss',$id,$photo->photopath,$photo->imagefullPath,$photo->title,$photo->description);
+               $photoInsStmt->bind_param('isss',$id,$photo->photopath,$photo->title,$photo->description);
                $photoInsStmt->execute();
            }
+       }else{
+            $this->conn2->query("delete from quick_bytes_photos where quick_byte_id=$id");
+            $photos= $this->conn->query("select * from photos where owned_by='quickbyte' and owner_id=$id");
+           while ($photo = $photos->fetch_object()) {
+              //print_r($photo);exit;
+               $photoInsStmt=$this->conn2->prepare("insert into quick_bytes_photos set quick_byte_id=?,quick_byte_photo_name=?"
+                       . ",quick_byte_photo_title=?,quick_byte_photo_description=?");
+               $photoInsStmt->bind_param('isss',$id,$photo->photopath,$photo->title,$photo->description);
+               $photoInsStmt->execute();
+           }
+           
        }
         
     }
@@ -1231,7 +1273,7 @@ function migratequotesTage() {
         //exit;
         $this->migrateAuthor();
         $this->migrateCategory();
-        //$this->migrateTag();
+        $this->migrateTag();
         $this->migrateTopics();
         $this->migrateMagazine();
         
@@ -1461,9 +1503,9 @@ function migrateFeaturImage($featurId,  $condition) {
                 $tagInsertStmt->close();
             }
         } else {
-            $checkTagResult = $this->conn->query("select * from article_tags where article_id=$articleId $condition");
+            /*$checkTagResult = $this->conn->query("select * from article_tags where article_id=$articleId $condition");
             if ($checkTagResult->num_rows > 0) {
-                $checkTagResult->close();
+                $checkTagResult->close();*/
                 $delRst = $this->conn2->query("delete from article_tags where article_id=$articleId");
                 $articleTagResultset = $this->conn->query("select * from article_tags where article_id=$articleId and valid='1'");
                 while (($tagRow = $articleTagResultset->fetch_assoc())) {
@@ -1472,7 +1514,7 @@ function migrateFeaturImage($featurId,  $condition) {
                     $tagInsertStmt->execute();
                     $tagInsertStmt->close();
                 }
-            }
+            //}
         }
     }
 
@@ -1489,9 +1531,9 @@ function migrateFeaturImage($featurId,  $condition) {
                 $insertArticleCategoryStmt->close();
             }
         } else { 
-            $checkCatResult = $this->conn->query("select * from article_category where article_id=$articleId $condition");
+           /* $checkCatResult = $this->conn->query("select * from article_category where article_id=$articleId $condition");
             if ($checkCatResult->num_rows > 0) {
-                $checkCatResult->close();
+                $checkCatResult->close();*/
                 $this->conn2->query("delete from article_category where article_id=$articleId");
                 
                 $articleCatRst = $this->conn->query("SELECT concat(`category_id`,'_',`level`) as catlevel,level FROM `article_category` WHERE  `article_id`='$articleId'");
@@ -1502,7 +1544,7 @@ function migrateFeaturImage($featurId,  $condition) {
                     $insertArticleCategoryStmt->execute();
                     $insertArticleCategoryStmt->close();
                 }
-            }
+           // }
         }
     }
 
@@ -1525,9 +1567,9 @@ function migrateFeaturImage($featurId,  $condition) {
                 $auInsertStmt->close();
             }
         } else {
-            $checkAuthorResult = $this->conn->query("select * from article_author where article_id=$articleId $condition");
+            /*$checkAuthorResult = $this->conn->query("select * from article_author where article_id=$articleId $condition");
             if ($checkAuthorResult->num_rows > 0) {
-                $checkAuthorResult->close();
+                $checkAuthorResult->close(); */
                 $this->conn2->query("delete from article_author where article_id=$articleId");
                 $articleAuthorResultset = $this->conn->query("select * from article_author where article_id=$articleId and valid='1'");
                 while ($authorRow = $articleAuthorResultset->fetch_assoc()) {
@@ -1537,7 +1579,7 @@ function migrateFeaturImage($featurId,  $condition) {
                     $auInsertStmt->execute();
                     $auInsertStmt->close();
                 }
-            }
+            //}
         }
     }
 
@@ -1552,10 +1594,10 @@ function migrateFeaturImage($featurId,  $condition) {
                     $tpInsertStmt->close();
                 }
         } else {
-            $checkTopicResult = $this->conn->query("select * from article_topics where article_id=$articleId $condition");
+           /* $checkTopicResult = $this->conn->query("select * from article_topics where article_id=$articleId $condition");
 
             if ($checkTopicResult->num_rows > 0) {
-                $checkTopicResult->close();
+                $checkTopicResult->close();*/
                 $this->conn2->query("delete from article_topics where article_id=$articleId");
                 $articleTopicsResultset = $this->conn->query("select * from article_topics where article_id=$articleId and valid='1'");
 
@@ -1565,7 +1607,7 @@ function migrateFeaturImage($featurId,  $condition) {
                     $tpInsertStmt->execute();
                     $tpInsertStmt->close();
                 }
-            }
+           // }
         }
     }
 
@@ -1582,10 +1624,10 @@ function migrateFeaturImage($featurId,  $condition) {
             }
         } else {
 
-            $checkImResult = $this->conn->query("select * from photos where owned_by='article' and owner_id=$articleId $condition");
+           /* $checkImResult = $this->conn->query("select * from photos where owned_by='article' and owner_id=$articleId $condition");
 
             if ($checkImResult->num_rows > 0) {
-                $checkImResult->close();
+                $checkImResult->close(); */
                 $this->conn2->query("delete from article_images where article_id=$articleId");
 
 
@@ -1598,7 +1640,7 @@ function migrateFeaturImage($featurId,  $condition) {
                     $imInsertStmt->execute();
                     $imInsertStmt->close();
                 }
-            }
+           // }
         }
     }
 
@@ -1616,9 +1658,9 @@ function migrateFeaturImage($featurId,  $condition) {
                 }
              
          }else{
-            $checkVdResult = $this->conn->query("select video_id from videos where owned_by='article' and owner_id=$articleId $condition");
+           /* $checkVdResult = $this->conn->query("select video_id from videos where owned_by='article' and owner_id=$articleId $condition");
             if ($checkVdResult->num_rows > 0) {
-                $checkVdResult->close();
+                $checkVdResult->close(); */
                 $this->conn2->query("delete from article_video where article_id=$articleId");
                 $articleVideoResultset = $this->conn->query("select * from videos where owned_by='article' and owner_id=$articleId and valid='1'");
                 while ($videoRow = $articleVideoResultset->fetch_assoc()) {
@@ -1628,7 +1670,7 @@ function migrateFeaturImage($featurId,  $condition) {
                     $vdInsertStmt->execute();
                     $vdInsertStmt->close();
                 }
-            }
+            //}
         }
     }
 

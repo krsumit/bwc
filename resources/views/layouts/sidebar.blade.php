@@ -110,7 +110,7 @@
 			   <li>
 			     <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon pen"></i>
-                    <span class="nav-selection">Columnist and Guest Author
+                    <span class="nav-selection">Authors Profile
 					</span>
                          <i class="icon-menu-arrow"></i> </a>
 									<div class="sub-nav">
@@ -119,10 +119,10 @@
                             <a href="/article/add-edit-author">Add/Edit Columnist</a>
                         </li>
 						<li>
-                            <a href="/guestauthor/add-edit-gustauthor">Add New Guest Author</a>
+                            <a href="/guestauthor/add-edit-gustauthor">Add/Edit Guest Author</a>
                         </li>
                         <li>
-                            <a href="/bwreporters/add-edit-bw-reporters">Reports</a>
+                            <a href="/bwreporters/add-edit-bw-reporters">Add/Edit Reporters</a>
                         </li>
 						<li>
                             <a href="#">Help</a>
