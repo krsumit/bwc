@@ -182,6 +182,7 @@ class AuthorsController extends Controller {
 
         $author = new Author;
         if ($request->qid) {
+            $author=Author::find($request->qid);
             $imageurl = '';
             $authordetail=Author::where('author_id',$request->qid)->first();
             //print_r($authordetail->photo);exit;
@@ -249,22 +250,33 @@ class AuthorsController extends Controller {
             }
             $valid = '1';
 
-            $postdata = [
-                'name' => $name,
-                'author_type_id' => $author_type_id,
-                'bio' => $bio,
-                'email' => $email,
-                'mobile' => $mobile,
-                'photo' => $photo,
-                'mobile' => $mobile,
-                'twitter' => $twitter,
-                'is_columnist' => $is_columnist,
-                'column_id' => $column_id,
-                'valid' => $valid
-            ];
-            DB::table('authors')
-                    ->where('author_id', $request->qid)
-                    ->update($postdata);
+            $author->name=$name;
+            $author->author_type_id=$author_type_id;
+            $author->bio=$bio;
+            $author->email=$email;
+            $author->mobile=$mobile;
+            $author->photo=$photo;
+            $author->twitter=$twitter;
+            $author->is_columnist=$is_columnist;
+            $author->column_id=$column_id;
+            $author->valid=$valid;
+//            $postdata = [
+//                'name' => $name,
+//                'author_type_id' => $author_type_id,
+//                'bio' => $bio,
+//                'email' => $email,
+//                'mobile' => $mobile,
+//                'photo' => $photo,
+//                'mobile' => $mobile,
+//                'twitter' => $twitter,
+//                'is_columnist' => $is_columnist,
+//                'column_id' => $column_id,
+//                'valid' => $valid
+//            ];
+//            DB::table('authors')
+//                    ->where('author_id', $request->qid)
+//                    ->update($postdata);
+                    $author->update();
             if ($request->isertedbybwreportersdata == 'isertedbybwreportersdata') {
                 Session::flash('message', 'Your data has been successfully modify.');
                 return Redirect::to('bwreporters/add-edit-bw-reporters');

@@ -242,7 +242,7 @@ class SponsoredPostsController extends Controller {
      * @return Response
      */
     public function show($id) {
-       
+     
         $uid = Session::get('users')->id;
         if (!($uid)) {
             return redirect('/auth/login');
@@ -254,9 +254,10 @@ class SponsoredPostsController extends Controller {
         $event = DB::table('event')->where('valid', '1')->get();
         $channel_arr = SponsoredPostsController::getUserChannels($uid);
         $category = DB::table('category')->where('valid', '1')->get();
-        $category2 = DB::table('category_two')->where('category_id', $spost->category2)->where('valid', '1')->get();
+        $category2 = DB::table('category_two')->where('category_id', $spost->category1)->where('valid', '1')->get();
         $category3 = DB::table('category_three')->where('category_two_id', $spost->category2)->where('valid', '1')->get();
         $category4 = DB::table('category_four')->where('category_three_id', $spost->category4)->where('valid', '1')->get();
+        
         $event = DB::table('event')->where('valid', '1')->get();
         $photos = DB::table('photos')->where('valid', '1')
                 ->where('owned_by', 'sponsoredpost')

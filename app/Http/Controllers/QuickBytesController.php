@@ -289,7 +289,7 @@ class QuickBytesController extends Controller
                         $imageEntry->title=$request->imagetitle[$c];
                         $imageEntry->description=$request->imagedesc[$c];;
                         $imageEntry->photopath=$image;
-                        $imageEntry->imagefullPath=url(config('constants.quickbyteimagedir').$image);
+                        $imageEntry->imagefullPath='';
                         $imageEntry->channel_id=$request->channel;
                         $imageEntry->owned_by='quickbyte';
                         $imageEntry->owner_id=$id;
@@ -524,7 +524,7 @@ class QuickBytesController extends Controller
                         $imageEntry->title=$request->imagetitle[$c];
                         $imageEntry->description=$request->imagedesc[$c];;
                         $imageEntry->photopath=$image;
-                        $imageEntry->imagefullPath=url(config('constants.quickbyteimagedir').$image);
+                        $imageEntry->imagefullPath='';
                         $imageEntry->channel_id=$request->channel;
                         $imageEntry->owned_by='quickbyte';
                         $imageEntry->owner_id=$id;

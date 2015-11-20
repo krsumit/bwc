@@ -218,6 +218,8 @@ class Cron {
                             $delStmt = $this->conn2->prepare("delete from photo_shoot where photo_shoot_id=?");
                             $delStmt->bind_param('i', $id);
                             $delStmt->execute();
+                                                 
+                            
                             if ($delStmt->affected_rows) {
                                 $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
                                 $this->deletePhotoshootRelatedRelated($id);
