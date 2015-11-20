@@ -286,7 +286,7 @@ class AlbumController extends Controller
             // Copy uploaded from temporary location to specific location
             $s3 = AWS::createClient('s3');
             foreach ($images as $image) {
-                $fname=time().rand(1,100).$image;
+                $fname=$image;
                 $source=$_SERVER['DOCUMENT_ROOT'].'/files/'.$image;
                 $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
                 $dest=$_SERVER['DOCUMENT_ROOT'].'/'.config('constants.albumimagedir').$fname;
@@ -305,7 +305,7 @@ class AlbumController extends Controller
                         $imageEntry->source=$request->photosource[$c];;
                         $imageEntry->source_url=$request->sourceurl[$c];;
                         $imageEntry->photo_by=$request->photographby[$c];;
-                        $imageEntry->photopath=$fname;
+                        $imageEntry->photopath=$image;
                         $imageEntry->imagefullPath=url(config('constants.albumimagedir').$fname);
                         $imageEntry->channel_id=$request->channel;
                         $imageEntry->owned_by='album';
