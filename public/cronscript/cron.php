@@ -1399,7 +1399,7 @@ function migratequotesTage() {
                 if ($checkFeaturResult->num_rows > 0) { //echo 'test'; exit;
                     //$checkFeaturResult->close();
                     if ($featurRow['valid'] =='1') {
-                        $featurUpdateStmt = $this->conn2->prepare("update feature_box set feature_box_title=?,feature_box_description=?,feature_box_url=?,feature_box_create_at=?,feature_box_updated_at=?,currently_feature==? where id=?");
+                        $featurUpdateStmt = $this->conn2->prepare("update feature_box set feature_box_title=?,feature_box_description=?,feature_box_url=?,feature_box_create_at=?,feature_box_updated_at=?,currently_feature=? where id=?");
                         $featurUpdateStmt->bind_param('sssssii', $featurRow['title'], $featurRow['description'], $featurRow['url'], $featurRow['created_at'],$featurRow['updated_at'],$featurRow['featured'],$id);
                         $featurUpdateStmt->execute();
                         if ($featurUpdateStmt->affected_rows) {
