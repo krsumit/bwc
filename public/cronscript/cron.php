@@ -1399,8 +1399,8 @@ function migratequotesTage() {
                 if ($checkFeaturResult->num_rows > 0) { //echo 'test'; exit;
                     //$checkFeaturResult->close();
                     if ($featurRow['valid'] =='1') {
-                        $featurUpdateStmt = $this->conn2->prepare("update feature_box set feature_box_title=?,feature_box_description=?,feature_box_url=?,feature_box_create_at=?,feature_box_updated_at=? where id=?");
-                        $featurUpdateStmt->bind_param('sssssi', $featurRow['title'], $featurRow['description'], $featurRow['url'], $featurRow['created_at'],$featurRow['updated_at'],$id);
+                        $featurUpdateStmt = $this->conn2->prepare("update feature_box set feature_box_title=?,feature_box_description=?,feature_box_url=?,feature_box_create_at=?,feature_box_updated_at=?,currently_feature==? where id=?");
+                        $featurUpdateStmt->bind_param('sssssii', $featurRow['title'], $featurRow['description'], $featurRow['url'], $featurRow['created_at'],$featurRow['updated_at'],$featurRow['featured'],$id);
                         $featurUpdateStmt->execute();
                         if ($featurUpdateStmt->affected_rows) {
                             $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
@@ -1421,8 +1421,8 @@ function migratequotesTage() {
                         //echo 'sumit2 insert';exit;
                         //echo '<pre>';
                        // print_r($featurRow);
-                        $featurInsertStmt = $this->conn2->prepare("insert feature_box set id=?,feature_box_title=?,feature_box_description=?,feature_box_url=?,feature_box_create_at=?,feature_box_updated_at=?");
-                        $featurInsertStmt->bind_param('isssss',$featurRow['id'], $featurRow['title'], $featurRow['description'], $featurRow['url'], $featurRow['created_at'],$featurRow['updated_at']);
+                        $featurInsertStmt = $this->conn2->prepare("insert feature_box set id=?,feature_box_title=?,feature_box_description=?,feature_box_url=?,feature_box_create_at=?,feature_box_updated_at=?,currently_feature=?");
+                        $featurInsertStmt->bind_param('isssssi',$featurRow['id'], $featurRow['title'], $featurRow['description'], $featurRow['url'], $featurRow['created_at'],$featurRow['updated_at'],$featurRow['featured']);
                         $featurInsertStmt->execute();
                         //print_r($featurInsertStmt); //exit;
                         //echo $featurInsertStmt->insert_id.'---'.$featurRow['id'].'<br>';    
@@ -1675,6 +1675,168 @@ function migrateFeaturImage($featurId,  $condition) {
             //}
         }
     }
+    
+    
+    
+    // Sponsored Post
+    
+     function migrateSponsored() {
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $_SESSION['noofdel'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='sponsoredposts' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
+
+        $sponsoredResults = $this->conn->query("SELECT *  FROM sponsoredposts where 1 $condition");
+        //echo $articleResults->num_rows ;exit;
+        if ($sponsoredResults->num_rows > 0) {
+            // exit;
+            $catMapArray = array();
+            $sponsoredCatDataRst = $this->conn2->query("select * from channel_category");
+            while ($sponsoredCatDataRow = $articleCatDataRst->fetch_assoc()) {
+                $key = $sponsoredCatDataRow['cms_cat_id'] . '_' . $sponsoredCatDataRow['cms_cat_level'];
+                $catMapArray[$key] = $sponsoredCatDataRow['category_id'];
+            }
+            $this->categoryMapping = $catMapArray;
+            //print_r( $this->categoryMapping);exit;
+            //print_r($catMapArray);exit;
+            // echo $articleCatDataRst->num_rows;exit;
+            $this->categoryMapping = $catMapArray;
+           // echo  $articleResults->num_rows;exit;
+            while ($sponsoredRow = $sponsoredResults->fetch_assoc()) {
+                $id = $sponsoredRow['article_id'];
+                $checkSponsoredResult = $this->conn2->query("select title from sponsoredposts where id=$id");
+                //echo $checkArticleResult->num_rows.'-' ;exit;
+                if ($checkSponsoredResult->num_rows > 0) {
+                    $checkSponsoredResult->close();
+                    if ($sponsoredRow['status'] == 'P') {
+                        $pubDate = $sponsoredRow['publish_date'] . ' ' . $sponsoredRow['publish_time'];
+                        $status = 'published';
+                        $sponsoredUpdateStmt = $this->conn2->prepare("update sponsoredposts set sponsoredposts_title=?,sponsoredposts_description=?,sponsoredposts_summary=?,"
+                                . "sponsoredposts_type=?,sponsoredposts_published_date=?,sponsoredposts_status=?,important_sponsoredposts=?,"
+                                . "where sponsoredposts_id=?");
+                        $sponsoredUpdateStmt->bind_param('ssssssii', $sponsoredRow['title'], $sponsoredRow['description'], $sponsoredRow['summary'], $sponsoredRow['event_id']
+                                , $pubDate,  $status, $sponsoredRow['feature_this'],  $sponsoredRow['id']
+                        );
+                        $sponsoredUpdateStmt->execute();
+                        if ($sponsoredUpdateStmt->affected_rows) {
+                            $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                        }
+                        $this->callSponsoredRelatedContent($sponsoredRow['id'], 0, $condition);
+                    } else {
+                        $delStmt = $this->conn2->prepare("delete from sponsoredposts where sponsoredposts_id=?");
+                        $delStmt->bind_param('i', $id);
+                        $delStmt->execute();
+                        if ($delStmt->affected_rows) {
+                            $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
+                            $this->deleteArticleRelated($id);
+                        }
+                        $delStmt->close();
+                    }
+                } else {
+                    if ($sponsoredRow['status'] == 'P') {
+                        $pubDate = $sponsoredRow['publish_date'] . ' ' . $sponsoredRow['publish_time'];
+                        $status = 'published';
+                        $sponsoredpostsInsertStmt = $this->conn2->prepare("insert sponsoredposts set sponsoredposts_id=?,sponsoredposts_title=?,sponsoredposts_description=?,sponsoredposts_summary=?,"
+                                . "sponsoredposts_type=?,sponsoredposts_published_date=?,sponsoredposts_status=?"
+                                . ",important_sponsoredposts=?");
+                        $sponsoredpostsInsertStmt->bind_param('issssssi', $sponsoredRow['id'], $sponsoredRow['title'], $articleRow['description'], $sponsoredRow['summary'], $sponsoredRow['event_id']
+                                , $pubDate,  $status, $sponsoredRow['feature_this']);
+                        $sponsoredpostsInsertStmt->execute();
+                        //print_r($articleInsertStmt);exit;
+                        // echo $articleInsertStmt->insert_id;exit;    
+                        if ($sponsoredpostsInsertStmt->insert_id) {
+                            $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                            $this->callSponsoredRelatedContent($sponsoredpostsInsertStmt->insert_id, 1, $condition);
+                        }
+                    }
+                }
+                //echo '1 done ';exit;
+            }
+        }
+
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='sponsoredposts',start_time=?,end_time=?");
+        $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecorstmt->execute();
+        $updatecorstmt->close();
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' sponsoredposts(s) inserted, ' . $_SESSION['noofupd'] . ' sponsoredposts(s) updated and ' . $_SESSION['noofdel'] . ' sponsoredposts(s) deleted.</h5>';
+        exit;
+
+        
+    }
+   function callSponsoredRelatedContent($SponsoredId, $isNew = 0, $condition) {
+        $this->migrateSponsoredImage($SponsoredId, $isNew, $condition);
+        $this->migrateSponsoredVideo($SponsoredId, $isNew, $condition);
+    }
+   function migrateSponsoredImage($SponsoredId, $isNew = 0, $condition) {
+        if ($isNew == '1') {
+            $sponsoredpostImageResultset = $this->conn->query("select * from photos where owned_by='sponsoredpost' and owner_id=$SponsoredId and valid='1'");
+            while ($imageRow = $sponsoredpostImageResultset->fetch_assoc()) {
+                $imInsertStmt = $this->conn2->prepare("insert into sponsoredposts_images set sponsoredposts_id=?,image_url=?,image_title=?"
+                        . ",image_source_name=?,image_source_url=?,image_status=?");
+                $status = ($imageRow['active'] == '1') ? 'enabled' : 'disabled';
+                $imInsertStmt->bind_param('isssss', $imageRow['owner_id'],$imageRow['photopath'],$imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $status);
+                $imInsertStmt->execute();
+                $imInsertStmt->close();
+            }
+        } else {
+
+            $checkImResult = $this->conn->query("select * from photos where owned_by='sponsoredpost' and owner_id=$SponsoredId $condition");
+
+            if ($checkImResult->num_rows > 0) {
+                $checkImResult->close();
+                $this->conn2->query("delete from sponsoredposts_images where sponsoredposts_id=$SponsoredId");
+
+
+                $sponsoredImageResultset = $this->conn->query("select * from photos where owned_by='sponsoredpost' and owner_id=$SponsoredId and valid='1'");
+                while ($imageRow = $sponsoredImageResultset->fetch_assoc()) {
+                    $imInsertStmt = $this->conn2->prepare("insert into article_images set article_id=?,image_url=?,image_title=?"
+                            . ",image_source_name=?,image_source_url=?,image_status=?");
+                    $status = ($imageRow['active'] == '1') ? 'enabled' : 'disabled';
+                    $imInsertStmt->bind_param('isssss', $imageRow['owner_id'],$imageRow['photopath'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $status);
+                    $imInsertStmt->execute();
+                    $imInsertStmt->close();
+                }
+            }
+        }
+    }
+
+    function migrateSponsoredVideo($SponsoredId, $isNew = 0, $condition) {
+         //$articleId= 71; 
+        //$isNew = 1;
+         if ($isNew == '1') {
+          $articleVideoResultset = $this->conn->query("select * from videos where owned_by='sponsoredpost' and owner_id=$SponsoredId and valid='1'");
+                while ($videoRow = $articleVideoResultset->fetch_assoc()) {
+                    $vdInsertStmt = $this->conn2->prepare("insert into sponsoredposts_video set sponsoredposts_id=?,sponsoredposts_url=?,"
+                            . "video_embed_code=?,video_title=?");
+                    $vdInsertStmt->bind_param('isss', $videoRow['owner_id'], $videoRow['url'], $videoRow['code'], $videoRow['title']);
+                    $vdInsertStmt->execute();
+                    $vdInsertStmt->close();
+                }
+             
+         }else{
+            $checkVdResult = $this->conn->query("select video_id from videos where owned_by='sponsoredpost' and owner_id=$SponsoredId $condition");
+            if ($checkVdResult->num_rows > 0) {
+                $checkVdResult->close();
+                $this->conn2->query("delete from sponsoredposts_video where sponsoredposts_id=$SponsoredId");
+                $articleVideoResultset = $this->conn->query("select * from videos where owned_by='article' and owner_id=$SponsoredId and valid='1'");
+                while ($videoRow = $articleVideoResultset->fetch_assoc()) {
+                    $vdInsertStmt = $this->conn2->prepare("insert into sponsoredposts_video set sponsoredposts_id=?,sponsoredposts_url=?,"
+                            . "video_embed_code=?,video_title=?");
+                    $vdInsertStmt->bind_param('isss', $videoRow['owner_id'], $videoRow['url'], $videoRow['code'], $videoRow['title']);
+                    $vdInsertStmt->execute();
+                    $vdInsertStmt->close();
+                }
+            }
+        }
+    }
+   
 
 }
 
