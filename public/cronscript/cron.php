@@ -421,34 +421,20 @@ class Cron {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
-        //echo "SELECT * FROM event  WHERE 1 $condition";exit;
         $eventrResults = $this->conn->query("SELECT * FROM event  WHERE 1 $condition");
-        //echo $eventrResults->num_rows;exit;
         if ($eventrResults->num_rows > 0) {
-
             while ($eventRow = $eventrResults->fetch_assoc()) {
-                 //print_r($eventRow);exit;
                $eventId = $eventRow['event_id'];
-               // exit;
                 $checkEventExistResultSet = $this->conn2->query("select event_id,title from event where event_id=$eventId");
-                if ($checkEventExistResultSet->num_rows > 0) { //echo 'test';exit;
-                    //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
-                    $eventUpdateStmt = $this->conn2->prepare("update event set title=?,description=?,imagepath=?,image_url=?,"
-                            . "start_date=?,end_date=?,start_time=?,end_time=?,	state=?, country=?,category=?,valid=?,created_at=?,"
-                            . "updated_at=? where event_id=?") or die($this->conn->error);
-                    $eventUpdateStmt->bind_param('ssssssssiisissi', $eventRow['title'], $eventRow['description'], $eventRow['imagepath'],$eventRow['image_url'], $eventRow['start_date'], 
-                            $eventRow['end_date'], $eventRow['start_time'], $eventRow['end_time'],$eventRow['state'],$eventRow['country'],$eventRow['category'],$eventRow['valid'],
-                            $eventRow['created_at'],$eventRow['updated_at'],$eventId) or die($this->conn->error);
-                    //echo $this->conn2->error;exit;
+                if ($checkEventExistResultSet->num_rows > 0) { 
+                    $eventUpdateStmt = $this->conn2->prepare("update event set title=?,description=?,imagepath=?,start_date=?,end_date=?,start_time=?,end_time=?,venue=?,valid=?,created_at=?,updated_at=? where event_id=?") or die($this->conn->error);
+                    $eventUpdateStmt->bind_param('sssssssiissi',$eventRow['title'], $eventRow['description'], $eventRow['imagepath'], $eventRow['start_date'], $eventRow['end_date'], $eventRow['start_time'], $eventRow['end_time'],$eventRow['country'],$eventRow['valid'],$eventRow['created_at'],$eventRow['updated_at'],$eventRow['event_id']) or die($this->conn->error);
                     $eventUpdateStmt->execute()or die($this->conn->error);
-                    //print_r($eventUpdateStmt);exit;
-                    //echo $eventUpdateStmt->affected_rows;exit;
                     if ($eventUpdateStmt->affected_rows)    
                         $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
-                }else {//echo 'goint to insert';exit;
-                    $eventInsertStmt = $this->conn2->prepare("insert into event set event_id=?,title=?,description=?,imagepath=?,image_url=?,start_date=?,end_date=?,start_time=?,end_time=?,state=?,country=?,category=?,valid=?,created_at=?,updated_at=?");
-                    //echo $this->conn2->error; exit;
-                    $eventInsertStmt->bind_param('issssssssiisiss', $eventRow['event_id'],$eventRow['title'], $eventRow['description'], $eventRow['imagepath'],$eventRow['image_url'], $eventRow['start_date'], $eventRow['end_date'], $eventRow['start_time'], $eventRow['end_time'],$eventRow['state'],$eventRow['country'],$eventRow['category'],$eventRow['valid'],$eventRow['created_at'],$eventRow['updated_at']);
+                }else {
+                    $eventInsertStmt = $this->conn2->prepare("insert into event set event_id=?,title=?,description=?,imagepath=?,start_date=?,end_date=?,start_time=?,end_time=?,venue=?,valid=?,created_at=?,updated_at=?");
+                    $eventInsertStmt->bind_param('isssssssiiss', $eventRow['event_id'],$eventRow['title'], $eventRow['description'], $eventRow['imagepath'], $eventRow['start_date'], $eventRow['end_date'], $eventRow['start_time'], $eventRow['end_time'],$eventRow['country'],$eventRow['valid'],$eventRow['created_at'],$eventRow['updated_at']);
                     $eventInsertStmt->execute();
                     if ($eventInsertStmt->affected_rows) {
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
