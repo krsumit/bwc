@@ -1,4 +1,5 @@
 <?php
+
 date_default_timezone_set('Asia/Calcutta');
 define('HOST','cmsdb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com');
 define('USER','bwcms');

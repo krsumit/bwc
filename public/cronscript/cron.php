@@ -1308,7 +1308,7 @@ function migratequotesTage() {
             //print_r( $this->categoryMapping);exit;
             //print_r($catMapArray);exit;
             // echo $articleCatDataRst->num_rows;exit;
-            $this->categoryMapping = $catMapArray;
+            //$this->categoryMapping = $catMapArray;
            // echo  $articleResults->num_rows;exit;
             while ($articleRow = $articleResults->fetch_assoc()) {
                 $id = $articleRow['article_id'];
@@ -1696,17 +1696,15 @@ function migrateFeaturImage($featurId,  $condition) {
         //echo $articleResults->num_rows ;exit;
         if ($sponsoredResults->num_rows > 0) {
             // exit;
+            
             $catMapArray = array();
-            $sponsoredCatDataRst = $this->conn2->query("select * from channel_category");
-            while ($sponsoredCatDataRow = $articleCatDataRst->fetch_assoc()) {
-                $key = $sponsoredCatDataRow['cms_cat_id'] . '_' . $sponsoredCatDataRow['cms_cat_level'];
-                $catMapArray[$key] = $sponsoredCatDataRow['category_id'];
+            $articleCatDataRst = $this->conn2->query("select * from channel_category");
+            while ($articleCatDataRow = $articleCatDataRst->fetch_assoc()) {
+                $key = $articleCatDataRow['cms_cat_id'] . '_' . $articleCatDataRow['cms_cat_level'];
+                $catMapArray[$key] = $articleCatDataRow['category_id'];
             }
             $this->categoryMapping = $catMapArray;
-            //print_r( $this->categoryMapping);exit;
-            //print_r($catMapArray);exit;
-            // echo $articleCatDataRst->num_rows;exit;
-            $this->categoryMapping = $catMapArray;
+            
            // echo  $articleResults->num_rows;exit;
             while ($sponsoredRow = $sponsoredResults->fetch_assoc()) {
                 $id = $sponsoredRow['article_id'];
@@ -1773,6 +1771,7 @@ function migrateFeaturImage($featurId,  $condition) {
    function callSponsoredRelatedContent($SponsoredId, $isNew = 0, $condition) {
         $this->migrateSponsoredImage($SponsoredId, $isNew, $condition);
         $this->migrateSponsoredVideo($SponsoredId, $isNew, $condition);
+        $this->migrateSponsoredCategory($SponsoredId,$condition);
     }
    function migrateSponsoredImage($SponsoredId, $isNew = 0, $condition) {
         if ($isNew == '1') {
@@ -1807,6 +1806,38 @@ function migrateFeaturImage($featurId,  $condition) {
         }
     }
 
+    
+        
+      function migrateSponsoredCategory($sponsId,$condition) {
+            $catResultSet = '';
+            $this->conn2->query("delete from sponsoredposts_category where sponsoredposts_id=$sponsId");
+            
+            $sponCatRst = $this->conn->query("SELECT category1,category2,category3,category4 FROM `sponsoredposts` WHERE  `id`='$sponsId'");
+            $catTempRow = $sponCatRst->fetch_assoc();
+            $catRowArray=array();
+            if($catTempRow['category1']!=0){
+                $catRowArray[]=array('catlevel'=>$catTempRow['category1'],'level'=>'1');
+                if($catTempRow['category2']!=0){
+                    $catRowArray[]=array('catlevel'=>$catTempRow['category2'],'level'=>'2');    
+                    if($catTempRow['category3']!=0){
+                        $catRowArray[]=array('catlevel'=>$catTempRow['category3'],'level'=>'3');    
+                        if($catTempRow['category4']!=0){
+                            $catRowArray[]=array('catlevel'=>$catTempRow['category4'],'level'=>'4');    
+                        }
+                    }
+                }
+            }
+            foreach ($catRowArray as $catRow) {
+                $insertSponsCategoryStmt = $this->conn2->prepare("insert into sponsoredposts_category set sponsoredposts_id=?,category_id=?,category_level=?");
+                $insertSponsCategoryStmt->bind_param('iii', $sponsId, $this->categoryMapping[$catRow['catlevel']], $catRow['level']);
+                $insertSponsCategoryStmt->execute();
+                $insertSpnsCategoryStmt->close();
+            }
+       
+    }
+    
+    
+    
     function migrateSponsoredVideo($SponsoredId, $isNew = 0, $condition) {
          //$articleId= 71; 
         //$isNew = 1;

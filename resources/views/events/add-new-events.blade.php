@@ -100,7 +100,7 @@
         </ul>
     </div>            <header>
         <i class="icon-big-notepad"></i>
-        <h2><small>Event ID: 45345</small></h2>
+        <h2><small>Add new event</small></h2>
 
     </header>
     <form class="form-horizontal" action="/event/add" method="POST"enctype= "multipart/form-data"  onsubmit="return validateEventData()">
@@ -213,14 +213,14 @@
                     <div class="controls">
                         <select name="category" id="selectBoxFilter20">
                             <option value="">--select category--</option>
-                            <option value="ponsored">Sponsored</option>
-                            <option value="bwbusinessworld"> BW Businessworld</option>
-                            <option value="bwsmartcities"> BW Smartcities</option>
-                            <option value="bwcio"> BW CIO</option>
-                            <option value="bwhotelier"> BW Hotelier</option>
-                            <option value="bwwealth"> BW Wealth</option>
-                            <option value="bwdealStreet"> BW DealStreet</option>
-                            <option value="bwdisrupt"> BW Disrupt</option>
+                            <option value="Sponsored">Sponsored</option>
+                            <option value="BW Businessworld"> BW Businessworld</option>
+                            <option value="BW Smartcities"> BW Smartcities</option>
+                            <option value="BW CIO"> BW CIO</option>
+                            <option value="BW Hotelier"> BW Hotelier</option>
+                            <option value="BW Wealth"> BW Wealth</option>
+                            <option value="BW DealStreet"> BW DealStreet</option>
+                            <option value="BW Disrupt"> BW Disrupt</option>
                         </select>
                     </div>
                 </div>
@@ -341,7 +341,7 @@
         </div>    
             
 
-            <div id="Article-Details" class="control-group row-fluid">
+<!--            <div id="Article-Details" class="control-group row-fluid">
                 <div class="span3">
                     <label class="control-label">Daily Timing</label>
                 </div>
@@ -350,7 +350,7 @@
                         <input type="text" id="hours"  name="hours" class="span3" placeholder="Hours" />&nbsp;&nbsp;&nbsp;<input type="text" id="minutes" class="span3" name="minutes" placeholder="Minutes" />&nbsp;To&nbsp;<input type="text" id="endhours" name="endhours" class="span3" placeholder="Hours" />&nbsp;&nbsp;&nbsp;<input type="text" id="endminutes" name="endminutes" class="span3" placeholder="Minutes" />
                     </div>
                 </div>
-            </div>
+            </div>-->
         </div>
         <div class="control-group row-fluid">
             <div class="span12 span-inset">
@@ -386,13 +386,15 @@
             if ($('input[name=startdate]').val().trim() == 0){
                 valid = 0;
                 $('input[name=startdate]').addClass('error');
-                $('input[name=startdate]').after(errorMessage('Please enter email'));
+                $('input[name=startdate]').after(errorMessage('Please enter start date'));
                 } 
             if ($('input[name=enddate]').val().trim() == 0){
                 valid = 0;
                 $('input[name=enddate]').addClass('error');
-                $('input[name=enddate]').after(errorMessage('Please enter mobile'));
+                $('input[name=enddate]').after(errorMessage('Please enter end date'));
                 }
+                
+            /*
             if ($('input[name=hours]').val().trim() == 0){
                 valid = 0;
                 $('input[name=hours]').addClass('error');
@@ -407,13 +409,13 @@
                 valid = 0;
                 $('input[name=endhours]').addClass('error');
                 $('input[name=endhours]').after(errorMessage('Please enter mobile'));
-                }
+                }                
             if ($('input[name=endminutes]').val().trim() == 0){
                 valid = 0;
                 $('input[name=endminutes]').addClass('error');
                 $('input[name=endminutes]').after(errorMessage('Please enter mobile'));
                 }
-                
+               */ 
             
                                     //alert(valid);
             if (valid == 0)

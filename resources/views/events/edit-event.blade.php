@@ -101,9 +101,10 @@
         </ul>
     </div>            <header>
         <i class="icon-big-notepad"></i>
-        <h2><small>Event ID: 45345</small></h2>
+        <h2><small>Event ID: 1</small></h2>
 
     </header>
+    <?php //print_r($posts); exit;?>
    @foreach($posts as $a)
     <form class="form-horizontal" action="/event/update" method="POST"enctype= "multipart/form-data"  onsubmit="return validateEventData()">
         <div class="container-fluid">
@@ -142,8 +143,8 @@
                         <select name="channel" id="selectBoxFilter20">
                             <option value="">Please select </option>
                              @foreach($channels as $channel)
-								<option value="{{ $channel->channel_id }}" @if($channel->channel_id == $a->channel_id) selected="selected" @endif >{{ $channel->channel }}</option>
-							@endforeach
+                                    <option value="{{ $channel->channel_id }}" @if($channel->channel_id == $a->channel_id) selected="selected" @endif >{{ $channel->channel }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
@@ -216,15 +217,14 @@
             <div class="span9">
                     <div class="controls">
                         <select name="category" id="selectBoxFilter20">
-                             <option value="{{$a->category}}" selected='selected'>{{ $a->category }}</option> 
-                            <option value="ponsored">Sponsored</option>
-                            <option value="bwbusinessworld"> BW Businessworld</option>
-                            <option value="bwsmartcities"> BW Smartcities</option>
-                            <option value="bwcio"> BW CIO</option>
-                            <option value="bwhotelier"> BW Hotelier</option>
-                            <option value="bwwealth"> BW Wealth</option>
-                            <option value="bwdealStreet"> BW DealStreet</option>
-                            <option value="bwdisrupt"> BW Disrupt</option>
+                            <option value="Sponsored">Sponsored</option>
+                            <option value="BW Businessworld"> BW Businessworld</option>
+                            <option value="BW Smartcities"> BW Smartcities</option>
+                            <option value="BW CIO"> BW CIO</option>
+                            <option value="BW Hotelier"> BW Hotelier</option>
+                            <option value="BW Wealth"> BW Wealth</option>
+                            <option value="BW DealStreet"> BW DealStreet</option>
+                            <option value="BW Disrupt"> BW Disrupt</option>
                         </select>
                     </div>
                 </div>
@@ -383,13 +383,15 @@
             if ($('input[name=startdate]').val().trim() == 0){
                 valid = 0;
                 $('input[name=startdate]').addClass('error');
-                $('input[name=startdate]').after(errorMessage('Please enter email'));
+                $('input[name=startdate]').after(errorMessage('Please enter start date'));
                 } 
             if ($('input[name=enddate]').val().trim() == 0){
                 valid = 0;
                 $('input[name=enddate]').addClass('error');
-                $('input[name=enddate]').after(errorMessage('Please enter mobile'));
+                $('input[name=enddate]').after(errorMessage('Please enter end date'));
                 }
+            
+            /*    
             if ($('input[name=hours]').val().trim() == 0){
                 valid = 0;
                 $('input[name=hours]').addClass('error');
@@ -411,6 +413,7 @@
                 $('input[name=endminutes]').after(errorMessage('Please enter mobile'));
                 }
                 
+                */
             
                                     //alert(valid);
             if (valid == 0)

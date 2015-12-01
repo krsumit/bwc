@@ -102,14 +102,14 @@ class eventController extends Controller
         
         $sponsored = $request->category;
         
-        $start_time = $request->hours.':'.$request->minutes;
-        $end_time = $request->endhours.':'.$request->endminutes;
+        //$start_time = $request->hours.':'.$request->minutes;
+        //$end_time = $request->endhours.':'.$request->endminutes;
         $venue=$request->venue;
         $valid = '1';
         $created_at=date('Y-m-d H:i:s');
         $updated_at=date('Y-m-d H:i:s');
        DB::table('event')->insert(
-        ['title' => $title, 'description' => $description,'channel_id'=>$channel_id,'imagepath'=>$photo,'start_date'=>$start_date,'end_date'=>$end_date,'start_time'=>$start_time,'end_time'=>$end_time,'country'=>$country,'state'=>$state,'image_url'=>$url,'category'=>$sponsored,'valid'=>$valid,'created_at'=>$created_at,'updated_at'=>$updated_at ]
+        ['title' => $title, 'description' => $description,'channel_id'=>$channel_id,'imagepath'=>$photo,'start_date'=>$start_date,'end_date'=>$end_date,'country'=>$country,'state'=>$state,'image_url'=>$url,'category'=>$sponsored,'valid'=>$valid,'created_at'=>$created_at,'updated_at'=>$updated_at ]
         );
 
         Session::flash('message', 'Your data has been successfully add.');
@@ -125,15 +125,15 @@ class eventController extends Controller
      * @return Response
      */
     public function published()
-            
     {
         if(isset($_GET['keyword'])){
             $queryed = $_GET['keyword'];
             $posts = DB::table('event')
-               ->join('country_states', 'country_states.state_id', '=', 'event.state')
+               ->leftJoin('country_states', 'country_states.state_id', '=', 'event.state')
                ->select('event.*','country_states.name'  )
                 ->where('event.valid', '=', '1')
                 ->where('event.title', 'LIKE', '%'.$queryed.'%')
+                ->orderBy('event.updated_at','DESC')
 		->paginate(10);
             //print_r($posts);die;
           
@@ -141,10 +141,10 @@ class eventController extends Controller
                //echo  $_GET['country'].'sumit'; echo $_GET['state'].'sumit4';  echo $_GET['startdate'].'sumitstart'; echo $_GET['enddate'];
                //die;
                  $q = DB::table('event')
-               ->join('country_states', 'country_states.state_id', '=', 'event.state')
+               ->leftJoin('country_states', 'country_states.state_id', '=', 'event.state')
                ->select('event.*','country_states.name'  )
-                ->where('event.valid', '=', '1');
-                 
+               ->where('event.valid', '=', '1')
+               ->orderBy('event.updated_at','DESC');  
                
                 if($_GET['country']) {
                     
@@ -171,12 +171,14 @@ class eventController extends Controller
                 // print_r($posts); die;
                   }else{
         
-        
+       
              $posts = DB::table('event')
-               ->join('country_states', 'country_states.state_id', '=', 'event.state')
+               ->leftJoin('country_states', 'country_states.state_id', '=', 'event.state')
                ->select('event.*','country_states.name'  )
-                ->where('event.valid', '=', '1')   
+                ->where('event.valid', '=', '1')
+                ->orderBy('event.updated_at','DESC')     
 		->paginate(10);
+                
         //print_r($posts);die;
                   }
         $country = Country::where('valid','=','1')->get();
@@ -192,7 +194,7 @@ class eventController extends Controller
      * @return Response
      */
     public function edit()
-    {
+    {   //echo 'test'; exit;
         //
         //$asd = fopen("/home/sudipta/log.log", 'a+');
         if (isset($_GET['id'])) {
@@ -200,8 +202,8 @@ class eventController extends Controller
         }
         //fwrite($asd, " EDIT ID Passed ::" .$id  . "\n\n");
        $posts = DB::table('event')
-               ->join('country_states', 'country_states.state_id', '=', 'event.state')
-               ->join('country', 'country.country_id', '=', 'event.country')
+               ->leftJoin('country_states', 'country_states.state_id', '=', 'event.state')
+               ->leftJoin('country', 'country.country_id', '=', 'event.country')
                ->select('event.*','country_states.name','country.name as countryname'  )
                 ->where('event.valid', '=', '1')
                 ->where('event.event_id', '=', $id)
@@ -292,13 +294,13 @@ class eventController extends Controller
         
         $sponsored = $request->category;
         
-        $start_time = $request->hours.':'.$request->minutes;
-        $end_time = $request->endhours.':'.$request->endminutes;
+        //$start_time = $request->hours.':'.$request->minutes;
+        //$end_time = $request->endhours.':'.$request->endminutes;
         $venue=$request->venue;
         $valid = '1';
         $created_at=date('Y-m-d H:i:s');
         $updated_at=date('Y-m-d H:i:s');
-         $postdata = ['title' => $title, 'description' => $description,'channel_id'=>$channel_id,'imagepath'=>$photo,'start_date'=>$start_date,'end_date'=>$end_date,'start_time'=>$start_time,'end_time'=>$end_time,'country'=>$country,'state'=>$state,'image_url'=>$url,'category'=>$sponsored,'valid'=>$valid,'created_at'=>$created_at,'updated_at'=>$updated_at ];
+         $postdata = ['title' => $title, 'description' => $description,'channel_id'=>$channel_id,'imagepath'=>$photo,'start_date'=>$start_date,'end_date'=>$end_date,'country'=>$country,'state'=>$state,'image_url'=>$url,'category'=>$sponsored,'valid'=>$valid,'created_at'=>$created_at,'updated_at'=>$updated_at ];
         DB::table('event')
             ->where('event_id',$request->editevent_id)
             ->update($postdata);

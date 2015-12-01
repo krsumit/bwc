@@ -250,12 +250,15 @@
             <script>
                $(document).ready(function () {
                 $('#tableSortable').dataTable({
-                    "sPaginationType": "bootstrap",
-                    "fnInitComplete": function () {
-                        $(".dataTables_wrapper select").select2({
-                            dropdownCssClass: 'noSearch'
-                        });
-                    }
+                     bInfo: false,
+                              bPaginate:false,
+                              "aaSorting": [] ,
+                              "aoColumnDefs": [ { "bSortable": false, "aTargets": [4] } ],
+                            "fnInitComplete": function(){
+                                $(".dataTables_wrapper select").select2({
+                                    dropdownCssClass: 'noSearch'
+                                });
+                            }
                 });
                 //                            $("#simpleSelectBox").select2({
                 //                                dropdownCssClass: 'noSearch'
