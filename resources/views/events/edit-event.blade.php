@@ -107,9 +107,10 @@
     <?php //print_r($posts); exit;?>
    @foreach($posts as $a)
     <form class="form-horizontal" action="/event/update" method="POST"enctype= "multipart/form-data"  onsubmit="return validateEventData()">
-        <div class="container-fluid">
-            {!! csrf_field() !!}
-            <div class="form-legend" id="Notifications">Notifications</div>
+       {!! csrf_field() !!}
+        <div class="container-fluid" @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif>
+           
+            <div class="form-legend" id="Notifications"  >Notifications</div>
 
             <!--Notifications begin-->
             <div class="control-group row-fluid">
@@ -180,7 +181,7 @@
                 </div>
                 <div class="span9">
                     <div class="controls">
-                        <textarea  rows="4" class="" name="descripation" id="descripation"> {{$a->description}}</textarea>
+                        <textarea  rows="4" class="" name="descripation" id="descripation">{{$a->description}}</textarea>
                     </div>
                 </div>
             </div>
@@ -194,7 +195,11 @@
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                         <div class="input-append">
                             <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input name="photo" type="file"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                            @if(trim($a->imagepath))
+                            <image src="{{ config('constants.awsbaseurl').config('constants.awaevent').$a->imagepath}}" style="margin-left: 10px;" height="50" width="50" />
+                            @endif;
                         </div>
+                        
                     </div>
                 </div>
             </div>
@@ -217,14 +222,14 @@
             <div class="span9">
                     <div class="controls">
                         <select name="category" id="selectBoxFilter20">
-                            <option value="Sponsored">Sponsored</option>
-                            <option value="BW Businessworld"> BW Businessworld</option>
-                            <option value="BW Smartcities"> BW Smartcities</option>
-                            <option value="BW CIO"> BW CIO</option>
-                            <option value="BW Hotelier"> BW Hotelier</option>
-                            <option value="BW Wealth"> BW Wealth</option>
-                            <option value="BW DealStreet"> BW DealStreet</option>
-                            <option value="BW Disrupt"> BW Disrupt</option>
+                            <option value="Sponsored" @if($a->category=='Sponsored') selected="selected" @endif >Sponsored</option>
+                            <option value="BW Businessworld" @if($a->category=='BW Businessworld') selected="selected" @endif > BW Businessworld</option>
+                            <option value="BW Smartcities" @if($a->category=='BW Smartcities') selected="selected" @endif > BW Smartcities</option>
+                            <option value="BW CIO" @if($a->category=='BW CIO') selected="selected" @endif > BW CIO</option>
+                            <option value="BW Hotelier" @if($a->category=='BW Hotelier') selected="selected" @endif > BW Hotelier</option>
+                            <option value="BW Wealth" @if($a->category=='BW Wealth') selected="selected" @endif> BW Wealth</option>
+                            <option value="BW DealStreet" @if($a->category=='BW DealStreet') selected="selected" @endif> BW DealStreet</option>
+                            <option value="BW Disrupt" @if($a->category=='BW Disrupt') selected="selected" @endif> BW Disrupt</option>
                         </select>
                     </div>
                 </div>

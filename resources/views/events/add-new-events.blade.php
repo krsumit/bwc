@@ -104,8 +104,9 @@
 
     </header>
     <form class="form-horizontal" action="/event/add" method="POST"enctype= "multipart/form-data"  onsubmit="return validateEventData()">
-        <div class="container-fluid">
-            {!! csrf_field() !!}
+         {!! csrf_field() !!}
+        <div class="container-fluid" @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif>
+           
             <div class="form-legend" id="Notifications">Notifications</div>
 
             <!--Notifications begin-->

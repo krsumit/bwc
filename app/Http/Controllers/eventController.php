@@ -113,7 +113,7 @@ class eventController extends Controller
         );
 
         Session::flash('message', 'Your data has been successfully add.');
-        return Redirect::to('event/add-event-management');
+        return Redirect::to('event/published');
       
        
     }
@@ -241,7 +241,7 @@ class eventController extends Controller
       $eventdetais = DB::table('event')
                ->select('event.imagepath')
                 ->where('event.event_id', '=', $request->editevent_id)
-		->get();
+		->first();
        if($request->file('photo')){ // echo 'test';exit;
         $file = $request->file('photo');
        // echo $file; exit;
@@ -254,6 +254,7 @@ class eventController extends Controller
         //$l = fopen('/home/sudipta/check.log','a+');
         //fwrite($l,"File :".$filename." Name: ".$name);
 
+        
         $destination_path = 'uploads/';
 
         //$filename = str_random(6).'_'.$request->file('photo')->getClientOriginalName();
@@ -294,8 +295,6 @@ class eventController extends Controller
         
         $sponsored = $request->category;
         
-        //$start_time = $request->hours.':'.$request->minutes;
-        //$end_time = $request->endhours.':'.$request->endminutes;
         $venue=$request->venue;
         $valid = '1';
         $created_at=date('Y-m-d H:i:s');
@@ -307,7 +306,7 @@ class eventController extends Controller
             $url ='/event/edit/?id='.$request->editevent_id;
 
         Session::flash('message', 'Your data has been successfully modiffy.');
-        return Redirect::to( $url);
+        return Redirect::to('event/published');
  
     }
 
@@ -331,10 +330,9 @@ class eventController extends Controller
             //fwrite($asd, " Delete Id : ".$d." \n\n");
             $valid='0';
             $deleteAl= [
-			
-			'valid' => $valid
-			
-            ];
+			'valid' => $valid,
+                        'updated_at'=>date('Y-m-d H:i:s')
+                       ];
             DB::table('event')
             ->where('event_id',$d)
             ->update($deleteAl);

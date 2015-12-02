@@ -92,24 +92,25 @@ class Cron {
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
-            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+           // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
         $authorResults = $this->conn->query("SELECT * FROM authors where 1 $condition");
-
+        //echo $authorResults->num_rows; exit;
         if ($authorResults->num_rows > 0) {
 
             while ($authorRow = $authorResults->fetch_assoc()) {
                 // print_r($authorRow); exit;
                 $authorId = $authorRow['author_id'];
                 $checkAthorExistResultSet = $this->conn2->query("select author_id,author_name from author where author_id=$authorId");
-                if ($checkAthorExistResultSet->num_rows > 0) {
+                if ($checkAthorExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
                     $authorUpdateStmt = $this->conn2->prepare("update author set author_name=?,author_photo=?,author_bio=?,author_type=?,column_id=?,valid=? where author_id=?");
                     $authorUpdateStmt->bind_param('sssiiii', $authorRow['name'], $authorRow['photo'], $authorRow['bio'], $authorRow['author_type_id'], $authorRow['column_id'], $authorRow['valid'], $authorId);
                     $authorUpdateStmt->execute();
                     if ($authorUpdateStmt->affected_rows)
                         $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                   // echo  $_SESSION['noofupd'];
                 }else {
                     $authorInsertStmt = $this->conn2->prepare("insert into author set author_id=?,author_name=?,author_photo=?,author_bio=?,author_type=?,column_id=?,valid=?");
                     //echo $this->conn2->error; exit;

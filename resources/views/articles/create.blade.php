@@ -776,7 +776,7 @@ foreach ($rights as $r) {
                                             $('input[name=mobile]').addClass('error');
                                             $('input[name=mobile]').after(errorMessage('Please enter mobile'));
                                     }else {
-                                        var regex=/^[6789]\d{9}$/;
+                                        var regex=/^(\d{1,3}[- ]?)?\d{10}$/;
                                         if(!regex.test($('input[name=mobile]').val())){
                                              valid = 0;
                                              $('input[name=mobile]').addClass('error');
