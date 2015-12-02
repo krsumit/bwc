@@ -203,6 +203,7 @@ class ArticlesController extends Controller {
     }
 
     function imageUpload() {
+		
         //  echo 'test';exit;
         $arg['script_url'] = url('article/image/upload');
         $upload_handler = new UploadHandler($arg);
@@ -535,6 +536,9 @@ class ArticlesController extends Controller {
      */
 
     public function update(Request $request) {
+		 if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
 
         //$asd = fopen("/home/sudipta/log.log", 'a+');
         //fwrite($asd, "Step 4.1 In Edit Article POST Function \n");
@@ -928,6 +932,9 @@ class ArticlesController extends Controller {
     }
 
     public function store(Request $request) {
+		 if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
                 //echo '<br>';
         //echo '<pre>';
         //print_r($request->all());exit;

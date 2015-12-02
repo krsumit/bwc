@@ -22,9 +22,10 @@ class eventController extends Controller
      * @return Response
      */
     public function index()
-    {
-        
-       
+    { 
+         if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
         $country = Country::where('valid','=','1')->get();
         $states = State::where('valid','=','1')->orderBy('name')->get();
         $uid = Session::get('users')->id;
@@ -48,6 +49,9 @@ class eventController extends Controller
      */
     public function store(Request $request)
     {
+		 if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
         // print_r($request);die;
       $validation = Validator::make($request->all(), [
             //'caption'     => 'required|regex:/^[A-Za-z ]+$/',
@@ -126,6 +130,9 @@ class eventController extends Controller
      */
     public function published()
     {
+		 if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
         if(isset($_GET['keyword'])){
             $queryed = $_GET['keyword'];
             $posts = DB::table('event')
@@ -194,7 +201,10 @@ class eventController extends Controller
      * @return Response
      */
     public function edit()
-    {   //echo 'test'; exit;
+    {  	 if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
+		 //echo 'test'; exit;
         //
         //$asd = fopen("/home/sudipta/log.log", 'a+');
         if (isset($_GET['id'])) {
@@ -232,7 +242,9 @@ class eventController extends Controller
      */
     public function update(Request $request)
     {
-        
+         if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
        $validation = Validator::make($request->all(), [
             //'caption'     => 'required|regex:/^[A-Za-z ]+$/',
             //'description' => 'required',

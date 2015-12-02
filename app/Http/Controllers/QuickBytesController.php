@@ -171,6 +171,9 @@ class QuickBytesController extends Controller
      */
     public function store(Request $request)
     { 
+		 if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
         //Session's User Id
       // echo count($request->Ltopics);
         $uid = $request->user()->id;
@@ -330,6 +333,10 @@ class QuickBytesController extends Controller
      */
     public function show($id)
     {
+		 if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
+        
         $quickbyte=QuickByte::find($id);
         //print_r($quickbyte);
 //exit;       //$arq=  explode($quickbyte->topics);exit;
@@ -413,7 +420,10 @@ class QuickBytesController extends Controller
      * @return Response
      */
     public function update(Request $request)
-    {//QuickByte
+    {	 if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
+		//QuickByte
         //print_r($request->all());exit;
         $quickbyte = QuickByte::find($request->id);
         // Add Arr Data to Article Table //
