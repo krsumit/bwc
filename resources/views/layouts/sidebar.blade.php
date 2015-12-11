@@ -41,7 +41,7 @@
                             <a href="/campaing/add-management">Campaign Management</a>
                         </li>
                         <li>
-                            <a href="add-a-magazine-issue.html">Add A Magazine Issue</a>
+                            <a href="/magazineissue">Add A Magazine Issue</a>
                         </li>
                         <li>
                             <a href="tips.html">Tips</a>
@@ -87,12 +87,12 @@
                 <div class="sub-nav">
                     <ul class="nav">
                         <li>
-                            <a href="published-debates.html">Published Debate</a>
+                            <a href="/debate/published">Published Debate</a>
                         </li>
                         <li>
-                            <a href="create-new-debate.html">Create New Debates</a>
+                            <a href="/debate/create">Create New Debates</a>
                         </li>
-						<li>
+<!--						<li>
                             <a href="new-comments-for-debate.html">Debate Comments</a>
                         </li>
                         <li>
@@ -103,7 +103,7 @@
                         </li>
 						<li>
                             <a href="#">Help</a>
-                        </li>
+                        </li>-->
                     </ul>
                 </div>
             </li>

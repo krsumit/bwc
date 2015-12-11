@@ -296,7 +296,7 @@
         </div>
         <div id="Text_Area_Resizable" class="control-group row-fluid">
             <div class="span3">
-                <label class="control-label">Quickbyte Discription</label>
+                <label class="control-label">Quickbyte Description</label>
             </div>
             <div class="span9">
                 <div class="controls">

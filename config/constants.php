@@ -29,9 +29,12 @@ return [
 'awauthordir'=> 'author/', 
 'awaevent'=> 'event/',
 'awatipstag'=> 'tipstag/',
-'awfeaturebox'=>'featurebox/',   
+'awfeaturebox'=>'featurebox/', 
+'awmagazinedir'=> 'magazineissue/',    
+'debatefeatured'=>'debate/featuredimage/', 
+'debateexpert'=>'debate/expertimage/',     
 'awbucket'=>'bwmedia',
-'awsbaseurl'=>'https://s3-ap-southeast-1.amazonaws.com/bwmedia/',    
+'awsbaseurl'=>'http://d1s8mqgwixvb29.cloudfront.net/',    
 'recordperpage' => '20'    
 ];
 ?>

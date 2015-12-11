@@ -320,6 +320,18 @@ Route::post('/featurebox', ['middleware' => 'auth',   'uses' => 'FeatureBoxContr
 Route::match(['get', 'post'], 'featurebox/edit', ['as' => 'featurebox/edit', 'uses' => 'FeatureBoxController@edit']);
 Route::match(['get', 'post'], 'featurebox/delete', ['as' => 'featurebox/delete', 'uses' => 'FeatureBoxController@destroy']);
 
+
+/*
+ * magazine issue Management
+ */
+Route::get('/magazineissue', ['middleware' => 'auth',   'uses' => 'MagazineissueController@create']);
+Route::post('/magazineissue/add', ['middleware' => 'auth',   'uses' => 'MagazineissueController@store']);
+Route::match(['get', 'post'], 'magazineissue/edit', ['as' => 'magazineissue/edit', 'uses' => 'MagazineissueController@edit']);
+Route::match(['get', 'post'], 'magazineissue/delete', ['as' => 'magazineissue/delete', 'uses' => 'MagazineissueController@destroy']);
+Route::match(['get', 'post'], 'magazineissue/update', ['as' => 'magazineissue/update', 'uses' => 'MagazineissueController@update']);
+
+
+
 /*
  * Tips, Tip-Tags, Quotes
  */
@@ -356,6 +368,17 @@ Route::match(['get', 'post'], '/quickbyte/publish', ['as' => '/quickbyte/publish
 Route::get('quickbyte/{id}','QuickBytesController@show');
 Route::post('quickbyte/image/upload', ['middleware' => 'auth',   'uses' => 'ArticlesController@imageUpload' ]);
 Route::get('quickbyte/image/upload','ArticlesController@imageUpload');
+
+/* Debate start here */
+Route::get('debate/create', ['middleware' => 'auth',   'uses' => 'DebateController@create']);
+Route::post('debate', ['middleware' => 'auth',   'uses' => 'DebateController@store' ]);
+Route::get('debate/published', ['middleware' => 'auth',   'uses' => 'DebateController@index']);
+Route::get('debate/edit/{id}',['middleware' => 'auth',   'uses' =>'DebateController@edit']);
+Route::post('debate/update', ['middleware' => 'auth',   'uses' => 'DebateController@update']);
+Route::match(['get', 'post'], '/debate/delete', ['middleware' => 'auth','as' => '/debate/delete', 'uses' => 'DebateController@destroy']);
+/* Debate ends*/
+
+
 
 /*Album routs start here */
 Route::get('album/create', ['middleware' => 'auth',   'uses' => 'AlbumController@create']);
