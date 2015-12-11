@@ -71,8 +71,8 @@ class Cron {
             case 'article':
                 $this->migrateArticle();
                 break;
-            case 'magazine': 
-                $this->migrateMagazine();
+            //case 'magazine': 
+            //    $this->migrateMagazine();
             case 'topics' : 
                 $this->migrateTopics();
             case 'newstype':
@@ -1002,7 +1002,7 @@ function migratequotesTage() {
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' newstype(s) inserted and ' . $_SESSION['noofupd'] . ' newstype(s) updated.</h5>';
 
     }
-
+    /*
     function migrateMagazine() {
         
         $_SESSION['noofins'] = 0;
@@ -1055,6 +1055,7 @@ function migratequotesTage() {
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' magazine(s) inserted and ' . $_SESSION['noofupd'] . ' magazine(s) updated.</h5>';
     
     }
+    */
     
     function migrateTopics(){
         //$this->migrateCategory();
@@ -1266,7 +1267,7 @@ function migratequotesTage() {
         $this->migrateCategory();
         $this->migrateTag();
         $this->migrateTopics();
-        $this->migrateMagazine();
+        //$this->migrateMagazine();
         
        // if(){
             

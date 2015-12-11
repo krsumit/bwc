@@ -279,6 +279,57 @@ class DebateController extends Controller {
      */
     public function edit($id) {
         $uid = Session::get('users')->id;
+        $debateDetail=  Debate::find($id);
+        $debatetags= json_encode(DebateTag::select('tags.tags_id as id', 'tags.tag as name')
+                ->join('tags','tags.tags_id','=','debate_tag.tag_id')
+                ->where('tags.valid','1')
+                ->where('debate_tag.debate_id',$id)->get());
+        
+        $acateg2 = DB::table('debate_category')->where('debate_id','=',$id)->get();
+        $cateStr = array();
+        $acateg = array();
+        foreach($acateg2 as $ac) {
+            $lable = 'c' . $ac->cat_level;
+            $cateStr[$lable] = $ac->cat_id;            
+            //fwrite($asd, " Category Level ::" . $ac->level . " \n");            
+            switch ($ac->cat_level) {
+                case "1":
+                    $catlbl = DB::table('category')->where('category_id', '=', $ac->cat_id)->get();
+                    $acateg[0]['level'] = 1;
+                    $acateg[0]['category_id'] = $ac->cat_id;
+                    $acateg[0]['name'] = $catlbl[0]->name;
+                    break;
+                case "2":
+                    $catlbl = DB::table('category_two')->where('category_two_id', '=', $ac->cat_id)->get();
+                    $acateg[1]['level'] = 2;
+                    $acateg[1]['category_id'] = $ac->cat_id;
+                    $acateg[1]['name'] = $catlbl[0]->name;;
+                    break;
+                case "3":
+                    $catlbl = DB::table('category_three')->where('category_three_id', '=', $ac->cat_id)->get();
+                    $acateg[2]['level'] = 3;
+                    $acateg[2]['category_id'] = $ac->cat_id;
+                    $acateg[2]['name'] = $catlbl[0]->name;
+                    break;
+                case "4":
+                    $catlbl = DB::table('category_four')->where('category_four_id', '=', $ac->cat_id)->get();
+                    $acateg[3]['level'] = 4;
+                    $acateg[3]['category_id'] = $ac->cat_id;
+                    $acateg[3]['name'] = $catlbl[0]->name;;
+                    break;
+            }
+            
+        }
+        //print_r($acateg); exit;
+         $category = DB::table('category')->where('valid','1')->orderBy('name')->get();
+         $debateVideo = Video::where('owned_by', '=', 'debate')
+                        ->where('owner_id', '=', $id)->first();
+         $debatePhotos = Photo::where('owned_by', '=', 'debate')
+                        ->where('owner_id', '=', $id)->first();
+         //print_r($debatePhotos);exit;
+          $expertnots=  DebateExpertView::where('debate_id',$id)->get();
+          echo count($expertnots); exit;
+          exit;
         $channels = DebateController::getUserChannels($uid);
         $category = DB::table('category')->where('valid', '1')->orderBy('name')->get();
         return view('debate.create', compact('category', 'uid', 'channels'));
