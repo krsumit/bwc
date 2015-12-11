@@ -1859,7 +1859,8 @@ function migrateFeaturImage($featurId,  $condition) {
     }
     
     function migrateMagazineissue() {
-	///echo 'test';
+	//echo 'test';
+        //die;
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
@@ -1871,21 +1872,28 @@ function migrateFeaturImage($featurId,  $condition) {
         }
         $magazinerResults = $this->conn->query("SELECT * FROM magazine  WHERE 1 $condition");
         if ($magazinerResults->num_rows > 0) {
+            //echo 'testsumit';
+            //die;
             while ($magazineRow = $magazinerResults->fetch_assoc()) {
+                //print_r($magazineRow); die;
                 $magazinevalid = $magazineRow['valid'];
+               //die;
                  $magazineId = $magazineRow['magazine_id'];
                 if($magazinevalid=='1'){
-                   
+                    //echo $magazineId;
+                    //echo 'testsumitkumar';
+                      //die;
                      $checkMagazineExistResultSet = $this->conn2->query("select magazine_id,title from magazine where magazine_id=$magazineId");
                      if ($checkMagazineExistResultSet->num_rows > 0) { //echo 'here'; exit;
                          $magazineUpdateStmt = $this->conn2->prepare("update magazine set title=?,imagepath=?,publish_date_m=?,story1_title=?,story1_url=?,story2_title=?,story2_url=?,story3_title=?,story3_url=?,story4_title=?, story4_url=?,story5_title=?,story5_url=?,created_at=?,updated_at=? where magazine_id=?") or die($this->conn->error);
-                         $magazineUpdateStmt->bind_param('sssssssssssssssssi',$magazineRow['title'], $magazineRow['imagepath'], $magazineRow['publish_date_m'],$magazineRow['story1_title'], $magazineRow['story1_url'], $magazineRow['story2_title'], $magazineRow['story2_url'], $magazineRow['story3_title'],$magazineRow['story3_url'],$magazineRow['story4_title'],$magazineRow['story4_url'],$magazineRow['story5_url'],$magazineRow['story5_url'],$magazineRow['created_at'],$magazineRow['updated_at'],$magazineRow['magazine_id']) or die($this->conn->error);
+                         $magazineUpdateStmt->bind_param('sssssssssssssssi',$magazineRow['title'], $magazineRow['imagepath'], $magazineRow['publish_date_m'],$magazineRow['story1_title'], $magazineRow['story1_url'], $magazineRow['story2_title'], $magazineRow['story2_url'], $magazineRow['story3_title'],$magazineRow['story3_url'],$magazineRow['story4_title'],$magazineRow['story4_url'],$magazineRow['story5_title'],$magazineRow['story5_url'],$magazineRow['created_at'],$magazineRow['updated_at'],$magazineRow['magazine_id']) or die($this->conn->error);
                          $magazineUpdateStmt->execute()or die($this->conn->error);
                          if ($magazineUpdateStmt->affected_rows)    
                              $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
-                     }else {
-                         $magazineInsertStmt = $this->conn2->prepare("insert into magazine set magazine_id=?,title=?,imagepath=?, publish_date_m=?,story1_title=?,story1_url=?,story2_title=?,story2_url=?,story3_title=?,story3_url=?,story4_title=?, story4_url=?,story5_title=?,story5_url=?,created_at=?,updated_at=?");
-                         $magazineInsertStmt->bind_param('isssssssssssssssss', $magazineRow['magazine_id'],$magazineRow['title'], $magazineRow['imagepath'], $magazineRow['publish_date_m'],$magazineRow['story1_title'], $magazineRow['story1_url'], $magazineRow['story2_title'], $magazineRow['story2_url'], $magazineRow['story3_title'],$magazineRow['story3_url'],$magazineRow['story4_title'],$magazineRow['story4_url'],$magazineRow['story5_url'],$magazineRow['story5_url'],$magazineRow['created_at'],$magazineRow['updated_at']);
+                     }else {//echo 'here sumit';echo $magazineRow['magazine_id']; exit;
+                     
+                         $magazineInsertStmt = $this->conn2->prepare("insert into magazine set magazine_id=?,title=?,imagepath=?,publish_date_m=?,story1_title=?,story1_url=?,story2_title=?,story2_url=?,story3_title=?,story3_url=?,story4_title=?,story4_url=?,story5_title=?,story5_url=?,created_at=?,updated_at=?");
+                         $magazineInsertStmt->bind_param('isssssssssssssss', $magazineRow['magazine_id'],$magazineRow['title'], $magazineRow['imagepath'], $magazineRow['publish_date_m'],$magazineRow['story1_title'], $magazineRow['story1_url'], $magazineRow['story2_title'], $magazineRow['story2_url'], $magazineRow['story3_title'],$magazineRow['story3_url'],$magazineRow['story4_title'],$magazineRow['story4_url'],$magazineRow['story5_title'],$magazineRow['story5_url'],$magazineRow['created_at'],$magazineRow['updated_at']);
                          $magazineInsertStmt->execute();
                          if ($magazineInsertStmt->affected_rows) {
                              $_SESSION['noofins'] = $_SESSION['noofins'] + 1;

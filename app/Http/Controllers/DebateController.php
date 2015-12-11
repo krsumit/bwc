@@ -279,6 +279,7 @@ class DebateController extends Controller {
      */
     public function edit($id) {
         $uid = Session::get('users')->id;
+        
         $debateDetail=  Debate::find($id);
         $debatetags= json_encode(DebateTag::select('tags.tags_id as id', 'tags.tag as name')
                 ->join('tags','tags.tags_id','=','debate_tag.tag_id')
@@ -327,12 +328,17 @@ class DebateController extends Controller {
          $debatePhotos = Photo::where('owned_by', '=', 'debate')
                         ->where('owner_id', '=', $id)->first();
          //print_r($debatePhotos);exit;
-          $expertnots=  DebateExpertView::where('debate_id',$id)->get();
-          echo count($expertnots); exit;
-          exit;
+          $expertnots= DebateExpertView::where('debate_id',$id)->get();
+          //echo count($expertnots);exit;
+          $exprtnts=array();
+          foreach($expertnots as $notes){
+             $exprtnts[]=$notes;
+          }
+        
+        //echo $exprtnts[0]->view;exit;
         $channels = DebateController::getUserChannels($uid);
         $category = DB::table('category')->where('valid', '1')->orderBy('name')->get();
-        return view('debate.create', compact('category', 'uid', 'channels'));
+        return view('debate.create', compact('category','acateg','uid', 'channels','debateDetail','debatetags','debatePhotos','debateVideo','exprtnts'));
     }
 
     /**
@@ -491,9 +497,7 @@ class DebateController extends Controller {
      * @return Response
      */
     public function destroy() {
-        //
         //$asd = fopen("/home/sudipta/log.log", 'a+');
-
         if (isset($_GET['option'])) {
             $id = $_GET['option'];
         }
@@ -502,9 +506,9 @@ class DebateController extends Controller {
         //fwrite($asd, " Del Arr Count: ".count($delArr)." \n\n");
         foreach ($delArr as $d) {
             //fwrite($asd, " Delete Id : ".$d." \n\n");
-            $deleteQB = QuickByte::find($d);
-            $deleteQB->status = 'D';
-            $deleteQB->save();
+            $deleteDb = Debate::find($d);
+            $deleteDb->valid =0;
+            $deleteDb->save();
         }
         return;
     }
