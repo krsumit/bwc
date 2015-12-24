@@ -236,7 +236,7 @@ class DebateController extends Controller {
             $objVideo->source = $request->videosource;
             $objVideo->url = $request->videourl;
             $objVideo->channel_id = $request->channel;
-            $objVideo->owned_by = 'article';
+            $objVideo->owned_by = 'debate';
             $objVideo->owner_id = $id;
             $objVideo->added_by = $uid;
             $objVideo->added_on = date('Y-m-d');
@@ -334,11 +334,14 @@ class DebateController extends Controller {
           foreach($expertnots as $notes){
              $exprtnts[]=$notes;
           }
+          //echo gettype($debateVideo); exit;
         
+          //print_r($debateDetail); exit;
+          
         //echo $exprtnts[0]->view;exit;
         $channels = DebateController::getUserChannels($uid);
         $category = DB::table('category')->where('valid', '1')->orderBy('name')->get();
-        return view('debate.create', compact('category','acateg','uid', 'channels','debateDetail','debatetags','debatePhotos','debateVideo','exprtnts'));
+        return view('debate.edit', compact('category','acateg','uid', 'channels','debateDetail','debatetags','debatePhotos','debateVideo','exprtnts'));
     }
 
     /**
@@ -349,145 +352,168 @@ class DebateController extends Controller {
      * @return Response
      */
     public function update(Request $request) {
-        if (!Session::has('users')) {
-            return redirect()->intended('/auth/login');
-        }
-        //QuickByte
-        //print_r($request->all());exit;
-        $quickbyte = QuickByte::find($request->id);
+        
+        $this->validate($request,[
+            'channel' => 'required',      
+            'title' => 'required',
+            'debatedesc' => 'required', 
+             
+        ]); 
+        
+        $uid = $request->user()->id;
+       // echo '<pre>';
+       // print_r($request->all());exit;
+
+        $debate =Debate::find($request->id);
         // Add Arr Data to Article Table //
-        $quickbyte->channel_id = $request->channel;
-        $quickbyte->author_type = $request->author_type;
-        $quickbyte->author_id = $request->author_name;
-        $quickbyte->title = $request->title;
-        $quickbyte->description = $request->featuredesc;
-        $quickbyte->tags = $request->Taglist;
-        $quickbyte->topics = (count($request->Ltopics) > 0) ? implode(',', $request->Ltopics) : '';
-        $quickbyte->sponsored = ($request->is_sponsored) ? '1' : '0';
-        //$quickbyte->add_date = date('Y-m-d H:i:s');
-        //$quickbyte->publish_date = date('Y-m-d H:i:s');
-        $quickbyte->status = $request->status;
-        //$quickbyte->created_at = date('Y-m-d H:i:s');
-        $quickbyte->updated_at = date('Y-m-d H:i:s');
-        $quickbyte->update();
-
+        $debate->channel_id = $request->channel;
+        $debate->title = $request->title;
+        $debate->description = $request->debatedesc;
+        $debate->valid = 1;
+        $debate->is_featured=isset($request->debatedesc)?1:0;
+        $debate->update();
         $id = $request->id;
-
-
-        //Quickbyte Category - Save New: Delete Old
-        // $arrExistingCats =
-        DB::table('quickbyte_category')->where('quickbyte_id', '=', $id)->delete();
-//        if(count($arrExistingCats)>0){
-//            foreach($arrExistingCats as $eachCat) {
-//                //fwrite($asd, " Each Cat Being Deleted : ".$eachCat->a_category_id."  \n");
-//                $delCat = QuickbyteCategory::find($eachCat->a_category_id);
-//                $delCat->delete();
-//            }
-//        }
-        //Quickbyte Category - Save
+        //Deleting debate cateogry
+        DB::table('debate_category')->where('debate_id','=',$id)->delete();
+        // Saving debate category
         for ($i = 1; $i <= 4; $i++) {
-            $quick_category = new QuickbyteCategory();
-            $quick_category->quickbyte_id = $id;
+            $debateCategory = new DebateCategory();
             $label = "category" . $i;
             if ($request->$label == '') {
                 break;
             }
-            $quick_category->category_id = $request->$label;
-            $quick_category->category_level = $i;
-            $quick_category->save();
+            $debateCategory->debate_id = $id;
+            $debateCategory->cat_id = $request->$label;
+            $debateCategory->cat_level = $i;
+            $debateCategory->save();
         }
-
-
-
-
-
-
-        $images = explode(',', $request->uploadedImages);
-        //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
-        $c = 0;
-        $s3 = AWS::createClient('s3');
-        foreach ($images as $image) {
-            $source = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $image;
-            $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
-            $dest = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.quickbyteimagedir') . $image;
-            if (@copy($source, $dest)) {
-                $imaged = new Zebra_Image();
-
-                // indicate a source image
-                $imaged->source_path = $dest;
-                $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.quickbytesimagethambtdir') . $image;
-
-                if ($imaged->resize(90, 76, ZEBRA_IMAGE_BOXED, -1)) {
-                    $result = $s3->putObject(array(
-                        'ACL' => 'public-read',
-                        'Bucket' => config('constants.awbucket'),
-                        'Key' => config('constants.awquickbytesimagethumbtdir') . $image,
-                        'SourceFile' => $imaged->target_path,
-                    ));
-                    if ($result['@metadata']['statusCode'] == 200) {
-                        unlink($imaged->target_path);
-                    }
-                }
-                $imaged->source_path = $dest;
-                $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.quickbytesimagemediumdir') . $image;
-
-                if ($imaged->resize(500, 270, ZEBRA_IMAGE_BOXED, -1)) {
-                    $result = $s3->putObject(array(
-                        'ACL' => 'public-read',
-                        'Bucket' => config('constants.awbucket'),
-                        'Key' => config('constants.awquickbytesimagemediumdir') . $image,
-                        'SourceFile' => $imaged->target_path,
-                    ));
-                    if ($result['@metadata']['statusCode'] == 200) {
-                        unlink($imaged->target_path);
-                    }
-                }
-                $imaged->source_path = $dest;
-                $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.quickbytesimageextralargedir') . $image;
-                if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)) {
-                    $result = $s3->putObject(array(
-                        'ACL' => 'public-read',
-                        'Bucket' => config('constants.awbucket'),
-                        'Key' => config('constants.awquickbytesimageextralargedir') . $image,
-                        'SourceFile' => $imaged->target_path,
-                    ));
-                    if ($result['@metadata']['statusCode'] == 200) {
-                        unlink($imaged->target_path);
-                    }
-                }
-
-                unlink($source);
-                unlink($source_thumb);
-                unlink($dest);
-                $imageEntry = new Photo();
-                $imageEntry->title = $request->imagetitle[$c];
-                $imageEntry->description = $request->imagedesc[$c];
-                ;
-                $imageEntry->photopath = $image;
-                $imageEntry->imagefullPath = '';
-                $imageEntry->channel_id = $request->channel;
-                $imageEntry->owned_by = 'quickbyte';
-                $imageEntry->owner_id = $id;
-                $imageEntry->active = '1';
-                $imageEntry->created_at = date('Y-m-d H:i:s');
-                $imageEntry->updated_at = date('Y-m-d H:i:s');
-                $imageEntry->save();
-                $c++;
+        //Deleting debat category 
+        DB::table('debate_tag')->where('debate_id','=',$id)->delete();
+        // Saving tags 
+         if ($request->Taglist) {
+            $tagids = explode(',', $request->Taglist);
+            $tagids = array_unique($tagids);
+            foreach ($tagids as $key => $value) {
+                $debateTag = new DebateTag();
+                $debateTag->debate_id = $id;
+                $debateTag->tag_id = $value;
+                $debateTag->save();
             }
         }
-        //If has been Saved by Editor
-        if ($request->status == 'P') {
-            Session::flash('message', 'Your Quickbte has been Published successfully.');
-            return redirect('/quickbyte/list/published');
+        
+        $s3 = AWS::createClient('s3');
+        
+        //Saving expert view1
+        
+       // Deleting old view of expert 
+        DB::table('debate_expert_view')->where('debate_id','=',$id)->delete();
+        
+       $destination_path = 'uploads/';
+       $expertfilename1='';
+       $expertfilename2='';
+       if($request->hasFile('expertimage1')){
+           $expertfilename1 = time().str_random(6) . '_' . $request->file('expertimage1')->getClientOriginalName();
+           $request->file('expertimage1')->move($destination_path, $expertfilename1);
+            $result=$s3->putObject(array(
+                                'ACL'=>'public-read',
+                                'Bucket'     => config('constants.awbucket'),
+                                'Key'    => config('constants.debateexpert').$expertfilename1,
+                                'SourceFile'   => $destination_path.$expertfilename1,
+                        ));
+                  if($result['@metadata']['statusCode']==200){
+                        unlink($destination_path . $expertfilename1);
+                }
+           
+       }else{
+           $expertfilename1=$request->expert_old_image1;
+       }
+       
+       if ($request->hasFile('expertimage1') || trim($request->expertname1) || trim($request->expertdesing1) || trim($request->experttwitter1) || trim($request->expertview1) || trim($request->expert_old_image1) ) {
+            $debeateView1 = new DebateExpertView();
+            $debeateView1->debate_id = $id;
+            $debeateView1->name=$request->expertname1;
+            $debeateView1->designation=$request->expertdesing1;
+            $debeateView1->expert_photo=$expertfilename1;
+            $debeateView1->twitter_ac=$request->experttwitter1;
+            $debeateView1->view=$request->expertview1;
+            $debeateView1->save();
         }
-
-        if ($request->status == 'D') {
-            Session::flash('message', 'Your Article has been Saved successfully.');
-            return redirect('/quickbyte/list/deleted');
+        
+        
+        // saving expert view2
+       if ($request->hasFile('expertimage2')) {
+            $expertfilename2 = time() . str_random(6) . '_' . $request->file('expertimage2')->getClientOriginalName();
+            $request->file('expertimage2')->move($destination_path, $expertfilename2);
+            $result = $s3->putObject(array(
+                'ACL' => 'public-read',
+                'Bucket' => config('constants.awbucket'),
+                'Key' => config('constants.debateexpert') . $expertfilename2,
+                'SourceFile' => $destination_path . $expertfilename2,
+            ));
+            if ($result['@metadata']['statusCode'] == 200) {
+                unlink($destination_path . $expertfilename2);
+            }
+        }else{
+           $expertfilenam2=$request->expert_old_image2;
+       }
+        
+        if($request->hasFile('expertimage2') || trim($request->expertname2) || trim($request->expertdesing2) || trim($request->experttwitter2) || trim($request->expertview2) || trim($request->expert_old_image2)){
+            $debeateView2 = new DebateExpertView();
+            $debeateView2->debate_id = $id;
+            $debeateView2->name=$request->expertname2;
+            $debeateView2->designation=$request->expertdesing2;
+            $debeateView2->expert_photo=$expertfilename2;
+            $debeateView2->twitter_ac=$request->experttwitter2;
+            $debeateView2->view=$request->expertview2;
+            $debeateView2->save();
         }
+       
+        // Deleting old videos 
+        DB::table('videos')->where('owner_id','=',$id)->where('owned_by','=','debate')->delete();
+        //Saving debate video 
+        if (trim($request->videotitle) || trim($request->videocode) || trim($request->videosource) || trim($request->videourl)) {
+            $objVideo = new Video();
+            $objVideo->title = $request->videotitle;
+            $objVideo->code = $request->videocode;
+            $objVideo->source = $request->videosource;
+            $objVideo->url = $request->videourl;
+            $objVideo->channel_id = $request->channel;
+            $objVideo->owned_by = 'debate';
+            $objVideo->owner_id = $id;
+            $objVideo->added_by = $uid;
+            $objVideo->added_on = date('Y-m-d');
+            $objVideo->save();
+        }
+        
+        
+        // Uploading and saving debate featured image
+        if ($request->hasFile('debateimage')) {
+            // Deleting old image if exist
+            DB::table('photos')->where('owner_id','=',$id)->where('owned_by','=','debate')->delete();
+            $debatefilename = time() . str_random(6) . '_' . $request->file('debateimage')->getClientOriginalName();
+            $request->file('debateimage')->move($destination_path, $debatefilename);
+            $result = $s3->putObject(array(
+                'ACL' => 'public-read',
+                'Bucket' => config('constants.awbucket'),
+                'Key' => config('constants.debatefeatured') . $debatefilename,
+                'SourceFile' => $destination_path . $debatefilename,
+            ));
+            if ($result['@metadata']['statusCode'] == 200) {
+                unlink($destination_path . $debatefilename);
+            }
+            $photo = new Photo();
+            $photo->channel_id = $request->channel;
+            $photo->owned_by = 'debate';
+            $photo->owner_id = $id;
+            $photo->valid = '1';
+            $photo->photopath = $debatefilename;
+            $photo->save();
+        } 
+        Session::flash('message', 'Your Debate has been updated successfully.');
+        return redirect('/debate/published');
 
-        //fclose($asd);
-        // return redirect('/quickbyte/list/published');
+        
+        
     }
 
     /**

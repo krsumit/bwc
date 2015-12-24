@@ -2055,7 +2055,8 @@
 //                            showButtonPanel: true
 //                    });
                             $.timeEntry.setDefaults({show24Hours: true,showSeconds: true});   
-                            $('#timeEntry').timeEntry({minTime: '-0 +1m'}).change();
+                            $('#timeEntry').timeEntry().change();
+                            //$('#timeEntry').timeEntry({minTime: '-0 +1m'}).change();
                     });</script>
     </div>
     @endif

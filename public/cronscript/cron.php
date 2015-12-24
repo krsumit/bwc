@@ -81,6 +81,8 @@ class Cron {
                 $this->migrateQuickByte();
             case 'magazine':
                 $this->migrateMagazineissue();
+            case 'debate':
+                $this->migrateDebate();    
         endswitch;
 
         $_SESSION['message'] = $this->message;
@@ -273,8 +275,8 @@ class Cron {
             while ($photo = $photos->fetch_object()) {
                 //print_r($photo);exit;
                 $photoInsStmt = $this->conn2->prepare("insert into photo_shoot_photos set photo_shoot_id=?,photo_shoot_photo_name=?,photo_shoot_photo_url=?"
-                        . ",photo_shoot_photo_title=?,photo_shoot_photo_description=?");
-                $photoInsStmt->bind_param('issss', $id, $photo->photopath, $photo->imagefullPath, $photo->title, $photo->description);
+                        . ",photo_shoot_photo_title=?,photo_by=?,photo_shoot_photo_description=?");
+                $photoInsStmt->bind_param('isssss', $id, $photo->photopath, $photo->imagefullPath, $photo->title,$photo->photo_by,$photo->description);
                 $photoInsStmt->execute();
             }
         } else {
@@ -292,8 +294,8 @@ class Cron {
                 while ($photo = $photos->fetch_object()) {
                     //print_r($photo);exit;
                     $photoInsStmt = $this->conn2->prepare("insert into photo_shoot_photos set photo_shoot_id=?,photo_shoot_photo_name=?,photo_shoot_photo_url=?"
-                            . ",photo_shoot_photo_title=?,photo_shoot_photo_description=?") or die($this->conn2->error);;
-                    $photoInsStmt->bind_param('issss', $id, $photo->photopath, $photo->imagefullPath, $photo->title, $photo->description) or die($this->conn2->error);
+                            . ",photo_shoot_photo_title=?,photo_by=?,photo_shoot_photo_description=?") or die($this->conn2->error);;
+                    $photoInsStmt->bind_param('isssss', $id, $photo->photopath, $photo->imagefullPath, $photo->title,$photo->photo_by,$photo->description) or die($this->conn2->error);
                     $photoInsStmt->execute() or die($this->conn2->error);
                 }
             }
@@ -1921,8 +1923,139 @@ function migrateFeaturImage($featurId,  $condition) {
         $updatecronstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' magazineissue(s) inserted and ' . $_SESSION['noofupd'] . ' magazineissue(s) updated.</h5>';
     }
+    
+    function migrateDebate(){
+        $this->migrateCategory();
+        $this->migrateTag();
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $_SESSION['noofdel'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='debate' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
+        
+        
+       $debateResults = $this->conn->query("SELECT *  FROM debates where channel_id='1' $condition");
+        //echo $quickBytesResults->num_rows;exit;
+        if ($debateResults->num_rows > 0) {
+            
+            // Mapping category to map four category table data into one table
+            
+            $catMapArray = array();
+            
+            $articleCatDataRst = $this->conn2->query("select * from channel_category");
+            while ($articleCatDataRow = $articleCatDataRst->fetch_assoc()) {
+                $key = $articleCatDataRow['cms_cat_id'] . '_' . $articleCatDataRow['cms_cat_level'];
+                $catMapArray[$key] = $articleCatDataRow['category_id'];
+            }
+            $this->categoryMapping = $catMapArray;
+            
+            
+            
+               while ($quickBytesRow = $quickBytesResults->fetch_assoc()) {
+                   $id=$quickBytesRow['id'];
+                   $checkResult = $this->conn2->query("select quick_byte_title from quick_bytes where quick_byte_id=$id") or die($this->conn2->error);
+                    if ($checkResult->num_rows > 0) {
+                        if($quickBytesRow['status']=='P'){                            
+                            $updateStmt = $this->conn2->prepare("update quick_bytes set quick_byte_author_type=?,"
+                                     . "quick_byte_author_id=?,quick_byte_title=?,quick_byte_description=?,quick_byte_sponsered=?,quick_byte_published_date=? where quick_byte_id=?") or die ($this->conn2->error) ;
+                            $updateStmt->bind_param('iissisi',$quickBytesRow['author_type'],$quickBytesRow['author_id']
+                                    ,$quickBytesRow['title'],$quickBytesRow['description'],$quickBytesRow['sponsored'],$quickBytesRow['publish_date'],$quickBytesRow['id']) or die ($this->conn2->error);
+                            $updateStmt->execute() or die ($this->conn2->error);
+                            //print_r($articleInsertStmt);exit;
+                            // echo $articleInsertStmt->insert_id;exit;    
+                          //  if ($insertStmt->insert_id) {
+                                $iid=$quickBytesRow['id'];
+                                $updateStmt->close();
+                                $topics=  explode(',', $quickBytesRow['topics']);
+                                $tags=  explode(',', $quickBytesRow['tags']);
+                                
+                                $this->conn2->query("delete from quick_bytes_topic where quick_byte_id=$iid");
+                                
+                                foreach($topics as $topic){
+                                    $this->conn2->query("insert into quick_bytes_topic set quick_byte_id=$iid,topic_id=$topic");
+                                }
+                                
+                                $this->conn2->query("delete from quick_bytes_tags where quick_byte_id=$iid");
+                                
+                                foreach($tags as $tag){
+                                    $this->conn2->query("insert into quick_bytes_tags set quick_byte_id=$iid,tag_id=$tag");
+                                }
+                                
+                                $this->migrateQuickBytePhoto($iid, 0);
+                                $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                                
+                         //   }
+                            
+                            
+                             // updating quickbyte
+                        }else{
+                             // deleting quickbyte
+                                $delStmt = $this->conn2->prepare("delete from quick_bytes where quick_byte_id=?") or die ($this->conn2->error);
+                                $delStmt->bind_param('i', $id) or die ($this->conn2->error);
+                                $delStmt->execute();
+                                if ($delStmt->affected_rows) {
+                                    $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
+                                    $this->deleteQuickByteRelatedRelated($id);
+                                }
+                                $delStmt->close();
+                        }
+                       
+                        
+                    }else{
+                        if($quickBytesRow['status']=='P'){
+                            // Inserting quickbyte
+                            
+                            //echo '<pre>';
+                            //print_r($quickBytesRow);exit;
+                            $insertStmt = $this->conn2->prepare("insert into quick_bytes set quick_byte_id=?,quick_byte_author_type=?,	"
+                                     . "quick_byte_author_id=?,quick_byte_title=?,quick_byte_description=?,quick_byte_sponsered=?,quick_byte_published_date=?") or die ($this->conn2->error) ;
+                            $insertStmt->bind_param('iiissis',$quickBytesRow['id'],$quickBytesRow['author_type'],$quickBytesRow['author_id']
+                                    ,$quickBytesRow['title'],$quickBytesRow['description'],$quickBytesRow['sponsored'],$quickBytesRow['publish_date']) or die ($this->conn2->error);
+                            $insertStmt->execute() or die ($this->conn2->error);
+                            //print_r($articleInsertStmt);exit;
+                            // echo $articleInsertStmt->insert_id;exit;    
+                            if ($insertStmt->insert_id) {
+                                $iid=$insertStmt->insert_id;
+                                $insertStmt->close();
+                                $topics=  explode(',', $quickBytesRow['topics']);
+                                $tags=  explode(',', $quickBytesRow['tags']);
+                                foreach($topics as $topic){
+                                    $this->conn2->query("insert into quick_bytes_topic set quick_byte_id=$iid,topic_id=$topic");
+                                }
+                                foreach($tags as $tag){
+                                    $this->conn2->query("insert into quick_bytes_tags set quick_byte_id=$iid,tag_id=$tag");
+                                }
+                                $this->migrateQuickBytePhoto($iid, 1);
+                                $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                                
+                            }
+                            
+                        }
+                    }
+               }
+
+        }
+        
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='quickbyte',start_time=?,end_time=?");
+        $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecorstmt->execute();
+        $updatecorstmt->close();
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' quickbyte(s) inserted, ' . $_SESSION['noofupd'] . ' quickbyte(s) updated and ' . $_SESSION['noofdel'] . ' quickbyte(s) deleted.</h5>';
+       
+        
+        
+    
+    }
    
 
 }
+
+
 
 ?>

@@ -1,14 +1,14 @@
 @extends('layouts/master')
 
-@section('title', 'Create New Debate - BWCMS')
+@section('title', 'Edit Debate - BWCMS')
 
-
+<?php  //print_r($debateDetail); exit;  ?>
 @section('content')
 <div class="panel">
     <div class="panel-content filler">
         <div class="panel-logo"></div>
         <div class="panel-header">
-            <h1><small>Create New Debate</small></h1>
+            <h1><small>Edit Debate</small></h1>
 
         </div>
 
@@ -104,17 +104,17 @@
                 </ul>
             </li>
             <li class="current">
-                <a href="javascript:;">Create New Debate</a>
+                <a href="javascript:;">Edit Debate</a>
             </li>
         </ul>
     </div>            <header>
         <i class="icon-big-notepad"></i>
-        <h2><small>New Debate</small></h2>
+        <h2><small>Edit Debate</small></h2>
     </header>
     <!--            <form class="form-horizontal" id="fileupload" action="" method="POST" enctype="multipart/form-data">-->
-    {!! Form::open(array('url'=>'debate/','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
+    {!! Form::open(array('url'=>'debate/update','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
     {!! csrf_field() !!}    
-
+     <input type="hidden" name="id" value="{{$debateDetail->id}}">
     <div class="container-fluid" @if(count($errors->all())==0) style="display:none" @endif >
 
          <div class="form-legend" id="Notifications" >Notifications</div>
@@ -153,7 +153,7 @@
                     <select name="channel"  id="channel" class="formattedelement">
                         <option selected="" value="">Please Select-</option>
                         @foreach($channels as $channel)
-                        <option value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                        <option @if($channel->channel_id==$debateDetail->channel_id) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -180,7 +180,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <textarea  rows="4" name="title" id="title" class="no-resize"></textarea>
+                    <textarea  rows="4" name="title" id="title" class="no-resize">{{$debateDetail->title}}</textarea>
 
                 </div>
             </div>
@@ -193,20 +193,20 @@
                 <div class="controls">
 
 
-                    <textarea id="debatedesc" name="debatedesc" rows="2" class="auto-resize"></textarea>
+                    <textarea id="debatedesc" name="debatedesc" rows="2" class="auto-resize">{{$debateDetail->description}}</textarea>
                     <script>
-                        elRTE.prototype.options.panels.web2pyPanel = [
-                            'pastetext','bold', 'italic','underline','justifyleft', 'justifyright',
-                           'justifycenter', 'justifyfull','forecolor','hilitecolor','fontsize','link',
-                           'image', 'insertorderedlist', 'insertunorderedlist'];
-                       elRTE.prototype.options.toolbars.web2pyToolbar = ['web2pyPanel','tables'];
-                       
-                        $('#debatedesc').elrte({
-                            lang: "en",
-                            styleWithCSS: false,
-                            height: 200,
-                            toolbar: 'web2pyToolbar'
-                        });
+//                        elRTE.prototype.options.panels.web2pyPanel = [
+//                            'pastetext','bold', 'italic','underline','justifyleft', 'justifyright',
+//                           'justifycenter', 'justifyfull','forecolor','hilitecolor','fontsize','link',
+//                           'image', 'insertorderedlist', 'insertunorderedlist'];
+//                       elRTE.prototype.options.toolbars.web2pyToolbar = ['web2pyPanel','tables'];
+//                       
+//                        $('#debatedesc').elrte({
+//                            lang: "en",
+//                            styleWithCSS: false,
+//                            height: 200,
+//                            toolbar: 'web2pyToolbar'
+//                        });
                     </script>
                 </div>
             </div>
@@ -293,13 +293,14 @@
                         searchDelay: 300,
                         minChars: 4,
                         preventDuplicates: true,
+                        prePopulate: <?php echo $debatetags ?>
                     });
                 });</script>
         </div>                       
         <!--Select Box with Filter Search end-->
     </div>
 
-    <div class="container-fluid">
+   <div class="container-fluid">
 
         <div class="form-legend" id="categories">Categories</div>
 
@@ -310,8 +311,12 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <select name="category1" id="category1" class="formattedelement">
-                        <option  value="">Please Select</option>
+                    <select name="category1" id="selectBoxFilter2" class="formattedelement">
+                        @if(count($acateg)>0)
+                        <option selected="" value="{{ $acateg[0]['category_id'] }}">{{$acateg[0]['name']}}</option>
+                        @else
+                        <option selected="selected" value="">Please Select</option>
+                        @endif
                         @foreach($category as $key )
                         <option value="{{ $key->category_id }}">{{ $key->name }}</option>
                         @endforeach
@@ -320,14 +325,14 @@
             </div>
             <script>
                 $(document).ready(function () {
-                    $("#category1").select2();
-                    $('#category1').change(function () {
+                    $("#selectBoxFilter2").select2();
+                    $('#selectBoxFilter2').change(function () {
                         $.get("{{ url('article/dropdown1')}}",
                                 {option: $(this).attr("value") + '&level=_two'},
                         function (data) {
                             var selectBoxFilter3 = $('#selectBoxFilter3');
                             selectBoxFilter3.empty();
-                            selectBoxFilter3.append("<option value=''>Please Select</option>");
+                            selectBoxFilter3.append("<option selected='' value=''>Please Select</option>");
                             $.each(data, function (index, element) {
                                 selectBoxFilter3.append("<option value='" + element + "'>" + index + "</option>");
                             });
@@ -336,7 +341,6 @@
                             $('#selectBoxFilter4').select2();
                             $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
                             $('#selectBoxFilter5').select2();
-
                         });
                     });
                 });</script>
@@ -348,8 +352,10 @@
             <div class="span9">
                 <div class="controls">
                     <select name="category2" id="selectBoxFilter3">
-                        <option  value="">Please Select</option>
-
+                        @if(count($acateg)>1)
+                        <option selected="" value="{{ $acateg[1]['category_id'] }}">{{$acateg[1]['name']}}</option>
+                        @endif
+                        <option value="">Please Select</option>
                     </select>
                 </div>
             </div>
@@ -380,7 +386,10 @@
             <div class="span9">
                 <div class="controls">
                     <select name="category3" id="selectBoxFilter4">
-                        <option  value="">Please Select</option>
+                        @if(count($acateg)>2)
+                        <option selected="" value="{{ $acateg[2]['category_id'] }}">{{ $acateg[2]['name'] }}</option>
+                        @endif
+                        <option value="">Please Select</option>
                     </select>
                 </div>
             </div>
@@ -393,12 +402,13 @@
                         function (data) {
                             var selectBoxFilter5 = $('#selectBoxFilter5');
                             selectBoxFilter5.empty();
-                            selectBoxFilter5.append("<option value=''>Please Select</option>");
+                            selectBoxFilter5.append("<option selected='' value=''>Please Select</option>");
                             $.each(data, function (index, element) {
                                 selectBoxFilter5.append("<option value='" + element + "'>" + index + "</option>");
                             });
                             $('#selectBoxFilter5').select2();
                         });
+
                     });
                 });</script>
         </div>
@@ -409,7 +419,10 @@
             <div class="span9">
                 <div class="controls">
                     <select name="category4" id="selectBoxFilter5">
-                        <option  value="">Please Select</option>
+                        @if(count($acateg)>3)
+                        <option selected="" value="{{ $acateg[3]['category_id'] }}">{{$acateg[3]['name']}}</option>
+                        @endif
+                        <option value="">Please Select</option>
                     </select>
                 </div>
             </div>
@@ -420,7 +433,7 @@
         </div>
         <!--Select Box with Filter Search end-->
 
-    </div> 
+    </div>
 
     <div class="container-fluid">
 
@@ -434,7 +447,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <input id="expertname1" name="expertname1" type="text">
+                    <input id="expertname1" name="expertname1" type="text" value="@if($exprtnts[0]){{$exprtnts[0]->name}}@endif">
                 </div>
             </div>
         </div>
@@ -447,7 +460,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <input id="expertdesing1" name="expertdesing1" type="text">
+                    <input id="expertdesing1" name="expertdesing1" type="text" value="@if($exprtnts[0]){{$exprtnts[0]->designation}}@endif">
                 </div>
             </div>
         </div>
@@ -462,6 +475,8 @@
                 <div class="fileupload fileupload-new" data-provides="fileupload">
                     <div class="input-append">
                         <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" id="expertimage1" name="expertimage1"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                        @if(isset($exprtnts[0]))<img src="{{config('constants.awsbaseurl').config('constants.debateexpert').$exprtnts[0]->expert_photo}}" width="100" height="100" style="padding-left: 5px;" />@endif
+                        <input type="hidden" name="expert_old_image1" value="@if($exprtnts[0]){{$exprtnts[0]->expert_photo}}@endif"/>
                     </div>
                 </div>
             </div>
@@ -475,7 +490,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <input id="experttwitter1" name="experttwitter1" type="text">
+                    <input id="experttwitter1" name="experttwitter1" type="text" value="@if($exprtnts[0]){{$exprtnts[0]->twitter_ac}}@endif">
                 </div>
             </div>
         </div>
@@ -487,7 +502,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <textarea rows="4" name="expertview1" id="expertview1" class="no-resize"></textarea>
+                    <textarea rows="4" name="expertview1" id="expertview1" class="no-resize">@if(isset($exprtnts[0])){{$exprtnts[0]->view}}@endif</textarea>
                 </div>
             </div>
         </div>
@@ -507,7 +522,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <input id="expertname2" name="expertname2" type="text">
+                    <input id="expertname2" name="expertname2" type="text" value="@if(isset($exprtnts[1])){{$exprtnts[1]->name}}@endif">
                 </div>
             </div>
         </div>
@@ -520,7 +535,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <input id="inputField" id="expertdesing2" name="expertdesing2" name="inputField" type="text">
+                    <input id="inputField" id="expertdesing2" name="expertdesing2" name="inputField" type="text" value="@if(isset($exprtnts[1])){{$exprtnts[1]->designation}}@endif">
                 </div>
             </div>
         </div>
@@ -535,6 +550,8 @@
                 <div class="fileupload fileupload-new" data-provides="fileupload">
                     <div class="input-append">
                         <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" id="expertimage2" name="expertimage2" ></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                        @if(isset($exprtnts[1]))<img src="{{config('constants.awsbaseurl').config('constants.debateexpert').$exprtnts[1]->expert_photo}}" width="100" height="100" style="padding-left: 5px;" />@endif
+                        <input type="hidden" name="expert_old_image2" value="@if(isset($exprtnts[1])){{$exprtnts[1]->expert_photo}}@endif"/>
                     </div>
                 </div>
             </div>
@@ -548,7 +565,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <input id="experttwitter2" name="experttwitter2" type="text">
+                    <input id="experttwitter2" name="experttwitter2" type="text" value="@if(isset($exprtnts[1])){{$exprtnts[1]->twitter_ac}}@endif">
                 </div>
             </div>
         </div>
@@ -560,7 +577,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <textarea rows="4" name="expertview2" id="expertview2"  class="no-resize"></textarea>
+                    <textarea rows="4" name="expertview2" id="expertview2"  class="no-resize">@if(isset($exprtnts[1])){{$exprtnts[1]->view}}@endif</textarea>
                 </div>
             </div>
         </div>
@@ -578,7 +595,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <input name="videotitle" id="videotitle" type="text">
+                    <input name="videotitle" id="videotitle" type="text" value="@if(isset($debateVideo)){{$debateVideo->title}}@endif">
                 </div>
             </div>
         </div>
@@ -588,7 +605,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <textarea rows="4" name="videocode" id="videocode" class="no-resize"></textarea>
+                    <textarea rows="4" name="videocode" id="videocode" class="no-resize">@if($debateVideo){{$debateVideo->code}}@endif</textarea>
                 </div>
             </div>
         </div>
@@ -598,7 +615,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <input name="videosource" id="videosource" type="text">
+                    <input name="videosource" id="videosource" type="text" value="@if($debateVideo){{$debateVideo->source}}@endif">
                 </div>
             </div>
         </div>
@@ -608,7 +625,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <input name="videourl" id="videourl" type="text">
+                    <input name="videourl" id="videourl" type="text" value="@if($debateVideo){{$debateVideo->url}}@endif">
                 </div>
             </div>
         </div>
@@ -620,7 +637,7 @@
             <div class="span12 span-inset">
 
                 <label class="checkbox" >
-                    <input type="checkbox" class="uniformCheckbox" value="checkbox1" name="is_featured">
+                    <input type="checkbox" class="uniformCheckbox" @if($debateDetail->is_featured=='1') checked="checked" @endif value="checkbox1" name="is_featured">
                     <a href="#" target="_blank"> Make this a featured Debate</a>
                 </label>
                 <script>
