@@ -838,8 +838,8 @@ class ArticlesController extends Controller {
                 // indicate a source image
                 $imaged->source_path = $dest;
                 $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagethambtdir') . $image;
-               
-                if ($imaged->resize(90, 76, ZEBRA_IMAGE_BOXED, -1)) {
+                $imaged->preserve_aspect_ratio = false;
+                if ($imaged->resize(90, 63, ZEBRA_IMAGE_BOXED, -1)) {
                     $result = $s3->putObject(array(
                         'ACL'=>'public-read',
                         'Bucket' => config('constants.awbucket'),
@@ -853,8 +853,9 @@ class ArticlesController extends Controller {
                 }
                
                 //$imaged->source_path = $dest;
+                $imaged->preserve_aspect_ratio = true;
                 $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagemediumdir') . $image;
-                if ($imaged->resize(160, 90, ZEBRA_IMAGE_BOXED, -1)) {
+                if ($imaged->resize(349,219, ZEBRA_IMAGE_BOXED, -1)) {
                     $result = $s3->putObject(array(
                         'ACL'=>'public-read',
                         'Bucket' => config('constants.awbucket'),
@@ -867,7 +868,7 @@ class ArticlesController extends Controller {
                 }
                 //$imaged->source_path = $dest;
                 $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagelargedir') . $image;
-                if ($imaged->resize(500, 270, ZEBRA_IMAGE_BOXED, -1)) {
+                if ($imaged->resize(476, 257, ZEBRA_IMAGE_BOXED, -1)) {
                     $result = $s3->putObject(array(
                         'ACL'=>'public-read',
                         'Bucket' => config('constants.awbucket'),
@@ -879,22 +880,24 @@ class ArticlesController extends Controller {
                     }
                 }
                 //$imaged->source_path = $dest;
-                $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimageextralargedir') . $image;
-                if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)) {
-                    $result = $s3->putObject(array(
+                //$imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimageextralargedir') . $image;
+                 $result = $s3->putObject(array(
                         'ACL'=>'public-read',
                         'Bucket' => config('constants.awbucket'),
                         'Key' => config('constants.awarticleimageextralargedir') . $image,
-                        'SourceFile' => $imaged->target_path,
+                        'SourceFile' => $imaged->source_path,
                     ));
-                    if ($result['@metadata']['statusCode'] == 200) {
-                        unlink($imaged->target_path);
-                    }
+                if ($result['@metadata']['statusCode'] == 200) {
+                    unlink($imaged->source_path);
                 }
+                    
+//                if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)) {
+//                   
+//                }
 
                 unlink($source);
                 unlink($source_thumb);
-                unlink($dest);
+                //unlink($dest);
                 $articleImage = new Photo();
                 $articleImage->photopath = $image;
                 $articleImage->imagefullPath = '';
@@ -1113,8 +1116,8 @@ class ArticlesController extends Controller {
                 // indicate a source image
                 $imaged->source_path = $dest;
                 $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagethambtdir') . $image;
-
-                if ($imaged->resize(90, 76, ZEBRA_IMAGE_BOXED, -1)) { //echo 'resized--';
+                $imaged->preserve_aspect_ratio = false;
+                if ($imaged->resize(90, 63, ZEBRA_IMAGE_BOXED, -1)) { //echo 'resized--';
                     $result = $s3->putObject(array(
                         'ACL'=>'public-read',
                         'Bucket' => config('constants.awbucket'),
@@ -1126,8 +1129,9 @@ class ArticlesController extends Controller {
                     }
                 }
                 //$imaged->source_path = $dest;
+                $imaged->preserve_aspect_ratio = true;
                 $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagemediumdir') . $image;
-                if ($imaged->resize(160, 90, ZEBRA_IMAGE_BOXED, -1)) {
+                if ($imaged->resize(349, 219, ZEBRA_IMAGE_BOXED, -1)) {
                     $result = $s3->putObject(array(
                         'ACL'=>'public-read',
                         'Bucket' => config('constants.awbucket'),
@@ -1140,7 +1144,7 @@ class ArticlesController extends Controller {
                 }
                 //$imaged->source_path = $dest;
                 $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagelargedir') . $image;
-                if ($imaged->resize(500, 270, ZEBRA_IMAGE_BOXED, -1)) {
+                if ($imaged->resize(476, 257, ZEBRA_IMAGE_BOXED, -1)) {
                     $result = $s3->putObject(array(                        
                         'ACL'=>'public-read',
                         'Bucket' => config('constants.awbucket'),
@@ -1152,22 +1156,22 @@ class ArticlesController extends Controller {
                     }
                 }
                 //$imaged->source_path = $dest;
-                $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimageextralargedir') . $image;
-                if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)) {
+                //$imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimageextralargedir') . $image;
+                //if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)) {
                     $result = $s3->putObject(array(
                         'ACL'=>'public-read',
                         'Bucket' => config('constants.awbucket'),
                         'Key' => config('constants.awarticleimageextralargedir') . $image,
-                        'SourceFile' => $imaged->target_path,
+                        'SourceFile' => $imaged->source_path,
                     ));
                     if ($result['@metadata']['statusCode'] == 200) {
-                        unlink($imaged->target_path);
+                        unlink($imaged->source_path);
                     }
-                }
+                //}
                 // echo 'before unlink'; exit;
                 unlink($source);
                 unlink($source_thumb);
-                unlink($dest);
+                //unlink($dest);
                 $articleImage = new Photo();
                 $articleImage->photopath = $image;
                 $articleImage->imagefullPath = '';

@@ -245,8 +245,8 @@ class QuickBytesController extends Controller
                         // indicate a source image
                         $imaged->source_path = $dest;
                          $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimagethambtdir') . $image;
-                         
-                        if ($imaged->resize(90, 76, ZEBRA_IMAGE_BOXED, -1)) {
+                        $imaged->preserve_aspect_ratio = false; 
+                        if ($imaged->resize(90, 63, ZEBRA_IMAGE_BOXED, -1)) {
                             $result = $s3->putObject(array(
                                 'ACL'=>'public-read',
                                 'Bucket' => config('constants.awbucket'),
@@ -257,10 +257,10 @@ class QuickBytesController extends Controller
                                 unlink($imaged->target_path);
                             }
                         }
-                        $imaged->source_path = $dest;
+                        //$imaged->source_path = $dest;
                          $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimagemediumdir') . $image;
-                        
-                         if ($imaged->resize(500, 270, ZEBRA_IMAGE_BOXED, -1)){
+                        $imaged->preserve_aspect_ratio = true;
+                         if ($imaged->resize(349, 219, ZEBRA_IMAGE_BOXED, -1)){
                              $result = $s3->putObject(array(
                                 'ACL'=>'public-read',
                                 'Bucket' => config('constants.awbucket'),
@@ -271,20 +271,20 @@ class QuickBytesController extends Controller
                                 unlink($imaged->target_path);
                             }
                          }
-                        $imaged->source_path = $dest;
-                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimageextralargedir') . $image;
+                        //$imaged->source_path = $dest;
+                        // $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimageextralargedir') . $image;
                          
-                         if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)){
+                         //if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)){
                              $result = $s3->putObject(array(
                                 'ACL'=>'public-read',
                                 'Bucket' => config('constants.awbucket'),
                                 'Key' => config('constants.awquickbytesimageextralargedir') . $image,
-                                'SourceFile' => $imaged->target_path,
+                                'SourceFile' => $imaged->source_path,
                             ));
                             if ($result['@metadata']['statusCode'] == 200) {
-                                unlink($imaged->target_path);
+                                unlink($imaged->source_path);
                             }
-                         }
+                         //}
                          
                         unlink($source);
                         unlink($source_thumb);
@@ -487,8 +487,8 @@ class QuickBytesController extends Controller
                         // indicate a source image
                         $imaged->source_path = $dest;
                          $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimagethambtdir') . $image;
-                         
-                        if ($imaged->resize(90, 76, ZEBRA_IMAGE_BOXED, -1)) {
+                        $imaged->preserve_aspect_ratio = false; 
+                        if ($imaged->resize(90,63, ZEBRA_IMAGE_BOXED, -1)) {
                             $result = $s3->putObject(array(
                                 'ACL'=>'public-read',
                                 'Bucket' => config('constants.awbucket'),
@@ -499,10 +499,10 @@ class QuickBytesController extends Controller
                                 unlink($imaged->target_path);
                             }
                         }
-                        $imaged->source_path = $dest;
+                        //$imaged->source_path = $dest;
                          $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimagemediumdir') . $image;
-                        
-                         if ($imaged->resize(500, 270, ZEBRA_IMAGE_BOXED, -1)) {
+                        $imaged->preserve_aspect_ratio = true;
+                         if ($imaged->resize(349, 219, ZEBRA_IMAGE_BOXED, -1)) {
                                $result = $s3->putObject(array(
                                 'ACL'=>'public-read',
                                 'Bucket' => config('constants.awbucket'),
@@ -513,23 +513,23 @@ class QuickBytesController extends Controller
                                 unlink($imaged->target_path);
                             }
                          }
-                        $imaged->source_path = $dest;
-                         $imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimageextralargedir') . $image;
-                         if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)){
+                        //$imaged->source_path = $dest;
+                         //$imaged->target_path = $_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbytesimageextralargedir') . $image;
+                         //if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)){
                               $result = $s3->putObject(array(
                                 'ACL'=>'public-read',
                                 'Bucket' => config('constants.awbucket'),
                                 'Key' => config('constants.awquickbytesimageextralargedir') . $image,
-                                'SourceFile' => $imaged->target_path,
+                                'SourceFile' => $imaged->source_path,
                             ));
                             if ($result['@metadata']['statusCode'] == 200) {
-                                unlink($imaged->target_path);
+                                unlink($imaged->source_path);
                             }
-                         }
+                         //}
                          
                         unlink($source);
                         unlink($source_thumb);
-                        unlink($dest);
+                       // unlink($dest);
                         $imageEntry=new Photo();
                         $imageEntry->title=$request->imagetitle[$c];
                         $imageEntry->description=$request->imagedesc[$c];;
