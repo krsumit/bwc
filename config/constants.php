@@ -30,6 +30,8 @@ return [
 'awaevent'=> 'event/',
 'awatipstag'=> 'tipstag/',
 'awfeaturebox'=>'featurebox/', 
+'awfeaturebox2'=>'featurebox2/', 
+'awfeaturebox3'=>'featurebox3/',  
 'awmagazinedir'=> 'magazineissue/',    
 'debatefeatured'=>'debate/featuredimage/', 
 'debateexpert'=>'debate/expertimage/',     

@@ -98,34 +98,6 @@
                                            // $('#simpleSelectBox3').append("<option selected='selected' value='element'></option>");
                                             //$('#url').value = element;
                                         }
-                                        if (index == 'position2_type') {
-                                            $('#position2_type').val(element);
-                                            $("#position2_type").select2();
-                                        }
-                                        if (index == 'position2_title') {
-                                            $('#position2_title').val(element);
-                                        }
-                                        if (index == 'position2val_photo') {
-                                            $('#position2val_photo').val(element);
-                                        
-                                        }
-                                        if (index == 'position2_url') {
-                                            $('#position2_url').val(element);
-                                        }
-                                        if (index == 'position3_type') {
-                                            $('#position3_type').val(element);
-                                            $("#position3_type").select2();
-                                        }
-                                        if (index == 'position3_title') {
-                                            $('#position3_title').val(element);
-                                        }
-                                        if (index == 'position3val_photo') {
-                                            $('#position3val_photo').val(element);
-                                        
-                                        }
-                                        if (index == 'position3_url') {
-                                            $('#position3_url').val(element);
-                                        }
                                         if (index == 'photo_id') {
                                             //$('#p_url').selected();
                                             if (element != 0) {
@@ -165,7 +137,7 @@
             return true;
             }
             function errorMessage($msg){
-             return '<div class="error">'+$msg+'</div>';
+             return '<span class="error">'+$msg+'</span>';
             }
                 
                 </script>
@@ -253,25 +225,38 @@
             {!! csrf_field() !!}
             <div class="container-fluid">
                 <input type="hidden" name="id" value="{{$uid}}">
-                <input type="hidden" name="position2val_photo" id="position2val_photo" value="">
-                <input type="hidden" name="position3val_photo" id="position3val_photo" value="">
                 <div class="form-legend" id="Notifications">Notifications</div>
 
-             <!--Notifications begin-->
-             <div class="control-group row-fluid">
-                <div class="span12 span-inset">
-                    @if (Session::has('message'))
-                    <div class="alert alert-success alert-block">
-                        <i class="icon-alert icon-alert-info"></i>
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>This is Success Notification</strong>
-                        <span>{{ Session::get('message') }}</span>
+                <!--Notifications begin-->
+                <div class="control-group row-fluid" style="display: none">
+                    <div class="span12 span-inset">
+                        <div class="alert alert-success alert-block">
+                            <i class="icon-alert icon-alert-info"></i>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>This is Success Notification</strong>
+                            <span>Your data has been successfully modified.</span>
+                        </div>
+                        <div class="alert alert-block">
+                            <i class="icon-alert icon-alert-info"></i>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>This is Alert Notification</strong>
+                            <span>No result found.</span>
+                        </div>
+                        <div class="alert alert-error alert-block">
+                            <i class="icon-alert icon-alert-info"></i>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>This is Error Notification</strong>
+                            <span>Please select a valid search criteria.</span>
+                        </div>
+                        <div class="alert alert-error alert-block">
+                            <i class="icon-alert icon-alert-info"></i>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>This is Error Notification</strong>
+                            <span>Please enter a valid email id.</span>
+                        </div>
                     </div>
-                      @endif 
-                    
                 </div>
-            </div>
-            <!--Notifications end-->
+                <!--Notifications end-->
             </div>
             <div class="container-fluid">
                 <input type="hidden" id="faid" name="faid" value="">
@@ -307,7 +292,7 @@
 
                 <div class="form-legend" id="fb">Feature Box</div>
 
-                <div class="form-legend" id="fb">Position1</div>
+
                 <div id="Article-Details" class="control-group row-fluid">
                     <div class="span3">
                         <label class="control-label">Title </label>
@@ -340,7 +325,6 @@
                         <label class="radio">
                             <input id="p_url" type="radio" checked name="mediaSel" class="uniformRadio" value="photo">
                             Photo
-                        </label>
                     </div>
                     <div class="span3">
                         <label class="radio">
@@ -376,7 +360,7 @@
 
                 <div class="control-group row-fluid" id="photourl">
                     <div class="span3">
-                        <label class="control-label">Photo</label>
+                        <label class="control-label">Photo (Size: 870px X 400px)</label>
                     </div>
                     <div class="span9">
                         <div class="fileupload fileupload-new" data-provides="fileupload">
@@ -407,135 +391,6 @@
                     <div class="span9">
                         <div class="controls">
                             <input type="url" name="url" id="url" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-legend" id="fb">Position 2</div>
-                 <!--Select Box with Filter Search begin-->
-                <div id="assign-article-to-a-Issue" class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label" for="channel_sel">Type</label>
-                    </div>
-                    <div class="span9">
-                        <div class="controls">
-                            <select name="position2_type" id="position2_type" class="req" >
-                                <option selected="" value="">All</option>
-                                 <option  value="abcd">abcd</option>
-                                
-                            </select>
-                        </div>
-                    </div>
-                    <script>
-                        $().ready(function(){
-                            $("#position2_type").select2();
-                        });
-                    </script>
-                </div>
-                <div id="Article-Details" class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Title </label>
-                    </div>
-                    <div class="span9">
-                        <div class="controls">
-                            <input type="text" name="position2_title" id="position2_title" >
-                        </div>
-                    </div>
-                </div>
-
-               
-
-               
-
-
-                <div class="control-group row-fluid" id="photourl">
-                    <div class="span3">
-                        <label class="control-label">Photo</label>
-                    </div>
-                    <div class="span9">
-                        <div class="fileupload fileupload-new" data-provides="fileupload">
-                            <div class="input-append">
-                                <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span>
-                                    <input type="file" name="position2_photo" id="position2_photo"  value=""/>
-                                </span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-               
-
-                <div class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">URL</label>
-                    </div>
-                    <div class="span9">
-                        <div class="controls">
-                            <input type="url" name="position2_url" id="position2_url" >
-                        </div>
-                    </div>
-                </div>
-                    <div class="form-legend" id="fb">Position 3</div>
-                     <div id="assign-article-to-a-Issue" class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label" for="channel_sel">Type</label>
-                    </div>
-                     <div class="span9">
-                        <div class="controls">
-                            <select name="position3_type" id="position3_type" class="req" >
-                                <option selected="" value="">All</option>
-                                 <option  value="abcd">abcd</option>
-                                
-                            </select>
-                        </div>
-                    </div>
-                    <script>
-                        $().ready(function(){
-                            $("#position_type3").select2();
-                        });
-                    </script>
-                </div>
-                                
-                <div id="Article-Details" class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Title </label>
-                    </div>
-                    <div class="span9">
-                        <div class="controls">
-                            <input type="text" name="position3_title" id="position3_title" >
-                        </div>
-                    </div>
-                </div>
-
-               
-
-              
-
-                
-               
-
-                <div class="control-group row-fluid" id="photourl">
-                    <div class="span3">
-                        <label class="control-label">Photo</label>
-                    </div>
-                    <div class="span9">
-                        <div class="fileupload fileupload-new" data-provides="fileupload">
-                            <div class="input-append">
-                                <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span>
-                                    <input type="file" name="position3_photo" id="position3_photo"  value=""/>
-                                </span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-              
-                <div class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">URL</label>
-                    </div>
-                    <div class="span9">
-                        <div class="controls">
-                            <input type="url" name="position3_url" id="position3_url" >
                         </div>
                     </div>
                 </div>

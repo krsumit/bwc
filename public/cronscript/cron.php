@@ -249,7 +249,7 @@ class Cron {
                                 foreach($tags as $tag){
                                     $this->conn2->query("insert into photo_shoot_tags set photo_shoot_id=$iid,tag_id=$tag");
                                 }
-                                $this->migratePhotoshootPhoto($iid, 1,$condition);
+                                $this->migratePhotoshootPhoto($iid,1,$condition);
                                 $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
                                 
                             }
@@ -1821,7 +1821,7 @@ function migrateFeaturImage($featurId,  $condition) {
             }
             foreach ($catRowArray as $catRow) {
                 $insertSponsCategoryStmt = $this->conn2->prepare("insert into sponsoredposts_category set sponsoredposts_id=?,category_id=?,category_level=?");
-                $insertSponsCategoryStmt->bind_param('iii', $sponsId, $this->categoryMapping[$catRow['catlevel']], $catRow['level']);
+                $insertSponsCategoryStmt->bind_param('iii', $sponsId, $this->categoryMapping[$catRow['catlevel'].'_'.$catRow['level']], $catRow['level']);
                 $insertSponsCategoryStmt->execute();
                 $insertSpnsCategoryStmt->close();
             }
@@ -1956,81 +1956,72 @@ function migrateFeaturImage($featurId,  $condition) {
             
             
             
-               while ($quickBytesRow = $quickBytesResults->fetch_assoc()) {
-                   $id=$quickBytesRow['id'];
-                   $checkResult = $this->conn2->query("select quick_byte_title from quick_bytes where quick_byte_id=$id") or die($this->conn2->error);
+               while ($debateRow = $debateResults->fetch_assoc()) {
+                   $id=$debateRow['id'];
+                   $checkResult = $this->conn2->query("select title from debates where id=$id") or die($this->conn2->error);
                     if ($checkResult->num_rows > 0) {
-                        if($quickBytesRow['status']=='P'){                            
-                            $updateStmt = $this->conn2->prepare("update quick_bytes set quick_byte_author_type=?,"
-                                     . "quick_byte_author_id=?,quick_byte_title=?,quick_byte_description=?,quick_byte_sponsered=?,quick_byte_published_date=? where quick_byte_id=?") or die ($this->conn2->error) ;
-                            $updateStmt->bind_param('iissisi',$quickBytesRow['author_type'],$quickBytesRow['author_id']
-                                    ,$quickBytesRow['title'],$quickBytesRow['description'],$quickBytesRow['sponsored'],$quickBytesRow['publish_date'],$quickBytesRow['id']) or die ($this->conn2->error);
+                        if($debateRow['valid']=='1'){
+                            
+                            $videoUrl='';
+                            $imagePath='';
+                            
+                            $debateImageRst=$this->conn->query("select photopath from photos where owned_by='debate' and owner_id='$id'");
+                            if($debateImageRst->num_rows > 0){
+                                $debateImageRow=$debateImageRst->fetch_assoc();
+                                $imagePath=$debateImageRow['photopath'];
+                            }
+                            
+                            
+                            $updateStmt = $this->conn2->prepare("update debates set title=?,"
+                                     . "description=?,viedo_url=?,imagepath=?,is_featured=?,created_at=?,updated_at=? where id=?") or die ($this->conn2->error) ;
+                            $updateStmt->bind_param('ssssissi',$debateRow['title'],$debateRow['description']
+                                    ,$videoUrl,$imagePath,$debateRow['is_featured'],$debateRow['created_at'],$debateRow['updated_at'],$debateRow['id']) or die ($this->conn2->error);
                             $updateStmt->execute() or die ($this->conn2->error);
-                            //print_r($articleInsertStmt);exit;
-                            // echo $articleInsertStmt->insert_id;exit;    
-                          //  if ($insertStmt->insert_id) {
-                                $iid=$quickBytesRow['id'];
+                                 $iid=$debateRow['id'];
                                 $updateStmt->close();
-                                $topics=  explode(',', $quickBytesRow['topics']);
-                                $tags=  explode(',', $quickBytesRow['tags']);
-                                
-                                $this->conn2->query("delete from quick_bytes_topic where quick_byte_id=$iid");
-                                
-                                foreach($topics as $topic){
-                                    $this->conn2->query("insert into quick_bytes_topic set quick_byte_id=$iid,topic_id=$topic");
-                                }
-                                
-                                $this->conn2->query("delete from quick_bytes_tags where quick_byte_id=$iid");
-                                
-                                foreach($tags as $tag){
-                                    $this->conn2->query("insert into quick_bytes_tags set quick_byte_id=$iid,tag_id=$tag");
-                                }
-                                
-                                $this->migrateQuickBytePhoto($iid, 0);
+                                $this->migrateDebateRelated($iid);
                                 $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
-                                
-                         //   }
-                            
-                            
+                       
                              // updating quickbyte
                         }else{
-                             // deleting quickbyte
-                                $delStmt = $this->conn2->prepare("delete from quick_bytes where quick_byte_id=?") or die ($this->conn2->error);
+                             // deleting debate code goes here 
+                            
+                                $delStmt = $this->conn2->prepare("delete from debates where id=?") or die ($this->conn2->error);
                                 $delStmt->bind_param('i', $id) or die ($this->conn2->error);
                                 $delStmt->execute();
                                 if ($delStmt->affected_rows) {
                                     $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
-                                    $this->deleteQuickByteRelatedRelated($id);
+                                    //Delete debates related content
+                                    
                                 }
                                 $delStmt->close();
                         }
                        
                         
                     }else{
-                        if($quickBytesRow['status']=='P'){
-                            // Inserting quickbyte
+                        if($debateRow['valid']=='1'){
+                            $videoUrl='';
+                            $imagePath='';
                             
-                            //echo '<pre>';
-                            //print_r($quickBytesRow);exit;
-                            $insertStmt = $this->conn2->prepare("insert into quick_bytes set quick_byte_id=?,quick_byte_author_type=?,	"
-                                     . "quick_byte_author_id=?,quick_byte_title=?,quick_byte_description=?,quick_byte_sponsered=?,quick_byte_published_date=?") or die ($this->conn2->error) ;
-                            $insertStmt->bind_param('iiissis',$quickBytesRow['id'],$quickBytesRow['author_type'],$quickBytesRow['author_id']
-                                    ,$quickBytesRow['title'],$quickBytesRow['description'],$quickBytesRow['sponsored'],$quickBytesRow['publish_date']) or die ($this->conn2->error);
+                            $debateImageRst=$this->conn->query("select photopath from photos where owned_by='debate' and owner_id='$id'");
+                            if($debateImageRst->num_rows > 0){
+                                $debateImageRow=$debateImageRst->fetch_assoc();
+                                $imagePath=$debateImageRow['photopath'];
+                            }
+                            
+                            $insertStmt = $this->conn2->prepare("insert into debates set id=?,title=?,"
+                                     . "description=?,viedo_url=?,imagepath=?,is_featured=?,created_at=?,updated_at=?") or die ($this->conn2->error) ;
+                            $insertStmt->bind_param('issssiss',$debateRow['id'],$debateRow['title'],$debateRow['description']
+                                    ,$videoUrl,$imagePath,$debateRow['is_featured'],$debateRow['created_at'],$debateRow['updated_at']) or die ($this->conn2->error);
                             $insertStmt->execute() or die ($this->conn2->error);
                             //print_r($articleInsertStmt);exit;
                             // echo $articleInsertStmt->insert_id;exit;    
                             if ($insertStmt->insert_id) {
                                 $iid=$insertStmt->insert_id;
                                 $insertStmt->close();
-                                $topics=  explode(',', $quickBytesRow['topics']);
-                                $tags=  explode(',', $quickBytesRow['tags']);
-                                foreach($topics as $topic){
-                                    $this->conn2->query("insert into quick_bytes_topic set quick_byte_id=$iid,topic_id=$topic");
-                                }
-                                foreach($tags as $tag){
-                                    $this->conn2->query("insert into quick_bytes_tags set quick_byte_id=$iid,tag_id=$tag");
-                                }
-                                $this->migrateQuickBytePhoto($iid, 1);
+                              
+                               
+                                $this->migrateDebateRelated($iid, 1);
                                 $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
                                 
                             }
@@ -2042,16 +2033,91 @@ function migrateFeaturImage($featurId,  $condition) {
         }
         
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='quickbyte',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='debate',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' quickbyte(s) inserted, ' . $_SESSION['noofupd'] . ' quickbyte(s) updated and ' . $_SESSION['noofdel'] . ' quickbyte(s) deleted.</h5>';
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' debate(s) inserted, ' . $_SESSION['noofupd'] . ' debate(s) updated and ' . $_SESSION['noofdel'] . ' debate(s) deleted.</h5>';
        
+    }
+    function migrateDebateRelated($id){
         
+        $delStmt = $this->conn2->prepare("delete from debate_category where debate_id=?") or die($this->conn2->error);
+        $delStmt->bind_param('i', $id) or die($this->conn2->error);
+        $delStmt->execute();
+        $delStmt->close();
+        //echo 'test'; exit;
+        $debateCatRst = $this->conn->query("select * from debate_category where debate_id=$id");
+        while (($debateCatRow = $debateCatRst->fetch_assoc())) {
+            //echo $debateCatRow['cat_id'].'_'.$debateCatRow['cat_level']; exit;
+            //echo $this->categoryMapping[$debateCatRow['cat_id'].'_'.$debateCatRow['cat_level']]; exit;
+            //print_r($debateCatRow); exit;
+            $catInsertStmt = $this->conn2->prepare("insert into debate_category  set id=?,debate_id=?,cat_id=?,cat_level=?") or die($this->conn2->error);
+            $catInsertStmt->bind_param('iiii',$debateCatRow['id'],$id,$this->categoryMapping[$debateCatRow['cat_id'].'_'.$debateCatRow['cat_level']],$debateCatRow['cat_level']) or die($this->conn2->error) ;
+            $catInsertStmt->execute() or die($this->conn2->error) ;
+            $catInsertStmt->close();
+        }
+            
+            
+        // Deleting expert view if exist
+        $delStmt = $this->conn2->prepare("delete from debate_expert_view where debate_id=?") or die($this->conn2->error);
+        $delStmt->bind_param('i', $id) or die($this->conn2->error);
+        $delStmt->execute();
+        $delStmt->close();
+        // Inserting expert view
+        $debateExpertViewRst = $this->conn->query("select * from debate_expert_view where debate_id=$id");
+        while (($debateExpertViewRow = $debateExpertViewRst->fetch_assoc())) {
+            $expertViewInsertStmt = $this->conn2->prepare("insert into debate_expert_view  set id=?,debate_id=?,name=?,designation=?,"
+                    . "expert_photo=?,twitter_ac=?,view=?");
+            $expertViewInsertStmt->bind_param('iisssss',$debateExpertViewRow['id'],$id,$debateExpertViewRow['name'],$debateExpertViewRow['designation'],
+                    $debateExpertViewRow['expert_photo'],$debateExpertViewRow['twitter_ac'],$debateExpertViewRow['view']);
+            $expertViewInsertStmt->execute();
+            $expertViewInsertStmt->close();
+            }
+        // Deleting tag if already exist
+        $delStmt = $this->conn2->prepare("delete from debate_tag where debate_id=?") or die($this->conn2->error);
+        $delStmt->bind_param('i', $id) or die($this->conn2->error);
+        $delStmt->execute();
+        $delStmt->close();
+        // Inserting tags
+        $debateTagRst = $this->conn->query("select * from debate_tag where debate_id=$id");
+        while (($debateTagRow = $debateTagRst->fetch_assoc())) {
+            $tagInsertStmt = $this->conn2->prepare("insert into debate_tag  set id=?,debate_id=?,tag_id=?") or die($this->conn2->error);
+            $tagInsertStmt->bind_param('iii',$debateTagRow['id'],$id, $debateTagRow['tag_id']) or die($this->conn2->error);
+            $tagInsertStmt->execute() or die($this->conn2->error) ;
+            $tagInsertStmt->close();
+            }
+            
+         // Deleting video if already exist
+        $delStmt = $this->conn2->prepare("delete from debate_video where debate_id=?") or die($this->conn2->error);
+        $delStmt->bind_param('i', $id) or die($this->conn2->error);
+        $delStmt->execute();
+        $delStmt->close();   
+        
+        // Debate Video
+            
+        $debateVideoRst=$this->conn->query("select * from videos where owned_by='debate' and owner_id='$id'")  or die($this->conn->error);
+        //echo $debateVideoRst->num_rows;exit;
+        if($debateVideoRst->num_rows > 0){
+            while($debateVideoRow=$debateVideoRst->fetch_assoc()){
+                
+                //print_r($debateVideoRow); exit;
+                
+                $videoInsertStmt = $this->conn2->prepare("insert into debate_video set debate_id=?,debate_video_ecode_url=?") or die($this->conn2->error);
+                $videoInsertStmt->bind_param('is',$id,$debateVideoRow['code']) or die($this->conn2->error);
+                $videoInsertStmt->execute() or die($this->conn2->error) ;
+                $videoInsertStmt->close();
+                 //print_r($debateVideoRow); exit;
+                
+            }
+        }    
+            
+        }
+        
+        // Debate Video
         
     
-    }
+    
    
 
 }
