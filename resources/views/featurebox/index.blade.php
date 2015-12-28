@@ -419,9 +419,20 @@
                     <div class="span9">
                         <div class="controls">
                             <select name="position2_type" id="position2_type" class="req" >
-                                <option selected="" value="">All</option>
-                                 <option  value="abcd">abcd</option>
-                                
+                                <option  value="">Select</option>
+                                <option  value="Archive">Archive</option>
+                                <option  value="Quick Byte">Quick Byte</option>
+                                <option  value="Interview">Interview</option>
+                                <option  value="Photo Feature">Photo Feature</option>
+                                <option  value="Face Off">Face Off</option>
+                                <option  value="Guest Blog">Guest Blog</option>
+                                <option  value="Column">Column</option>
+                                <option  value="Analysis">Analysis</option>
+                                <option  value="Expert Opinion">Expert Opinion</option>
+                                <option  value="View">View</option>
+                                <option  value="Counterview">Counterview</option>
+                                <option  value="Video">Video</option>
+                                <option  value="Sponsored">Sponsored</option>
                             </select>
                         </div>
                     </div>
@@ -482,15 +493,26 @@
                      <div class="span9">
                         <div class="controls">
                             <select name="position3_type" id="position3_type" class="req" >
-                                <option selected="" value="">All</option>
-                                 <option  value="abcd">abcd</option>
-                                
+                                <option  value="">Select</option>
+                                <option  value="Archive">Archive</option>
+                                <option  value="Quick Byte">Quick Byte</option>
+                                <option  value="Interview">Interview</option>
+                                <option  value="Photo Feature">Photo Feature</option>
+                                <option  value="Face Off">Face Off</option>
+                                <option  value="Guest Blog">Guest Blog</option>
+                                <option  value="Column">Column</option>
+                                <option  value="Analysis">Analysis</option>
+                                <option  value="Expert Opinion">Expert Opinion</option>
+                                <option  value="View">View</option>
+                                <option  value="Counterview">Counterview</option>
+                                <option  value="Video">Video</option>
+                                 <option  value="Sponsored">Sponsored</option>
                             </select>
                         </div>
                     </div>
                     <script>
                         $().ready(function(){
-                            $("#position_type3").select2();
+                            $("#position3_type").select2();
                         });
                     </script>
                 </div>

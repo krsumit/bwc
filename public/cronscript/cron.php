@@ -1370,6 +1370,7 @@ function migratequotesTage() {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
+      
         $cronresult = $this->conn->query("select start_time from cron_log where section_name='featur' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
@@ -1378,7 +1379,7 @@ function migratequotesTage() {
         }
 
         $featurResults = $this->conn->query("SELECT *  FROM featuredarticle where 1 $condition");
-       // echo $featurResults->num_rows ;exit;
+      // echo $featurResults->num_rows ;exit;
         //print_r($featurResults);exit;
         if ($featurResults->num_rows > 0) {
             // exit;
@@ -1391,8 +1392,8 @@ function migratequotesTage() {
                 if ($checkFeaturResult->num_rows > 0) { //echo 'test'; exit;
                     //$checkFeaturResult->close();
                     if ($featurRow['valid'] =='1') {
-                        $featurUpdateStmt = $this->conn2->prepare("update feature_box set feature_box_title=?,feature_box_description=?,feature_box_url=?,feature_box_create_at=?,feature_box_updated_at=?,currently_feature=? where id=?");
-                        $featurUpdateStmt->bind_param('sssssii', $featurRow['title'], $featurRow['description'], $featurRow['url'], $featurRow['created_at'],$featurRow['updated_at'],$featurRow['featured'],$id);
+                        $featurUpdateStmt = $this->conn2->prepare("update feature_box set feature_box_title=?,feature_box_description=?,position2_type=?,position2_title=?,position2_photo=?,position2_url=?,position3_type=?,position3_title=?,position3_photo=?,position3_url=?,feature_box_url=?,feature_box_create_at=?,feature_box_updated_at=?,currently_feature=? where id=?");
+                        $featurUpdateStmt->bind_param('sssssssssssssii', $featurRow['title'], $featurRow['description'],$featurRow['position2_type'],$featurRow['position2_title'],$featurRow['position2_photo'],$featurRow['position2_url'],$featurRow['position3_type'],$featurRow['position3_title'],$featurRow['position3_photo'],$featurRow['position3_url'], $featurRow['url'], $featurRow['created_at'],$featurRow['updated_at'],$featurRow['featured'],$id);
                         $featurUpdateStmt->execute();
                         if ($featurUpdateStmt->affected_rows) {
                             $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
@@ -1413,9 +1414,9 @@ function migratequotesTage() {
                         //echo 'sumit2 insert';exit;
                         //echo '<pre>';
                        // print_r($featurRow);
-                        $featurInsertStmt = $this->conn2->prepare("insert feature_box set id=?,feature_box_title=?,feature_box_description=?,feature_box_url=?,feature_box_create_at=?,feature_box_updated_at=?,currently_feature=?");
-                        $featurInsertStmt->bind_param('isssssi',$featurRow['id'], $featurRow['title'], $featurRow['description'], $featurRow['url'], $featurRow['created_at'],$featurRow['updated_at'],$featurRow['featured']);
-                        $featurInsertStmt->execute();
+                        $featurInsertStmt = $this->conn2->prepare("insert feature_box set id=?,feature_box_title=?,feature_box_description=?,position2_type=?,position2_title=?,position2_photo=?,position2_url=?,position3_type=?,position3_title=?,position3_photo=?,position3_url=?,feature_box_url=?,feature_box_create_at=?,feature_box_updated_at=?,currently_feature=?") or die($this->conn2->error);;
+                        $featurInsertStmt->bind_param('isssssssssssssi',$featurRow['id'], $featurRow['title'], $featurRow['description'],$featurRow['position2_type'],$featurRow['position2_title'],$featurRow['position2_photo'],$featurRow['position2_url'],$featurRow['position3_type'],$featurRow['position3_title'],$featurRow['position3_photo'],$featurRow['position3_url'], $featurRow['url'], $featurRow['created_at'],$featurRow['updated_at'],$featurRow['featured']) or die($this->conn2->error);;
+                        $featurInsertStmt->execute() or die($this->conn2->error); 
                         //print_r($featurInsertStmt); //exit;
                         //echo $featurInsertStmt->insert_id.'---'.$featurRow['id'].'<br>';    
                         if ($featurInsertStmt->insert_id) {
