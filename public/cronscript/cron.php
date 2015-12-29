@@ -1944,8 +1944,8 @@ function migrateFeaturImage($featurId,  $condition) {
     }
     
     function migrateDebate(){
-        $this->migrateCategory();
-        $this->migrateTag();
+       // $this->migrateCategory();
+       // $this->migrateTag();
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
