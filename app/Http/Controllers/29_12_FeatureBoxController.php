@@ -160,7 +160,7 @@ class FeatureBoxController extends Controller
 			'Key'    => config('constants.awfeaturebox2').$ph->position2_photo
                         ));
             }
-            
+            FeatureBox::where('id',$request->faid)->delete();
             $result=$s3->putObject(array(
                                 'ACL'=>'public-read',
                                 'Bucket'     => config('constants.awbucket'),
@@ -189,7 +189,7 @@ class FeatureBoxController extends Controller
 			'Key'    => config('constants.awfeaturebox3').$ph->position3_photo
                         ));
             }
-           
+            FeatureBox::where('id',$request->faid)->delete();
             $result=$s3->putObject(array(
                                 'ACL'=>'public-read',
                                 'Bucket'     => config('constants.awbucket'),
