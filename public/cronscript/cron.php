@@ -1236,8 +1236,8 @@ function migratequotesTage() {
            while ($photo = $photos->fetch_object()) {
               //print_r($photo);exit;
                $photoInsStmt=$this->conn2->prepare("insert into quick_bytes_photos set quick_byte_id=?,quick_byte_photo_name=?"
-                       . ",quick_byte_photo_title=?,quick_byte_photo_description=?");
-               $photoInsStmt->bind_param('isss',$id,$photo->photopath,$photo->title,$photo->description);
+                       . ",quick_byte_photo_title=?,quick_byte_photo_description=?,photo_by=?");
+               $photoInsStmt->bind_param('issss',$id,$photo->photopath,$photo->title,$photo->description,$photo->photo_by);
                $photoInsStmt->execute();
            }
        }else{
@@ -1246,8 +1246,8 @@ function migratequotesTage() {
            while ($photo = $photos->fetch_object()) {
               //print_r($photo);exit;
                $photoInsStmt=$this->conn2->prepare("insert into quick_bytes_photos set quick_byte_id=?,quick_byte_photo_name=?"
-                       . ",quick_byte_photo_title=?,quick_byte_photo_description=?");
-               $photoInsStmt->bind_param('isss',$id,$photo->photopath,$photo->title,$photo->description);
+                       . ",quick_byte_photo_title=?,quick_byte_photo_description=?,photo_by=?");
+               $photoInsStmt->bind_param('issss',$id,$photo->photopath,$photo->title,$photo->description,$photo->photo_by);
                $photoInsStmt->execute();
            }
            
@@ -1611,9 +1611,9 @@ function migrateFeaturImage($featurId,  $condition) {
             $articleImageResultset = $this->conn->query("select * from photos where owned_by='article' and owner_id=$articleId and valid='1'");
             while ($imageRow = $articleImageResultset->fetch_assoc()) {
                 $imInsertStmt = $this->conn2->prepare("insert into article_images set article_id=?,photopath=?,image_url=?,image_title=?"
-                        . ",image_source_name=?,image_source_url=?,image_status=?");
+                        . ",image_source_name=?,image_source_url=?,photo_by=?,image_status=?");
                 $status = ($imageRow['active'] == '1') ? 'enabled' : 'disabled';
-                $imInsertStmt->bind_param('issssss', $imageRow['owner_id'],$imageRow['photopath'],$imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $status);
+                $imInsertStmt->bind_param('isssssss', $imageRow['owner_id'],$imageRow['photopath'],$imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'],$imageRow['photo_by'],$status);
                 $imInsertStmt->execute();
                 $imInsertStmt->close();
             }
@@ -1629,9 +1629,9 @@ function migrateFeaturImage($featurId,  $condition) {
                 $articleImageResultset = $this->conn->query("select * from photos where owned_by='article' and owner_id=$articleId and valid='1'");
                 while ($imageRow = $articleImageResultset->fetch_assoc()) {
                     $imInsertStmt = $this->conn2->prepare("insert into article_images set article_id=?,photopath=?,image_url=?,image_title=?"
-                            . ",image_source_name=?,image_source_url=?,image_status=?");
+                            . ",image_source_name=?,image_source_url=?,photo_by=?,image_status=?");
                     $status = ($imageRow['active'] == '1') ? 'enabled' : 'disabled';
-                    $imInsertStmt->bind_param('issssss', $imageRow['owner_id'],$imageRow['photopath'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $status);
+                    $imInsertStmt->bind_param('isssssss', $imageRow['owner_id'],$imageRow['photopath'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'],$imageRow['photo_by'], $status);
                     $imInsertStmt->execute();
                     $imInsertStmt->close();
                 }

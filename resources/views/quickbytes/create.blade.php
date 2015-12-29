@@ -858,7 +858,10 @@
     <td colspan="1">Description</td>
     <td colspan="3"><textarea name="imagedesc[]"></textarea></td>    
     </tr>
-
+     <tr>
+            <td colspan="1">Photograph By</td>
+             <td colspan="3"><input type="text" name="photographby[]"/></textarea></td>    
+   </tr>
 
     </table>   
     </td>           

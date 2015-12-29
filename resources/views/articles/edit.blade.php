@@ -1529,8 +1529,8 @@
                                     <thead class="cf sorthead">
                                         <tr>
                                             <th>Image</th>
-<!--                                            <th>Title</th>
-                                            <th>Source</th>
+                                            <th>Photo By</th>
+  <!--                                          <th>Source</th>
                                             <th>Source URL</th>-->
                                             <th>Action</th>
                                         </tr>
@@ -1541,6 +1541,7 @@
                                             <td>
                                                 <img src="{{ config('constants.awsbaseurl').config('constants.awarticleimagethumbtdir').$photo->photopath}}" alt="article" />
                                             </td>
+                                            <td>{{$photo->photo_by}}</td>
 <!--                                            <td>{{ $photo->title }}</td>-->
                                     <input type="hidden" name="deleteImagel" id="{{ $photo->photo_id }}">
 <!--                                    <td class="center">{{ $photo->source }}</td>
@@ -2171,6 +2172,9 @@
 <script id="template-download" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade">
+    <td colspan="4">            
+    <table width="100%">
+    <tr>  
         <td>
             <span class="preview">
                 {% if (file.thumbnailUrl) { %}
@@ -2207,6 +2211,14 @@
                 </button>
             {% } %}
         </td>
+</tr>
+<tr>
+            <td colspan="1">Photograph By</td>
+             <td colspan="3"><input type="text" name="photographby[]"/></textarea></td>    
+   </tr>
+    
+    </table>   
+    </td>   
     </tr>
 {% } %}
 </script>

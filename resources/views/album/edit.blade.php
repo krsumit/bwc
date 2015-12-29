@@ -199,7 +199,7 @@
                                             <th>Image</th>
                                             <th>Title</th>
                                             <th>Desc</th>
-    <!--                                        <th>Source URL</th>-->
+                                            <th>Photo By</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -209,13 +209,13 @@
                                             <td width="20%">
                                                 <img src="{{ config('constants.awsbaseurl').config('constants.awalbumimagedir').$photo->photopath}}" alt="user" style="width:40%;" />
                                             </td>
-                                            <td width="25%">{{$photo->title}}</td>
-                                             <td width="35%" class="tdimagedesc">{{$photo->description}}</td>
-<!--                                            <td>{{ $photo->title }}</td>-->
+                                            <td width="20%">{{$photo->title}}</td>
+                                             <td width="30%" class="tdimagedesc">{{$photo->description}}</td>
+                                            <td width="15%">{{ $photo->photo_by}}</td>
                                     <input type="hidden" name="deleteImagel" id="{{ $photo->photo_id }}">
 <!--                                    <td class="center">{{ $photo->source }}</td>
                                     <td class="center">{{ $photo->source_url }}</td>-->
-                                    <td class="center" with="20%"><button type="button" onclick="$(this).MessageBox({{ $photo->photo_id }})" name="{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-danger">Dump</button><img  src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:20%; display:block; margin-left:15px;display:none;"/></td>
+                                    <td class="center" with="15%"><button type="button" onclick="$(this).MessageBox({{ $photo->photo_id }})" name="{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-danger">Dump</button><img  src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:20%; display:block; margin-left:15px;display:none;"/></td>
                                     </tr>
                                     @endforeach
 

@@ -319,7 +319,7 @@
                             <th>Image</th>
                             <th>Title</th>
                             <th>Desc</th>
-<!--                                        <th>Source URL</th>-->
+                            <th>Photo By</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -329,13 +329,15 @@
                             <td width="20%">
                                 <img src="{{ config('constants.awsbaseurl').config('constants.awquickbytesimagethumbtdir').$photo->photopath}}" alt="quick byte" />
                             </td>
-                            <td width="25%">{{$photo->title}}</td>
-                            <td width="35%" class="tdimagedesc">{{$photo->description}}</td>
+                            <td width="20%">{{$photo->title}}</td>
+                            <td width="30%" class="tdimagedesc">{{$photo->description}}</td>
+                            <td class="center" width="15%">{{$photo->photo_by}}</td>
 <!--                                            <td>{{ $photo->title }}</td>-->
                     <input type="hidden" name="deleteImagel" id="{{ $photo->photo_id }}">
 <!--                                    <td class="center">{{ $photo->source }}</td>
                     <td class="center">{{ $photo->source_url }}</td>-->
-                    <td class="center" with="20%"><button type="button" onclick="$(this).MessageBox({{ $photo->photo_id }})" name="{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-danger">Dump</button><img  src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:20%; display:block; margin-left:15px;display:none;"/></td>
+                    <td class="center" width="15%"><button type="button" onclick="$(this).MessageBox({{ $photo->photo_id }})" name="{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-danger">Dump</button><img  src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:20%; display:block; margin-left:15px;display:none;"/></td>
+                    
                     </tr>
                     @endforeach
 
@@ -919,7 +921,10 @@
     <td colspan="1">Description</td>
     <td colspan="3"><textarea name="imagedesc[]"></textarea></td>    
     </tr>
-
+    <tr>
+            <td colspan="1">Photograph By</td>
+            <td colspan="3"><input type="text" name="photographby[]"/></textarea></td>    
+   </tr>
 
     </table>   
     </td>           

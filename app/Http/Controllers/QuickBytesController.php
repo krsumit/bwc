@@ -290,7 +290,8 @@ class QuickBytesController extends Controller
                         unlink($source_thumb);
                         $imageEntry=new Photo();
                         $imageEntry->title=$request->imagetitle[$c];
-                        $imageEntry->description=$request->imagedesc[$c];;
+                        $imageEntry->description=$request->imagedesc[$c];
+                        $imageEntry->photo_by=$request->photographby[$c];
                         $imageEntry->photopath=$image;
                         $imageEntry->imagefullPath='';
                         $imageEntry->channel_id=$request->channel;
@@ -300,9 +301,9 @@ class QuickBytesController extends Controller
                         $imageEntry->created_at=date('Y-m-d H:i:s');
                         $imageEntry->updated_at=date('Y-m-d H:i:s');
                         $imageEntry->save();
-                        $c++;
+                       
                 }
-        
+                 $c++;
             }
              
         //If has been Saved by Editor
@@ -532,7 +533,8 @@ class QuickBytesController extends Controller
                        // unlink($dest);
                         $imageEntry=new Photo();
                         $imageEntry->title=$request->imagetitle[$c];
-                        $imageEntry->description=$request->imagedesc[$c];;
+                        $imageEntry->description=$request->imagedesc[$c];
+                        $imageEntry->photo_by=$request->photographby[$c];
                         $imageEntry->photopath=$image;
                         $imageEntry->imagefullPath='';
                         $imageEntry->channel_id=$request->channel;
@@ -542,9 +544,9 @@ class QuickBytesController extends Controller
                         $imageEntry->created_at=date('Y-m-d H:i:s');
                         $imageEntry->updated_at=date('Y-m-d H:i:s');
                         $imageEntry->save();
-                        $c++;
+                       
                 }
-        
+                 $c++;
             }
         //If has been Saved by Editor
         if($request->status == 'P') {

@@ -824,6 +824,7 @@ class ArticlesController extends Controller {
         //Photos table (article_id)- Save
 
         $images = explode(',', $request->uploadedImages);
+        $c=0;
         $s3 = AWS::createClient('s3');
         //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
         foreach ($images as $image) { //echo $request->uploadedImages; exit;
@@ -901,6 +902,7 @@ class ArticlesController extends Controller {
                 $articleImage = new Photo();
                 $articleImage->photopath = $image;
                 $articleImage->imagefullPath = '';
+                $articleImage->photo_by=$request->photographby[$c];
                 $articleImage->channel_id = $request->channel_sel;
                 $articleImage->owned_by = 'article';
                 $articleImage->owner_id = $id;
@@ -909,7 +911,7 @@ class ArticlesController extends Controller {
                 $articleImage->updated_at = date('Y-m-d H:i:s');
                 $articleImage->save();
             }
-
+             $c++;
         }
 
 
@@ -1102,6 +1104,7 @@ class ArticlesController extends Controller {
       
         $images = explode(',', $request->uploadedImages);
         //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
+        $c=0;
         $s3 = AWS::createClient('s3');
         foreach ($images as $image) { //echo 'foreach--';
             $source = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $image;
@@ -1175,6 +1178,7 @@ class ArticlesController extends Controller {
                 $articleImage = new Photo();
                 $articleImage->photopath = $image;
                 $articleImage->imagefullPath = '';
+                $articleImage->photo_by=$request->photographby[$c];
                 $articleImage->channel_id = $request->channel_sel;
                 $articleImage->owned_by = 'article';
                 $articleImage->owner_id = $id;
@@ -1183,7 +1187,7 @@ class ArticlesController extends Controller {
                 $articleImage->updated_at = date('Y-m-d H:i:s');
                 $articleImage->save();
             }
-
+             $c++;
         }
 
         //}

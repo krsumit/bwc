@@ -1926,6 +1926,9 @@ foreach ($rights as $r) {
 <script id="template-download" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade">
+    <td colspan="4">            
+    <table width="100%">
+    <tr>             
         <td>
             <span class="preview">
                 {% if (file.thumbnailUrl) { %}
@@ -1962,6 +1965,13 @@ foreach ($rights as $r) {
                 </button>
             {% } %}
         </td>
+ </tr>
+<tr>
+            <td colspan="1">Photograph By</td>
+             <td colspan="3"><input type="text" name="photographby[]"/></textarea></td>    
+   </tr>
+    </table>   
+    </td>    
     </tr>
 {% } %}
 </script>
