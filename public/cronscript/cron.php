@@ -75,14 +75,19 @@ class Cron {
             //    $this->migrateMagazine();
             case 'topics' : 
                 $this->migrateTopics();
+                 break;
             case 'newstype':
                 $this->migrateNewsType();
+                 break;
             case 'quickbyte':
                 $this->migrateQuickByte();
+                 break;
             case 'magazine':
                 $this->migrateMagazineissue();
+                 break;
             case 'debate':
-                $this->migrateDebate();    
+                $this->migrateDebate();  
+                 break;
         endswitch;
 
         $_SESSION['message'] = $this->message;
@@ -1323,12 +1328,14 @@ function migratequotesTage() {
                         }
                         $this->callArticleRelatedContent($articleRow['article_id'], 0, $condition);
                     } else {
+						
+						$this->deleteArticleRelated($id);
                         $delStmt = $this->conn2->prepare("delete from articles where article_id=?");
                         $delStmt->bind_param('i', $id);
                         $delStmt->execute();
                         if ($delStmt->affected_rows) {
                             $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
-                            $this->deleteArticleRelated($id);
+                           
                         }
                         $delStmt->close();
                     }
@@ -1485,7 +1492,14 @@ function migrateFeaturImage($featurId,  $condition) {
     }
 
     function deleteArticleRelated($articleId) {
-        
+       $this->conn2->query("delete from article_author where article_id=$articleId");
+       $this->conn2->query("delete from article_category where article_id=$articleId");
+       $this->conn2->query("delete from article_images where article_id=$articleId");
+       $this->conn2->query("delete from article_tags where article_id=$articleId");
+       $this->conn2->query("delete from article_topics where article_id=$articleId");
+       $this->conn2->query("delete from article_video where article_id=$articleId");
+       $this->conn2->query("delete from article_view where article_id=$articleId");
+		
     }
 
     function migrateArticleTag($articleId, $isNew = 0, $condition) {
@@ -1725,7 +1739,7 @@ function migrateFeaturImage($featurId,  $condition) {
                         $delStmt->execute();
                         if ($delStmt->affected_rows) {
                             $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
-                            $this->deleteArticleRelated($id);
+                            //$this->deleteArticleRelated($id);
                         }
                         $delStmt->close();
                     }
@@ -1862,10 +1876,10 @@ function migrateFeaturImage($featurId,  $condition) {
     }
     
     function migrateMagazineissue() {
-	//echo 'test';
-        //die;
+	//echo 'test';die;
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
+        $_SESSION['noofdel'] =0;
         $conStartTime = date('Y-m-d H:i:s');
         $cronresult = $this->conn->query("select start_time from cron_log where section_name='magazineissue' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
@@ -1875,6 +1889,7 @@ function migrateFeaturImage($featurId,  $condition) {
         }
         $magazinerResults = $this->conn->query("SELECT * FROM magazine  WHERE 1 $condition");
         if ($magazinerResults->num_rows > 0) {
+            //echo $magazinerResults->num_rows; exit;
             //echo 'testsumit';
             //die;
             while ($magazineRow = $magazinerResults->fetch_assoc()) {
@@ -1882,31 +1897,32 @@ function migrateFeaturImage($featurId,  $condition) {
                 $magazinevalid = $magazineRow['valid'];
                //die;
                  $magazineId = $magazineRow['magazine_id'];
-                if($magazinevalid=='1'){
+                if($magazinevalid=='1'){ 
+                    //echo 'test'; exit;
                     //echo $magazineId;
                     //echo 'testsumitkumar';
                       //die;
                      $checkMagazineExistResultSet = $this->conn2->query("select magazine_id,title from magazine where magazine_id=$magazineId");
                      if ($checkMagazineExistResultSet->num_rows > 0) { //echo 'here'; exit;
-                         $magazineUpdateStmt = $this->conn2->prepare("update magazine set title=?,imagepath=?,publish_date_m=?,story1_title=?,story1_url=?,story2_title=?,story2_url=?,story3_title=?,story3_url=?,story4_title=?, story4_url=?,story5_title=?,story5_url=?,created_at=?,updated_at=? where magazine_id=?") or die($this->conn->error);
-                         $magazineUpdateStmt->bind_param('sssssssssssssssi',$magazineRow['title'], $magazineRow['imagepath'], $magazineRow['publish_date_m'],$magazineRow['story1_title'], $magazineRow['story1_url'], $magazineRow['story2_title'], $magazineRow['story2_url'], $magazineRow['story3_title'],$magazineRow['story3_url'],$magazineRow['story4_title'],$magazineRow['story4_url'],$magazineRow['story5_title'],$magazineRow['story5_url'],$magazineRow['created_at'],$magazineRow['updated_at'],$magazineRow['magazine_id']) or die($this->conn->error);
-                         $magazineUpdateStmt->execute()or die($this->conn->error);
+                         $magazineUpdateStmt = $this->conn2->prepare("update magazine set title=?,imagepath=?,publish_date_m=?,story1_title=?,story1_url=?,story2_title=?,story2_url=?,story3_title=?,story3_url=?,story4_title=?, story4_url=?,story5_title=?,story5_url=?,created_at=?,updated_at=? where magazine_id=?") or die($this->conn2->error);
+                         $magazineUpdateStmt->bind_param('sssssssssssssssi',$magazineRow['title'], $magazineRow['imagepath'], $magazineRow['publish_date_m'],$magazineRow['story1_title'], $magazineRow['story1_url'], $magazineRow['story2_title'], $magazineRow['story2_url'], $magazineRow['story3_title'],$magazineRow['story3_url'],$magazineRow['story4_title'],$magazineRow['story4_url'],$magazineRow['story5_title'],$magazineRow['story5_url'],$magazineRow['created_at'],$magazineRow['updated_at'],$magazineRow['magazine_id']) or die($this->conn2->error);
+                         $magazineUpdateStmt->execute() or die($this->conn2->error);
                          if ($magazineUpdateStmt->affected_rows)    
                              $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                      }else {//echo 'here sumit';echo $magazineRow['magazine_id']; exit;
                      
-                         $magazineInsertStmt = $this->conn2->prepare("insert into magazine set magazine_id=?,title=?,imagepath=?,publish_date_m=?,story1_title=?,story1_url=?,story2_title=?,story2_url=?,story3_title=?,story3_url=?,story4_title=?,story4_url=?,story5_title=?,story5_url=?,created_at=?,updated_at=?");
-                         $magazineInsertStmt->bind_param('isssssssssssssss', $magazineRow['magazine_id'],$magazineRow['title'], $magazineRow['imagepath'], $magazineRow['publish_date_m'],$magazineRow['story1_title'], $magazineRow['story1_url'], $magazineRow['story2_title'], $magazineRow['story2_url'], $magazineRow['story3_title'],$magazineRow['story3_url'],$magazineRow['story4_title'],$magazineRow['story4_url'],$magazineRow['story5_title'],$magazineRow['story5_url'],$magazineRow['created_at'],$magazineRow['updated_at']);
-                         $magazineInsertStmt->execute();
+                         $magazineInsertStmt = $this->conn2->prepare("insert into magazine set magazine_id=?,title=?,imagepath=?,publish_date_m=?,story1_title=?,story1_url=?,story2_title=?,story2_url=?,story3_title=?,story3_url=?,story4_title=?,story4_url=?,story5_title=?,story5_url=?,created_at=?,updated_at=?") or die($this->conn2->error);
+                         $magazineInsertStmt->bind_param('isssssssssssssss', $magazineRow['magazine_id'],$magazineRow['title'], $magazineRow['imagepath'], $magazineRow['publish_date_m'],$magazineRow['story1_title'], $magazineRow['story1_url'], $magazineRow['story2_title'], $magazineRow['story2_url'], $magazineRow['story3_title'],$magazineRow['story3_url'],$magazineRow['story4_title'],$magazineRow['story4_url'],$magazineRow['story5_title'],$magazineRow['story5_url'],$magazineRow['created_at'],$magazineRow['updated_at']) or die($this->conn2->error);
+                         $magazineInsertStmt->execute() or die($this->conn2->error);
                          if ($magazineInsertStmt->affected_rows) {
                              $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
                          }
                     }
                 }else{
-                    
-                     $delStmt = $this->conn2->prepare("delete from magazine where id=?");
-                        $delStmt->bind_param('i', $magazineId);
-                        $delStmt->execute();
+                   // echo 'test'; exit;
+                    $delStmt = $this->conn2->prepare("delete from magazine where magazine_id=?") or die($this->conn2->error);
+                    $delStmt->bind_param('i', $magazineId) or die($this->conn2->error);
+                    $delStmt->execute() or die($this->conn2->error);
                         if ($delStmt->affected_rows) {
                             $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
                             //$this->deleteFeaturRelated($id);
@@ -1922,7 +1938,9 @@ function migrateFeaturImage($featurId,  $condition) {
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' magazineissue(s) inserted and ' . $_SESSION['noofupd'] . ' magazineissue(s) updated.</h5>';
+        
+        //echo 'test1';die;
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' magazineissue(s) inserted,  ' . $_SESSION['noofupd'] . ' magazineissue(s) updated and '.$_SESSION['noofdel'].' magazineissue(s) deleted.</h5>';
     }
     
     function migrateDebate(){

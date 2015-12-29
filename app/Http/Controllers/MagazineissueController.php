@@ -299,7 +299,8 @@ class MagazineissueController extends Controller
             $valid='0';
             $deleteAl= [
 			
-			'valid' => $valid
+			'valid' => $valid,
+                        'updated_at'=>date('Y-m-d H:i:s')
 			
             ];
             DB::table('magazine')
