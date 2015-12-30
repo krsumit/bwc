@@ -114,7 +114,7 @@ class AuthController extends Controller
     public function postLogin()
     {
         $data = Request::all();
-        //print_r($data);
+        //print_r($data); exit;
         //$this->validate('email'=>'required','password'=>'required');
         /*
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
@@ -125,6 +125,7 @@ class AuthController extends Controller
         //$asd=fopen("/home/sudipta/log.log",'a+');
         //fwrite($asd,"EEEE ".$is_authenticated." RRRRR \n");
         //AuthController::authenticate($request->only('email','password'));
+        //echo $is_authenticated; exit;
         if($is_authenticated == '1'){
             $has = Session::has('users');
             //$id = Session::get('id');
@@ -132,8 +133,15 @@ class AuthController extends Controller
            // echo "Hereljlcsc;";
             $user = Auth::user();
             //print_r($user);
-            print Auth::check();
-            return redirect()->intended('/dashboard');
+           // print Auth::check();
+            //echo 'redirecting to dashboard';exit;
+           // echo Session::get('url.intended'); exit;//, url('/')); exit;
+            if(strpos(Session::get('url.intended'), 'logout')=== false){
+                return redirect()->intended('/dashboard');
+            }else{
+                return redirect('/dashboard');
+            }
+            
         }else{
             print "cudnt authenticate";
             return redirect('/auth/login');
