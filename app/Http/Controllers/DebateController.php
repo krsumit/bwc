@@ -464,7 +464,7 @@ class DebateController extends Controller {
                 unlink($destination_path . $expertfilename2);
             }
         }else{
-           $expertfilenam2=$request->expert_old_image2;
+           $expertfilename2=$request->expert_old_image2;
        }
         
         if($request->hasFile('expertimage2') || trim($request->expertname2) || trim($request->expertdesing2) || trim($request->experttwitter2) || trim($request->expertview2) || trim($request->expert_old_image2)){
