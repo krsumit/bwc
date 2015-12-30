@@ -447,7 +447,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <input id="expertname1" name="expertname1" type="text" value="@if($exprtnts[0]){{$exprtnts[0]->name}}@endif">
+                    <input id="expertname1" name="expertname1" type="text" value="@if(isset($exprtnts[0])){{$exprtnts[0]->name}}@endif">
                 </div>
             </div>
         </div>
@@ -460,7 +460,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <input id="expertdesing1" name="expertdesing1" type="text" value="@if($exprtnts[0]){{$exprtnts[0]->designation}}@endif">
+                    <input id="expertdesing1" name="expertdesing1" type="text" value="@if(isset($exprtnts[0])){{$exprtnts[0]->designation}}@endif">
                 </div>
             </div>
         </div>
@@ -476,7 +476,7 @@
                     <div class="input-append">
                         <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" id="expertimage1" name="expertimage1"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
                         @if(isset($exprtnts[0]))<img src="{{config('constants.awsbaseurl').config('constants.debateexpert').$exprtnts[0]->expert_photo}}" width="100" height="100" style="padding-left: 5px;" />@endif
-                        <input type="hidden" name="expert_old_image1" value="@if($exprtnts[0]){{$exprtnts[0]->expert_photo}}@endif"/>
+                        <input type="hidden" name="expert_old_image1" value="@if(isset($exprtnts[0])){{$exprtnts[0]->expert_photo}}@endif"/>
                     </div>
                 </div>
             </div>
@@ -490,7 +490,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <input id="experttwitter1" name="experttwitter1" type="text" value="@if($exprtnts[0]){{$exprtnts[0]->twitter_ac}}@endif">
+                    <input id="experttwitter1" name="experttwitter1" type="text" value="@if(isset($exprtnts[0])){{$exprtnts[0]->twitter_ac}}@endif">
                 </div>
             </div>
         </div>
@@ -637,7 +637,7 @@
             <div class="span12 span-inset">
 
                 <label class="checkbox" >
-                    <input type="checkbox" class="uniformCheckbox" @if($debateDetail->is_featured=='1') checked="checked" @endif value="checkbox1" name="is_featured">
+                    <input type="checkbox" class="uniformCheckbox" @if($debateDetail->is_featured=='1' || old('is_featured')) checked="checked" @endif value="checkbox1" name="is_featured">
                     <a href="#" target="_blank"> Make this a featured Debate</a>
                 </label>
                 <script>
@@ -657,6 +657,8 @@
                 <div class="fileupload fileupload-new" data-provides="fileupload">
                     <div class="input-append">
                         <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" name="debateimage" id="debateimage"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                         @if(isset($debatePhotos))<img src="{{config('constants.awsbaseurl').config('constants.debatefeatured').$debatePhotos->photopath}}" width="100" height="100" style="padding-left: 5px;" />
+                         <input type="hidden" value="{{$debatePhotos->photopath}}" name="debate_old_featured_image"/>@endif
                     </div>
                 </div>
             </div>

@@ -292,10 +292,8 @@ class MagazineissueController extends Controller
             $id = $_GET['option'];
         }
         $delArr = explode(',', $id);
-        //fwrite($asd, " Del Arr Count: ".count($delArr)." \n\n");
+        
         foreach ($delArr as $d) {
-            //fwrite($asd, " Delete Id : ".$d." \n\n");
-            //Magazineissue::where('magazine_id',$d)->delete();
             $valid='0';
             $deleteAl= [
 			
@@ -309,6 +307,5 @@ class MagazineissueController extends Controller
             
         }
         return;
-        
     }
 }

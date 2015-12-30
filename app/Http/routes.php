@@ -10,14 +10,21 @@
 |
 */
 
-Route::get('/', 'Auth\AuthController@getLogin');
+Route::get('/', ['middleware' => 'guest',   'uses' =>'Auth\AuthController@getLogin']);
 /*
 Route::get('/', function () {
    // return view('welcome');
       return View::make('login');
 });
 */
-Route::get('/dashboard', function () {
+Route::get('/dashboard', ['middleware' => 'auth',   'uses' => function () {
+//    echo '<pre>';
+//   //print_r(Auth::user()); exit;;
+//    if(Auth::guest()){
+//        echo '1'; exit;
+//    }else{
+//        echo '2'; exit;
+//    }
  $posts = DB::table('articles')
         ->join('article_author', 'article_author.article_id', '=', 'articles.article_id')
         ->join('authors', 'article_author.author_id', '=', 'authors.author_id')
@@ -50,7 +57,7 @@ Route::get('/dashboard', function () {
          ->count();
  
     return view('layouts.dashboard',compact('posts','article_publish','quickbyte_publish','columns_publish','photos_publish','videos_publish') );
-});
+}]);
 
 Route::get('/notlog', function () {
     // return view('welcome');
@@ -98,7 +105,7 @@ Route::controllers([
 
 
 // Authentication routes...
-Route::get('auth/login', 'Auth\AuthController@getLogin');
+Route::get('auth/login', ['middleware' => 'guest',   'uses' =>'Auth\AuthController@getLogin']);
 Route::post('auth/login', 'Auth\AuthController@postLogin');
 Route::get('auth/logout', 'Auth\AuthController@getLogout');
 

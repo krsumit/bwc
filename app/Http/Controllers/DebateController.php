@@ -131,8 +131,8 @@ class DebateController extends Controller {
         }
          
         $uid = $request->user()->id;
-       // echo '<pre>';
-       // print_r($request->all());exit;
+        // echo '<pre>';
+        //print_r($request->all());exit;
 
         $debate = new Debate();
 
@@ -141,7 +141,7 @@ class DebateController extends Controller {
         $debate->title = $request->title;
         $debate->description = $request->debatedesc;
         $debate->valid = 1;
-        $debate->is_featured=isset($request->debatedesc)?1:0;
+        $debate->is_featured=($request->is_featured)?1:0;
         $debate->save();
         $id = $debate->id;
         // Saving debate category
@@ -352,14 +352,24 @@ class DebateController extends Controller {
      * @return Response
      */
     public function update(Request $request) {
-        
-        $this->validate($request,[
+        if($request->is_featured && !trim($request->debate_old_featured_image)){
+            //echo 'test'; exit;
+            $this->validate($request,[
             'channel' => 'required',      
             'title' => 'required',
             'debatedesc' => 'required', 
-             
-        ]); 
+            'debateimage' => 'required'  
+        ]);
+        }else{
+            $this->validate($request,[
+                'channel' => 'required',      
+                'title' => 'required',
+                'debatedesc' => 'required', 
+
+            ]); 
+        }
         
+        //debate_old_featured_image
         $uid = $request->user()->id;
        // echo '<pre>';
        // print_r($request->all());exit;
@@ -370,7 +380,7 @@ class DebateController extends Controller {
         $debate->title = $request->title;
         $debate->description = $request->debatedesc;
         $debate->valid = 1;
-        $debate->is_featured=isset($request->debatedesc)?1:0;
+        $debate->is_featured=($request->is_featured)?1:0;
         $debate->update();
         $id = $request->id;
         //Deleting debate cateogry

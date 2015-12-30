@@ -620,7 +620,7 @@
             <div class="span12 span-inset">
 
                 <label class="checkbox" >
-                    <input type="checkbox" class="uniformCheckbox" value="1" name="is_featured">
+                    <input type="checkbox" @if(old('is_featured')) checked="checked" @endif class="uniformCheckbox" value="1" name="is_featured">
                     <a href="#" target="_blank"> Make this a featured Debate</a>
                 </label>
                 <script>
