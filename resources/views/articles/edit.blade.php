@@ -2214,7 +2214,7 @@
 </tr>
 <tr>
             <td colspan="1">Photograph By</td>
-             <td colspan="3"><input type="text" name="photographby[]"/></textarea></td>    
+             <td colspan="3"><input type="text" name="photographby[{%=file.name%}]"/></textarea></td>    
    </tr>
     
     </table>   

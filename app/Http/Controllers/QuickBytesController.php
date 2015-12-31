@@ -236,6 +236,8 @@ class QuickBytesController extends Controller
             $c=0;
             $s3 = AWS::createClient('s3');
             foreach ($images as $image) {
+                if($request->photographby[$image]){
+                //}
                 $source=$_SERVER['DOCUMENT_ROOT'].'/files/'.$image;
                 $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
                 $dest=$_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbyteimagedir').$image;
@@ -289,9 +291,9 @@ class QuickBytesController extends Controller
                         unlink($source);
                         unlink($source_thumb);
                         $imageEntry=new Photo();
-                        $imageEntry->title=$request->imagetitle[$c];
-                        $imageEntry->description=$request->imagedesc[$c];
-                        $imageEntry->photo_by=$request->photographby[$c];
+                        $imageEntry->title=$request->imagetitle[$image];
+                        $imageEntry->description=$request->imagedesc[$image];
+                        $imageEntry->photo_by=$request->photographby[$image];
                         $imageEntry->photopath=$image;
                         $imageEntry->imagefullPath='';
                         $imageEntry->channel_id=$request->channel;
@@ -304,6 +306,7 @@ class QuickBytesController extends Controller
                        
                 }
                  $c++;
+            }
             }
              
         //If has been Saved by Editor
@@ -479,6 +482,8 @@ class QuickBytesController extends Controller
             $c=0;
             $s3 = AWS::createClient('s3');
             foreach ($images as $image) {
+                if($request->photographby[$image]){
+               // }
                 $source=$_SERVER['DOCUMENT_ROOT'].'/files/'.$image;
                 $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
                 $dest=$_SERVER['DOCUMENT_ROOT'].'/'.config('constants.quickbyteimagedir').$image;
@@ -532,9 +537,9 @@ class QuickBytesController extends Controller
                         unlink($source_thumb);
                        // unlink($dest);
                         $imageEntry=new Photo();
-                        $imageEntry->title=$request->imagetitle[$c];
-                        $imageEntry->description=$request->imagedesc[$c];
-                        $imageEntry->photo_by=$request->photographby[$c];
+                        $imageEntry->title=$request->imagetitle[$image];
+                        $imageEntry->description=$request->imagedesc[$image];
+                        $imageEntry->photo_by=$request->photographby[$image];
                         $imageEntry->photopath=$image;
                         $imageEntry->imagefullPath='';
                         $imageEntry->channel_id=$request->channel;
@@ -547,6 +552,7 @@ class QuickBytesController extends Controller
                        
                 }
                  $c++;
+              }
             }
         //If has been Saved by Editor
         if($request->status == 'P') {

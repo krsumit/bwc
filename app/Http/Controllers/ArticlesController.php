@@ -828,6 +828,7 @@ class ArticlesController extends Controller {
         $s3 = AWS::createClient('s3');
         //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
         foreach ($images as $image) { //echo $request->uploadedImages; exit;
+            if($request->photographby[$image]){
             $source = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $image;
             $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
             $dest = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagedir') . $image;
@@ -902,7 +903,7 @@ class ArticlesController extends Controller {
                 $articleImage = new Photo();
                 $articleImage->photopath = $image;
                 $articleImage->imagefullPath = '';
-                $articleImage->photo_by=$request->photographby[$c];
+                $articleImage->photo_by=$request->photographby[$image];
                 $articleImage->channel_id = $request->channel_sel;
                 $articleImage->owned_by = 'article';
                 $articleImage->owner_id = $id;
@@ -912,6 +913,7 @@ class ArticlesController extends Controller {
                 $articleImage->save();
             }
              $c++;
+        }
         }
 
 
@@ -1107,6 +1109,8 @@ class ArticlesController extends Controller {
         $c=0;
         $s3 = AWS::createClient('s3');
         foreach ($images as $image) { //echo 'foreach--';
+            if($request->photographby[$image]){
+            
             $source = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $image;
             $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
             $dest = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagedir') . $image;
@@ -1178,7 +1182,7 @@ class ArticlesController extends Controller {
                 $articleImage = new Photo();
                 $articleImage->photopath = $image;
                 $articleImage->imagefullPath = '';
-                $articleImage->photo_by=$request->photographby[$c];
+                $articleImage->photo_by=$request->photographby[$image];
                 $articleImage->channel_id = $request->channel_sel;
                 $articleImage->owned_by = 'article';
                 $articleImage->owner_id = $id;
@@ -1188,6 +1192,7 @@ class ArticlesController extends Controller {
                 $articleImage->save();
             }
              $c++;
+        }
         }
 
         //}

@@ -914,16 +914,16 @@
 
     <tr>
     <td colspan="1">Title</td>
-    <td colspan="3"><input type="text" name="imagetitle[]"/></td>    
+    <td colspan="3"><input type="text" name="imagetitle[{%=file.name%}]"/></td>    
     </tr>
 
     <tr>
     <td colspan="1">Description</td>
-    <td colspan="3"><textarea name="imagedesc[]"></textarea></td>    
+    <td colspan="3"><textarea name="imagedesc[{%=file.name%}]"></textarea></td>    
     </tr>
     <tr>
             <td colspan="1">Photograph By</td>
-            <td colspan="3"><input type="text" name="photographby[]"/></textarea></td>    
+            <td colspan="3"><input type="text" name="photographby[{%=file.name%}]"/></textarea></td>    
    </tr>
 
     </table>   
