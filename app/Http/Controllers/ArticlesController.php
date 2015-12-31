@@ -828,7 +828,7 @@ class ArticlesController extends Controller {
         $s3 = AWS::createClient('s3');
         //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
         foreach ($images as $image) { //echo $request->uploadedImages; exit;
-            if($request->photographby[$image]){
+            if(isset($request->photographby[$image])){
             $source = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $image;
             $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
             $dest = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagedir') . $image;
@@ -1109,7 +1109,7 @@ class ArticlesController extends Controller {
         $c=0;
         $s3 = AWS::createClient('s3');
         foreach ($images as $image) { //echo 'foreach--';
-            if($request->photographby[$image]){
+            if(isset($request->photographby[$image])){
             
             $source = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $image;
             $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
