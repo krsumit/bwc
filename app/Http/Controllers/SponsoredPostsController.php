@@ -78,7 +78,7 @@ class SponsoredPostsController extends Controller {
         $upload_handler = new UploadHandler($arg);
     }
     
-    public function create() {
+    public function create() { 
         //Authenticate User
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');

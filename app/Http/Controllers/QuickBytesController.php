@@ -233,7 +233,7 @@ class QuickBytesController extends Controller
         $images = explode(',', $request->uploadedImages);
        
             //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
-            $c=0;
+          
             $s3 = AWS::createClient('s3');
             //echo '<pre>';
             //print_r($request->all()); exit;
@@ -307,7 +307,7 @@ class QuickBytesController extends Controller
                         $imageEntry->save();
                        
                 }
-                 $c++;
+                
             }
             }
              
@@ -475,13 +475,9 @@ class QuickBytesController extends Controller
         }
         
         
-        
-        
-        
-        
         $images = explode(',', $request->uploadedImages);
             //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
-            $c=0;
+          
             $s3 = AWS::createClient('s3');
             foreach ($images as $image) {
                 if(isset($request->photographby[$image])){
@@ -553,7 +549,7 @@ class QuickBytesController extends Controller
                         $imageEntry->save();
                        
                 }
-                 $c++;
+                
               }
             }
         //If has been Saved by Editor

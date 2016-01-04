@@ -824,7 +824,7 @@ class ArticlesController extends Controller {
         //Photos table (article_id)- Save
 
         $images = explode(',', $request->uploadedImages);
-        $c=0;
+        
         $s3 = AWS::createClient('s3');
         //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
         foreach ($images as $image) { //echo $request->uploadedImages; exit;
@@ -912,7 +912,7 @@ class ArticlesController extends Controller {
                 $articleImage->updated_at = date('Y-m-d H:i:s');
                 $articleImage->save();
             }
-             $c++;
+            
         }
         }
 
@@ -1106,7 +1106,7 @@ class ArticlesController extends Controller {
       
         $images = explode(',', $request->uploadedImages);
         //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
-        $c=0;
+        
         $s3 = AWS::createClient('s3');
         foreach ($images as $image) { //echo 'foreach--';
             if(isset($request->photographby[$image])){
@@ -1191,7 +1191,7 @@ class ArticlesController extends Controller {
                 $articleImage->updated_at = date('Y-m-d H:i:s');
                 $articleImage->save();
             }
-             $c++;
+             
         }
         }
 

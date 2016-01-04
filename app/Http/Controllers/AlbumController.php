@@ -126,7 +126,6 @@ class AlbumController extends Controller
      * @return Array
      */
     public function getUserChannels($userID){
-
         $channels = DB::table('channels')
             ->join('rights','rights.pagepath','=','channels.channel_id')
             ->join('user_rights', 'user_rights.rights_id','=','rights.rights_id')
@@ -182,10 +181,12 @@ class AlbumController extends Controller
         $id = $album->id;
         // Getting upladed images in array
         $images = explode(',', $request->uploadedImages);
-            $c=0;
+          
             // Copy uploaded from temporary location to specific location
             $s3 = AWS::createClient('s3');
             foreach ($images as $image) {
+                if(isset($request->photographby[$image])){
+                    
                 $source=$_SERVER['DOCUMENT_ROOT'].'/files/'.$image;
                 $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
                 $dest=$_SERVER['DOCUMENT_ROOT'].'/'.config('constants.albumimagedir').$image;
@@ -199,11 +200,11 @@ class AlbumController extends Controller
                         unlink($source);
                         unlink($source_thumb);
                         $imageEntry=new Photo();
-                        $imageEntry->title=$request->imagetitle[$c];
-                        $imageEntry->description=$request->imagedesc[$c];
-                        $imageEntry->source=$request->photosource[$c];;
-                        $imageEntry->source_url=$request->sourceurl[$c];;
-                        $imageEntry->photo_by=$request->photographby[$c];;
+                        $imageEntry->title=$request->imagetitle[$image];
+                        $imageEntry->description=$request->imagedesc[$image];
+                        $imageEntry->source=$request->photosource[$image];
+                        $imageEntry->source_url=$request->sourceurl[$image];
+                        $imageEntry->photo_by=$request->photographby[$image];
                         $imageEntry->photopath=$image;
                         $imageEntry->imagefullPath=url(config('constants.albumimagedir').$image);
                         $imageEntry->channel_id=$request->channel;
@@ -211,7 +212,8 @@ class AlbumController extends Controller
                         $imageEntry->owner_id=$id;
                         $imageEntry->active='1';
                         $imageEntry->save();
-                        $c++;
+                        
+                }
                 }
         
             }
@@ -282,10 +284,11 @@ class AlbumController extends Controller
         
        $id = $request->id;
        $images = explode(',', $request->uploadedImages);
-            $c=0;
+           
             // Copy uploaded from temporary location to specific location
             $s3 = AWS::createClient('s3');
             foreach ($images as $image) {
+                if(isset($request->photographby[$image])){
                 $fname=$image;
                 $source=$_SERVER['DOCUMENT_ROOT'].'/files/'.$image;
                 $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
@@ -300,11 +303,11 @@ class AlbumController extends Controller
                         unlink($source);
                         unlink($source_thumb);
                         $imageEntry=new Photo();
-                        $imageEntry->title=$request->imagetitle[$c];
-                        $imageEntry->description=$request->imagedesc[$c];
-                        $imageEntry->source=$request->photosource[$c];;
-                        $imageEntry->source_url=$request->sourceurl[$c];;
-                        $imageEntry->photo_by=$request->photographby[$c];;
+                        $imageEntry->title=$request->imagetitle[$image];
+                        $imageEntry->description=$request->imagedesc[$image];
+                        $imageEntry->source=$request->photosource[$image];
+                        $imageEntry->source_url=$request->sourceurl[$image];
+                        $imageEntry->photo_by=$request->photographby[$image];
                         $imageEntry->photopath=$image;
                         $imageEntry->imagefullPath=url(config('constants.albumimagedir').$fname);
                         $imageEntry->channel_id=$request->channel;
@@ -312,9 +315,9 @@ class AlbumController extends Controller
                         $imageEntry->owner_id=$id;
                         $imageEntry->active='1';
                         $imageEntry->save();
-                        $c++;
+                       
                 }
-        
+                }
             }
         //If it's puublished
         if($request->status == 'P') {
