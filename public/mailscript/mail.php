@@ -5,12 +5,16 @@ class Cron {
     var $conn;
     var $message;
     var $keyarray;
+    var $url;
     
     
     
     function __construct() {
         $this->conn = new mysqli('cmsdb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com', 'bwcms', 'bwpassword2015', 'bwcms') or die($this->conn->connect_errno);
-         }
+       // $this->conn = new mysqli('localhost', 'root', 'admin', '17novlivecms') or die($this->conn->connect_errno);
+        $this->url='http://businessworld.in/';
+        
+    }
 
 
     function sendMailData($section) {
@@ -20,20 +24,15 @@ class Cron {
         switch ($section):
             case 'sendmailauthor':
                 $this->sendMailAuthor();
-                
-            
         endswitch;
 
         $_SESSION['message'] = $this->message;
     }
 
     function sendMailAuthor() {
-       // echo 'test';
-        //exit;
-       
-
-        $articlesResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date,article_author.*,authors.* FROM articles  JOIN article_author ON  article_author.article_id = articles.article_id JOIN  authors ON  authors.author_id = article_author.author_id where send_mail_status='0' AND status ='P'");
-
+            //send_mail_status='0' AND
+        $articlesResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date FROM articles where  status ='P' and articles.article_id='89926'");
+        //echo $articlesResults->num_rows; exit;
         if ($articlesResults->num_rows > 0) {
 
             while ($authorRow = $articlesResults->fetch_assoc()) {
@@ -56,22 +55,21 @@ class Cron {
      }
 
    function sendMail($id){
-       //include('SMTPconfig.php');
-       //include('SMTPClass.php');
-       //echo "SELECT articles.article_id,articles.title,articles.publish_date,article_author.*,authors.* FROM articles  JOIN article_author ON  article_author.article_id = articles.article_id JOIN  authors ON  authors.author_id = article_author.author_id where articles.article_id =$id"; 
-        $authorResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date,article_author.*,authors.* FROM articles  JOIN article_author ON  article_author.article_id = articles.article_id JOIN  authors ON  authors.author_id = article_author.author_id where articles.article_id = $id ");
+       $authorResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date,article_author.*,authors.* FROM articles  JOIN article_author ON  article_author.article_id = articles.article_id JOIN  authors ON  authors.author_id = article_author.author_id where articles.article_id = $id ");
 
           while ($authorRow = $authorResults->fetch_assoc()) {
-             //print_r($authorRow); 
-              $email=  $authorRow['email'];
+              $email='sudipta@businessworld.in';  //$authorRow['email'];
               $name=  $authorRow['name'];
               $articletitle =  $authorRow['title'];
               $title=  str_replace(' ', '-', $authorRow['title']);
               $publish_date=  str_replace(' ', '-', $authorRow['publish_date']);
               $article_id=  str_replace(' ', '-', $authorRow['article_id']);
-              $url= 'http://bwbusinessworld.com/article/'.$title.'/'.$publish_date.'-'.$article_id;
+              $url= $this->url.'article/'.preg_replace('/[^a-zA-Z0-9_.]/', '-',$title).'/'.$publish_date.'-'.$article_id;
              $user_email= 'BW Edit Team';
-             $urlcontact ='http://bwbusinessworld.com/contact-us/';
+             $urlcontact =$this->url.'contact-us/';
+             
+              $this->sendSms($url,$authorRow['mobile'],$authorRow['name'],$authorRow['title']);
+             
          // exit;
           $headers  = 'MIME-Version: 1.0' . "\r\n";
 
@@ -217,7 +215,6 @@ class Cron {
         $return_html .= '<tr><td style="font-family:Segoe,Segoe UI,DejaVu Sans,Trebuchet MS,Verdana,sans-serif !important;"><strong >BW Businessworld Editorial</strong></td> </tr>';
         $return_html .= '<tr><td width="590" height="30"></td></tr>';
         $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline><i>This is a system generated email. Please do not reply to this mail. For any feedback about the article/process or otherwise, <a href="'.$urlcontact.'" target="_blank">(click here)</a> &nbsp;to contact us.</i></singleline></td></tr>';
-        
         $return_html .= '<tr><td width="590" height="30"></td></tr>';
         $return_html .= '<tr><td style="font-family:Segoe,Segoe UI,DejaVu Sans,Trebuchet MS,Verdana,sans-serif !important;"><strong >Think <span style="color:#d92e35;">Business.</span> Think <span style="color:#d92e35;">BW Businessworld.</span></strong></td> </tr>';
         $return_html .= '<tr><td width="590" style="font-size: 12.5px; color: #696a78; text-align: left; border-top:1px solid #ccc; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline>BW Businessworld Media Pvt. Ltd., Express Building 9-10 BSZ Marg, ITO , New Delhi, 110092</singleline></td></tr>';
@@ -227,18 +224,23 @@ class Cron {
         $return_html .= '</table>';
         $return_html .= '</body>';
         $return_html .= '</html>';
-        //echo $return_html;die;
-        //$to = $_POST['to'];
-        //$from = $_POST['from'];
-        //$subject = $_POST['sub'];
-        //$body = $_POST['message'];
-        //$SMTPMail = new SMTPClient ($SmtpServer, $SmtpPort, $SmtpUser, $SmtpPass, $from, $to, $subject, $body);
-        //$SMTPChat = $SMTPMail->SendMail();
         mail("$email","Your article on BW has been published",$return_html,$headers);
     }
     return true;
 }
-
+// funtion to send sms to authors
+function sendSms($url,$mob,$authorName,$articleTitle){
+    $mob='9899415606';
+    $bitly_acesss_token='54faae0489a41d4c932f27cd7d5a060563bace93';
+    $nimbus_username='businessworld';
+    $nimbus_password='del12345';
+    $url=  urlencode($url);
+    $data=file_get_contents("https://api-ssl.bitly.com//v3/shorten?access_token=$bitly_acesss_token&longUrl=$url");
+    $arr=json_decode($data);
+    //echo $arr->data->url;exit;
+    $message=urlencode("Hi $authorName, Your article : $articleTitle has been published. Url :".$arr->data->url); // $url";
+    file_get_contents("http://203.212.70.200/smpp/sendsms?username=$nimbus_username&password=$nimbus_password&to=$mob&from=Bworld&text=$message&udh=&dlr-mask=19&dlr-url=http://www.mywebsite.com/myurl?myid=123456%26status=%25d%26updated_on=%25t%26res=%252");
+    }
 }
 
 ?>
