@@ -11,7 +11,7 @@ class Cron {
     
     function __construct() {
         $this->conn = new mysqli('cmsdb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com', 'bwcms', 'bwpassword2015', 'bwcms') or die($this->conn->connect_errno);
-       // $this->conn = new mysqli('localhost', 'root', 'admin', '17novlivecms') or die($this->conn->connect_errno);
+        //$this->conn = new mysqli('localhost', 'root', 'admin', '17novlivecms') or die($this->conn->connect_errno);
         $this->url='http://businessworld.in/';
         
     }
@@ -32,7 +32,7 @@ class Cron {
     function sendMailAuthor() {
             //send_mail_status='0' AND
         $articlesResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date FROM articles where  status ='P' and send_mail_status='0'");
-        //echo $articlesResults->num_rows; exit;
+       echo $articlesResults->num_rows; exit;
         if ($articlesResults->num_rows > 0) {
 
             while ($authorRow = $articlesResults->fetch_assoc()) {
@@ -78,7 +78,7 @@ class Cron {
 
           $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
           $headers .= 'From: '.$user_email."\r\n".'Reply-To: '.$user_email."\r\n" .'X-Mailer: PHP/' . phpversion();
-         
+        $return_html=''; 
         $return_html .= '<!doctype html>';
         $return_html .= '<html xmlns="http://www.w3.org/1999/xhtml">';
         $return_html .= '<head>';
