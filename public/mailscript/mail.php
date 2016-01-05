@@ -31,7 +31,7 @@ class Cron {
 
     function sendMailAuthor() {
             //send_mail_status='0' AND
-        $articlesResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date FROM articles where  status ='P' and articles.article_id='89926'");
+        $articlesResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date FROM articles where  status ='P' and send_mail_status='0'");
         //echo $articlesResults->num_rows; exit;
         if ($articlesResults->num_rows > 0) {
 
@@ -58,7 +58,9 @@ class Cron {
        $authorResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date,article_author.*,authors.* FROM articles  JOIN article_author ON  article_author.article_id = articles.article_id JOIN  authors ON  authors.author_id = article_author.author_id where articles.article_id = $id ");
 
           while ($authorRow = $authorResults->fetch_assoc()) {
-              $email='sudipta@businessworld.in';  //$authorRow['email'];
+              if($authorRow['author_type_id']==1)continue;
+              $email=$authorRow['email'];
+              //echo $email;exit;
               $name=  $authorRow['name'];
               $articletitle =  $authorRow['title'];
               $title=  str_replace(' ', '-', $authorRow['title']);
@@ -66,6 +68,7 @@ class Cron {
               $article_id=  str_replace(' ', '-', $authorRow['article_id']);
               $url= $this->url.'article/'.preg_replace('/[^a-zA-Z0-9_.]/', '-',$title).'/'.$publish_date.'-'.$article_id;
              $user_email= 'BW Edit Team';
+             //$user_email= 'noreply@businessworld.com';
              $urlcontact =$this->url.'contact-us/';
              
               $this->sendSms($url,$authorRow['mobile'],$authorRow['name'],$authorRow['title']);
@@ -191,7 +194,7 @@ class Cron {
         $return_html .= '<tr><td>';
         $return_html .= '<table border="0" cellpadding="0" cellspacing="0" align="left" class="mobileCenter">';
         $return_html .= '<tr><td height="12"></td></tr>';
-        $return_html .= '<tr><td height="50"><a href="#"><img editable="true" width="250" src="http://bwbusinessworld.com/static/images/BW-logo.png" alt="" border="0"></a></td></tr>';
+        $return_html .= '<tr><td height="50"><a href="#"><img editable="true" width="250" src="http://d1s8mqgwixvb29.cloudfront.net/static/images/BW-logo.png" alt="" border="0"></a></td></tr>';
         $return_html .= '</table>';
         $return_html .= '<table border="0" cellpadding="0" cellspacing="0" align="right" class="mobileCenter">';
         $return_html .= '<tr><td height="12" class="eraseForMobile"></td></tr>';
@@ -205,10 +208,17 @@ class Cron {
         $return_html .= '</table>';
         $return_html .= '<table width="590" border="0" cellpadding="0" cellspacing="0" align="center" class="scaleForMobile">';
         $return_html .= '<tr><td width="590" height="12"></td></tr>';
-        $return_html .= '<tr><td width="590" style="font-size: 22px; color: #2f2f36; text-align: left; font-weight: bold; font-family: Helvetica, Arial, sans-serif; line-height: 30px;"><singleline>Dear&nbsp;'.$name .'</singleline></td></tr>';
+        $return_html .= '<tr><td width="590" style="font-size: 22px; color: #2f2f36; text-align: left; font-weight: bold; font-family: Helvetica, Arial, sans-serif; line-height: 30px;"><singleline>Dear&nbsp;'.$name .',</singleline></td></tr>';
         $return_html .= '<tr><td width="590" height="10"></td></tr>';
-        $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline>Your article titled <a href="'.$url.'" target="_blank">'.$articletitle.'&nbsp;(click here)</a> has been published on BW Businessworld.</singleline></td></tr>';
-        $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline>Click on the article title to read and share it with your circle.</singleline></td></tr>';
+        $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline>Your article titled <a href="'.$url.'" target="_blank">'.$articletitle.'&nbsp;(click here!)</a> has been published on BW Businessworld website.</singleline></td></tr>';
+        $return_html .= '<tr><td width="590" height="30"></td></tr>';
+        $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'
+                . '<b>What can you do now?</b><br>'
+                . '<a style="text-decoration: none; color: inherit; display: block; width: 180px;" href="'.$url.'" target="_blank"><img src="http://d1s8mqgwixvb29.cloudfront.net/static/images/fb.png" alt="Facebook"/>&nbsp;&nbsp; <span style="float:right">Share it on Facebook</span></a>'
+                . '<a style="text-decoration: none; color: inherit; display: block; width: 161px;" href="'.$url.'" target="_blank"><img src="http://d1s8mqgwixvb29.cloudfront.net/static/images/tw.png" alt="Twitter"/>&nbsp;&nbsp; <span style="float:right">Share it on Twitter</span></a>'
+                . '<a style="text-decoration: none; color: inherit; display: block; width: 217px;" href="'.$url.'" target="_blank"><img src="http://d1s8mqgwixvb29.cloudfront.net/static/images/wht.png" alt="Whatsapp"/>&nbsp;&nbsp; <span style="float:right">Share it through Whatsapp</span></a>'
+                . '</td></tr>';
+        $return_html .= '<tr><td width="590" height="30"></td></tr>';
         $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline>Looking forward to many such enriching contribution from you.</singleline></td></tr>';
         $return_html .= '<tr><td width="590" height="30"></td></tr>';
         $return_html .= '<tr><td style="font-family:Segoe,Segoe UI,DejaVu Sans,Trebuchet MS,Verdana,sans-serif !important;"><strong >Regards</strong></td> </tr>';
@@ -224,13 +234,14 @@ class Cron {
         $return_html .= '</table>';
         $return_html .= '</body>';
         $return_html .= '</html>';
+        //echo $return_html; exit;
         mail("$email","Your article on BW has been published",$return_html,$headers);
     }
     return true;
 }
 // funtion to send sms to authors
 function sendSms($url,$mob,$authorName,$articleTitle){
-    $mob='9899415606';
+    //$mob='9899415606';
     $bitly_acesss_token='54faae0489a41d4c932f27cd7d5a060563bace93';
     $nimbus_username='businessworld';
     $nimbus_password='del12345';
