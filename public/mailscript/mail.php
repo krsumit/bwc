@@ -32,7 +32,7 @@ class Cron {
     function sendMailAuthor() {
             //send_mail_status='0' AND
         $articlesResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date FROM articles where  status ='P' and send_mail_status='0'");
-       echo $articlesResults->num_rows; exit;
+        //echo $articlesResults->num_rows; exit;
         if ($articlesResults->num_rows > 0) {
 
             while ($authorRow = $articlesResults->fetch_assoc()) {
