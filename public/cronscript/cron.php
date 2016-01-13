@@ -2223,7 +2223,8 @@ function migrateFeaturImage($featurId,  $condition) {
 		$mailbody=str_replace(array('[from_date]','[to_date]','[total_stories]','[reporters_data]',),array($start_published_date, $end_published_date,$total_stories,$reportdata),$template);
 		$headers  = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-        $headers .= 'From: noreply@businessworld.in Reply-To: noreply@businnessworld.in X-Mailer: PHP/' . phpversion();
+        $from_email="noreply@businessworld.in";
+        $headers .= 'From: '.$from_email."\r\n".'Reply-To: '.$from_email."\r\n" .'X-Mailer: PHP/' . phpversion();
         mail("sudipta@businessworld.in,shekhar@businessworld.in","Reporter's published articles report for last week @businessworld.in",$mailbody,$headers);
 		//echo $mailbody; exit;
 		}
