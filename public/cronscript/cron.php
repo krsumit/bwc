@@ -2185,7 +2185,7 @@ function migrateFeaturImage($featurId,  $condition) {
         
         
         function generateReport(){
-			$template=file_get_contents('editorial-report.html');
+			$template=file_get_contents('editorial.html');
 		//echo 'test'; exit;
 		 $start_published_date=date('Y-m-d H:i:s', strtotime("last Sunday")-604800); //echo '<br>';
 		 $end_published_date=date('Y-m-d H:i:s', strtotime("last Saturday")+86399);  //echo '<br>';
