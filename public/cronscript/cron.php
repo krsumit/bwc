@@ -18,7 +18,10 @@ class Cron {
     function migrateData($section) { 
 		//$this->migrateArticleAuthor('1','2');exit;
         // print_r($arr);exit;
-       // echo $section;
+        
+        //echo $section; exit;
+        
+        
         switch ($section):
             case 'author':
                 $this->migrateAuthor();
@@ -88,6 +91,10 @@ class Cron {
             case 'debate':
                 $this->migrateDebate();  
                  break;
+            case 'sendreport': 
+				 //echo 'test'; exit;
+				$this->generateReport();
+				break;	
         endswitch;
 
         $_SESSION['message'] = $this->message;
@@ -146,13 +153,13 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
         $cronresult = $this->conn2->query("select start_time from cron_log where section_name='featurviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
-        $condition = '';
+    
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
-            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        
         }
         //echo "SELECT * FROM event  WHERE 1 $condition";exit;
-        $featurviewcountrResults = $this->conn2->query("SELECT * FROM feature_box_clicked_count WHERE 1  $condition ");
+        $featurviewcountrResults = $this->conn2->query("SELECT * FROM feature_box_clicked_count WHERE 1 ");
         //echo $articleviewcountrResults->num_rows;exit;
         if ($featurviewcountrResults->num_rows > 0) {
 
@@ -372,18 +379,17 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
         $cronresult = $this->conn2->query("select start_time from cron_log where section_name='articleviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
-        $condition = '';
+        
         if ($cronresult->num_rows > 0) {
-            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
-            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];    
         }
-        //echo "SELECT * FROM event  WHERE 1 $condition";exit;
-        $articleviewcountrResults = $this->conn2->query("SELECT article_id,count(*) as articleidcount FROM article_view WHERE 1  $condition group by article_id");
+        
+        $articleviewcountrResults = $this->conn2->query("SELECT article_id,count(*) as articleidcount FROM article_view WHERE 1   group by article_id");
         //echo $articleviewcountrResults->num_rows;exit;
         if ($articleviewcountrResults->num_rows > 0) {
 
             while ($viewsRow = $articleviewcountrResults->fetch_assoc()) {
-                // print_r($viewsRow);exit;
+                 //print_r($viewsRow);exit;
                $viewId = $viewsRow['article_id'];
                //echo $viewId;
                // exit;
@@ -417,6 +423,8 @@ class Cron {
         $updatecronstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' articleviewcount(s) inserted and ' . $_SESSION['noofupd'] . ' articleviewcount(s) updated.</h5>';
     } 
+    
+ 
     
     
     
@@ -2133,6 +2141,92 @@ function migrateFeaturImage($featurId,  $condition) {
             
         }
         
+        /*function generateReport(){
+		//echo 'test'; exit;
+		 $start_published_date=date('Y-m-d H:i:s', strtotime("last Sunday")-604800); //echo '<br>';
+		 $end_published_date=date('Y-m-d H:i:s', strtotime("last Saturday")+86399);  //echo '<br>';
+		 $query="select author.author_id,author_name,count(*) as article_count from author left join article_author on author.author_id=article_author.author_id left join articles on article_author.article_id=articles.article_id where author.author_type='2' and articles.article_published_date between '".$start_published_date."' and '".$end_published_date."' group by author.author_id order by article_count desc;";
+		$rst=$this->conn2->query($query);
+		//echo '<pre>';
+		$storycount=0;
+		$viewcount=0;
+		$avgView=0;
+		$reportdata='<table><tr>
+                	<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Reporter</b></th>
+                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Story</b></th>
+                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Views</b></th>
+                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Average views per article</b></th>
+                </tr>';
+		while($row=$rst->fetch_assoc()){
+			
+			if($row['article_count']>0){
+			$storycount=$row['article_count'];	
+			$viwcountquery="select articles.article_id,article_author.author_id,count(*) as cs from articles inner join article_author on articles.article_id=article_author.article_id left join article_view  on articles.article_id=article_view.article_id where articles.article_published_date between '".$start_published_date."' and '".$end_published_date."' and article_author.author_id='".$row['author_id']."' group by article_author.author_id ;
+";
+
+			$viewCountRst=$this->conn2->query($viwcountquery);
+			$viewCountRow=$viewCountRst->fetch_assoc();
+			
+			$viewcount=$viewCountRow['cs'];
+			
+			if($viewcount>0) $avgView=intval($viewcount/$storycount);
+			
+			}
+			$reportdata.='<tr>
+                	<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.$row['author_name'].'</td>
+                    <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.$storycount.'</td>
+                    <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.$viewcount.'</td>
+                    <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.$avgView.'</td>
+                </tr>';
+		}
+		$reportdata.='</table>';
+		echo $reportdata; exit;
+		} */
+        
+        
+        function generateReport(){
+			$template=file_get_contents('editorial-report.html');
+		//echo 'test'; exit;
+		 $start_published_date=date('Y-m-d H:i:s', strtotime("last Sunday")-604800); //echo '<br>';
+		 $end_published_date=date('Y-m-d H:i:s', strtotime("last Saturday")+86399);  //echo '<br>';
+		 $query="select authors.name,ar.cs,ar.views_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '".$start_published_date."' and '".$end_published_date."'   group by article_author.author_id) ar on authors.author_id=ar.author_id where authors.author_type_id='2' order by ar.cs desc;
+";
+		$rst=$this->conn->query($query);
+		//echo '<pre>';
+		
+		$reportdata='<tr>
+                	<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Reporter</b></th>
+                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Story</b></th>
+                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Views</b></th>
+                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Average views per article</b></th>
+                </tr>';
+        $total_stories=0;
+		while($row=$rst->fetch_assoc()){
+			$storycount=0;
+			$viewcount=0;
+			$avgView=0;
+			//print_r($row);
+			if($row['cs']>0){
+			$total_stories+=$row['cs'];	
+			$storycount=$row['cs'];
+			$viewcount=$row['views_count'];
+			if($viewcount>0) $avgView=intval($viewcount/$storycount);
+			}
+			$reportdata.='<tr>
+                	<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.$row['name'].'</td>
+                    <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.$storycount.'</td>
+                    <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.$viewcount.'</td>
+                    <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.$avgView.'</td>
+                </tr>';
+		}
+		
+		$mailbody=str_replace(array('[from_date]','[to_date]','[total_stories]','[reporters_data]',),array($start_published_date, $end_published_date,$total_stories,$reportdata),$template);
+		$headers  = 'MIME-Version: 1.0' . "\r\n";
+        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+        $headers .= 'From: noreply@businessworld.in Reply-To: noreply@businnessworld.in X-Mailer: PHP/' . phpversion();
+        mail("sudipta@businessworld.in,shekhar@businessworld.in","Reporter's published articles report for last week @businessworld.in",$mailbody,$headers);
+		//echo $mailbody; exit;
+		}
         // Debate Video
         
     
