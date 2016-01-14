@@ -51,8 +51,6 @@ class ArticlesController extends Controller {
 //,"created_at":"2015-09-10 16:36:12","updated_at":"2015-09-10 16:36:12"}}]'));exit;
         //dd($option);
 //        dd('Not here');
-echo '<pre>';
-print_r(Session::all()); exit;
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
