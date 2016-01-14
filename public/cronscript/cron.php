@@ -2197,7 +2197,7 @@ function migrateFeaturImage($featurId,  $condition) {
 		$reportdata='<tr>
                 	<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Reporter</b></th>
                     <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Story</b></th>
-                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Views</b></th>
+                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Total Views</b></th>
                     <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Average views per article</b></th>
                 </tr>';
         $total_stories=0;
@@ -2223,9 +2223,9 @@ function migrateFeaturImage($featurId,  $condition) {
 		$mailbody=str_replace(array('[from_date]','[to_date]','[total_stories]','[reporters_data]',),array($start_published_date, $end_published_date,$total_stories,$reportdata),$template);
 		$headers  = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-        $from_email="noreply@businessworld.in";
+        $from_email="reports@bwbusinessworld.com";
         $headers .= 'From: '.$from_email."\r\n".'Reply-To: '.$from_email."\r\n" .'X-Mailer: PHP/' . phpversion();
-        mail("sudipta@businessworld.in,shekhar@businessworld.in","Reporter's published articles report for last week @businessworld.in",$mailbody,$headers);
+        mail("anurag.batra@businessworld.in,yamini@businessworld.in,sudipta@businessworld.in,shekhar@businessworld.in","Weekly Report – Article Contribution to Digital",$mailbody,$headers);
 		//echo $mailbody; exit;
 		}
         // Debate Video
