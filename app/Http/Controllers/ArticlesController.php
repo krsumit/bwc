@@ -945,7 +945,8 @@ class ArticlesController extends Controller {
 		 if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
-            //echo '<br>';
+            echo '<pre>';
+     print_r($request->all());exit;
        
         //$d = new Request;
         //echo $HTTP_POST_VARS;
