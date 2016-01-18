@@ -80,7 +80,7 @@ Route::post('article/update', ['middleware' => 'auth',   'uses' => 'ArticlesCont
 Route::post('article/image/upload', ['middleware' => 'auth',   'uses' => 'ArticlesController@imageUpload' ]);
 Route::get('article/image/upload','ArticlesController@imageUpload');
 //Route::delete('article/image/upload', 'ArticlesController@imageUpload');
-Route::post('article/savearticle', ['middleware' => 'auth','uses' => 'ArticlesController@saveArticle' ]);
+Route::post('article', ['middleware' => 'auth',   'uses' => 'ArticlesController@store' ]);
 Route::get('article/publishscheduled','ArticlesController@publishScheduledArticle');
 Route::get('profile', ['middleware' => 'auth',   'uses' => 'ArticlesController@create' ]);
 /*

@@ -303,7 +303,7 @@ foreach ($rights as $r) {
         <h2><small>New Article</small></h2>
         <h3><small>{{ $userTup->name or '' }}</small></h3>
     </header>
-    {!! Form::open(array('url'=>'article','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
+    {!! Form::open(array('url'=>'article/savearticle','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
     {!! csrf_field() !!}
     <div class="container-fluid">
 
@@ -1396,7 +1396,7 @@ foreach ($rights as $r) {
 
 
 
-<?php /* ?>
+
     <div class="container-fluid">
 
         <div class="form-legend" id="photos-videos">Photos & Videos</div>
@@ -1639,7 +1639,6 @@ foreach ($rights as $r) {
 <!--        <input type="hidden" id="uploadedVideos" name="uploadedVideos[]">-->
 
     </div><!--end container-->
-    <?php */ ?>
     <script>
                         // magic.js
                         $.fn.MessageBox = function (msg)
