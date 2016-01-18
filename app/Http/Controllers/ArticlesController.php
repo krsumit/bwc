@@ -485,6 +485,7 @@ class ArticlesController extends Controller {
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
+       
         //dd('here');
         //$uid = Auth::user();
         $uid = Session::get('users')->id;
@@ -521,7 +522,9 @@ class ArticlesController extends Controller {
         $event = DB::table('event')->where('valid', '1')->get();
         $campaign = DB::table('campaign')->where('valid', '1')->get();
         $columns = DB::table('columns')->where('valid', '1')->get();
-        $tags = DB::table('tags')->where('valid', '1')->get();
+        
+        //$tags = DB::table('tags')->where('valid', '1')->get(); 
+        //echo 'test'; exit;
         //$tags = DB::table('tags')->where('valid','1')->lists('tag','tags_id');
         //$photos = DB::table('photos')->where('valid', '1')->get();
         //$newstype = NewsType::where('valid','=','1')->get();
@@ -942,9 +945,8 @@ class ArticlesController extends Controller {
 		 if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
-                //echo '<br>';
-        //echo '<pre>';
-        //print_r($request->all());exit;
+            //echo '<br>';
+       
         //$d = new Request;
         //echo $HTTP_POST_VARS;
         //print_r($_POST);
@@ -1002,7 +1004,7 @@ class ArticlesController extends Controller {
 //        echo '<pre>';
 //        print_r($request->all());exit;
         $article->save();
-
+ 
         //Get Article_id
         $id = $article->article_id;
 

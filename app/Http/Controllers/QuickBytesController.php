@@ -108,7 +108,7 @@ class QuickBytesController extends Controller
         $authors = Author::where('author_type_id','=',2)->get();
         $category = DB::table('category')->where('valid','1')->orderBy('name')->get();
         
-        $tags = Tag::where('valid','1')->get();
+        //$tags = Tag::where('valid','1')->get();
         $p1= DB::table('author_type')->where('valid','1')->whereIn('author_type_id',[1,2])->lists('label','author_type_id');
         //fclose($asd);
         return view('quickbytes.create', compact('category','uid','channels','p1','authors','tags'));
