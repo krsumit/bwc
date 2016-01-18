@@ -941,12 +941,14 @@ class ArticlesController extends Controller {
         //return view('/dashboard');
     }
 
-    public function store(Request $request) {
+    public function saveArticle(Request $request) {
 		// if (!Session::has('users')) {
          //   return redirect()->intended('/auth/login');
        // }
-            echo '<pre>';
-     print_r($request->all());exit;
+            //echo '<pre>';
+			//print_r($request->all());
+			
+			//exit;
        
         //$d = new Request;
         //echo $HTTP_POST_VARS;
