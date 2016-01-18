@@ -303,7 +303,7 @@ foreach ($rights as $r) {
         <h2><small>New Article</small></h2>
         <h3><small>{{ $userTup->name or '' }}</small></h3>
     </header>
-    {!! Form::open(array('url'=>'article/','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
+    {!! Form::open(array('url'=>'article/store','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
     {!! csrf_field() !!}
     <div class="container-fluid">
 

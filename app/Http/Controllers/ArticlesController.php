@@ -942,9 +942,9 @@ class ArticlesController extends Controller {
     }
 
     public function store(Request $request) {
-		 if (!Session::has('users')) {
-            return redirect()->intended('/auth/login');
-        }
+		// if (!Session::has('users')) {
+         //   return redirect()->intended('/auth/login');
+       // }
             echo '<pre>';
      print_r($request->all());exit;
        
