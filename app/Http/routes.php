@@ -70,6 +70,7 @@ Route::get('child', function () {
 
 // Article - Module
 Route::get('article/create', ['middleware' => 'auth',   'uses' => 'ArticlesController@create']);
+Route::get('article/createtest', ['middleware' => 'auth',   'uses' => 'ArticlesController@createTest']);
 Route::get('article/list/{option}', ['middleware' => 'auth',   'uses' => 'ArticlesController@index']);
 
 //Route::get('article/list/{option}',['middleware' => 'auth', 'uses' => 'ArticlesController@index','as' => 'search']);
@@ -81,6 +82,7 @@ Route::post('article/image/upload', ['middleware' => 'auth',   'uses' => 'Articl
 Route::get('article/image/upload','ArticlesController@imageUpload');
 //Route::delete('article/image/upload', 'ArticlesController@imageUpload');
 Route::post('article', ['middleware' => 'auth',   'uses' => 'ArticlesController@store' ]);
+Route::post('article/teststore', ['middleware' => 'auth',   'uses' => 'ArticlesController@storeTest' ]);
 Route::get('article/publishscheduled','ArticlesController@publishScheduledArticle');
 Route::get('profile', ['middleware' => 'auth',   'uses' => 'ArticlesController@create' ]);
 /*

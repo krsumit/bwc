@@ -485,15 +485,7 @@ class ArticlesController extends Controller {
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
-       
-        //dd('here');
-        //$uid = Auth::user();
         $uid = Session::get('users')->id;
-        //$uid = $this->session()->get('id');
-        //$uid = $request->user()->id;
-        //$asd = fopen("/home/sudipta/log.log", 'a+');
-        //fwrite($asd, "\n Step 2.8 In Article CREATE".$uid."\n");
-        //$channels = Channel::where('valid','=','1')->get();
         $channels = DB::table('channels')
                 ->join('rights', 'rights.pagepath', '=', 'channels.channel_id')
                 ->join('user_rights', 'user_rights.rights_id', '=', 'rights.rights_id')
@@ -505,12 +497,8 @@ class ArticlesController extends Controller {
 
         $postAs = AuthorType::where('valid', '=', '1')->orderBy('label')->get();
         $p1 = DB::table('author_type')->where('valid', '1')->lists('label', 'author_type_id');
-        $rights = ArticlesController::getRights($uid, 1); /*
-          $rights = DB::table('rights')
-          ->join('user_rights','user_rights.rights_id','=','rights.rights_id')
-          ->where('user_rights.user_id','=',$uid)
-          ->get();
-         */
+        $rights = ArticlesController::getRights($uid, 1); 
+      
         $country = Country::where('valid', '=', '1')->get();
         $states = State::where('valid', '=', '1')->orderBy('name')->get();
         $newstype = DB::table('news_type')->where('valid', '1')->get();
@@ -523,14 +511,42 @@ class ArticlesController extends Controller {
         $campaign = DB::table('campaign')->where('valid', '1')->get();
         $columns = DB::table('columns')->where('valid', '1')->get();
         
-        //$tags = DB::table('tags')->where('valid', '1')->get(); 
-        //echo 'test'; exit;
-        //$tags = DB::table('tags')->where('valid','1')->lists('tag','tags_id');
-        //$photos = DB::table('photos')->where('valid', '1')->get();
-        //$newstype = NewsType::where('valid','=','1')->get();
-        //return view('layouts.dashboard2');
-        //return view('articles.index', compact('articles'));
+       
         return view('articles.create', compact('channels', 'p1', 'postAs', 'country', 'states', 'newstype', 'category', 'magazine', 'event', 'campaign', 'columns', 'tags', 'rights'));
+    }
+    
+     public function createTest() {
+        if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
+        $uid = Session::get('users')->id;
+        $channels = DB::table('channels')
+                ->join('rights', 'rights.pagepath', '=', 'channels.channel_id')
+                ->join('user_rights', 'user_rights.rights_id', '=', 'rights.rights_id')
+                ->select('channels.*')
+                ->where('rights.label', '=', 'channel')
+                ->where('user_rights.user_id', '=', $uid)
+                ->orderBy('channel')
+                ->get();
+
+        $postAs = AuthorType::where('valid', '=', '1')->orderBy('label')->get();
+        $p1 = DB::table('author_type')->where('valid', '1')->lists('label', 'author_type_id');
+        $rights = ArticlesController::getRights($uid, 1); 
+      
+        $country = Country::where('valid', '=', '1')->get();
+        $states = State::where('valid', '=', '1')->orderBy('name')->get();
+        $newstype = DB::table('news_type')->where('valid', '1')->get();
+        $category = DB::table('category')->where('valid', '1')->orderBy('name')->get();
+
+        //fwrite($asd, "\n Channels SELECTED FOR USER ".$channels[1]->channel_id."\n");
+
+        $magazine = DB::table('magazine')->where('valid', '1')->get();
+        $event = DB::table('event')->where('valid', '1')->get();
+        $campaign = DB::table('campaign')->where('valid', '1')->get();
+        $columns = DB::table('columns')->where('valid', '1')->get();
+        
+       
+        return view('articles.createtest', compact('channels', 'p1', 'postAs', 'country', 'states', 'newstype', 'category', 'magazine', 'event', 'campaign', 'columns', 'tags', 'rights'));
     }
 
     /*
@@ -945,6 +961,11 @@ class ArticlesController extends Controller {
 		 if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
+        
+//        echo '<pre>';
+//        print_r($request->all());exit;
+//        
+//        
             //echo '<br>';
        
         //$d = new Request;
@@ -1195,6 +1216,293 @@ class ArticlesController extends Controller {
             }
              
         }
+        }
+
+        //}
+        //Add article_id to Relational Tables;
+        //     exit;        
+        //fwrite($asd, "Step 3.1 In Article POST Function END ING \n");        
+        //If has been Saved by Editor
+        if ($request->status == 'P') {
+            Session::flash('message', 'Your Article has been Published successfully. It will appear on website shortly.');
+            return redirect('/article/list/published');
+        }
+        if ($request->status == 'N') {
+            Session::flash('message', 'Your Article has been Saved successfully.');
+            return redirect('/article/list/new');
+        }
+        if ($request->status == 'D') {
+            Session::flash('message', 'Your Article has been Deleted successfully.');
+            return redirect('/article/list/deleted');
+        }
+        if ($request->status == 'S') {
+            Session::flash('message', 'Your Article has been saved successfully in - My Drafts.');
+            return redirect('/article/list/drafts');
+        }
+
+        return redirect('/article/list/new');
+
+        //return redirect('/dashboard');
+        //return Redirect::to('/dashboard');
+        //return view('/dashboard');
+    }
+    
+    public function storeTest(Request $request) {
+        if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
+
+//        echo '<pre>';
+//        print_r($request->all());exit;
+//        
+//        
+        //echo '<br>';
+        //$d = new Request;
+        //echo $HTTP_POST_VARS;
+        //print_r($_POST);
+//exit;
+        //$asd = fopen("/home/sudipta/log.log", 'a+');
+        //fwrite($asd, "Step 3.1 In Article POST Function \n");
+        //Validate Data Received
+        //Mark Non-Mandatory Data
+        // Laters
+        //$validation = Validator::make($request->all(), [
+        /*
+          $this->validate($request,[
+          //'caption'     => 'required|regex:/^[A-Za-z ]+$/',
+          'channel_sel' => 'required',
+          'authortype' => 'required',
+          'photo'     => 'required|image|mimes:jpeg,png|min:0|max:4'
+          ]);
+         */
+        // NO CONDITION ------ For any Submit Other Than Drafts
+        //if($request->status != 'S') {
+        //Session's User Id
+        $uid = $request->user()->id;
+
+        //fwrite($asd, "Step 3.2 In Article POST Function ".$uid." \n");            
+
+        $article = new Article();
+
+        // Add Arr Data to Article Table //
+        $article->channel_id = $request->channel_sel;
+        $article->user_id = $uid;
+        $article->author_type = $request->authortype;
+        $article->is_columnist = $article->author_type == '4' ? 1 : 0;
+        $article->title = $request->title;
+        $article->summary = $request->summary;
+        $article->description = $request->description;
+        $article->country = $request->country;
+        $article->state = $request->state;
+        $article->news_type = $request->newstype;
+        $article->magazine_id = $request->magazine;
+        $article->event_id = $request->event;
+        $article->campaign_id = $request->campaign;
+        //$article->publish_date = 0;//$request->datepicked;
+        //$article->publish_time = 0;//$request->timepicked;
+        if ($request->status == 'N') {
+            $article->for_homepage = 1;
+        } else {
+            $article->for_homepage = $request->for_homepage ? 1 : 0;
+        }
+
+        $article->important = $request->important ? 1 : 0;
+        $article->web_exclusive = $request->web_exclusive ? 1 : 0;
+
+        $article->slug = 'slug';
+        $article->status = $request->status;
+//        echo '<pre>';
+//        print_r($request->all());exit;
+        $article->save();
+
+        //Get Article_id
+        $id = $article->article_id;
+
+        //- Assign to tertiary tables - Save in Tables -//
+        //Save in Author Associative Table - for any other than Online Bureau
+        if ($request->authortype != '1') {
+            $author_count = 0;
+            //For BW Reporters - Multiple
+            if ($request->authortype == '2' and ( $request->author_id2 or $request->author_id3)) {
+                if ($request->author_id2 && $request->author_id3) {
+                    $author_count = 3;
+                    $authorid = array($request->author_id1, $request->author_id2, $request->author_id3);
+                    $authorRank = array('1', '2', '3');
+                } elseif ($request->author_id2) {
+                    $author_count = 2;
+                    $authorid = array($request->author_id1, $request->author_id2);
+                    $authorRank = array('1', '2');
+                } elseif ($request->author_id3) {
+                    $author_count = 2;
+                    $authorid = array($request->author_id1, $request->author_id3);
+                    $authorRank = array('1', '3');
+                }
+            } else {
+                $author_count = 1;
+                $authorid = array($request->author_id1);
+                $authorRank = array('1');
+            }
+            //echo "aCount: ".$author_count;
+            for ($i = 0; $i < $author_count; $i++) {
+                $article_author = new ArticleAuthor();
+                $article_author->article_id = $id;
+                $article_author->channel_id = $request->channel_sel;
+                $article_author->article_author_rank = $authorRank[$i];
+                $article_author->author_id = $authorid[$i];
+                $article_author->valid = '1';
+
+                $article_author->save();
+            }
+        } else {// Assignig static author if author type is online bureau
+            $article_author = new ArticleAuthor();
+            $article_author->article_id = $id;
+            $article_author->channel_id = $request->channel_sel;
+            $article_author->article_author_rank = '1';
+            $article_author->author_id = '1'; // It's fixed in for all onlien bureau
+            $article_author->valid = '1';
+
+            $article_author->save();
+        }
+        //Article Topics - Save
+        if ($request->Ltopics) {
+            foreach ($request->Ltopics as $key => $value) {
+                $article_topics = new ArticleTopic();
+                $article_topics->article_id = $id;
+                $article_topics->topic_id = $value;
+                $article_topics->save();
+            }
+        }
+        //Article Tags - Save
+        if ($request->Taglist) {
+            $articleids = explode(',', $request->Taglist);
+            $articleids = array_unique($articleids);
+            foreach ($articleids as $key => $value) {
+                $article_tags = new ArticleTag();
+                $article_tags->article_id = $id;
+                $article_tags->tags_id = $value;
+                $article_tags->save();
+            }
+        }
+        //Article Category - Save
+        for ($i = 1; $i <= 4; $i++) {
+            $article_category = new ArticleCategory();
+            $article_category->article_id = $id;
+            $label = "category" . $i;
+            if ($request->$label == '') {
+                break;
+            }
+            $article_category->category_id = $request->$label;
+            $article_category->level = $i;
+            $article_category->save();
+        }
+
+        //- Update article_id to respective table -//
+        //Video table (article_id)- Save
+        if (trim($request->videoTitle) || trim($request->videoCode) || trim($request->videoSource) || trim($request->videoURL)) {
+            $objVideo = new Video();
+            $objVideo->title = $request->videoTitle;
+            $objVideo->code = $request->videoCode;
+            $objVideo->source = $request->videoSource;
+            $objVideo->url = $request->videoURL;
+            $objVideo->channel_id = $request->channel_sel;
+            $objVideo->owned_by = 'article';
+            $objVideo->owner_id = $id;
+            $objVideo->added_by = $uid;
+            $objVideo->added_on = date('Y-m-d');
+            $objVideo->save();
+        }
+
+//            DB::table('videos')->where('video_id', $request->uploadedVideos)
+//                ->update(['owner_id' => $id]);
+        //Photos table (article_id + channel_id)- Save
+
+        $images = explode(',', $request->uploadedImages);
+        //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
+
+        $s3 = AWS::createClient('s3');
+        foreach ($images as $image) { //echo 'foreach--';
+            if (isset($request->photographby[$image])) {
+
+                $source = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $image;
+                $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
+                $dest = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagedir') . $image;
+                //echo $source; echo '<br>'; echo $dest;
+
+                if (@copy($source, $dest)) { //echo 'copied--';
+                    $imaged = new Zebra_Image();
+
+                    // indicate a source image
+                    $imaged->source_path = $dest;
+                    $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagethambtdir') . $image;
+                    $imaged->preserve_aspect_ratio = false;
+                    if ($imaged->resize(90, 63, ZEBRA_IMAGE_BOXED, -1)) { //echo 'resized--';
+                        $result = $s3->putObject(array(
+                            'ACL' => 'public-read',
+                            'Bucket' => config('constants.awbucket'),
+                            'Key' => config('constants.awarticleimagethumbtdir') . $image,
+                            'SourceFile' => $imaged->target_path,
+                        ));
+                        if ($result['@metadata']['statusCode'] == 200) {
+                            unlink($imaged->target_path);
+                        }
+                    }
+                    //$imaged->source_path = $dest;
+                    $imaged->preserve_aspect_ratio = true;
+                    $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagemediumdir') . $image;
+                    if ($imaged->resize(349, 219, ZEBRA_IMAGE_BOXED, -1)) {
+                        $result = $s3->putObject(array(
+                            'ACL' => 'public-read',
+                            'Bucket' => config('constants.awbucket'),
+                            'Key' => config('constants.awarticleimagemediumdir') . $image,
+                            'SourceFile' => $imaged->target_path,
+                        ));
+                        if ($result['@metadata']['statusCode'] == 200) {
+                            unlink($imaged->target_path);
+                        }
+                    }
+                    //$imaged->source_path = $dest;
+                    $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagelargedir') . $image;
+                    if ($imaged->resize(476, 257, ZEBRA_IMAGE_BOXED, -1)) {
+                        $result = $s3->putObject(array(
+                            'ACL' => 'public-read',
+                            'Bucket' => config('constants.awbucket'),
+                            'Key' => config('constants.awarticleimagelargedir') . $image,
+                            'SourceFile' => $imaged->target_path,
+                        ));
+                        if ($result['@metadata']['statusCode'] == 200) {
+                            unlink($imaged->target_path);
+                        }
+                    }
+                    //$imaged->source_path = $dest;
+                    //$imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimageextralargedir') . $image;
+                    //if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)) {
+                    $result = $s3->putObject(array(
+                        'ACL' => 'public-read',
+                        'Bucket' => config('constants.awbucket'),
+                        'Key' => config('constants.awarticleimageextralargedir') . $image,
+                        'SourceFile' => $imaged->source_path,
+                    ));
+                    if ($result['@metadata']['statusCode'] == 200) {
+                        unlink($imaged->source_path);
+                    }
+                    //}
+                    // echo 'before unlink'; exit;
+                    unlink($source);
+                    unlink($source_thumb);
+                    //unlink($dest);
+                    $articleImage = new Photo();
+                    $articleImage->photopath = $image;
+                    $articleImage->imagefullPath = '';
+                    $articleImage->photo_by = $request->photographby[$image];
+                    $articleImage->channel_id = $request->channel_sel;
+                    $articleImage->owned_by = 'article';
+                    $articleImage->owner_id = $id;
+                    $articleImage->active = '1';
+                    $articleImage->created_at = date('Y-m-d H:i:s');
+                    $articleImage->updated_at = date('Y-m-d H:i:s');
+                    $articleImage->save();
+                }
+            }
         }
 
         //}

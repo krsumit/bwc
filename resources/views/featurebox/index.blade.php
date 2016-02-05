@@ -249,7 +249,7 @@
         </header>
 
         <!--<form class="form-horizontal" id="validation_form">-->
-            {!! Form::open(array('url'=>'featurebox/','class'=> 'form-horizontal','id'=>'validation_form', 'files' => true,'onsubmit'=>'return addfeaturefunction()')) !!}
+            {!! Form::open(array('url'=>'featurebox','class'=> 'form-horizontal','id'=>'validation_form', 'files' => true,'')) !!}
             {!! csrf_field() !!}
             <div class="container-fluid">
                 <input type="hidden" name="id" value="{{$uid}}">

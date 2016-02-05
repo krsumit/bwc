@@ -198,7 +198,7 @@
                 </div>
                 <div class="span9">
                     <div class="controls">
-                        <input  name="mobile" type="number" id="mobile">
+                        <input  name="mobile" type="text" id="mobile">
                     </div>
                 </div>
             </div>
@@ -392,9 +392,9 @@
                     }
                 }
             if ($('input[name=mobile]').val().trim() == 0){
-                valid = 0;
-                $('input[name=mobile]').addClass('error');
-                $('input[name=mobile]').after(errorMessage('Please enter mobile'));
+               // valid = 0;
+               // $('input[name=mobile]').addClass('error');
+               // $('input[name=mobile]').after(errorMessage('Please enter mobile'));
                 }else {
                     var regex=/^(\d{1,3}[- ]?)?\d{10}$/;
                     if(!regex.test($('input[name=mobile]').val())){

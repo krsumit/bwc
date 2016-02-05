@@ -198,7 +198,7 @@
                 </div>
                 <div class="span9">
                     <div class="controls">
-                        <input  name="mobile" type="number" id="mobile">
+                        <input  name="mobile" type="text" id="mobile">
                     </div>
                 </div>
             </div>

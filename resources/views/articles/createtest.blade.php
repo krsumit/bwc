@@ -275,7 +275,7 @@ foreach ($rights as $r) {
         <h2><small>New Article</small></h2>
         <h3><small>{{ $userTup->name or '' }}</small></h3>
     </header>
-    {!! Form::open(array('url'=>'article','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
+    {!! Form::open(array('url'=>'article/teststore','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
     {!! csrf_field() !!}
     <div class="container-fluid">
 
@@ -496,7 +496,7 @@ foreach ($rights as $r) {
 
                 <div id="new" class="tab-pane fade entypo ">
                     <!--<form name="addAuthorForm" method="post" enctype="multipart/form-data" id="addAuthorForm">-->
-<!--                    <div class="control-group row-fluid">
+                    <div class="control-group row-fluid">
                         <div class="span3">
                             <label class="control-label" >&nbsp;</label>
                         </div>
@@ -615,7 +615,7 @@ foreach ($rights as $r) {
                             <button class="btn btn-warning pull-right" id="addabut" type="button" style="display:block;">Add</button>
                             <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:7%; display:none; margin-left:15px;float:right;"/>
                         </div>
-                    </div>-->
+                    </div>
                     <!--</form>-->
                 </div>
                 <script>
@@ -1688,7 +1688,7 @@ $('#fileupload').fileupload({
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
         maxFileSize: 10000000
     });
-    $('.authorimagespn').append('<input type="file" name="photo" id="photo">'); 
+   // $('.authorimagespn').append('<input type="file" name="photo" id="photo">'); 
      });
      $('#fileupload').bind('fileuploaddone', function (e, data) {
     //console.log(e);
