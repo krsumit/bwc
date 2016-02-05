@@ -7,6 +7,7 @@ use App\Author;
 use Illuminate\Http\Request;
 use DB;
 use Session;
+use App\Right;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -20,9 +21,23 @@ class AuthorsController extends Controller {
      *
      * @return Response
      */
+    private $rightObj;
+    public function __construct() {
+         $this->rightObj= new Right();
+    
+    }
+    
+    
     public function index() {
-
-        //echo $queryed ;exit;
+      //echo '$queryed' ;exit;
+        
+        /* Right mgmt start */
+        $rightId=9;
+        if(!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+        
+        
         if (isset($_GET['keyword'])) {
             $queryed = $_GET['keyword'];
             $posts = DB::table('authors')
@@ -61,7 +76,14 @@ class AuthorsController extends Controller {
      * @return show
      */
     public function gustauthor() {
-
+        
+        /* Right mgmt start */
+        $rightId=44;
+        if(!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+        
+        
         //echo $queryed ;exit;
         if (isset($_GET['keyword'])) {
             $queryed = $_GET['keyword'];
@@ -96,6 +118,12 @@ class AuthorsController extends Controller {
 
     public function bwreporters() {
 
+        /* Right mgmt start */
+        $rightId=45;
+        if(!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+        
         //echo $queryed ;exit;
         if (isset($_GET['keyword'])) {
             $queryed = $_GET['keyword'];
@@ -170,9 +198,26 @@ class AuthorsController extends Controller {
      * @return Response
      */
     public function store(Request $request) {
+        
         //Save Request Tuple in Table - Validate First
         // print_r($request->all());exit;
         // Validation //
+        
+         
+        if($request->author_type==2){// Bw reporters
+             $rightId=45;
+        }else if($request->author_type==3){ // Guest author
+             $rightId=44;
+        }else if($request->author_type==4){ //Columnist
+             $rightId=9;
+        }
+        
+        if(!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
+        
+        
+        
+        
         $validation = Validator::make($request->all(), [
                     //'caption'     => 'required|regex:/^[A-Za-z ]+$/',
                     //'description' => 'required',

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Quote;
 use Illuminate\Http\Request;
-
+use App\Right;
 use DB;
 use PhpParser\Node\Expr\Array_;
 use Session;
@@ -18,6 +18,12 @@ class QuotesController extends Controller
      *
      * @return Response
      */
+    private $rightObj;
+    public function __construct() {
+         $this->rightObj= new Right();
+    
+    }
+    
     public function index()
     {
         //
@@ -38,8 +44,16 @@ class QuotesController extends Controller
         $uid = Session::get('users')->id;
         //$asd = fopen("/home/sudipta/log.log", 'a+');
 
+         /* Right mgmt start */
+        $rightId=34;
+        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
+        $channels=$this->rightObj->getAllowedChannels($rightId);
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
         
-        $channels = QuotesController::getUserChannels($uid);
+        
+        //$channels = QuotesController::getUserChannels($uid);
         $quoteArr='';
          //B::enableQueryLog();
         if($request->channel){
@@ -161,7 +175,14 @@ class QuotesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        /* Right mgmt start */
+        $rightId=34;
+        $currentChannelId=$request->channel_sel;
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+        
         $uid = $request->user()->id;
         //print_r($_POST);
 

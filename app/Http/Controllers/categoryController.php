@@ -5,6 +5,7 @@ use Redirect;
 use App\Category;
 use Illuminate\Http\Request;
 use DB;
+use App\Right;
 use Auth;
 use Session;
 use App\Http\Requests;
@@ -18,8 +19,20 @@ class categoryController extends Controller
      *
      * @return Response
      */
+    public function __construct() {
+        $this->rightObj = new Right();
+    }
+    
     public function index()
     {
+        
+        /* Right mgmt start */
+        $rightId = 75;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */ 
         
        if(isset($_GET['keyword'])){
             $queryed = $_GET['keyword'];
@@ -27,6 +40,7 @@ class categoryController extends Controller
                 ->join('users', 'users.id', '=', 'category.user_id')
 		->select('category.*','category.category_id','users.id','users.name as userssname'  )
                 ->where('category.valid', '=', '1')
+                ->where('category.channel_id',$currentChannelId)
                 ->where('category.name', 'LIKE', '%'.$queryed.'%')
 		->get();
           
@@ -35,20 +49,14 @@ class categoryController extends Controller
         $posts = DB::table('category')
                 ->join('users', 'users.id', '=', 'category.user_id')
 		->select('category.*','category.category_id','users.id','users.name as userssname'  )
-                ->where('category.valid', '=', '1')   
+                ->where('category.valid', '=', '1')
+                ->where('category.channel_id',$currentChannelId)
 		->get();
         //print_r($posts);
         } 
         $uid = Session::get('users')->id;
-        $channels = DB::table('channels')
-                ->join('rights', 'rights.pagepath', '=', 'channels.channel_id')
-                ->join('user_rights', 'user_rights.rights_id', '=', 'rights.rights_id')
-                ->select('channels.*')
-                ->where('rights.label', '=', 'channel')
-                ->where('user_rights.user_id', '=', $uid)
-                ->orderBy('channel')
-                ->get();
-        return view('categorymaster.categorymaster',compact('posts','channels'));
+       
+        return view('categorymaster.categorymaster',compact('posts','channels','currentChannelId'));
     }
  
 public function subcategoryindex()
@@ -171,6 +179,7 @@ public function subcategoryindex()
      */
     public function store(Request $request)
     {
+        
        if($request->pt_id){
         $parantname = $request->pt_name ; 
         
@@ -220,6 +229,14 @@ public function subcategoryindex()
         $url= 'sub-category-master/add/?name='.$parantname.'&id='.$category_id;
         return Redirect::to($url);
        }else{
+        
+         /* Right mgmt start */
+        $rightId = 75;
+        $currentChannelId =$request->channel;
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */     
+           
         $channel_id = $request->channel;
         $name = $request->add_mastercategory;
         $id = Auth::id();

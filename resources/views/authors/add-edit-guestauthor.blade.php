@@ -204,7 +204,7 @@
             </div>
             <div id="File_Upload" class="control-group row-fluid">
                 <div class="span3">
-                    <label class="control-label">Photo</label>
+                    <label class="control-label">Photo(File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}})</label>
                 </div>
                 <div class="span9">
                     <div class="fileupload fileupload-new" data-provides="fileupload">
@@ -375,9 +375,9 @@
                     }
                 }
             if ($('input[name=mobile]').val().trim() == 0){
-               // valid = 0;
-              //  $('input[name=mobile]').addClass('error');
-              //  $('input[name=mobile]').after(errorMessage('Please enter mobile'));
+                //valid = 0;
+                //$('input[name=mobile]').addClass('error');
+               // $('input[name=mobile]').after(errorMessage('Please enter mobile'));
                 }else {
                     var regex=/^(\d{1,3}[- ]?)?\d{10}$/;
                     if(!regex.test($('input[name=mobile]').val())){

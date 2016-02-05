@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Right;
 use Illuminate\Http\Request;
 use DB;
 use Session;
@@ -15,6 +15,11 @@ use App\Classes\Zebra_Image;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 class SponsoredPostsController extends Controller {
+     private $rightObj;
+    public function __construct() {
+         $this->rightObj= new Right();
+    
+    }
 
     /**
      * Display a listing of the resource.
@@ -31,27 +36,29 @@ class SponsoredPostsController extends Controller {
         switch ($option) {
             case "published":
                 $valid = '1';
-                $rightLabel = "publishedSPosts";
+                $rightId=28;
                 break;
             case "deleted":
                 $valid = '0';
-                $rightLabel = "deletedSPosts";
+                $rightId=29;
                 break;
         }
+        
+        
+         /* Right mgmt start */
+        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
+        $channels=$this->rightObj->getAllowedChannels($rightId);
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+        
+        
         //Get QB Array
         //$qbytes = QuickByte::where('status',$status);
-        $sposts = SponsoredPost::where('valid',$valid)->paginate(config('constants.recordperpage'));
-        $arrRights = SponsoredPostsController::getRights($uid);
-
-        //fwrite($asd, " CHANNEL SELECTED ::" . $uid . " user_id :" . count($sposts) . " status:".$status."\n");
-
-        foreach ($arrRights as $eachRight) {
-            if ($rightLabel == $eachRight->label) {
-                return view('sposts.' . $option, compact('sposts'));
-            }
-        }
-        //fclose($asd);
-        return redirect('/dashboard');
+        $sposts = SponsoredPost::where('valid',$valid)->where('channel_id',$currentChannelId)->paginate(config('constants.recordperpage'));
+        
+        return view('sposts.' . $option, compact('sposts','channels','currentChannelId'));
+           
     }
 
     public function getRights($uid, $parentId = 0) {
@@ -83,19 +90,24 @@ class SponsoredPostsController extends Controller {
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
-        //$asd = fopen("/home/sudipta/log.log", 'a+');
+       
         $uid = Session::get('users')->id;
-        //$channels = QuickBytesController::getUserChannels($uid);
-        //$authors = Author::where('author_type_id','=',2)->get();
-        //$tags = Tag::where('valid','1')->get();
-        //fclose($asd);
-        $channel_arr = SponsoredPostsController::getUserChannels($uid);
-        $category = DB::table('category')->where('valid', '1')->get();
-        $event = DB::table('event')->where('valid', '1')->get();
+        /* Right mgmt start */
+        $rightId=27;
+        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
+        $channels=$this->rightObj->getAllowedChannels($rightId);
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        
+        /* Right mgmt end */    
+        
+        //$channel_arr = SponsoredPostsController::getUserChannels($uid);
+        $category = DB::table('category')->where('valid', '1')->where('channel_id',$currentChannelId)->get();
+        $event = DB::table('event')->where('valid', '1')->where('channel_id',$currentChannelId)->get();
         $photos = DB::table('photos')->where('valid', '1')->get();
         //videos in Edit mode
 
-        return view('sposts.create', compact('uid', 'channel_arr', 'category', 'event', 'photos'));
+        return view('sposts.create', compact('uid', 'channels', 'category', 'event', 'photos','currentChannelId'));
     }
 
     /**
@@ -126,6 +138,14 @@ class SponsoredPostsController extends Controller {
     public function store(Request $request) {
 //       echo '<pre>';
 //       print_r($request->all());
+        
+        /* Right mgmt start */
+        $rightId=27;
+        $currentChannelId=$request->channel_sel;
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+         /* Right mgmt start */
+        
         $uid = $request->user()->id;
         $spost = new SponsoredPost();
         $spost->channel_id = $request->channel_sel;
@@ -232,7 +252,7 @@ class SponsoredPostsController extends Controller {
             $page = 'deleted';
         }
         //fclose($asd);
-        return redirect('/sposts/list/' . $page);
+        return redirect('/sposts/list/' . $page.'?channel='.$currentChannelId);
     }
 
     /**
@@ -248,17 +268,30 @@ class SponsoredPostsController extends Controller {
             return redirect('/auth/login');
         }
         $spost = SponsoredPost::find($id);
-       
+        
+         /* Right mgmt start */
+        $rightId=27;
+        $currentChannelId=$spost->channel_id;
+        $channels=$this->rightObj->getAllowedChannels($rightId);
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+         /* Right mgmt start */
+       // echo '<pre>';
+       //  print_r($spost); exit;
+        
         //fwrite($asd, "EDIT ARTICLE ID::".$article->article_id." \n");                
 
         $event = DB::table('event')->where('valid', '1')->get();
-        $channel_arr = SponsoredPostsController::getUserChannels($uid);
-        $category = DB::table('category')->where('valid', '1')->get();
+        //$channels = SponsoredPostsController::getUserChannels($uid);
+        $category = DB::table('category')->where('channel_id','=',$currentChannelId)->where('valid', '1')->get();
+        
+       // print_r($category);exit;
+        
         $category2 = DB::table('category_two')->where('category_id', $spost->category1)->where('valid', '1')->get();
         $category3 = DB::table('category_three')->where('category_two_id', $spost->category2)->where('valid', '1')->get();
         $category4 = DB::table('category_four')->where('category_three_id', $spost->category4)->where('valid', '1')->get();
         
-        $event = DB::table('event')->where('valid', '1')->get();
+        $event = DB::table('event')->where('channel_id','=',$currentChannelId)->where('valid', '1')->get();
         $photos = DB::table('photos')->where('valid', '1')
                 ->where('owned_by', 'sponsoredpost')
                 ->where('owner_id', $id)
@@ -268,7 +301,7 @@ class SponsoredPostsController extends Controller {
 
         //fclose($asd);
 
-        return view('sposts.edit', compact('uid', 'spost', 'channel_arr', 'category', 'category2', 'category3', 'category4', 'event', 'photos', 'arrVideo'));
+        return view('sposts.edit', compact('uid', 'spost', 'channels','currentChannelId','category', 'category2', 'category3', 'category4', 'event', 'photos', 'arrVideo'));
 
         //return view('sposts.edit', compact('article','rights','channels','p1','postAs','country','states','newstype','category','magazine','event','campaign','columns','tags','photos','acateg','arrAuth','arrTags','arrVideo','userTup','arrTopics'));
     }
@@ -307,26 +340,15 @@ class SponsoredPostsController extends Controller {
      * @return Response
      */
     public function update(Request $request) {
-        //echo $HTTP_POST_VARS;
-        //print_r($_POST);
-//exit;
-        //$asd = fopen("/home/sudipta/log.log", 'a+');
-        //fwrite($asd, "Step 3.1 In Article POST Function \n");
-        //Validate Data Received
-        //Mark Non-Mandatory Data
-        // Laters
-        //$validation = Validator::make($request->all(), [
-        /*
-          $this->validate($request,[
-          //'caption'     => 'required|regex:/^[A-Za-z ]+$/',
-          'channel_sel' => 'required',
-          'authortype' => 'required',
-          'photo'     => 'required|image|mimes:jpeg,png|min:0|max:4'
-          ]);
-         */
-
-        // NO CONDITION ------ For any Submit Other Than Drafts
-        //Session's User Id
+        
+        /* Right mgmt start */
+        $rightId=27;
+        $currentChannelId=$request->channel_sel;
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+         /* Right mgmt start */
+        
+        
         $uid = $request->user()->id;
 
 //        fwrite($asd, "Step 3.2 In Article POST Function ".$uid." \n");
@@ -455,7 +477,7 @@ class SponsoredPostsController extends Controller {
         }
         //fclose($asd);
 
-        return redirect('/sposts/list/' . $page);
+        return redirect('/sposts/list/' . $page.'?channel='.$currentChannelId);
     }
 
     /**
@@ -500,7 +522,7 @@ class SponsoredPostsController extends Controller {
             $deleteS->publish_time = date('H:i:s');
             $deleteS->save();
         }
-        return;
+        return 'success';
     }
 
 }

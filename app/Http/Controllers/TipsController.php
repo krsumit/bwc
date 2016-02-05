@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Tip;
 use App\TipTag;
 use Illuminate\Http\Request;
-
+use App\Right;
 use DB;
 use Session;
 use App\Http\Requests;
@@ -18,6 +18,12 @@ class TipsController extends Controller
      *
      * @return Response
      */
+    private $rightObj;
+    public function __construct() {
+         $this->rightObj= new Right();
+    
+    }
+    
     public function index()
     {
         //
@@ -40,7 +46,18 @@ class TipsController extends Controller
         $uid = Session::get('users')->id;
         //$asd = fopen("/home/sudipta/log.log", 'a+');
 
-        $channels = TipsController::getUserChannels($uid);
+        
+        /* Right mgmt start */
+        $rightId=20;
+        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
+        $channels=$this->rightObj->getAllowedChannels($rightId);
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+        
+        
+        ///$channels = TipsController::getUserChannels($uid);
+        
         $tipArr = TipsController::getTipsforUser($channels);
         $tagArr = TipsController::getTagsforTips($tipArr);
         /*$tipArr = array();

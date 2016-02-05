@@ -247,12 +247,13 @@
             <i class="icon-big-notepad"></i>
             <h2><small>Feature Box Management</small></h2>
         </header>
-
+        
         <!--<form class="form-horizontal" id="validation_form">-->
-            {!! Form::open(array('url'=>'featurebox','class'=> 'form-horizontal','id'=>'validation_form', 'files' => true,'')) !!}
+            {!! Form::open(array('url'=>'featurebox/','class'=> 'form-horizontal','id'=>'validation_form', 'files' => true,'onsubmit'=>'return addfeaturefunction()')) !!}
             {!! csrf_field() !!}
             <div class="container-fluid">
                 <input type="hidden" name="id" value="{{$uid}}">
+                <input type="hidden" name="photo_photo" id="photo_photo" value="">
                 <input type="hidden" name="position2val_photo" id="position2val_photo" value="">
                 <input type="hidden" name="position3val_photo" id="position3val_photo" value="">
                 <div class="form-legend" id="Notifications">Notifications</div>
@@ -285,9 +286,9 @@
                     <div class="span9">
                         <div class="controls">
                             <select name="channel_id" id="channel_id" class="req" required>
-                                <option selected="" value="">All</option>
+                               
                                 @foreach($channels as $channel)
-                                    <option value="{{$channel->channel_id}}">{{$channel->channel}}</option>
+                                    <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{$channel->channel_id}}">{{$channel->channel}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -295,6 +296,24 @@
                     <script>
                         $().ready(function(){
                             $("#channel_id").select2();
+                            
+                              $("#channel_id").change(function () {
+                        $(this).find("option:selected").each(function () {
+
+                            if ($(this).attr("value").trim().length != 0) {
+
+                                window.location = '{{url("featurebox")}}' + '?channel=' + $(this).attr("value").trim();
+                            }
+
+                            else if ($(this).attr("value") == "none") {
+
+                                $("#quote_list").hide();
+
+                            }
+
+                        });
+
+                    });
                         });
                     </script>
                 </div>
@@ -588,15 +607,15 @@
                             </thead>
                             <tbody>
 
-                            @foreach($current as $c)
-                            <tr class="gradeX" id="rowCur{{$c->id}}">
-                                <td>{{$c->title}}</td>
-                                <td>{{$c->featured_on}}</td>
-                                <td>{{$c->name}}</td>
-                                <td class="center">2015678</td>
-                                <td class="center"> <input type="checkbox" id="selectEdit" name="editFBID" class="uniformCheckbox" value="{{$c->id}}"></td>
+                           @if($current)
+                            <tr class="gradeX" id="rowCur{{$current->id}}">
+                                <td>{{$current->title}}</td>
+                                <td>{{$current->featured_on}}</td>
+                                <td>{{$current->name}}</td>
+                                <td class="center">-----</td>
+                                <td class="center"> <input type="checkbox" id="selectEdit" name="editFBID" class="uniformCheckbox" value="{{$current->id}}"></td>
                             </tr>
-                            @endforeach
+                           @endif
 
                             </tbody>
                         </table>
@@ -649,7 +668,7 @@
                                 <td><a href="#" onclick="getEditFB({{$olds->id}});">{{$olds->title}}</a></td>
                                 <td>{{$olds->featured_on}}</td>
                                 <td>{{$olds->name}}</td>
-                                <td class="center">20156</td>
+                                <td class="center">----</td>
                             </tr>
                             @endforeach
                             </tbody>

@@ -12,10 +12,11 @@
         </div>
         <div class="panel-search container-fluid" style="height: 100px">
             <form class="form-horizontal" method="get" action="">
+                <input type="hidden" name="channel" value="{{$currentChannelId}}"/> 
                 <input id="panelSearch" value="{{$_GET['keyword'] or ''}}" required placeholder="Search" type="text" name="keyword">
                 <button class="btn btn-search" type="submit"></button>
                  @if(isset($_GET['searchin'])) 
-                    <a href="{{url("quickbyte/list/deleted")}}"><button class="btn btn-default" type="button">Reset</button></a>
+                    <a href="{{url("quickbyte/list/deleted?channel=").$currentChannelId}}"><button class="btn btn-default" type="button">Reset</button></a>
                     @endif
                 
                <label class="radio">
@@ -96,6 +97,54 @@
                <h2><small>Deleted QuickByte</small></h2>
               
            </header>
+<div class="form-horizontal">
+
+        <div class="container-fluid">
+
+            <div class="form-legend" id="Channel">Channel</div>
+
+            <!--Select Box with Filter Search begin-->
+            <div  class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="channel_sel">Channel</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <select name="channel_sel" id="channel_sel" class="required channel_sel formattedelement">
+                            @foreach($channels as $channel)
+                            <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                            @endforeach
+                        </select>
+
+                    </div>
+                </div>
+                <script>
+                    $().ready(function () {
+                        $("#channel_sel").select2();
+                         $("#channel_sel").change(function () {
+                    $(this).find("option:selected").each(function () {
+
+                        if ($(this).attr("value").trim().length != 0) {
+
+                            window.location = '{{url("quickbyte/list/deleted")}}' + '?channel=' + $(this).attr("value").trim();
+                        }
+
+                        else if ($(this).attr("value") == "none") {
+
+                            $("#quote_list").hide();
+
+                        }
+
+                    });
+
+                });
+                    });
+             </script>
+            </div>
+
+            <!--Select Box with Filter Search end-->
+        </div>
+    </div>
         {!! Form::open(array('url'=>'quickbyte/','class'=> 'form-horizontal','id'=>'validation_form')) !!}
         {!! csrf_field() !!}
      <div class="container-fluid " id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >

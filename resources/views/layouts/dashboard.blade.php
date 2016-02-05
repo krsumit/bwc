@@ -29,6 +29,33 @@
         $(".widget-general-stats select").select2();
     });
 </script>
+<div class="container-fluid " id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
+
+            <!--Notifications begin-->
+            <div class="control-group row-fluid" >
+                <div class="span12 span-inset">
+                    @if(Session::has('message'))
+                    <div class="alert alert-success alert-block">
+                        <i class="icon-alert icon-alert-info"></i>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>This is Success Notification</strong>
+                        <span>{{ Session::get('message') }}</span>
+                    </div>
+                    @endif
+                    @if(Session::has('error'))
+                    <div class="alert alert-error alert-block">
+                        <i class="icon-alert icon-alert-info"></i>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>This is Error Notification</strong>
+                        <span>{{ Session::get('error') }}</span>
+                    </div>
+                    @endif
+
+                </div>
+            </div>
+            <!--Notifications end-->
+
+        </div>
 <div class="widget-holder">
     <div class="widget-flipper">
         <div class="widget-area widget-general-stats widget-front">

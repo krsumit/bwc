@@ -1,6 +1,6 @@
  <div>
  @yield('sidebar')
-    <div class="nav-fixed-left" style="visibility: hidden">
+   <div class="nav-fixed-left" style="visibility: hidden">
         <ul class="nav nav-side-menu">
             <li class="shadow-layer"></li>
             <li>
@@ -9,6 +9,7 @@
                     <span class="nav-selection">Dashboard</span>
                                     </a>
             </li>
+            @if(count(array_diff(array('2','8','11','15','16','17','13','12','19','30','32','33','77'), Session::get('user_rights'))) != count(array('2','8','11','15','16','17','13','12','19','30','32','33','77')))
             <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon document_alt_stroke"></i>
@@ -16,45 +17,69 @@
                     <i class="icon-menu-arrow"></i>                </a>
                 <div class="sub-nav">
                     <ul class="nav">
+                        @if(in_array('2',Session::get('user_rights')))
                         <li>
                             <a href="/article/create">Create New Articles</a>
                         </li>
-						<li>
+			@endif			
+                        @if(in_array('11',Session::get('user_rights')))
+                        <li>
                             <a href="/article/list/new">New Articles</a>
                         </li>
-						<li>
+                        @endif
+			@if(in_array('15',Session::get('user_rights')))			
+                        <li>
                             <a href="/article/list/scheduled">Scheduled Articles</a>
                         </li>
+                        @endif
+                        @if(in_array('16',Session::get('user_rights')))
                         <li>
                             <a href="/article/list/published">Published Article</a>
                         </li>
-						<li>
+                        @endif
+			<li>
                             <a href="/article/list/drafts">My Drafts</a>
                         </li>
+                        @if(in_array('17',Session::get('user_rights')))
                         <li>
                             <a href="/article/list/deleted">Deleted Articles</a>
                         </li>
-						<li>
+                        @endif
+			@if(in_array('19',Session::get('user_rights')))			
+                        <li>
                             <a href="/featurebox">Feature Box Management</a>
                         </li>
-						<li>
+                        @endif
+			@if(in_array('30',Session::get('user_rights')))			
+                        <li>
                             <a href="/campaing/add-management">Campaign Management</a>
                         </li>
+                        @endif
+                        @if(in_array('77',Session::get('user_rights')))
                         <li>
                             <a href="/magazineissue">Add A Magazine Issue</a>
                         </li>
-                        <li>
+                        @endif
+                        
+<!--                        <li>
                             <a href="tips.html">Tips</a>
-                        </li>
+                        </li>-->
+                        
+                        @if(in_array('32',Session::get('user_rights')))
                         <li>
-                            <a href="#">Reports</a>
+                            <a href="#">Show reports (General)</a>
                         </li>
-						<li>
-                            <a href="#">Help</a>
+                        @endif
+			@if(in_array('33',Session::get('user_rights')))			
+                        <li>
+                            <a href="#">Show reports (General)</a>
                         </li>
+                        @endif
                     </ul>
                 </div>
             </li>
+            @endif
+            @if(count(array_diff(array('20','21','34'), Session::get('user_rights'))) != count(array('20','21','34')))
             <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon comment_alt2_stroke"></i>
@@ -62,40 +87,58 @@
                     <i class="icon-menu-arrow"></i>                </a>
                 <div class="sub-nav">
                     <ul class="nav">
+                        @if(in_array('20',Session::get('user_rights')))	
                         <li>
                             <a href="/tips">Tips</a>
                         </li>
+                        @endif
+                        @if(in_array('21',Session::get('user_rights')))	
                         <li>
                             <a href="/tip-tags">Tags</a>
-						<li>
+                        </li>
+                        @endif
+                        @if(in_array('34',Session::get('user_rights')))	
+                        <li>
                             <a href="/quotes">Quotes</a>
                         </li>
-                        <li>
+                        @endif
+                        	
+<!--                        <li>
                             <a href="#">Reports</a>
-                        </li>
-						<li>
+                        </li>	
+                       	
+                        <li>
                             <a href="#">Help</a>
-                        </li>
+                        </li>-->
+                        
                     </ul>
                 </div>
             </li>
-			<li>
+            @endif
+            @if(count(array_diff(array('79','80','81'), Session::get('user_rights'))) != count(array('79','80','81')))
+            <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon mic"></i>
                     <span class="nav-selection">Debate</span>
                     <i class="icon-menu-arrow"></i>                </a>
                 <div class="sub-nav">
                     <ul class="nav">
+                        @if(in_array('79',Session::get('user_rights')))	
                         <li>
                             <a href="/debate/published">Published Debate</a>
                         </li>
+                        @endif
+                        @if(in_array('80',Session::get('user_rights')))	
+                        <li>
+                            <a href="#">Deleted Debate</a>
+                        </li>
+                        @endif
+			@if(in_array('81',Session::get('user_rights')))				
                         <li>
                             <a href="/debate/create">Create New Debates</a>
                         </li>
-<!--						<li>
-                            <a href="new-comments-for-debate.html">Debate Comments</a>
-                        </li>
-                        <li>
+                        @endif
+<!--                        <li>
                             <a href="profanity-filter.html">Profanity Filter</a>
                         </li>
 						<li>
@@ -107,54 +150,71 @@
                     </ul>
                 </div>
             </li>
-			   <li>
-			     <a href="javascript:;" class="sub-nav-container">
+            @endif
+            @if(count(array_diff(array('9','44','45'), Session::get('user_rights'))) != count(array('9','44','45')))
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon pen"></i>
                     <span class="nav-selection">Authors Profile
-					</span>
-                         <i class="icon-menu-arrow"></i> </a>
-									<div class="sub-nav">
+                    </span>
+                    <i class="icon-menu-arrow"></i> </a>
+                <div class="sub-nav">
                     <ul class="nav">
+                        
+                        @if(in_array('2',Session::get('user_rights')))	
                         <li>
                             <a href="/article/add-edit-author">Add/Edit Columnist</a>
                         </li>
-						<li>
+                        @endif
+                         @if(in_array('44',Session::get('user_rights')))	
+                        <li>
                             <a href="/guestauthor/add-edit-gustauthor">Add/Edit Guest Author</a>
                         </li>
+                        @endif
+                         @if(in_array('45',Session::get('user_rights')))	
                         <li>
                             <a href="/bwreporters/add-edit-bw-reporters">Add/Edit Reporters</a>
                         </li>
-						<li>
+                        @endif
+<!--                        <li>
                             <a href="#">Help</a>
-                        </li>
+                        </li>-->
                     </ul>
                 </div>
             </li>
+            @endif
 			
-			 
-			<li>
+	    @if(count(array_diff(array('48','49','50'), Session::get('user_rights'))) != count(array('48','49','50')))	 
+            <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon movie"></i>
                     <span class="nav-selection">Events</span>
                     <i class="icon-menu-arrow"></i>                </a>
                 <div class="sub-nav">
                     <ul class="nav">
+                        @if(in_array('48',Session::get('user_rights')))
                         <li>
                             <a href="{{url('event/add-event-management')}}">Add New Events</a>
                         </li>
+                        @endif
+                        @if(in_array('49',Session::get('user_rights')))
                         <li>
                             <a href="{{url('event/published')}}">Published Events</a>
                         </li>
-						
-						<li>
+                        @endif
+                        @if(in_array('50',Session::get('user_rights')))
+                        <li>
                             <a href="#">Reports</a>
                         </li>
-						<li>
+                        @endif
+<!--                        <li>
                             <a href="#">Help</a> 
-                        </li>
+                        </li>-->
                     </ul>
                 </div>
             </li>
+            @endif
+            @if(count(array_diff(array('23','24','25'), Session::get('user_rights'))) != count(array('23','24','25')))	 
             <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon steering_wheel"></i>
@@ -162,51 +222,65 @@
                     <i class="icon-menu-arrow"></i>                </a>
                 <div class="sub-nav">
                     <ul class="nav">
+                         @if(in_array('23',Session::get('user_rights')))
                         <li>
                             <a href="/quickbyte/create">Create New Quick Byte</a>
                         </li>
+                         @endif
+                         @if(in_array('24',Session::get('user_rights')))
                         <li>
                             <a href="/quickbyte/list/published">Published Quick Bytes</a>
                         </li>
-						<li>
+                         @endif
+			 @if(in_array('25',Session::get('user_rights')))			
+                        <li>
                             <a href="/quickbyte/list/deleted">Deleted Quick Bytes</a>
                         </li>
-						<li>
-                            <a href="#">Reports</a>
-                        </li>
-						<li>
-                            <a href="#">Help</a>
-                        </li>
+                         @endif
+<!--                         <li>
+                             <a href="#">Reports</a>
+                         </li>
+                         <li>
+                             <a href="#">Help</a>
+                         </li>-->
                     </ul>
                 </div>
             </li>
-			
-			<li>
+            @endif
+	    @if(count(array_diff(array('27','28','29'), Session::get('user_rights'))) != count(array('27','28','29')))	 	
+            <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon document_stroke"></i>
                     <span class="nav-selection">Sponsored Post</span>
-                   <i class="icon-menu-arrow"></i>     </a>
-                 <div class="sub-nav">
-                 	<ul class="nav">
+                    <i class="icon-menu-arrow"></i>     </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        @if(in_array('27',Session::get('user_rights')))
                         <li>
-                        	<a href="/sposts/create">Create New Sponsored Post</a>
+                            <a href="/sposts/create">Create New Sponsored Post</a>
                         </li>
+                         @endif
+                         @if(in_array('28',Session::get('user_rights')))
                         <li>
                             <a href="/sposts/list/published">Published Sponsored Posts</a>
                         </li>
-						<li>
+                         @endif
+                         @if(in_array('29',Session::get('user_rights')))
+                        <li>
                             <a href="/sposts/list/deleted">Deleted Sponsored Posts</a>
                         </li>
-						<li>
+                         @endif
+<!--                        <li>
                             <a href="#">Reports</a>
                         </li>
-						<li>
+                        <li>
                             <a href="#">Help</a>
-                        </li>
+                        </li>-->
                     </ul>
                 </div>
             </li>
-			
+	    @endif
+            @if(count(array_diff(array('57','58','59'), Session::get('user_rights'))) != count(array('57','58','59')))	 	
             <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon new_window"></i>
@@ -214,77 +288,104 @@
                     <i class="icon-menu-arrow"></i>                </a>
                 <div class="sub-nav">
                     <ul class="nav">
+                         @if(in_array('59',Session::get('user_rights')))
                        <li>
                             <a href="{{url('album/create')}}">Upload New Album</a>
                         </li>
+                         @endif
+                         @if(in_array('57',Session::get('user_rights')))
                         <li>
                             <a href="{{url('album/list/published')}}">Published Album</a>
                         </li>
-						<li>
+                         @endif
+			 @if(in_array('58',Session::get('user_rights')))			
+                        <li>
                             <a href="{{url('album/list/deleted')}}">Deleted Photos</a>
                         </li>
-						<li>
+                         @endif
+						
+<!--                         <li>
                             <a href="#">Reports</a>
                         </li>
-						<li>
+						
+                        <li>
                             <a href="#">Help</a>
-                        </li>
+                        </li>-->
                     </ul>
                 </div>
             </li>
-
-            <li>
+            @endif
+            @if(count(array_diff(array('62','63','64','65'), Session::get('user_rights'))) != count(array('62','63','64','65')))	 	
+          <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon play"></i>
                     <span class="nav-selection">Videos</span>
                     <i class="icon-menu-arrow"></i>                </a>
                 <div class="sub-nav">
                     <ul class="nav">
+                        @if(in_array('65',Session::get('user_rights')))
                         <li>
-                            <a href="upload-new-Video.html">Upload New Video</a>
+                            <a href="/video/create">Upload New Video</a>
                         </li>
+                        @endif
+                        @if(in_array('62',Session::get('user_rights')))
                         <li>
-                            <a href="published-Videos.html">Published Videos</a>
+                            <a href="/video/list">Published Videos</a>
                         </li>
-						<li>
-                            <a href="deleted-Videos.html">Deleted Videos</a>
+                        @endif
+                        @if(in_array('63',Session::get('user_rights')))
+                        <li>
+                            <a href="#">Deleted Videos</a>
                         </li>
-						<li>
-                            <a href="featured-Videos.html">Featured Videos</a>
+                        @endif
+                        @if(in_array('64',Session::get('user_rights')))
+                        <li>
+                            <a href="#">Featured Videos</a>
                         </li>
-						<li>
+                        @endif
+<!--                        <li>
                             <a href="#">Reports</a>
                         </li>
-						<li>
+                        <li>
                             <a href="#">Help</a>
-                        </li>
+                        </li>-->
                     </ul>
                 </div>
             </li>
-
-			<li>
+            @endif
+            @if(count(array_diff(array('68','69','70','75'), Session::get('user_rights'))) != count(array('68','69','70','75')))	 	
+            <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon cog"></i>
                     <span class="nav-selection">Site Management</span>
                     <i class="icon-menu-arrow"></i>                </a>
                 <div class="sub-nav">
                     <ul class="nav">
+                        @if(in_array('75',Session::get('user_rights')))
                         <li>
                             <a href="/category/add-master-category">Category Master</a>
                         </li>
-						<li>
+                        @endif
+                        @if(in_array('68',Session::get('user_rights')))
+                        <li>
                             <a href="location-master.html">Location Master</a>
                         </li>
-						<li>
-                            <a href="topic-master.html">Topic Master</a>
-                        </li>
+                        @endif
+                        @if(in_array('69',Session::get('user_rights')))
                         <li>
-                            <a href="tags.html">Tags Master</a>
+                            <a href="#">Topic Master</a>
                         </li>
+                        @endif
+                        @if(in_array('70',Session::get('user_rights')))
+                        <li>
+                            <a href="#">Tags Master</a>
+                        </li>
+                        @endif
                     </ul>
                 </div>
             </li>
-
+            @endif
+            @if(count(array_diff(array('72','73'), Session::get('user_rights'))) != count(array('72','73')))	 	
             <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon cog"></i>
@@ -292,20 +393,33 @@
                     <i class="icon-menu-arrow"></i>                </a>
                 <div class="sub-nav">
                     <ul class="nav">
+                        @if(in_array('72',Session::get('user_rights')))
                         <li>
                             <a href="{{url('rights')}}">CMS Rights</a>
                         </li>
-						<li>
+                        
+                        @endif
+                        @if(in_array('73',Session::get('user_rights')))
+                        <li>
+                            <a href="{{url('roles/manage')}}">Manage Roles</a>
+                        </li>
+                        
+                        <li>
+                            <a href="{{url('roles/add')}}">Add Roles</a>
+                        </li>
+                        @endif
+<!--                        <li>
                             <a href="#">Reports</a>
                         </li>
-						<li>
+                        <li>
                             <a href="#">Help</a>
-                        </li>
+                        </li>-->
                     </ul>
                 </div>
             </li>
-
-			<li>
+            @endif
+            <!--
+            <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon info"></i>
                     <span class="nav-selection">Help</span>
@@ -321,7 +435,7 @@
                     </ul>
                 </div>
             </li>
-
+            -->
         <li class="nav-logout">
                 <a href="/auth/logout">
                     <i class="icon-photon key_stroke"></i><span class="nav-selection">Logout</span>

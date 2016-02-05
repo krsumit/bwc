@@ -204,22 +204,14 @@
                                     "attr" : { "href" : "#photos-videos" }
                             }
                             },
-<?php
-foreach ($rights as $r) {
-    if ($r->label == 'articleScheduler') {
-        ?>
+                             @if(in_array('12',Session::get('user_rights')))
                                     {
                                     "data" : {
                                     "title" : "Schedule for Upload",
                                             "attr" : { "href" : "#schedule-for-upload" }
                                     }
                                     },
-        <?php
-    }
-}
-?>
-
-
+                             @endif
                             ]
                             },
                                     "plugins" : [ "themes", "json_data", "ui" ]
@@ -371,11 +363,9 @@ foreach ($rights as $r) {
             <ul class="nav nav-tabs" id="iconsTab">
                 <li class="active"><a data-toggle="tab" href="#existing">Choose From Existing</a></li>
                 <!-- Add Author Section Only if Rights -->
-                @foreach($rights as $right)
-                @if( $right->label == 'addAuthor')
+                 @if(count(array_diff(array('9','44','45'), Session::get('user_rights'))) != count(array('9','44','45')))
                 <li class=""><a data-toggle="tab" href="#new">Add A New Author</a></li>
                 @endif
-                @endforeach
             </ul>
             <div class="tab-content">
                 <div id="existing" class="tab-pane fade active in">
@@ -1929,8 +1919,7 @@ foreach ($rights as $r) {
                 });</script>
 
     <!--start container-->
-    @foreach($rights as $right)
-    @if( $right->label == 'articleScheduler')
+     @if(in_array('12',Session::get('user_rights')))
 
     <div class="container-fluid">
 
@@ -1980,7 +1969,7 @@ foreach ($rights as $r) {
     </div>
 
     @endif
-    @endforeach
+   
 
     <div class="container-fluid">
 
@@ -2024,11 +2013,10 @@ foreach ($rights as $r) {
                 <button type="submit" name="status" value="S" id="draftSubmit" class="btn btn-default">Draft</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
                 <button type="submit" name="status" value="N" id="pageSubmit" name="N" class="btn btn-warning">Submit</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
                 <!--<button type="button" name="N" class="btn btn-info">Save</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>-->
-                @foreach($rights as $right)
-                @if($right->label == 'publishButton')
+               @if(in_array('12',Session::get('user_rights')))
                 <button type="button" name="status" value="P" id="publishSubmit" class="btn btn-success">Publish</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
                 @endif
-                @endforeach
+                
                 <button type="reset" name="status" value="D" id="dumpSubmit" class="btn btn-danger">Dump</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
 
             </div>

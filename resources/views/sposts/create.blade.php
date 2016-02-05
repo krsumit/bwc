@@ -162,9 +162,8 @@
                             <div class="span9">
                                 <div class="controls">
                                     <select name="channel_sel" id="selectBoxFilter20">
-                                        <option selected="" value="">Select</option>
-                                        @foreach($channel_arr as $ch)                                        
-                                            <option value="{{$ch->channel_id}}">{{$ch->channel}}</option>
+                                        @foreach($channels as $ch)                                        
+                                            <option @if($ch->channel_id==$currentChannelId) @endif value="{{$ch->channel_id}}">{{$ch->channel}}</option>
                                         @endforeach 
                                     </select>
                                 </div>
@@ -172,6 +171,32 @@
                             <script>
                                 $().ready(function(){
                                     $("#selectBoxFilter20").select2();
+                                    $('#selectBoxFilter20').change(function(){
+                                        $.get("{{ url('article/dropdown1')}}",
+                                { option: $(this).attr("value") + '&level=' },
+                                        function(data) {
+                                        var Box = $('#selectBoxFilter2');
+                                                Box.empty();
+                                                Box.append("<option value=''>Please Select</option>");
+                                                $.each(data, function(index, element) {
+                                                Box.append("<option value='" + element + "'>" + index + "</option>");
+                                                });
+                                                 $("#selectBoxFilter2").select2();
+                                        });
+                                        
+                                         $.get("{{ url('article/event')}}",
+                        { option: $(this).attr("value") },
+                                function(data) {
+                                var eventBox = $('#event_id');
+                                        eventBox.empty();
+                                        eventBox.append("<option value=''>Please Select</option>");
+                                        $.each(data, function(index, element) {
+                                        eventBox.append("<option value='" + element + "'>" + index + "</option>");
+                                        });
+                                        $("#event_id").select2();
+                                });
+                                        
+                                    });
                                 });
                             </script>
                         </div>						
@@ -372,8 +397,8 @@
                             </div>
                             <div class="span9">
                                 <div class="controls">
-                                    <select name="event" id="selectBoxFilter20">
-                                        <option selected="" value="All">All</option>
+                                    <select name="event" id="event_id">
+                                         <option  value="">Please Select</option>
                                         @foreach($event as $ev)
                                         <option value="{{$ev->event_id}}">{{$ev->title}}</option>
                                         @endforeach
@@ -382,7 +407,7 @@
                             </div>
                             <script>
                                 $().ready(function(){
-                                    $("#selectBoxFilter20").select2();
+                                    $("#event_id").select2();
                                 });
                             </script>
                         </div>
@@ -632,7 +657,7 @@
                     <div class="control-group row-fluid">
                         <div class="span12 span-inset">
                             <button type="submit" name="status" value="P" id="publish" class="btn btn-success">Publish</button><img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;"/>
-                            <button type="submit" name="status" value="D" id="dump" class="btn btn-danger">Dump</button><img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;"/>								
+                            <button type="reset" name="status" value="D" id="dump" class="btn btn-danger">Dump</button><img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;"/>								
                         </div>
                     </div>
                 </div>

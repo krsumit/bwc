@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\FeatureBox;
 use Illuminate\Http\Request;
-
 use DB;
 use Session;
 use App\Photo;
@@ -12,21 +11,27 @@ use App\Video;
 use App\Http\Controllers\VideosController;
 use App\Http\Controllers\PhotosController;
 use App\Http\Requests;
+use App\Right;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 
-class FeatureBoxController extends Controller
-{
+class FeatureBoxController extends Controller {
+
     /**
      * Display a listing of the resource.
      *
      * @return Response
      */
-    public function index()
-    {
+    private $rightObj;
+
+    public function __construct() {
+        $this->rightObj = new Right();
+    }
+
+    public function index() {
         //
     }
 
@@ -35,44 +40,40 @@ class FeatureBoxController extends Controller
      *
      * @return Response
      */
-    public function create()
-    {
+    public function create() {
         //Authenticate User
-        if(!Session::has('users')){
+        if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
         $uid = Session::get('users')->id;
 //        $asd = fopen("/home/sudipta/log.log", 'a+');
 
-        //Getting Channel Access
-        $channels = FeatureBoxController::getUserChannels($uid);
+        /* Right mgmt start */
+        $rightId = 19;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
 
-        //Get All (Active) Featured Articles of respective Channels
-        $i=0;
-        $current = array();
-        foreach($channels as $eachChannel) {
-            //if ($eachChannel->label == 'channel'){
-            $cur = DB::table('featuredarticle')
-                ->join('users','featuredarticle.editor_id','=','users.id')
-                ->select('featuredarticle.*','users.name')
-                ->where('featuredarticle.featured','=','1')
-                ->where('featuredarticle.channel_id','=',$eachChannel->channel_id)
-                ->where('featuredarticle.valid','1')
+
+        $current = DB::table('featuredarticle')
+                ->join('users', 'featuredarticle.editor_id', '=', 'users.id')
+                ->select('featuredarticle.*', 'users.name')
+                ->where('featuredarticle.featured', '=', '1')
+                ->where('featuredarticle.channel_id', '=', $currentChannelId)
+                ->where('featuredarticle.valid', '1')
                 ->first();
-            if($cur != "") {
-                $current[$i] = $cur;
-  //              fwrite($asd, " Current SELECTED ::" . count($current) . " id :" . $current[$i]->featured_on . " channelID: " . $eachChannel->channel_id . "\n");
-            }
-            //array_push($current,$currentArr);
-            $i++;
-          }
 
-        //Get All Old Featured Articles
-        $old = FeatureBoxController::getOldFeaturedArticles();
-
-    //    fwrite($asd, " CURRENT SELECTED Total ::" . count($current) . " \n");
-    //    fclose($asd);
-        return view('featurebox.index',compact('channels','current','old','uid'));
+        $old = DB::table('featuredarticle')
+                ->join('users', 'featuredarticle.editor_id', '=', 'users.id')
+                ->select('featuredarticle.*', 'users.name')
+                ->where('featuredarticle.featured', '=', '0')
+                ->where('featuredarticle.channel_id', '=', $currentChannelId)
+                ->where('featuredarticle.valid', '=', '1')
+                ->orderBy('updated_at', 'desc')
+                ->get();
+        return view('featurebox.index', compact('channels', 'current', 'old', 'uid', 'currentChannelId'));
     }
 
     /**
@@ -81,15 +82,15 @@ class FeatureBoxController extends Controller
      * @param User ID $uid
      * @return $channelArr Array
      */
-    public function getUserChannels($uid){
+    public function getUserChannels($uid) {
 
         $channels = DB::table('channels')
-            ->join('rights','rights.pagepath','=','channels.channel_id')
-            ->join('user_rights', 'user_rights.rights_id','=','rights.rights_id')
-            ->select('channels.*')
-            ->where('rights.label', '=', 'channel')
-            ->where('user_rights.user_id', '=', $uid)
-            ->get();
+                ->join('rights', 'rights.pagepath', '=', 'channels.channel_id')
+                ->join('user_rights', 'user_rights.rights_id', '=', 'rights.rights_id')
+                ->select('channels.*')
+                ->where('rights.label', '=', 'channel')
+                ->where('user_rights.user_id', '=', $uid)
+                ->get();
 
         return $channels;
     }
@@ -100,31 +101,30 @@ class FeatureBoxController extends Controller
      * @param None
      * @return Array
      */
-    public function getOldFeaturedArticles(){
 
-        $old = DB::table('featuredarticle')
-            ->join('users','featuredarticle.editor_id','=','users.id')
-            ->select('featuredarticle.*','users.name')
-            ->where('featuredarticle.featured','=','0')
-            ->where('featuredarticle.valid','=','1')
-            ->orderBy('updated_at','desc')
-            ->get();
-
-        return $old;
-    }
     /**
      * Store a newly created resource in storage.
      *
      * @param  Request  $request
      * @return Response
      */
-    public function store(Request $request)
-    {
-        
+    public function store(Request $request) {
+
+
         $uid = $request->user()->id;
 
         $featureB = "";
-        //If Active Featured Article is Edited -
+        
+        
+        /* Right mgmt start */
+        $rightId = 19;
+        $currentChannelId = $request->channel_id;
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+
+        
+        
         if($request->faid){
             $featureB = FeatureBox::find($request->faid);
         //    fwrite($asd, " Is for Edit ::" .$request->faid  . "\n\n");
@@ -170,6 +170,10 @@ class FeatureBoxController extends Controller
                   if($result['@metadata']['statusCode']==200){
                         unlink($destination_path . $filename);
                 }
+        } else{
+        if($request ->position2val_photo!=''){
+             $featureB->position2_photo = $request ->position2val_photo;
+             }
         }
         if($request ->position3_photo !=''){
             $destination_path = 'uploads/';
@@ -189,7 +193,7 @@ class FeatureBoxController extends Controller
 			'Key'    => config('constants.awfeaturebox3').$ph->position3_photo
                         ));
             }
-           
+            
             $result=$s3->putObject(array(
                                 'ACL'=>'public-read',
                                 'Bucket'     => config('constants.awbucket'),
@@ -199,18 +203,19 @@ class FeatureBoxController extends Controller
                   if($result['@metadata']['statusCode']==200){
                         unlink($destination_path . $filename);
                 }
+        }else{
+            
+              if($request ->position3val_photo!=''){
+            $featureB->position3_photo = $request ->position3val_photo;
+            }
         }
         $featureB->title = $request->title;
         $featureB->description = $request->description;
         $featureB->url = $request->url;
         $featureB->channel_id = $request->channel_id;
         $featureB->editor_id = $uid;
-        if($request ->position3val_photo!=''){
-        $featureB->position3_photo = $request ->position3val_photo;
-        }
-        if($request ->position2val_photo!=''){
-        $featureB->position2_photo = $request ->position2val_photo;
-        }
+       
+       
         
         $featureB->position2_title = $request ->position2_title;
         $featureB->position2_url = $request ->position2_url;
@@ -228,9 +233,10 @@ class FeatureBoxController extends Controller
 
 
         //For Image or Video Added:
-        if($request->mediaSel == 'photo' && $request->photo !=''){
+        if($request->mediaSel == 'photo' ){
+            
             $photo = new Photo();
-
+            if($request->photo !=''){
             $destination_path = 'uploads/';
             $file = $request->file('photo');
           //  fwrite($asd, " File name:".$file."  \n");
@@ -259,7 +265,9 @@ class FeatureBoxController extends Controller
                         unlink($destination_path . $filename);
                 }
             
-            
+            }else{
+                $photo->photopath = $request->photo_photo;
+            }
             $photo->channel_id = $request->channel_id;
             $photo->owned_by = 'featurebox';
             $photo->owner_id = $fid;
@@ -286,9 +294,9 @@ class FeatureBoxController extends Controller
             $fBEdit->video_id = $vid;
             $fBEdit->update();
         }
-       /// fclose($asd);
-		 Session::flash('message', 'Your FeatureBox has been Published successfully.');
-        return redirect('/featurebox');
+        /// fclose($asd);
+        Session::flash('message', 'Your FeatureBox has been Published successfully.');
+        return redirect('/featurebox?channel='.$request->channel_id);
     }
 
     /**
@@ -297,8 +305,7 @@ class FeatureBoxController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function show($id)
-    {
+    public function show($id) {
         //
     }
 
@@ -308,8 +315,7 @@ class FeatureBoxController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function edit()
-    {
+    public function edit() {
         //
         //print_r($_POST);
 
@@ -322,13 +328,13 @@ class FeatureBoxController extends Controller
 
         $fb = FeatureBox::find($id);
         /*   ->join('videos','featuredarticle.video_id','=','videos.video_id')
-           ->join('photos','featuredarticle.photo_id','=','photos.photo_id')
-           ->get();
-       */
+          ->join('photos','featuredarticle.photo_id','=','photos.photo_id')
+          ->get();
+         */
         //fwrite($asd, " CURRENT SELECTED IFB ::" . $id . " " . count($fb) . " ID:" . $fb . "\n\n");
         if ($fb->video_id > 0) {
             $vd = Video::where('owner_id', $fb->id)->where('owned_by', 'featurebox')
-                ->select('video_id', 'code')->get();
+                            ->select('video_id', 'code')->get();
 
             $user[] = json_decode($fb, true);
             foreach ($vd as $v) {
@@ -336,25 +342,25 @@ class FeatureBoxController extends Controller
             }
             $fb = $json_merge = json_encode($user);
             /*
-                        $a1 = json_decode( $fb, true );
-                        //$a2 = json_decode( $vd, true );
-                        $res = array_merge_recursive( $a1, $vd );
-                        $fb = json_encode( $res );
+              $a1 = json_decode( $fb, true );
+              //$a2 = json_decode( $vd, true );
+              $res = array_merge_recursive( $a1, $vd );
+              $fb = json_encode( $res );
 
 
-                        $r = [];
-                        foreach(json_decode($fb, true) as $key => $array){
-                            fwrite($asd, " KEY ::" . $key . " Arr:  ".$array."\n");
-                            $r[$key] = array_merge(json_decode($vd, true)[$key],$array);
-                        }
-                        $fb = json_encode($r);
-            */
-          //  fwrite($asd, " CURRENT SELECTED VD ::" . $id . " " . count($vd) . " ID:" . $vd . "\n\n");
-          //  fwrite($asd, " CURRENT SELECTED FB ::" . $id . " " . count($fb) . " ID:" . $fb . "\n\n");
+              $r = [];
+              foreach(json_decode($fb, true) as $key => $array){
+              fwrite($asd, " KEY ::" . $key . " Arr:  ".$array."\n");
+              $r[$key] = array_merge(json_decode($vd, true)[$key],$array);
+              }
+              $fb = json_encode($r);
+             */
+            //  fwrite($asd, " CURRENT SELECTED VD ::" . $id . " " . count($vd) . " ID:" . $vd . "\n\n");
+            //  fwrite($asd, " CURRENT SELECTED FB ::" . $id . " " . count($fb) . " ID:" . $fb . "\n\n");
             //$fb = json_encode(array_merge(json_decode($fb, true),json_decode($vd, true)));
         } elseif (($fb->photo_id) && ($fb->photo_id > 0)) {
             $ph = Photo::where('owner_id', $fb->id)->where('owned_by', 'featurebox')
-                ->select('photo_id', 'photopath')->get();
+                            ->select('photo_id', 'photopath')->get();
 
             $user[] = json_decode($fb, true);
             foreach ($ph as $p) {
@@ -365,9 +371,8 @@ class FeatureBoxController extends Controller
             //$user[] = json_decode($fb,true);
             //$user[] = json_decode($ph,true);
             //$fb = $json_merge = json_encode($user);
-
             //$fb = json_encode(array_merge(json_decode($fb, true),json_decode($ph, true)));
-        }else{
+        } else {
             $user[] = json_decode($fb, true);
             $fb = $json_merge = json_encode($user);
         }
@@ -375,7 +380,6 @@ class FeatureBoxController extends Controller
 //fclose($asd);
 
         return $fb;
-
     }
 
     /**
@@ -385,8 +389,7 @@ class FeatureBoxController extends Controller
      * @param  int  $id
      * @return Response
      */
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         //
     }
 
@@ -396,8 +399,7 @@ class FeatureBoxController extends Controller
      * @param  int  $id
      * @return None
      */
-    public function destroy()
-    {
+    public function destroy() {
         //
         if (isset($_GET['option'])) {
             $id = $_GET['option'];
@@ -409,4 +411,5 @@ class FeatureBoxController extends Controller
 
         return;
     }
+
 }

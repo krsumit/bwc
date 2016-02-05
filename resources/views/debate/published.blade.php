@@ -12,10 +12,11 @@
         </div>
         <div class="panel-search container-fluid" style="height: 100px">
             <form class="form-horizontal" action="">
+                 <input type="hidden" name="channel" value="{{$currentChannelId}}"/>
                 <input id="panelSearch" required placeholder="Search" type="text" value="{{$_GET['keyword'] or ''}}" name="keyword">
                 <button class="btn btn-search" type="submit"></button>
                 @if(isset($_GET['searchin'])) 
-                <a href="{{url("debate/published")}}"><button class="btn btn-default" type="button">Reset</button></a>
+                <a href="{{url("debate/published?channel=").$currentChannelId}}"><button class="btn btn-default" type="button">Reset</button></a>
                 @endif
 
                 <label class="radio">
@@ -124,6 +125,53 @@
         <h2><small>Published Debate</small></h2>
 
     </header>
+    <div class="form-horizontal">
+
+        <div class="container-fluid">
+
+            <div class="form-legend" id="Channel">Channel</div>
+
+            <!--Select Box with Filter Search begin-->
+            <div  class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="channel_sel">Channel</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <select name="channel_sel" id="channel_sel" class="required channel_sel formattedelement">
+                            @foreach($channels as $channel)
+                            <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                            @endforeach
+                        </select>
+
+                    </div>
+                </div>
+                <script>
+                    $().ready(function () {
+                        $("#channel_sel").select2();
+                        $("#channel_sel").change(function () {
+                    $(this).find("option:selected").each(function () {
+
+                        if ($(this).attr("value").trim().length != 0) {
+
+                            window.location = '{{url("debate/published")}}' + '?channel=' + $(this).attr("value").trim();
+                        }
+
+                        else if ($(this).attr("value") == "none") {
+
+                            $("#quote_list").hide();
+
+                        }
+
+                    });
+
+                });
+                    });</script>
+            </div>
+
+            <!--Select Box with Filter Search end-->
+        </div>
+    </div>
     <form class="form-horizontal">
         <div class="container-fluid " id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
@@ -234,7 +282,9 @@
 
         <div class="control-group row-fluid">
             <div class="span12 span-inset">
+                @if(in_array('81',Session::get('user_rights')))
                 <button type="button" onclick="deleteDebate();" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                @endif
             </div></div>
     </form>
 </div>

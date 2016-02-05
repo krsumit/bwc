@@ -131,39 +131,35 @@
     {!! Form::open(array('url'=>'quickbyte/update','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
     {!! csrf_field() !!}    
     <input type="hidden" name="id" value="{{$quickbyte->id}}">
-    <div class="container-fluid">
-        <div class="form-legend" id="Notifications">Notifications</div>
-        <!--Notifications begin-->
-        <div class="control-group row-fluid" style="display:none">
-            <div class="span12 span-inset">
-                <div class="alert alert-success alert-block">
-                    <i class="icon-alert icon-alert-info"></i>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>This is Success Notification</strong>
-                    <span>Your data has been successfully modified.</span>
-                </div>
-                <div class="alert alert-block">
-                    <i class="icon-alert icon-alert-info"></i>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>This is Alert Notification</strong>
-                    <span>No result found.</span>
-                </div>
-                <div class="alert alert-error alert-block">
-                    <i class="icon-alert icon-alert-info"></i>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>This is Error Notification</strong>
-                    <span>Please select a valid search criteria.</span>
-                </div>
-                <div class="alert alert-error alert-block">
-                    <i class="icon-alert icon-alert-info"></i>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>This is Error Notification</strong>
-                    <span>Please enter a valid email id.</span>
+    <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
+
+             <div class="form-legend" id="Notifications">Notifications</div>
+
+            <!--Notifications begin-->
+            <div class="control-group row-fluid" >
+                <div class="span12 span-inset">
+                    @if (Session::has('message'))
+                    <div class="alert alert-success alert-block" style="">
+                        <i class="icon-alert icon-alert-info"></i>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>This is Success Notification</strong>
+                        <span>{{ Session::get('message') }}</span>
+                    </div>
+                    @endif
+
+                    @if (Session::has('error'))
+                    <div class="alert alert-error alert-block">
+                        <i class="icon-alert icon-alert-info"></i>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>This is Error Notification</strong>
+                        <span>{{ Session::get('error') }}</span>
+                    </div>
+                    @endif
                 </div>
             </div>
+            <!--Notifications end-->
+
         </div>
-        <!--Notifications end-->
-    </div>
     <div class="container-fluid">
 
         <div class="form-legend" id="Channel">Channel</div>
@@ -176,7 +172,6 @@
             <div class="span9">
                 <div class="controls">
                     <select name="channel"  id="channel" class="formattedelement">
-                        <option selected="" value="">Please Select</option>
                         @foreach($channels as $channel)
                         <option @if($channel->channel_id==$quickbyte->channel_id) selected @endif; value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
                         @endforeach
@@ -186,6 +181,28 @@
             <script>
                 $().ready(function () {
                     $("#channel").select2();
+                    
+                     $('#channel').change(function(){
+                                $.get("{{ url('article/dropdown1')}}",
+                                { option: $(this).attr("value") + '&level=' },
+                                        function(data) {
+                                        var Box = $('#selectBoxFilter2');
+                                                Box.empty();
+                                                Box.append("<option value=''>Please Select</option>");
+                                                $.each(data, function(index, element) {
+                                                Box.append("<option value='" + element + "'>" + index + "</option>");
+                                                });
+                                                $("#selectBoxFilter2").select2();
+                                                $('#selectBoxFilter3').select2();
+                                                $("#selectBoxFilter3").select2();
+                                                $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
+                                                $('#selectBoxFilter4').select2();
+                                                $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                                $('#selectBoxFilter5').select2();
+                                        });
+                        });
+                    
+                    
                 });
             </script>
         </div>
@@ -350,7 +367,7 @@
         <div id="Drag_And_Drop_Upload" class="control-group row-fluid">
             <div class="span3">
                 <label class="control-label" for="inputField">
-                    Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: 680px X 372px)."><i class="icon-photon info-circle"></i></a>
+                    Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: 680px X 372px) (File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}}  )."><i class="icon-photon info-circle"></i></a>
                 </label>
             </div>
             <div class="span9 row-fluid" >

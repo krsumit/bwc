@@ -2,8 +2,7 @@
 
 @section('title', 'Edit Article - BWCMS')
 @section('content')
-<?php //echo count($photos); exit; ?>
-<?php // print_r($article); exit;?>
+ <style> .none { display:none; } </style>
 <div class="panel">
     <div class="panel-content filler">
         <div class="panel-logo"></div>
@@ -18,12 +17,20 @@
 
         <script>
             $(document).ready(function(){
+                     $('#draftSubmit').click(function(){
+                        $("#validation_form").validate().cancelSubmit = true;
+                      });
+                      
+                       $('#dumpSubmit').click(function(){
+                        $("#validation_form").validate().cancelSubmit = true;
+                      });
+             
                     $('#saveSubmit').click(doClick);
                     $('#pageSubmit').click(doClick);
                     $('#publishSubmit').click(doClick);
-                    $('#scheduleSubmit').click(doClick);
+                    $('#saveSchedule').click(doClick);
                     //$('#scheduleSubmit').click(doClickSchedule);
-                    $('#dumpSubmit').click(doClick);
+                    //$('#dumpSubmit').click(doClick);
                     //$('#pageSubmit','#dumpSubmit','#publishSubmit').click(function() {}
 
                             function doClickSchedule(){
@@ -289,19 +296,14 @@
                             "attr" : { "href" : "#photos-videos" }
                     }
                     },
-<?php foreach ($rights as $r) {
-    if ($r->label == 'EditPageScheduler') {
-        ?>
+ @if(in_array('12',Session::get('user_rights')) && $article->status!='P' )
                             {
                             "data" : {
                             "title" : "Schedule for Upload",
                                     "attr" : { "href" : "#schedule-for-upload" }
                             }
                             },
-        <?php
-    }
-}
-?>
+@endif
 
 
                     ]
@@ -383,42 +385,35 @@
     </header>
     {!! Form::open(array('url'=>'article/update/','class'=> 'form-horizontal','id'=>'validation_form')) !!}
     {!! csrf_field() !!}
-    <div class="container-fluid">
+    <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
-        <div class="form-legend" id="Notifications">Notifications</div>
+             <div class="form-legend" id="Notifications">Notifications</div>
 
-        <!--Notifications begin-->
-        <div class="control-group row-fluid" style="display:none">
-            <div class="span12 span-inset">
-                <div class="alert alert-success alert-block">
-                    <i class="icon-alert icon-alert-info"></i>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>This is Success Notification</strong>
-                    <span>Your data has been successfully modified.</span>
-                </div>
-                <div class="alert alert-block">
-                    <i class="icon-alert icon-alert-info"></i>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>This is Alert Notification</strong>
-                    <span>No result found.</span>
-                </div>
-                <div class="alert alert-error alert-block">
-                    <i class="icon-alert icon-alert-info"></i>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>This is Error Notification</strong>
-                    <span>Please select a valid search criteria.</span>
-                </div>
-                <div class="alert alert-error alert-block">
-                    <i class="icon-alert icon-alert-info"></i>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>This is Error Notification</strong>
-                    <span>Please enter a valid email id.</span>
+            <!--Notifications begin-->
+            <div class="control-group row-fluid" >
+                <div class="span12 span-inset">
+                    @if (Session::has('message'))
+                    <div class="alert alert-success alert-block" style="">
+                        <i class="icon-alert icon-alert-info"></i>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>This is Success Notification</strong>
+                        <span>{{ Session::get('message') }}</span>
+                    </div>
+                    @endif
+
+                    @if (Session::has('error'))
+                    <div class="alert alert-error alert-block">
+                        <i class="icon-alert icon-alert-info"></i>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>This is Error Notification</strong>
+                        <span>{{ Session::get('error') }}</span>
+                    </div>
+                    @endif
                 </div>
             </div>
-        </div>
-        <!--Notifications end-->
+            <!--Notifications end-->
 
-    </div>
+        </div>
     <input type="hidden" name="id" value="{{$article->article_id}}">
     <div class="container-fluid">
         <div class="form-legend" id="Author-Detail">Author Detail
@@ -455,12 +450,11 @@
             <ul class="nav nav-tabs" id="iconsTab">
                 <li class="active"><a data-toggle="tab" href="#existing">Choose From Existing</a></li>
                 <!-- Add Author Section Only if Rights -->
-                <?php //print_r($rights);exit;?>
-                @foreach($rights as $right)
-                @if( $right->label == 'EditPageaddAuthor')
+              
+                @if(count(array_diff(array('9','44','45'), Session::get('user_rights'))) != count(array('9','44','45')))
                 <li class=""><a data-toggle="tab" href="#new">Add A New Author</a></li>
                 @endif
-                @endforeach
+                
             </ul>
             <div class="tab-content">
                 <div id="existing" class="tab-pane fade  active in">
@@ -810,7 +804,7 @@
                     <select name="channel_sel" id="channel_sel" class="required channel_sel formattedelement">
                         <!--<option selected="" value=></option>-->
                         @foreach($channels as $channel)
-                        <option value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                        <option @if($channel->channel_id==$article->channel_id) selected="selected" @endif  value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
                         @endforeach
                     </select>
                     <span for="channel_sel1" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
@@ -826,46 +820,106 @@
                         function(data) {
                         var eventBox = $('#event_id');
                                 eventBox.empty();
-                                eventBox.append("<option selected='' value=''>All</option>");
+                                eventBox.append("<option selected='' value=''>Please Select</option>");
                                 $.each(data, function(index, element) {
                                 eventBox.append("<option value='" + element + "'>" + index + "</option>");
                                 });
+                                $("#event_id").select2();
                         });
                         $.get("{{ url('article/campaign')}}",
                         { option: $(this).attr("value") },
                                 function(data) {
                                 var Box = $('#campaign_id');
                                         Box.empty();
-                                        Box.append("<option selected='' value=''>All</option>");
+                                        Box.append("<option selected='' value=''>Please Select</option>");
                                         $.each(data, function(index, element) {
                                         Box.append("<option value='" + element + "'>" + index + "</option>");
                                         });
+                                      $("#campaign_id").select2();
                                 });
                         $.get("{{ url('article/magazine')}}",
                         { option: $(this).attr("value") },
                                 function(data) {
                                 var Box = $('#magazine_id');
                                         Box.empty();
-                                        Box.append("<option selected='' value=''>All</option>");
+                                        Box.append("<option selected='' value=''>Please Select</option>");
                                         $.each(data, function(index, element) {
                                         Box.append("<option value='" + element + "'>" + index + "</option>");
                                         });
+                                        $("#magazine_id").select2();
                                 });
                         $.get("{{ url('article/dropdown1')}}",
                         { option: $(this).attr("value") + '&level=' },
                                 function(data) {
                                 var Box = $('#selectBoxFilter2');
                                         Box.empty();
-                                        Box.append("<option selected='' value=''>All</option>");
+                                        Box.append("<option selected='' value=''>Please Select</option>");
                                         $.each(data, function(index, element) {
                                         Box.append("<option value='" + element + "'>" + index + "</option>");
                                         });
+                                         $("#selectBoxFilter2").select2();
+                                         $('#selectBoxFilter3').html("<option value=''>Please Select</option>");
+                                         $("#selectBoxFilter3").select2();
+                                         $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
+                                         $('#selectBoxFilter4').select2();
+                                         $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                         $('#selectBoxFilter5').select2();
                                 });
                 });
                 });</script>
         </div>
 
         <!--Select Box with Filter Search end-->
+    </div>
+    
+    <div class="container-fluid">
+        <div class="form-legend" id="Channel">Canonical</div>
+        <div id="Text_Area_Resizable" class="control-group row-fluid">
+               <div class="span3">
+                   <label class="control-label">Is this article published  elsewhere</label>
+               </div>
+               <div class="span3">
+                                <label class="radio">
+
+                                    <input id="ifyes" @if($article->canonical_options==1) checked="checked" @endif type="radio" name="canonical_options" class="uniformRadio" value="1">
+
+                                    Yes
+
+                                </label>
+                   
+                  <!-- <div class="controls">
+                       <input type="radio" value="1" name="canonical_options" id="ifyes" />Yes
+                       <input type="radio"  value="0"name="canonical_options" id="ifno" checked/>No
+                   </div>-->
+               </div>
+                <div class="span3">
+                                <label class="radio">
+
+                                    <input id="ifno" @if($article->canonical_options==0) checked="checked" @endif  type="radio" name="canonical_options" class="uniformRadio" value="0">
+
+                                    No
+
+                                </label>
+                   
+                  <!-- <div class="controls">
+                       <input type="radio" value="1" name="canonical_options" id="ifyes" />Yes
+                       <input type="radio"  value="0"name="canonical_options" id="ifno" checked/>No
+                   </div>-->
+               </div>
+           
+           </div>
+           <div id="canonical" class="control-group row-fluid">
+               <div id="Text_Area_Resizable" class="control-group row-fluid" >
+                   <div class="span3">
+                       <label class="control-label">Enter Canonical Url </label>
+                   </div>
+                   <div class="span9">
+                       <div class="controls">
+                           <input type="text" name="canonical_url" id="canonical_url" value="{{$article->canonical_url}}">
+                       </div>
+                   </div>
+               </div>
+       </div>
     </div>
 
     <div class="container-fluid">
@@ -920,7 +974,21 @@
                                 styleWithCSS: false,
                                 height: 200,
                                 toolbar: 'web2pyToolbar'
-                        });</script>
+                        });
+                                            
+                      $(document).ready(function() { 
+                                      @if($article->canonical_options==0)  
+                                      $("#canonical").addClass("none");
+                                      @endif
+                                    $(':radio[id=ifno]').change(function() {
+                                        $("#canonical").addClass("none");
+                                    });
+                                    $(':radio[id=ifyes]').change(function() {
+                                        $("#canonical").removeClass("none");
+                                        
+                                    });
+                                 });  
+                    </script>
                 </div>
             </div>
         </div>
@@ -1258,7 +1326,7 @@
             <div class="span9">
                 <div class="controls">
                     <select name="magazine" id="magazine_id">
-
+                         <option value="">Please Select</option>
                         @foreach($magazine as $magazines)
                         @if($article->magazine_id == $magazines->magazine_id)
                         <option selected value="{{ $magazines->magazine_id }}">{{ $magazines->title }}</option>
@@ -1266,7 +1334,7 @@
                         <option value="{{ $magazines->magazine_id }}">{{ $magazines->title }}</option>
                         @endif
                         @endforeach
-                        <option @if($article->magazine_id ==0) selected @endif value="">Please Select</option>
+                       
                     </select>
                 </div>
             </div>
@@ -1291,6 +1359,7 @@
             <div class="span9">
                 <div class="controls">
                     <select name="event" id="event_id">
+                         <option value="">Please Select</option>
                         @foreach($event as $events)
                         @if($article->event_id == $events->event_id)
                         <option selected value="{{ $events->event_id }}">{{ $events->title }}</option>
@@ -1298,7 +1367,7 @@
                         <option value="{{ $events->event_id }}">{{ $events->title }}</option>
                         @endif
                         @endforeach
-                        <option @if($article->event_id == 0) selected @endif value="">Please Select</option>
+                       
                     </select>
                 </div>
             </div>
@@ -1323,6 +1392,7 @@
             <div class="span9">
                 <div class="controls">
                     <select name="campaign"  id="campaign_id">
+                         <option value="">Please Select</option>
                         @foreach($campaign as $campaigns)
                         @if($article->campaign_id == $campaigns->campaign_id)
                         <option selected value="{{ $campaigns->campaign_id }}">{{ $campaigns->title }}</option>
@@ -1330,7 +1400,7 @@
                         <option value="{{ $campaigns->campaign_id }}">{{ $campaigns->title }}</option>
                         @endif
                         @endforeach
-                        <option @if($article->campaign_id == 0) selected @endif value="">Please Select</option>
+                       
                     </select>
                     <span for="campaign" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
                     <!--<div class="control-group row-fluid">
@@ -1461,7 +1531,31 @@
 <!--                <li><a data-toggle="tab" href="#tab-example4">Current Photos</a></li>-->
             </ul>
             <div class="tab-content">
-                <div id="tab-example1" class="tab-pane fade">
+                 <div id="tab-example1" class="tab-pane fade">
+                   <div class="control-group row-fluid"> 
+                    <div class="span3">
+                            <label class="radio">
+
+                                <input id="embedcodevideo" type="radio" name="vodeo" class="uniformRadio" value="1">
+
+                                Embed  Video Code
+
+                            </label>
+
+                    </div>
+                    <div class="span3">
+                            <label class="radio">
+
+                                <input id="videoid" type="radio" name="vodeo" class="uniformRadio" value="2">
+
+                                Video
+
+                            </label>
+
+                    </div>
+                   </div>
+                    
+                    <div id="embedcodevideodetails" >
                     <div class="control-group row-fluid">
                         <div class="span3">
                             <label class="control-label">Title</label>
@@ -1503,12 +1597,25 @@
                             </div>
                         </div>
                     </div>
+                    </div>
+                    <div id="videocode">
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Video ID</label>
+                        </div>
+                     <div class="span9">
+                            <div class="controls">
+                                <input type="text" class="valid" name="video_Id" id="video_Id" value="{{$article->video_Id}}"/>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
 <!--                    <div class="control-group row-fluid">
                         <div class="span12 span-inset">
                             <div style="float:right; width:11%; margin-bottom:5px;"><button class="btn btn-warning" id="addvideobutton" name="addvideobutton" type="button" style="display:block;">Submit</button>
                                 <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:50%; display:block; margin-left:15px;"/></div>
                         </div>
-                    </div>-->
+                    </div> -->
                 </div>
 
 <!--                <div id="tab-example4" class="tab-pane fade">
@@ -1559,7 +1666,7 @@
                            <div class="control-group row-fluid">
                         <div class="span3">
                             <label class="control-label" for="inputField">
-                                Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: 680px X 372px) ."><i class="icon-photon info-circle"></i></a>
+                                Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: 680px X 372px) (File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}}  )."><i class="icon-photon info-circle"></i></a>
                             </label>
                         </div>
                         <div class="span9 row-fluid" >
@@ -1839,7 +1946,12 @@
                         </div>
                     </div>
                 </div>-->
+                
             </div>
+            <label class="checkbox" >
+                               <input type="checkbox" name="hide_image" @if($article->hide_image) checked="checked" @endif class="uniformCheckbox2" value="1">
+                                      <a href="javascript:;">Do Not Show Images On Landing Page</a>
+                  </label>
         </div>
         <!-- Uploaded Image and Video Ids -->
         <input type="hidden" id="uploadedImages" name="uploadedImages"/>
@@ -2001,12 +2113,32 @@
                         //event.preventDefault();
                 }//);
 
-        });</script>
+        });
+            
+    
+    $(document).ready(function() {              
+     $("#videocode").addClass("none");                  
+   $(':radio[id=videoid]').change(function() {
+      
+   $("#videocode").removeClass("none");
+   $("#embedcodevideodetails").addClass("none");
+
+
+});
+$(':radio[id=embedcodevideo]').change(function() {
+    
+   $("#embedcodevideodetails").removeClass("none");
+   $("#videocode").addClass("none");
+
+});
+  });   
+    
+    
+    </script>
 
     <!--start container-->
-    @foreach($rights as $right)
-    @if( $right->label == 'EditPageScheduler')
-    @if($article->status=='N' || $article->status=='SD') 
+     @if(in_array('12',Session::get('user_rights')) && $article->status!='P')
+    
     <div class="container-fluid">
 
         <div class="form-legend" id="schedule-for-upload">Schedule For Upload</div>
@@ -2061,8 +2193,7 @@
                     });</script>
     </div>
     @endif
-    @endif
-    @endforeach
+    
 
     <div class="container-fluid">
 
@@ -2114,18 +2245,18 @@
                 @if($article->status=='S' )
                 <button class="btn btn-warning" id="pageSubmit" value="N" name="status" type="submit">Submit</button>
                 @endif
-                @foreach($rights as $right)
-                @if($right->label == 'publishButton')
+               
+                @if(in_array('12',Session::get('user_rights')))
                 @if($article->status!='P' )
                 <button type="submit" name="status" value="P" id="publishSubmit" class="btn btn-success">Publish</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
                 @endif
                 @endif
-                @if($right->label == 'deleteButton')
+                @if(in_array('13',Session::get('user_rights')))
                 @if($article->status!='D')
                 <button type="submit" name="status" value="D" id="dumpSubmit" class="btn btn-danger">Dump</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
                 @endif
                 @endif
-                @endforeach
+                
             </div>
         </div>
     </div>

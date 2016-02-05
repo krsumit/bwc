@@ -48,10 +48,11 @@
                 </script>
         <div class="panel-search container-fluid" style="height: 100px">
             <form class="form-horizontal" action="">
+                <input type="hidden" value="{{$currentChannelId}}" name="channel"/>
                 <input id="panelSearch" required placeholder="Search" type="text" value="{{$_GET['keyword'] or ''}}" name="keyword">
                 <button class="btn btn-search" type="submit"></button>
                 @if(isset($_GET['keyword'])) 
-                <a href="{{url("magazineissue/")}}"><button class="btn btn-default" type="button">Reset</button></a>
+                <a href="{{url("magazineissue")}}?channel={{$currentChannelId}}"><button class="btn btn-default" type="button">Reset</button></a>
                 @endif
 
                 <label class="radio">
@@ -68,6 +69,24 @@
             $().ready(function () {
                 $(".uniformRadio").uniform({
                     radioClass: 'uniformRadio'
+                });
+                
+                $("#selectBoxFilter20").change(function () {
+                    $(this).find("option:selected").each(function () {
+
+                        if ($(this).attr("value").trim().length != 0) {
+
+                            window.location = '{{url("magazineissue")}}' + '?channel=' + $(this).attr("value").trim();
+                        }
+
+                        else if ($(this).attr("value") == "none") {
+
+                            $("#quote_list").hide();
+
+                        }
+
+                    });
+
                 });
 
             });
@@ -166,9 +185,8 @@
                 <div class="span9">
                     <div class="controls">
                         <select name="channel" id="selectBoxFilter20">
-                            <option value="">--select Channel--</option>
-                            @foreach($channels as $channel)
-                       <option value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                        @foreach($channels as $channel)
+                       <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
                         @endforeach
                         </select>
                     </div>
@@ -481,7 +499,7 @@
                        // alert(2);
                         var ids = checkedVals.join(",");
                         //alert(ids);return false;
-                        $.get("{{ url('/magazineissue/delete/')}}",
+                        $.get("{{ url('/magazineissue/delete/?channel=').$currentChannelId}}",
                                 {option: ids},
                         function (data) {
                             $.each(checkedVals, function (i, e) {

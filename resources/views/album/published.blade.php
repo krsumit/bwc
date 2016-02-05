@@ -12,12 +12,13 @@
         </div>
         <div class="panel-search container-fluid" style="height: 100px">
             <form class="form-horizontal" action="">
+                <input type="hidden" value="{{$currentChannelId}}" name="channel" />
                 <input id="panelSearch" required placeholder="Search" type="text" value="{{$_GET['keyword'] or ''}}" name="keyword">
                 <button class="btn btn-search" type="submit"></button>
                 @if(isset($_GET['searchin'])) 
-                <a href="{{url("album/list/published")}}"><button class="btn btn-default" type="button">Reset</button></a>
+                <a href="{{url("album/list/published?channel=").$currentChannelId}}"><button class="btn btn-default" type="button">Reset</button></a>
                 @endif
-               
+
                 <label class="radio">
                     <input type="radio"  @if(isset($_GET['searchin'])) @if($_GET['searchin']=='title') checked @endif @endif required name="searchin" class="uniformRadio" value="title">
                            Search by Article Title
@@ -99,6 +100,58 @@
         <h2><small>Published Album</small></h2>
 
     </header>
+    <div class="form-horizontal">
+
+        <div class="container-fluid">
+
+            <div class="form-legend" id="Channel">Channel</div>
+
+            <!--Select Box with Filter Search begin-->
+            <div  class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="channel_sel">Channel</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <select name="channel_sel" id="channel_sel" class="required channel_sel formattedelement">
+                            @foreach($channels as $channel)
+                            <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                            @endforeach
+                        </select>
+
+                    </div>
+                </div>
+                <script>
+                    $().ready(function () {
+                        $("#channel_sel").select2();
+                        
+                        $("#channel_sel").change(function () {
+                        $(this).find("option:selected").each(function () {
+
+                            if ($(this).attr("value").trim().length != 0) {
+
+                                window.location = '{{url("album/list/published")}}' + '?channel=' + $(this).attr("value").trim();
+                            }
+
+                            else if ($(this).attr("value") == "none") {
+
+                                $("#quote_list").hide();
+
+                            }
+
+                        });
+
+                    });
+
+                        
+                        
+                    });</script>
+            </div>
+
+            <!--Select Box with Filter Search end-->
+        </div>
+    </div>
+
     <form class="form-horizontal">
         <div class="container-fluid " id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
@@ -148,7 +201,7 @@
                         <tbody>
                             @foreach($albums as $qb)
                             <?php //print_r($qb);exit;?>
-<?php //echo '<pre>'; print_r($qb);exit;  ?>
+                            <?php //echo '<pre>'; print_r($qb);exit;  ?>
                             <tr class="gradeX" id="rowCur{{$qb->id}}">
                                 <td>{{$qb->id}}
                                     <!--<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="No. of Photos"><i class="icon-photon info-circle"></i></a> -->
@@ -165,19 +218,18 @@
                 </div>
             </div>
             <!--Sortable Responsive Media Table end-->
-             <div class="dataTables_paginate paging_bootstrap pagination">
-                    
+            <div class="dataTables_paginate paging_bootstrap pagination">
+
                 {!! $albums->appends(Input::get())->render() !!}
-                </div>
+            </div>
         </div><!-- end container -->
         <script>
             $(document).ready(function () {
                 $('#tableSortable, #tableSortableRes, #tableSortableResMed').dataTable({
                     bInfo: false,
-                     bPaginate:false,
-                     "aaSorting": [] ,
-                     "aoColumnDefs": [ { "bSortable": false, "aTargets": [4] } ],
-
+                    bPaginate: false,
+                    "aaSorting": [],
+                    "aoColumnDefs": [{"bSortable": false, "aTargets": [4]}],
                     "fnInitComplete": function () {
                         $(".dataTables_wrapper select").select2({
                             dropdownCssClass: 'noSearch'
@@ -187,45 +239,45 @@
                 //                            $("#simpleSelectBox").select2({
                 //                                dropdownCssClass: 'noSearch'
                 //                            });
-                $('#selectall').click(function(){
-                   if($(this).is(':checked')) {
-                       $('input[name="checkItem[]"]').each(function(){
-                           $(this).attr('checked','checked');
-                       });
-                   }else{
-                        $('input[name="checkItem[]"]').each(function(){
-                           $(this).removeAttr('checked');
-                       });
-                   }
+                $('#selectall').click(function () {
+                    if ($(this).is(':checked')) {
+                        $('input[name="checkItem[]"]').each(function () {
+                            $(this).attr('checked', 'checked');
+                        });
+                    } else {
+                        $('input[name="checkItem[]"]').each(function () {
+                            $(this).removeAttr('checked');
+                        });
+                    }
                 });
             });
             function deleteAlbum() {
-                        var ids = '';
-                        var checkedVals = $('input[name="checkItem[]"]:checkbox:checked').map(function () {
-                            var row = 'rowCur' + this.value;
-                            $("#" + row).hide();
-                            return this.value;
-                        }).get();
-                        var ids = checkedVals.join(",");
-                        //alert(ids);return false;
-                        $.get("{{ url('/album/delete/')}}",
-                                {option: ids},
-                        function (data) {
-                            $.each(checkedVals, function (i, e) {
-                                var row = 'rowCur' + e;
-                                $("#" + row).hide();
-                            });
-                            $('#notificationdiv').show();
-                            $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
+                var ids = '';
+                var checkedVals = $('input[name="checkItem[]"]:checkbox:checked').map(function () {
+                    var row = 'rowCur' + this.value;
+                    $("#" + row).hide();
+                    return this.value;
+                }).get();
+                var ids = checkedVals.join(",");
+                //alert(ids);return false;
+                $.get("{{ url('/album/delete/?channel=').$currentChannelId}}",
+                        {option: ids},
+                function (data) {
+                    $.each(checkedVals, function (i, e) {
+                        var row = 'rowCur' + e;
+                        $("#" + row).hide();
+                    });
+                    $('#notificationdiv').show();
+                    $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
                                 <i class="icon-alert icon-alert-info"></i><button type="button" class="close" data-dismiss="alert">\n\
                                 &times;</button><strong>This is Success Notification</strong>\n\
                                 <span></span>Selected records dumped.</div>');
-                           
-                            //alert(1);
-                        });
-               }
+
+                    //alert(1);
+                });
+            }
         </script>
-        
+
         <div class="control-group row-fluid">
             <div class="span12 span-inset">
                 <button type="button" onclick="deleteAlbum();" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>

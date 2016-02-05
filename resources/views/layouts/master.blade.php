@@ -49,6 +49,7 @@
 <script type="text/javascript" src="{{ asset('js/plugins/select2.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/jquery-picklist.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/jquery.validate.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/plugins/jquery.validate.file.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/additional-methods.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/jquery.form.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/jquery.metadata.js') }}"></script>

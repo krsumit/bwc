@@ -13,14 +13,15 @@
         </div>
         <div class="panel-search container-fluid">
             <form class="form-horizontal" method="get" action="">
-                    <input id="panelSearch" required  placeholder="Search" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">
-                    
-                    <button class="btn btn-search" type="submit"></button>
-                     @if(isset($_GET['keyword'])) 
-                     <a href="/event/published"><button class="btn btn-default" type="button">Reset</button></a>
-                   @endif
+                <input type="hidden" name="channel" value="{{$currentChannelId}}"/>
+                <input id="panelSearch" required  placeholder="Search" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">
 
-             </form>
+                <button class="btn btn-search" type="submit"></button>
+                @if(isset($_GET['keyword'])) 
+                <a href="/event/published"><button class="btn btn-default" type="button">Reset</button></a>
+                @endif
+
+            </form>
         </div>
 
         <div class="panel-header">
@@ -28,35 +29,34 @@
         </div> 
         <script type="text/javascript">
             $(function () {
-                $("#jstree").jstree({
-                    "json_data": {
-                        "data": [
-                            {
-                                "data": {
-                                    "title": "Sort By",
-                                    "attr": {"href": "#Simple_Select_Box_with_Filter_Search"}
-                                }
-                            },
-                            {
-                                "data": {
-                                    "title": "Published Events",
-                                    "attr": {"href": "#tableSortable_wrapper"}
-                                }
-                            },
-                        ]
-                    },
+            $("#jstree").jstree({
+            "json_data": {
+            "data": [
+            {
+            "data": {
+            "title": "Sort By",
+                    "attr": {"href": "#Simple_Select_Box_with_Filter_Search"}
+            }
+            },
+            {
+            "data": {
+            "title": "Published Events",
+                    "attr": {"href": "#tableSortable_wrapper"}
+            }
+            },
+            ]
+            },
                     "plugins": ["themes", "json_data", "ui"]
-                })
-                        .bind("click.jstree", function (event) {
-                            var node = $(event.target).closest("li");
+            })
+                    .bind("click.jstree", function (event) {
+                    var node = $(event.target).closest("li");
                             document.location.href = node.find('a').attr("href");
                             return false;
-                        })
-                        .delegate("a", "click", function (event, data) {
-                            event.preventDefault();
-                        });
-            });
-        </script>
+                    })
+                    .delegate("a", "click", function (event, data) {
+                    event.preventDefault();
+                    });
+            });        </script>
         <div class="sidebarMenuHolder">
             <div class="JStree">
                 <div class="Jstree_shadow_top"></div>
@@ -86,37 +86,82 @@
         <i class="icon-big-notepad"></i>
         <h2><small>Published Events</small></h2>
     </header>
-    <form class="form-horizontal" action="" method="get">
+    <div class="form-horizontal">
 
-       <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
+        <div class="container-fluid">
 
-                <div class="form-legend" id="Notifications">Notifications</div>
+            <div class="form-legend" id="Channel">Channel</div>
 
-                <!--Notifications begin-->
-                <div class="control-group row-fluid" >
-                    <div class="span12 span-inset">
-                        @if (Session::has('message'))
-                        <div class="alert alert-success alert-block" style="">
-                            <i class="icon-alert icon-alert-info"></i>
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <strong>This is Success Notification</strong>
-                            <span>{{ Session::get('message') }}</span>
-                        </div>
-                        @endif
-                        
-                        @if (Session::has('error'))
-                        <div class="alert alert-error alert-block">
-                            <i class="icon-alert icon-alert-info"></i>
-                            <button type="button" class="close" data-dismiss="alert">&times;</button>
-                            <strong>This is Error Notification</strong>
-                            <span>{{ Session::get('error') }}</span>
-                        </div>
-                        @endif
+            <!--Select Box with Filter Search begin-->
+            <div  class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="channel_sel">Channel</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <select name="channel_sel" id="channel_sel" class="required channel_sel formattedelement">
+                            @foreach($channels as $channel)
+                            <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                            @endforeach
+                        </select>
+
                     </div>
                 </div>
-                <!--Notifications end-->
+                <script>
+                            $().ready(function () {
+                    $("#channel_sel").select2();
+                    $("#channel_sel").change(function () {
+                    $(this).find("option:selected").each(function () {
 
+                    if ($(this).attr("value").trim().length != 0) {
+
+                    window.location = '{{url("event/published")}}' + '?channel=' + $(this).attr("value").trim();
+                    }
+
+                    else if ($(this).attr("value") == "none") {
+
+                    $("#quote_list").hide();
+                    }
+
+                    });
+                    });
+                    });                </script>
             </div>
+
+            <!--Select Box with Filter Search end-->
+        </div>
+    </div>
+    <form class="form-horizontal" action="" method="get">
+        <input type="hidden" name="channel" value="{{$currentChannelId}}"/>
+        <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
+
+             <div class="form-legend" id="Notifications">Notifications</div>
+
+            <!--Notifications begin-->
+            <div class="control-group row-fluid" >
+                <div class="span12 span-inset">
+                    @if (Session::has('message'))
+                    <div class="alert alert-success alert-block" style="">
+                        <i class="icon-alert icon-alert-info"></i>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>This is Success Notification</strong>
+                        <span>{{ Session::get('message') }}</span>
+                    </div>
+                    @endif
+
+                    @if (Session::has('error'))
+                    <div class="alert alert-error alert-block">
+                        <i class="icon-alert icon-alert-info"></i>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>This is Error Notification</strong>
+                        <span>{{ Session::get('error') }}</span>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            <!--Notifications end-->
+
+        </div>
 
         <div class="container-fluid">
 
@@ -129,60 +174,56 @@
                 </div>
                 <div class="span9">
                     <div class="controls">
-                       <select name="country" id="selectBoxFilter6">
-                        <option  value="">Please Select</option>
-                        @foreach($country as $countrye)
-                        <option value="{{ $countrye->country_id }}">{{ $countrye->name }}</option>
-                        @endforeach	                                        
-                    </select>
+                        <select name="country" id="selectBoxFilter6">
+                            <option  value="">Please Select</option>
+                            @foreach($country as $countrye)
+                            <option value="{{ $countrye->country_id }}">{{ $countrye->name }}</option>
+                            @endforeach	                                        
+                        </select>
                     </div>
                 </div>
                 <script>
-                    $().ready(function () {
-                        $("#selectBoxFilter").select2();
+                            $().ready(function () {
+                    $("#selectBoxFilter").select2();
                     });
-                </script>
+                    });                </script>
             </div>
             <!--Select Box with Filter Search end-->
             <!--Select Box with Filter Search begin-->
             <div id="tabState">
-            <div id="Simple_Select_Box_with_Filter_Search" class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Sort By Type</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <select name="state" id="selectBoxFilter7">
-                            <option value="">Please Select</option>
-                            @foreach($states as $state)
-                            <option value="{{ $state->state_id}}">{{ $state->name }}</option>		
-                            @endforeach
-                        </select>
+                <div id="Simple_Select_Box_with_Filter_Search" class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label" for="selectBoxFilter">Sort By Type</label>
                     </div>
-                </div>
-            </div>  
+                    <div class="span9">
+                        <div class="controls">
+                            <select name="state" id="selectBoxFilter7">
+                                <option value="">Please Select</option>
+                                @foreach($states as $state)
+                                <option value="{{ $state->state_id}}">{{ $state->name }}</option>		
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>  
             </div>
             <!--Select Box with Filter Search end-->
 
-                    <script>
-                        $(document).ready(function(){
-                        $("#selectBoxFilter6").select2();
-                        $("#selectBoxFilter6").change(function(){
-                        $(this).find("option:selected").each(function(){
-                        if ($(this).attr("value") == "1"){
-                        $("#tabState").show();
-                       
-                        } else{
-                        $("#selectBoxFilter7").select2();
+            <script>
+                        $(document).ready(function () {
+                $("#selectBoxFilter6").select2();
+                        $("#selectBoxFilter6").change(function () {
+                $(this).find("option:selected").each(function () {
+                if ($(this).attr("value") == "1") {
+                $("#tabState").show();
+                } else {
+                $("#selectBoxFilter7").select2();
                         $("#tabState").hide();
-                        
-                        }
+                }
 
-                        });
-                        }).change();
-                        });
-                                           
-                </script>
+                });
+                }).change();
+                });            </script>
 
             <!--Select Box with Filter Search begin-->
             <div id="Simple_Select_Box_with_Filter_Search" class="control-group row-fluid">
@@ -199,16 +240,15 @@
 
             </div>
             <script>
-                $(function () {
-                    $("#datepicker").datepicker();
-                    $("#datepickerInline").datepicker();
-                    $("#datepickerMulti").datepicker({
+                        $(function () {
+                        $("#datepicker").datepicker();
+                                $("#datepickerInline").datepicker();
+                                $("#datepickerMulti").datepicker({
                         numberOfMonths: 3,
-                        showButtonPanel: true
-                    });
-                    $('#timeEntry').timeEntry().change();
-                });
-            </script> 
+                                showButtonPanel: true
+                        });
+                                $('#timeEntry').timeEntry().change();
+                        });            </script> 
             <div id="Simple_Select_Box_with_Filter_Search" class="control-group row-fluid">
                 <div class="span3">
                     <label class="control-label" for="datepicker">
@@ -222,16 +262,15 @@
                 </div>
             </div>
             <script>
-                $(function () {
-                    $("#datepicker2").datepicker();
-                    $("#datepickerInline").datepicker();
-                    $("#datepickerMulti").datepicker({
+                        $(function () {
+                        $("#datepicker2").datepicker();
+                                $("#datepickerInline").datepicker();
+                                $("#datepickerMulti").datepicker({
                         numberOfMonths: 3,
-                        showButtonPanel: true
-                    });
-                    $('#timeEntry').timeEntry().change();
-                });
-            </script> 
+                                showButtonPanel: true
+                        });
+                                $('#timeEntry').timeEntry().change();
+                        });            </script> 
 
             <div class="span12 span-inset">
                 <button type="submit" class="btn btn-info">Search</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
@@ -264,82 +303,78 @@
                                 <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$a->event_id}}" name="checkItem[]"></td>
                             </tr>
                             @endforeach
-        
+
                         </tbody>
                     </table>
                 </div>
             </div>
             <!--Sortable Non-responsive Table end-->
 
- <div class="dataTables_paginate paging_bootstrap pagination">
-                    
-                 {!! $posts->appends(Input::get())->render() !!}
-                </div>
+            <div class="dataTables_paginate paging_bootstrap pagination">
+
+                {!! $posts->appends(Input::get())->render() !!}
+            </div>
             <script>
-               $(document).ready(function () {
+                        $(document).ready(function () {
                 $('#tableSortable').dataTable({
-                     bInfo: false,
-                              bPaginate:false,
-                              "aaSorting": [] ,
-                              "aoColumnDefs": [ { "bSortable": false, "aTargets": [4] } ],
-                            "fnInitComplete": function(){
-                                $(".dataTables_wrapper select").select2({
-                                    dropdownCssClass: 'noSearch'
-                                });
-                            }
+                bInfo: false,
+                        bPaginate: false,
+                        "aaSorting": [],
+                        "aoColumnDefs": [{"bSortable": false, "aTargets": [4]}],
+                        "fnInitComplete": function () {
+                        $(".dataTables_wrapper select").select2({
+                        dropdownCssClass: 'noSearch'
+                        });
+                        }
                 });
-                //                            $("#simpleSelectBox").select2({
-                //                                dropdownCssClass: 'noSearch'
-                //                            }); 
-                
-                
-                 $('#selectall').click(function(){
-                            if($(this).is(':checked')) {
-                                $('input[name="checkItem[]"]').each(function(){
-                                    $(this).attr('checked','checked');
-                                });
-                            }else{
-                                 $('input[name="checkItem[]"]').each(function(){
-                                    $(this).removeAttr('checked');
-                                });
-                            }
-                         });
-            });
-            
-             function deleteAuthor() {
+                        //                            $("#simpleSelectBox").select2({
+                        //                                dropdownCssClass: 'noSearch'
+                        //                            }); 
+
+
+                        $('#selectall').click(function () {
+                if ($(this).is(':checked')) {
+                $('input[name="checkItem[]"]').each(function () {
+                $(this).attr('checked', 'checked');
+                });
+                } else {
+                $('input[name="checkItem[]"]').each(function () {
+                $(this).removeAttr('checked');
+                });
+                }
+                });
+                });
+                        function deleteAuthor() {
                         var ids = '';
-                        var checkedVals = $('input[name="checkItem[]"]:checkbox:checked').map(function () {
-                            var row = 'rowCur' + this.value;
-                           
-                            return this.value;
+                                var checkedVals = $('input[name="checkItem[]"]:checkbox:checked').map(function () {
+                        var row = 'rowCur' + this.value;
+                                return this.value;
                         }).get();
-                        
-                       // alert(2);
-                        var ids = checkedVals.join(",");
-                        //alert(ids);return false;
-                        $.get("{{ url('/event/delete/')}}",
+                                // alert(2);
+                                var ids = checkedVals.join(",");
+                                //alert(ids);return false;
+                                $.get("{{ url('/event/delete?channel=').$currentChannelId}}",
                                 {option: ids},
-                        function (data) {
-                            $.each(checkedVals, function (i, e) {
-                                var row = 'rowCur' + e;
-                                $("#" + row).remove();
-                            });
-                            $('#notificationdiv').show();
-                            $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
+                                        function (data) {
+                                        $.each(checkedVals, function (i, e) {
+                                        var row = 'rowCur' + e;
+                                                $("#" + row).remove();
+                                        });
+                                                $('#notificationdiv').show();
+                                                $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
                                 <i class="icon-alert icon-alert-info"></i><button type="button" class="close" data-dismiss="alert">\n\
                                 &times;</button><strong>This is Success Notification</strong>\n\
                                 <span></span>Selected records dumped.</div>');
-                           
-                            //alert(1);
-                        });
-                    }
+                                                //alert(1);
+                                        });
+                        }
             </script>
         </div><!-- end container -->
-         <div class="control-group row-fluid">
-                <div class="span12 span-inset">
-                 <button type="button" onclick="deleteAuthor()" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>							
+        <div class="control-group row-fluid">
+            <div class="span12 span-inset">
+                <button type="button" onclick="deleteAuthor()" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>							
             </div>
-          </div>
+        </div>
     </form>
 </div>
 @stop

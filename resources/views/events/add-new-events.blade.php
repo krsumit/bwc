@@ -139,9 +139,8 @@
                 <div class="span9">
                     <div class="controls">
                         <select name="channel" id="selectBoxFilter20">
-                            <option value="">Please select </option>
                             @foreach($channels as $channel)
-                       <option value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                       <option @if($channel->channel_id == $currentChannelId) @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
                         @endforeach
                         </select>
                     </div>
@@ -186,7 +185,7 @@
 
             <div id="File_Upload" class="control-group row-fluid">
                 <div class="span3">
-                    <label class="control-label">Upload Image</label>
+                    <label class="control-label">Upload Image(File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}})</label>
                 </div>
                 <div class="span9">
                     <div class="fileupload fileupload-new" data-provides="fileupload">
@@ -198,7 +197,7 @@
             </div>
              <div  class="control-group row-fluid">
                 <div class="span3">
-                    <label class="control-label">Image Url </label>
+                    <label class="control-label">Event Page Url </label>
                 </div>
                 <div class="span9">
                     <div class="controls">

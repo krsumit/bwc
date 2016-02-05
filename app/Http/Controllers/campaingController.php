@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 use Redirect;
 use Illuminate\Http\Request;
 use DB;
+use App\Right;
 use Auth;
 use Session;
 use App\Http\Requests;
@@ -16,13 +17,30 @@ class campaingController extends Controller
      *
      * @return Response
      */
+    private $rightObj;
+    
+    public function __construct() {
+        $this->rightObj = new Right();
+    }
+    
     public function index()
     {
-         if(isset($_GET['keyword'])){
+        
+        /* Right mgmt start */
+        $rightId = 30;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+        
+        
+        
+        if(isset($_GET['keyword'])){
             $queryed = $_GET['keyword'];
             $posts = DB::table('campaign')
 		->select('campaign.*')
-               
+                ->where('channel_id','=',$currentChannelId)
                 ->where('campaign.valid', '=', '1')
                 ->where('campaign.title', 'LIKE', '%'.$queryed.'%')
 		->paginate(10);  
@@ -30,23 +48,14 @@ class campaingController extends Controller
         }else {
          $posts = DB::table('campaign')
 		->select('campaign.*')
-               
+                ->where('channel_id','=',$currentChannelId)
                 ->where('campaign.valid', '=', '1')
                     
 		->paginate(10);
         }   
         $uid = Session::get('users')->id;
-        $channels = DB::table('channels')
-                ->join('rights', 'rights.pagepath', '=', 'channels.channel_id')
-                ->join('user_rights', 'user_rights.rights_id', '=', 'rights.rights_id')
-                ->select('channels.*')
-                ->where('rights.label', '=', 'channel')
-                ->where('user_rights.user_id', '=', $uid)
-                ->orderBy('channel')
-                ->get();
-                
-                
-        return view('articles.campaing-managment',compact('posts','channels'));
+        
+        return view('articles.campaing-managment',compact('posts','channels','currentChannelId'));
     }
  
 
@@ -129,7 +138,7 @@ class campaingController extends Controller
        
         Session::flash('message', 'Your data has been successfully add.');
         }
-        return Redirect::to('campaing/add-management');
+        return Redirect::to('campaing/add-management?channel='.$request->channel);
        
     }
 

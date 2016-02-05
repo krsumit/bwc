@@ -144,11 +144,26 @@
             {!! Form::open(array('url'=>'rights/','class'=> 'form-horizontal','id'=>'form1')) !!}
             {!! csrf_field() !!}
                 
-                <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
+            <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')) && (count($errors->all())==0) )style="display: none" @endif >
 
                 <div class="form-legend" id="Notifications">Notifications</div>
 
                 <!--Notifications begin-->
+                <div class="control-group row-fluid">
+                    <div class="span12 span-inset">
+                        @if (count($errors) > 0)
+                        <div class="alert alert-error alert-block">
+                            <i class="icon-alert icon-alert-info"></i>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>This is Error Notification</strong>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                            <!--<span>Please select a valid search criteria.</span>-->
+                        </div>
+                        @endif				
+                    </div>
+                </div>
                 <div class="control-group row-fluid" >
                     <div class="span12 span-inset">
                         @if (Session::has('message'))
@@ -238,7 +253,7 @@
                                                         <select name="role" id="simpleSelectBox" value="{{old('role')}}">
                                                             <option selected="" value="">---Please Select---</option>                                                            
                                                             @foreach($roles as $role)
-                                                            <option value="{{$role->user_types_id}}">{{$role->label}}</option>
+                                                            <option value="{{$role->id}}">{{$role->name}}</option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -279,7 +294,7 @@
                                                    @foreach($allchannel as $channel)
                                                     <div class="span3">
                                                         <label class="radio">
-                                                            <input type="checkbox"    name="rightArr[]" class="uniformRadio" value="{{$rightChannels[$channel->channel_id]}}">
+                                                            <input type="checkbox"    name="rightArr[]" class="uniformRadio" value="{{$channel->channel_id}}">
                                                            {{$channel->channel}}
                                                         </label>
                                                     </div>

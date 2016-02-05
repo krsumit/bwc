@@ -49,7 +49,7 @@ class TipTagsController extends Controller
      * @return Response
      */
     public function store(Request $request)
-    {
+    {   
         //
         $uid = $request->id;
 

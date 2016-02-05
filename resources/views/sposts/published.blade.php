@@ -14,6 +14,7 @@
         </div>
         <div class="panel-search container-fluid">
             <form class="form-horizontal" action="javascript:;">
+                 <input type="hidden" value="{{$currentChannelId}}" name="channel" />
                 <input id="panelSearch" placeholder="Search" type="text" name="panelSearch">
                 <button class="btn btn-search"></button>
                 
@@ -76,13 +77,18 @@
                     }).get();
                     var ids = checkedVals.join(",");
                     //alert(ids);
-                    $.get("{{ url('/sposts/delete/')}}",
+                    $.get("{{ url('/sposts/delete/?channel=').$currentChannelId}}",
                             { option: ids },
                             function(data) {
                                 $.each(checkedVals, function (i, e) {
                                     var row = 'rowCur' + e;
                                     $("#" + row).hide();
                                 });
+                                $('#notificationdiv').show();
+                                $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
+                            <i class="icon-alert icon-alert-info"></i><button type="button" class="close" data-dismiss="alert">\n\
+                            &times;</button><strong>This is Success Notification</strong>\n\
+                            <span></span>Selected records dumped.</div>');
                             });
                 }
     </script>
@@ -115,6 +121,59 @@
                <i class="icon-big-notepad"></i>
                <h2><small>Published Sponsored Posts</small></h2>
            </header>
+
+           <div class="form-horizontal">
+
+        <div class="container-fluid">
+
+            <div class="form-legend" id="Channel">Channel</div>
+
+            <!--Select Box with Filter Search begin-->
+            <div  class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="channel_sel">Channel</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <select name="channel_sel" id="channel_sel" class="required channel_sel formattedelement">
+                            @foreach($channels as $channel)
+                            <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                            @endforeach
+                        </select>
+
+                    </div>
+                </div>
+                <script>
+                    $().ready(function () {
+                        $("#channel_sel").select2();
+                        
+                        $("#channel_sel").change(function () {
+                        $(this).find("option:selected").each(function () {
+
+                            if ($(this).attr("value").trim().length != 0) {
+
+                                window.location = '{{url("sposts/list/published")}}' + '?channel=' + $(this).attr("value").trim();
+                            }
+
+                            else if ($(this).attr("value") == "none") {
+
+                                $("#quote_list").hide();
+
+                            }
+
+                        });
+
+                    });
+
+                        
+                        
+                    });</script>
+            </div>
+
+            <!--Select Box with Filter Search end-->
+        </div>
+    </div>
+
            <form class="form-horizontal">
             
 		 <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >

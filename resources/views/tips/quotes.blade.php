@@ -2,10 +2,6 @@
 
 @section('title', 'Quotes - BWCMS')
 @section('content')
-<?php
-//print_r($input = Request::input('channel'));exit;
-
-?>
 
     <div class="panel">
         <div class="panel-content filler">

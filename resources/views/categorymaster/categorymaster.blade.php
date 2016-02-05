@@ -1,8 +1,6 @@
 @extends('layouts/master')
 
 @section('title', 'Add-edit-Master category - BWCMS')
-
-
 @section('content')
 <div class="panel">
     <div class="panel-content filler">
@@ -12,10 +10,11 @@
         </div>		
         <div class="panel-search container-fluid">
              <form class="form-horizontal" method="get" action="">
+                 <input type="hidden" name="channel" value="{{$currentChannelId}}"/>
                     <input id="panelSearch" required  placeholder="Search" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">
                     <button class="btn btn-search" type="submit"></button>
                      @if(isset($_GET['keyword'])) 
-                    <a href="{{url("category/add-master-category")}}"><button class="btn btn-default" type="button">Reset</button></a>
+                    <a href="{{url("category/add-master-category?channel=").$currentChannelId}}"><button class="btn btn-default" type="button">Reset</button></a>
                     @endif
 
              </form>
@@ -127,9 +126,8 @@
                 <div class="span9">
                     <div class="controls">
                         <select name="channel" id="selectBoxFilter20">
-                            <option selected="" value="">-select channel-</option>
                             @foreach($channels as $channel)
-                       <option value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                       <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
                         @endforeach
                            
                         </select>
@@ -138,6 +136,21 @@
                 <script>
                     $().ready(function () {
                         $("#selectBoxFilter20").select2();
+                           $("#selectBoxFilter20").change(function () {
+                            $(this).find("option:selected").each(function () {
+
+                                if ($(this).attr("value").trim().length != 0) {
+
+                                window.location = '{{url("category/add-master-category")}}' + '?channel=' + $(this).attr("value").trim();
+                            }
+
+                            else if ($(this).attr("value") == "none") {
+
+                            $("#quote_list").hide();
+                        }
+
+                        });
+                    });
                     });
                 </script>
             </div>
@@ -255,7 +268,7 @@
                        // alert(2);
                         var ids = checkedVals.join(",");
                         //alert(ids);return false;
-                        $.get("{{ url('/mastercategory/delete/')}}",
+                        $.get("{{ url('/mastercategory/delete/?channel=').$currentChannelId}}",
                                 {option: ids},
                         function (data) {
                             $.each(checkedVals, function (i, e) {

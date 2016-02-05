@@ -4,7 +4,7 @@
 
 
 @section('content')
-
+ <style> .none { display:none; } </style>
 <div class="panel">
     <div class="panel-content filler">
         <div class="panel-logo"></div>
@@ -23,11 +23,22 @@
              alert('here in 3');
              return false;
              } */
+             $('#draftSubmit').click(function(){
+               $("#fileupload").validate().cancelSubmit = true;
+             });
+             $('#dumpSubmit').click(function(){
+               $('span.error').remove();
+               $('div.error.noborder').remove();
+               $('.error').removeClass('error');
+             });             
+             
             $('#pageSubmit').click(doClick);
+            $('#saveSchedule').click(doClick);
             $('#publishSubmit').click(doClick);
                     //$('#dumpSubmit').click(doClick);
                             //$('#pageSubmit','#dumpSubmit','#publishSubmit').click(function() {}
                                     function doClick(){ 
+                                       // alert(1);
                                         var checkvalid=1;
                                         //alert(1);
                                     //$('.btn-success').click(function() {}
@@ -42,14 +53,44 @@
                                         $('.elrte-wrapper').after('<span class="error elrte-error" style="display:block;" >Article description is required. </span>');
                                         checkvalid=0;
                                     }
- 
+//                                    else if (as.length < 500 || as.length > 80000){
+//                                         //alert(2);
+//                                                $('.elrte-wrapper').after('<span class="error elrte-error" style="display:block;">Please enter a text between 500 and 80000 characters long in Article Description</span>');
+//                                    //alert('Please enter a text between 500 and 80000 characters long in Article Description');
+//                                            $('#maxi').focus();
+//                                            checkvalid=0;
+//                                            //return false;
+//                                    }   
+//                                    if($('#channel_sel').val() == '')
+//                                     {
+//                                     alert('Please Select Channel');
+//                                     $('#channel_sel').focus();
+//                                     return false;
+//                                     }
+                                    
+//                                    if ($('#simpleSelectAuthor').val() == '') {
+//                                            alert('Please Select Author Type');
+//                                            $('#simpleSelectAuthor').focus();
+//                                            return false;
+//                                    } else 
                                     if (($('#authortype').val() != '') && ($('#authortype').val() != '1') && $('#simpleSelectBox1').val() == '') {
                                             //alert('Please Select Author Name');
                                             $('#simpleSelectBox1').after('<span class="error author-error">Author name is required.</span>');
                                             $('#simpleSelectBox1').siblings('div').addClass('error');
                                            checkvalid=0;
                                     }
+//                                    if ($('#selectBoxFilter2').val() == '')
+//                                    {
+//                                    alert('Please Select Category from DropDown');
+//                                            $('#selectBoxFilter2').focus();
+//                                             checkvalid=0;
+//                                    }
+//                                    
+                                   
+                                    
                                      $("#fileupload").validate({
+                                         
+                                      
                                     errorElement: "span",
                                             errorClass: "error",
                                             //$("#pageSubmit").onclick: true,
@@ -182,20 +223,14 @@
                                     "attr" : { "href" : "#photos-videos" }
                             }
                             },
-<?php
-foreach ($rights as $r) {
-    if ($r->label == 'articleScheduler') {
-        ?>
+                            @if(in_array('12',Session::get('user_rights')))
                                     {
                                     "data" : {
                                     "title" : "Schedule for Upload",
                                             "attr" : { "href" : "#schedule-for-upload" }
                                     }
                                     },
-        <?php
-    }
-}
-?>
+                             @endif
 
 
                             ]
@@ -275,44 +310,37 @@ foreach ($rights as $r) {
         <h2><small>New Article</small></h2>
         <h3><small>{{ $userTup->name or '' }}</small></h3>
     </header>
-    {!! Form::open(array('url'=>'article','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
+    {!! Form::open(array('url'=>'article/','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
     {!! csrf_field() !!}
-    <div class="container-fluid">
+  <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
-        <div class="form-legend" id="Notifications">Notifications</div>
+             <div class="form-legend" id="Notifications">Notifications</div>
 
-        <!--Notifications begin-->
-        <div class="control-group row-fluid" style="display:none">
-            <div class="span12 span-inset">
-                <div class="alert alert-success alert-block">
-                    <i class="icon-alert icon-alert-info"></i>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>This is Success Notification</strong>
-                    <span>Your data has been successfully modified.</span>
-                </div>
-                <div class="alert alert-block">
-                    <i class="icon-alert icon-alert-info"></i>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>This is Alert Notification</strong>
-                    <span>No result found.</span>
-                </div>
-                <div class="alert alert-error alert-block">
-                    <i class="icon-alert icon-alert-info"></i>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>This is Error Notification</strong>
-                    <span>Please select a valid search criteria.</span>
-                </div>
-                <div class="alert alert-error alert-block">
-                    <i class="icon-alert icon-alert-info"></i>
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    <strong>This is Error Notification</strong>
-                    <span>Please enter a valid email id.</span>
+            <!--Notifications begin-->
+            <div class="control-group row-fluid" >
+                <div class="span12 span-inset">
+                    @if (Session::has('message'))
+                    <div class="alert alert-success alert-block" style="">
+                        <i class="icon-alert icon-alert-info"></i>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>This is Success Notification</strong>
+                        <span>{{ Session::get('message') }}</span>
+                    </div>
+                    @endif
+
+                    @if (Session::has('error'))
+                    <div class="alert alert-error alert-block">
+                        <i class="icon-alert icon-alert-info"></i>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>This is Error Notification</strong>
+                        <span>{{ Session::get('error') }}</span>
+                    </div>
+                    @endif
                 </div>
             </div>
-        </div>
-        <!--Notifications end-->
+            <!--Notifications end-->
 
-    </div>
+        </div>
 
     <div class="container-fluid">
         <div class="form-legend" id="Author-Detail">Author Detail
@@ -327,7 +355,12 @@ foreach ($rights as $r) {
 
                     {!! Form::select('authortype',['' => 'Please Select'] + $p1,null,
                     ['class' => 'form-control formattedelement','id' =>'authortype' ]) !!}
-
+<!--<select style="display: none;" name="simpleSelectBox" id="simpleSelectBox1">
+                        <option selected="" value="All">--Please Select--</option>
+                         @foreach($postAs as $postas1)
+                             <option value="{{ $postas1->author_type_id }}">{{ $postas1->label }}</option>
+         @endforeach
+                     </select>-->
                 </div>
             </div>
             <script>
@@ -343,12 +376,11 @@ foreach ($rights as $r) {
         <div class="bs-docs-example" id="tabarea">
             <ul class="nav nav-tabs" id="iconsTab">
                 <li class="active"><a data-toggle="tab" href="#existing">Choose From Existing</a></li>
-                   <?php // echo '<pre>'; print_r($rights);exit;?>
-                @foreach($rights as $right)
-                @if( $right->label == 'addAuthor')
+                <!-- Add Author Section Only if Rights -->
+                @if(count(array_diff(array('9','44','45'), Session::get('user_rights'))) != count(array('9','44','45')))
                 <li class=""><a data-toggle="tab" href="#new">Add A New Author</a></li>
                 @endif
-                @endforeach
+                
             </ul>
             <div class="tab-content">
                 <div id="existing" class="tab-pane fade active in">
@@ -576,7 +608,16 @@ foreach ($rights as $r) {
                             <div class="controls authorimagespn">
                                 
                             </div>
-
+                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                <div class="input-append">
+                                    <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div>
+                                    <span class="btn btn-file  authorimagespn">
+                                        <span class="fileupload-new">Select file</span>
+                                        <span class="fileupload-exists">Change</span>
+                                       <input type="file" name="photo" id="photo">
+                                        </span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="control-group row-fluid">
@@ -621,12 +662,17 @@ foreach ($rights as $r) {
                 <script>
                                     // magic.js
                                     $(document).ready(function() {
+                                         $(".uniformRadio").uniform({
+                                    radioClass: 'uniformRadio'
+                                    });
                             //var csrf_token = $('meta[name="csrf-token"]').attr('content');
                             var token = $('input[name=_token]');
                                     // process the form
                                     $("#addabut").click(function(){
                             //$("#addAuthorForm").on('click',function(event){}
                             if (validateAuthorData()){
+
+
                             //return false;
                             // get the form data
                             // there are many ways to get this data using jQuery (you can use the class or id also)
@@ -790,6 +836,7 @@ foreach ($rights as $r) {
                                         $.each(data, function(index, element) {
                                         eventBox.append("<option value='" + element + "'>" + index + "</option>");
                                         });
+                                        $("#event_id").select2();
                                 });
                                 $.get("{{ url('article/campaign')}}",
                                 { option: $(this).attr("value") },
@@ -800,6 +847,7 @@ foreach ($rights as $r) {
                                                 $.each(data, function(index, element) {
                                                 Box.append("<option value='" + element + "'>" + index + "</option>");
                                                 });
+                                            $("#campaign_id").select2();
                                         });
                                 $.get("{{ url('article/magazine')}}",
                                 { option: $(this).attr("value") },
@@ -810,6 +858,7 @@ foreach ($rights as $r) {
                                                 $.each(data, function(index, element) {
                                                 Box.append("<option value='" + element + "'>" + index + "</option>");
                                                 });
+                                                $("#magazine_id").select2();
                                         });
                                 $.get("{{ url('article/dropdown1')}}",
                                 { option: $(this).attr("value") + '&level=' },
@@ -820,6 +869,15 @@ foreach ($rights as $r) {
                                                 $.each(data, function(index, element) {
                                                 Box.append("<option value='" + element + "'>" + index + "</option>");
                                                 });
+                                                
+                                                $("#category1").select2();
+                                                $('#selectBoxFilter3').html("<option value=''>Please Select</option>");
+                                                $("#selectBoxFilter3").select2();
+                                                $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
+                                                $('#selectBoxFilter4').select2();
+                                                $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                                $('#selectBoxFilter5').select2();
+                            
                                         });
                         });
                         });</script>
@@ -828,6 +886,56 @@ foreach ($rights as $r) {
         <!--Select Box with Filter Search end-->
     </div>
 
+    <div class="container-fluid">
+        <div class="form-legend" id="Channel">Canonical</div>
+        <div id="Text_Area_Resizable" class="control-group row-fluid">
+               <div class="span3">
+                   <label class="control-label">Is this article published  elsewhere</label>
+               </div>
+               <div class="span3">
+                                <label class="radio">
+
+                                    <input id="ifyes" type="radio" name="canonical_options" class="uniformRadio" value="1">
+
+                                    Yes
+
+                                </label>
+                   
+                  <!-- <div class="controls">
+                       <input type="radio" value="1" name="canonical_options" id="ifyes" />Yes
+                       <input type="radio"  value="0"name="canonical_options" id="ifno" checked/>No
+                   </div>-->
+               </div>
+                <div class="span3">
+                                <label class="radio">
+
+                                    <input id="ifno" checked="checked" type="radio" name="canonical_options" class="uniformRadio" value="0">
+
+                                    No
+
+                                </label>
+                   
+                  <!-- <div class="controls">
+                       <input type="radio" value="1" name="canonical_options" id="ifyes" />Yes
+                       <input type="radio"  value="0"name="canonical_options" id="ifno" checked/>No
+                   </div>-->
+               </div>
+           
+           </div>
+           <div id="canonical" class="control-group row-fluid">
+               <div id="Text_Area_Resizable" class="control-group row-fluid" >
+                   <div class="span3">
+                       <label class="control-label">Enter Canonical Url </label>
+                   </div>
+                   <div class="span9">
+                       <div class="controls">
+                           <input type="text" name="canonical_url" id="canonical_url">
+                       </div>
+                   </div>
+               </div>
+       </div>
+    </div>
+    
     <div class="container-fluid">
         <div class="form-legend" id="Article-Details">Article Details
 
@@ -882,7 +990,22 @@ foreach ($rights as $r) {
                                         styleWithCSS: false,
                                         height: 200,
                                         toolbar: 'web2pyToolbar'
-                                });</script>
+                                });
+                     
+                                  $(document).ready(function() { 
+                                      
+                                      $("#canonical").addClass("none");
+                                    $(':radio[id=ifno]').change(function() {
+                                        $("#canonical").addClass("none");
+                                    });
+                                    $(':radio[id=ifyes]').change(function() {
+                                        $("#canonical").removeClass("none");
+                                        
+                                    });
+                                 });                       
+                                            
+                    
+                    </script>
                 </div>
           </div>
         </div>
@@ -1247,7 +1370,14 @@ foreach ($rights as $r) {
                         @endforeach
                     </select>
                     <span for="campaign" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
-                    
+                    <!--<div class="control-group row-fluid">
+<div class="span12 span-inset">
+<button class="btn btn-warning" type="button" style="display:block; float:left;">Delete</button>
+<img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;"/>
+<button type="button" class="btn btn-primary" style="display:block; float:left; margin-left:5px;">Attach</button>
+<img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;"/>
+</div>
+</div>-->
                 </div>
             </div>
             <script>
@@ -1341,20 +1471,58 @@ foreach ($rights as $r) {
         <!--Select Box with Filter Search end-->
     </div>
 
+
+
+
+
     <div class="container-fluid">
 
         <div class="form-legend" id="photos-videos">Photos & Videos</div>
-        
+       
         <!--Tabs begin-->
+        
         <div  class="control-group row-fluid span-inset">
             <ul class="nav nav-tabs" id="myTab">
-                
+                <!--                <li class="dropdown active">
+                                    
+                                    <a data-toggle="dropdown" class="dropdown-toggle" href="javascript:;">Upload Image<b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a data-toggle="tab" href="#dropdown1">Image 1</a></li>
+                                          <li><a data-toggle="tab" href="#dropdown2">Image 2</a></li>
+                                          <li><a data-toggle="tab" href="#dropdown3">Image 3</a></li>
+                                          <li><a data-toggle="tab" href="#dropdown4">Image 4</a></li> 
+                                    </ul>
+                                </li>-->
                 <li class="dropdown active"><a data-toggle="tab" href="#dropdown1">Photo</a></li>
                 <li><a data-toggle="tab" href="#tab-example1">Video</a></li>
                 <!--	<li><a data-toggle="tab" href="#tab-example4">Current Photos</a></li>-->
             </ul>
             <div class="tab-content">
                 <div id="tab-example1" class="tab-pane fade">
+                   <div class="control-group row-fluid"> 
+                    <div class="span3">
+                            <label class="radio">
+
+                                <input id="embedcodevideo" checked="checked" type="radio" name="vodeo" class="uniformRadio" value="1">
+
+                                Embed  Video Code
+
+                            </label>
+
+                    </div>
+                    <div class="span3">
+                            <label class="radio">
+
+                                <input id="videoid" type="radio" name="vodeo" class="uniformRadio" value="1">
+
+                                Video
+
+                            </label>
+
+                    </div>
+                   </div>
+                    
+                    <div id="embedcodevideodetails" >
                     <div class="control-group row-fluid">
                         <div class="span3">
                             <label class="control-label">Title</label>
@@ -1367,7 +1535,7 @@ foreach ($rights as $r) {
                     </div>
                     <div class="control-group row-fluid">
                         <div class="span3">
-                            <label class="control-label">Code (500/320)</label>
+                            <label class="control-label">  Embed Code (300/300)</label>
                         </div>
                         <div class="span9">
                             <div class="controls">
@@ -1394,19 +1562,101 @@ foreach ($rights as $r) {
                                 <input type="text" name="videoURL" id="inputSpan9">
                             </div>
                         </div>
+                       
+                        
                     </div>
-
+                    </div>
+                    <div id="videocode">
+                    <div class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Video ID</label>
+                        </div>
+                     <div class="span9">
+                            <div class="controls">
+                                <input type="text" class="valid" name="video_Id" id="video_Id"/>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+<!--                    <div class="control-group row-fluid">
+                        <div class="span12 span-inset">
+                            <div style="float:right; width:11%; margin-bottom:5px;"><button class="btn btn-warning" id="addvideobutton" name="addvideobutton" type="button" style="display:block;">Submit</button>
+                                <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:50%; display:block; margin-left:15px;"/></div>
+                        </div>
+                    </div> -->
                 </div>
 
               
                 <div id="dropdown1" class="tab-pane fade active in">
                      
-                   
+                    <!--                    <div class="control-group row-fluid">
+                                            <div class="span3">
+                                                <label class="control-label">Upload Image 1</label>
+                                            </div>
+                                            <div class="span9">
+                                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                    <div class="input-append">
+                                                        <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" name="albumPhoto" id="albumPhoto"/></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group row-fluid">
+                                            <div class="span3">
+                                                <label class="control-label">Title 1</label>
+                                            </div>
+                                            <div class="span9">
+                                                <div class="controls">
+                                                    <input type="text" name="photoTitle" id="inputSpan9">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group row-fluid">
+                                            <div class="span3">
+                                                <label class="control-label">Description 1</label>
+                                            </div>
+                                            <div class="span9">
+                                                <div class="controls">
+                                                    <textarea rows="4" name="photoDesc" class=""></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group row-fluid">
+                                            <div class="span3">
+                                                <label class="control-label">Source Name</label>
+                                            </div>
+                                            <div class="span9">
+                                                <div class="controls">
+                                                    <input type="text" name="photoSource" id="inputSpan9">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group row-fluid">
+                                            <div class="span3">
+                                                <label class="control-label">Source URL</label>
+                                            </div>
+                                            <div class="span9">
+                                                <div class="controls">
+                                                    <input type="text" name="photoSourceURL" id="inputSpan9">
+                                                </div>
+                                            </div>
+                                        </div>
                     
+                                        <div class="control-group row-fluid">
+                                            <div class="span12 span-inset">
+                                                <div data-on-label="Enabled" data-off-label="Disabled" class="switch">
+                                                    <input type="checkbox" name="photoEnabled" checked="checked">
+                                                </div>
+                    
+                    
+                                                <button class="btn btn-warning" type="button" id="addphotobutton" name="addphotobutton" style="display:block;">Submit</button>
+                                                <img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
+                                            </div>
+                                        </div>-->
                     <div class="control-group row-fluid">
                         <div class="span3">
                             <label class="control-label" for="inputField">
-                                Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: 680px X 372px)."><i class="icon-photon info-circle"></i></a>
+                                Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: 680px X 372px) (File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}})."><i class="icon-photon info-circle"></i></a>
                             </label>
                         </div>
                         <div class="span9 row-fluid" >
@@ -1449,19 +1699,69 @@ foreach ($rights as $r) {
                             <input type="hidden" id="uploadedImages" name="uploadedImages">
 
                         </div>
+<!--                        <script type="text/javascript">
+                            $().ready(function() {
 
+                                var errors="";
+                                
+                                $('#upload').mfupload({
+                                    
+                                    type        : '',   //all types
+                                    maxsize     : 2,
+                                    post_upload : "./file-uploader.html",
+                                    folder      : "./",
+                                    ini_text    : "Drag your file(s) here or click (max: 2MB each)",
+                                    over_text   : "Drop Here",
+                                    over_col    : '#666666',
+                                    over_bkcol  : '#f0f0f0',
+                                    
+                                    init        : function(){       
+                                        $("#uploaded").empty();
+                                    },
+                                    
+                                    start       : function(result){     
+                                        $("#uploaded").append("<div id='FILE"+result.fileno+"' class='files'>"+result.filename+"<div class='progress progress-info progress-thin'><div class='bar' id='PRO"+result.fileno+"'></div></div></div>"); 
+                                    },
+
+                                    loaded      : function(result){
+                                        $("#PRO"+result.fileno).remove();
+                                        $("#FILE"+result.fileno).html("Uploaded: "+result.filename+" ("+result.size+")");           
+                                    },
+
+                                    progress    : function(result){
+                                        $("#PRO"+result.fileno).css("width", result.perc+"%");
+                                    },
+
+                                    error       : function(error){
+                                        
+                                        errors += error.filename+": "+error.err_des+"\n";
+                                    },
+
+                                    completed   : function(){
+                                        if (errors != "") {
+                                            alert(errors);
+                                            errors = "";
+                                        }
+                                    }
+                                });     
+                            })
+                        </script>-->
                     </div>
 
                 </div>
              
             </div>
         </div>
-     
+        <!-- Uploaded Image and Video Ids -->
         
 <!--        <input type="hidden" id="uploadedVideos" name="uploadedVideos[]">-->
 
+         <label class="checkbox" >
+                    <input type="checkbox" name="hide_image" class="uniformCheckbox2" value="1">
+                           <a href="javascript:;">Do Not Show Images On Landing Page</a>
+       </label>
+       
     </div><!--end container-->
-    
     <script>
                         // magic.js
                         $.fn.MessageBox = function (msg)
@@ -1497,7 +1797,52 @@ foreach ($rights as $r) {
                         $(document).ready(function() {
                 //var csrf_token = $('meta[name="csrf-token"]').attr('content');
                 var token = $('input[name=_token]');
-                
+                        // process the form - For Add Image in Album
+                /*        $("#addvideobutton").click(function(){
+                // get the form data
+                var formData = new FormData();
+                        formData.append('title', $('input[name=videoTitle]').val());
+                        formData.append('code', $('textarea[name=videoCode]').val());
+                        formData.append('source', $('input[name=videoSource]').val());
+                        formData.append('url', $('input[name=videoURL]').val());
+                        formData.append('channel_id', $('select[name=channel_sel]').val());
+                        formData.append('owner', 'article');
+                        // process the form
+                        $.ajax({
+                        type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                                //method      : 'POST',
+                                url         : '/article/addVideos', // the url where we want to POST
+                                //files       :  true,
+                                data        :  formData,
+                                dataType    : 'json', // what type of data do we expect back from the server
+                                contentType :  false,
+                                processData :  false,
+                                success     :  function(respText){
+                                theResponse = respText;
+                                        alert(theResponse);
+                                        //Assign returned ID to hidden array element
+                                        $('#uploadedVideos').val(theResponse);
+                                        //alert($('#uploadedVideos').val());
+                                },
+                                headers: {
+                                'X-CSRF-TOKEN': token.val()
+                                }
+                        })
+                        // using the done promise callback
+                        .done(function(data) {
+
+                        // log data to the console so we can see
+                        console.log(data);
+                                // here we will handle errors and validation messages
+                        });
+                        // stop the form from submitting the normal way and refreshing the page
+                        //event.preventDefault();
+                });   */
+                        // process the form - For Add Image in Album
+                        $("#addphotobutton").click(function(){
+                //$("#addAuthorForm").on('click',function(event){}
+                //  alert('Yay!');
+
                 // get the form data
                 // there are many ways to get this data using jQuery (you can use the class or id also)
                 var formData = new FormData();
@@ -1554,25 +1899,124 @@ foreach ($rights as $r) {
                         // stop the form from submitting the normal way and refreshing the page
                         //event.preventDefault();
                 });
-                });</script>
+                });
+      
+    $(document).ready(function() {
+     $("#videocode").addClass("none");                  
+   $(':radio[id=videoid]').change(function() {
+      
+   $("#videocode").removeClass("none");
+   $("#embedcodevideodetails").addClass("none");
 
+
+});
+$(':radio[id=embedcodevideo]').change(function() {
     
-    
+   $("#embedcodevideodetails").removeClass("none");
+   $("#videocode").addClass("none");
+
+});
+  });                         
+    </script>
+
+      @if(in_array('12',Session::get('user_rights')))
 
     <div class="container-fluid">
 
+        <div class="form-legend" id="schedule-for-upload">Schedule For Upload</div>
+
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="datepicker">
+                    Date Picker<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Click to choose date."><i class="icon-photon info-circle"></i></a>
+                </label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <input type="text" name="datepicked" id="datepicker" class="span3" />
+                </div>
+            </div>
+        </div>
+
+        <div id="Time_Picker" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="timeEntry">
+                    Time Picker<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Enter time."><i class="icon-photon info-circle"></i></a>
+                </label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <input type="text" name="timepicked" id="timeEntry" class="span3" />
+                </div>
+            </div>
+        </div>
+        <div class="control-group row-fluid">
+            <div class="span12 span-inset">
+                <button name="status" value="SD" id="saveSchedule" class="btn btn-warning" type="submit" style="display:block;">Schedule</button>
+                <img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
+            </div>
+        </div>
+        <script>
+                            $(function(){
+                            $("#datepicker").datepicker({
+                                 minDate: 0,
+            dateFormat: "yy-mm-dd"
+                            });
+                                  
+                             $.timeEntry.setDefaults({show24Hours: true,showSeconds: true});   
+                            $('#timeEntry').timeEntry().change();
+                            });</script> 
+    </div>
+
+    @endif
+  
+
+    <div class="container-fluid">
+
+             <div class="control-group row-fluid">
+                    <div class="span12 span-inset">
         
+                        <label class="checkbox" >
+                            <input type="checkbox" name="for_homepage" class="uniformCheckbox" value="checkbox1" checked >
+                            <a href="#" target="_blank">Publish this to Home Page.</a>
+                        </label>
+                        <script>
+                                            $().ready(function(){
+                                    $(".uniformCheckbox").uniform();
+                                    });</script>
+        
+                        <label class="checkbox" >
+                            <input type="checkbox" name="important" class="uniformCheckbox2" value="checkbox1">
+                            <a href="#" target="_blank">This article is important.</a>
+                        </label>
+                        <script>
+                                            $().ready(function(){
+                                    $(".uniformCheckbox2").uniform();
+                                    });</script>
+        
+                        <label class="checkbox" >
+                            <input type="checkbox" name="web_exclusive" class="uniformCheckbox3" value="checkbox1">
+                            <a href="#" target="_blank">Web Exclusive.</a>
+                        </label>
+                        <script>
+                                            $().ready(function(){
+                                    $(".uniformCheckbox3").uniform();
+                                    });
+                        </script>
+        
+        
+                    </div>
+                </div>
 
         <div class="control-group row-fluid" id="submitsection">
             <div class="span12 span-inset">
                 <button type="submit" name="status" value="S" id="draftSubmit" class="btn btn-default">Draft</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
                 <button type="submit" name="status" value="N" id="pageSubmit" name="N" class="btn btn-warning">Submit</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
                 <!--<button type="button" name="N" class="btn btn-info">Save</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>-->
-                @foreach($rights as $right)
-                @if($right->label == 'publishButton')
-                <button type="button" name="status" value="P" id="publishSubmit" class="btn btn-success">Publish</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
+                @if(in_array('12',Session::get('user_rights')))
+                <button type="submit" name="status" value="P" id="publishSubmit" class="btn btn-success">Publish</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
                 @endif
-                @endforeach
+               
                 <button type="reset" name="status" value="D" id="dumpSubmit" class="btn btn-danger">Dump</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
 
             </div>

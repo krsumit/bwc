@@ -88,6 +88,9 @@ class Cron {
             case 'magazine':
                 $this->migrateMagazineissue();
                  break;
+            case 'mastervideo':
+                $this->migrateMasterVideo();
+                 break;
             case 'debate':
                 $this->migrateDebate();  
                  break;
@@ -111,7 +114,7 @@ class Cron {
            // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $authorResults = $this->conn->query("SELECT * FROM authors where 1 $condition");
+        $authorResults = $this->conn->query("SELECT * FROM authors where  1 $condition");
         //echo $authorResults->num_rows; exit;
         if ($authorResults->num_rows > 0) {
 
@@ -146,7 +149,7 @@ class Cron {
         $updatecronstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' author(s) inserted and ' . $_SESSION['noofupd'] . ' author(s) updated.</h5>';
     }
-
+     
     function Featureviewcount() {
 	///echo 'test';
         $_SESSION['noofins'] = 0;
@@ -439,7 +442,7 @@ class Cron {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
-        $eventrResults = $this->conn->query("SELECT * FROM event  WHERE 1 $condition");
+        $eventrResults = $this->conn->query("SELECT * FROM event  WHERE channel_id= '1'  $condition");
         if ($eventrResults->num_rows > 0) {
             while ($eventRow = $eventrResults->fetch_assoc()) {
                $eventId = $eventRow['event_id'];
@@ -484,8 +487,8 @@ class Cron {
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
         //echo "SELECT * FROM tips  WHERE 1 $condition";exit;
-        $tipsrResults = $this->conn->query("SELECT * FROM tips  WHERE 1 $condition");
-        //echo $tipsrResults->num_rows;exit;
+        $tipsrResults = $this->conn->query("SELECT * FROM tips  WHERE channel_id = '1'   $condition");
+        //echo $tipsrResults->num_rows;exit; 
         if ($tipsrResults->num_rows > 0) {
 
             while ($tipsRow = $tipsrResults->fetch_assoc()) {
@@ -670,7 +673,7 @@ function migrateQuotes() {
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
         //echo "SELECT * FROM event  WHERE 1 $condition";exit;
-        $quotesrResults = $this->conn->query("SELECT * FROM quotes WHERE 1 $condition");
+        $quotesrResults = $this->conn->query("SELECT * FROM quotes WHERE channel_id = '1'  $condition");
         //echo $quotesrResults->num_rows;exit;
         if ($quotesrResults->num_rows > 0) {
 
@@ -1299,7 +1302,7 @@ function migratequotesTage() {
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $articleResults = $this->conn->query("SELECT *  FROM articles where 1 $condition");
+        $articleResults = $this->conn->query("SELECT *  FROM articles where  channel_id='1'  $condition");
         //echo $articleResults->num_rows ;exit;
         if ($articleResults->num_rows > 0) {
             // exit;
@@ -1325,10 +1328,10 @@ function migratequotesTage() {
                         $pubDate = $articleRow['publish_date'] . ' ' . $articleRow['publish_time'];
                         $status = 'published';
                         $articleUpdateStmt = $this->conn2->prepare("update articles set article_title=?,article_description=?,article_summary=?,"
-                                . "article_type=?,article_published_date=?,article_slug=?,article_status=?,important_article=?,display_to_homepage=?,is_exclusive=?,"
-                                . "magzine_issue_name=?,article_location_country=?,article_location_state=? where article_id=?");
-                        $articleUpdateStmt->bind_param('sssisssiiiiiii', $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
-                                , $pubDate, $articleRow['slug'], $status, $articleRow['important'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'], $articleRow['country'], $articleRow['state'], $articleRow['article_id']
+                                . "article_type=?,article_published_date=?,article_slug=?,article_status=?,important_article=?,video_Id=?,display_to_homepage=?,is_exclusive=?,"
+                                . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,article_location_country=?,article_location_state=?,hide_image=? where article_id=?");
+                        $articleUpdateStmt->bind_param('sssisssiiiiiissiiii', $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
+                                , $pubDate, $articleRow['slug'], $status, $articleRow['video_Id'],$articleRow['important'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'],$articleRow['canonical_options'],$articleRow['video_type'],$articleRow['canonical_url'], $articleRow['country'], $articleRow['state'], $articleRow['hide_image'], $articleRow['article_id']
                         );
                         $articleUpdateStmt->execute();
                         if ($articleUpdateStmt->affected_rows) {
@@ -1352,10 +1355,10 @@ function migratequotesTage() {
                         $pubDate = $articleRow['publish_date'] . ' ' . $articleRow['publish_time'];
                         $status = 'published';
                         $articleInsertStmt = $this->conn2->prepare("insert articles set article_id=?,article_title=?,article_description=?,article_summary=?,"
-                                . "article_type=?,article_published_date=?,article_slug=?,article_status=?,important_article=?,display_to_homepage=?,is_exclusive=?,"
-                                . "magzine_issue_name=?,article_location_country=?,article_location_state=?,is_old=?");
-                        $articleInsertStmt->bind_param('isssisssiiiiiii', $articleRow['article_id'], $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
-                                , $pubDate, $articleRow['slug'], $status, $articleRow['important'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'], $articleRow['country'], $articleRow['state'],$articleRow['is_old']);
+                                . "article_type=?,article_published_date=?,article_slug=?,article_status=?,video_Id=?,important_article=?,display_to_homepage=?,is_exclusive=?,"
+                                . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,article_location_country=?,article_location_state=?,is_old=?,hide_image=?");
+                        $articleInsertStmt->bind_param('isssisssiiiiiiii', $articleRow['article_id'], $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
+                                , $pubDate, $articleRow['slug'], $status, $articleRow['video_Id'],$articleRow['important'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'],$articleRow['canonical_options'],$articleRow['video_type'],$articleRow['canonical_url'], $articleRow['country'], $articleRow['state'],$articleRow['is_old'],$articleRow['hide_image']);
                         $articleInsertStmt->execute();
                         //print_r($articleInsertStmt);exit;
                         // echo $articleInsertStmt->insert_id;exit;    
@@ -1393,7 +1396,7 @@ function migratequotesTage() {
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $featurResults = $this->conn->query("SELECT *  FROM featuredarticle where 1 $condition");
+        $featurResults = $this->conn->query("SELECT *  FROM featuredarticle where channel_id='1' $condition");
       // echo $featurResults->num_rows ;exit;
         //print_r($featurResults);exit;
         if ($featurResults->num_rows > 0) {
@@ -1707,8 +1710,8 @@ function migrateFeaturImage($featurId,  $condition) {
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $sponsoredResults = $this->conn->query("SELECT *  FROM sponsoredposts where 1 $condition");
-        //echo $articleResults->num_rows ;exit;
+        $sponsoredResults = $this->conn->query("SELECT *  FROM sponsoredposts where channel_id ='1' $condition");
+        //echo $articleResults->num_rows ;exit; 
         if ($sponsoredResults->num_rows > 0) {
             // exit;
             
@@ -1895,7 +1898,7 @@ function migrateFeaturImage($featurId,  $condition) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
-        $magazinerResults = $this->conn->query("SELECT * FROM magazine  WHERE 1 $condition");
+        $magazinerResults = $this->conn->query("SELECT * FROM magazine  WHERE channel_id ='1' $condition");
         if ($magazinerResults->num_rows > 0) {
             //echo $magazinerResults->num_rows; exit;
             //echo 'testsumit';
@@ -2230,8 +2233,55 @@ function migrateFeaturImage($featurId,  $condition) {
 		}
         // Debate Video
         
-    
-    
+    //video module
+                
+    function migrateMasterVideo() {
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='mastervideo' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+           // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
+
+        $masterVideoResults = $this->conn->query("SELECT * FROM video_master where channel_id=1 $condition");
+        //echo $authorResults->num_rows; exit;
+        if ($masterVideoResults->num_rows > 0) {
+
+            while ($masterVideoRow = $masterVideoResults->fetch_assoc()) {
+                // print_r($authorRow); exit;
+                $masterVideoId = $masterVideoRow['id'];
+                $checkmasterVideoExistResultSet = $this->conn2->query("select id, video_title,video_summary, video_name,video_thumb_name,tags,created_at,updated_at from video_master where id=$authorId");
+                if ($checkmasterVideoExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
+                    //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
+                    $masterVideoUpdateStmt = $this->conn2->prepare("update video_master set video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=? where video_id=?");
+                    $masterVideoUpdateStmt->bind_param('sssssssi', $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'],$masterVideoRow['updated_at'], $masterVideoId);
+                    $masterVideoUpdateStmt->execute();
+                    if ($masterVideoUpdateStmt->affected_rows)
+                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                   // echo  $_SESSION['noofupd'];
+                }else {
+                    $masterVideoInsertStmt = $this->conn2->prepare("insert into video_master set video_id=?,video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?");
+                    //echo $this->conn2->error; exit;
+                    $masterVideoInsertStmt->bind_param('isssssss', $masterVideoRow['id'], $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'],$masterVideoRow['updated_at']);
+                    $masterVideoInsertStmt->execute();
+                    if ($masterVideoInsertStmt->affected_rows) {
+                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                    }
+                }
+            }
+        }
+
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='mastervideo',start_time=?,end_time=?");
+        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecronstmt->execute();
+        $updatecronstmt->close();
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' mastervideo(s) inserted and ' . $_SESSION['noofupd'] . ' mastervideo(s) updated.</h5>';
+    }
+
    
 
 }

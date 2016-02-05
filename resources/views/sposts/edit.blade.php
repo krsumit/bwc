@@ -118,10 +118,10 @@
                             <div class="span9">
                                 <div class="controls">
                                     <select name="channel_sel" id="selectBoxFilter20">                                        
-                                        @foreach($channel_arr as $ch)                                        
-                                            <option value="{{$ch->channel_id}}">{{$ch->channel}}</option>
+                                        @foreach($channels as $ch)                                        
+                                            <option @if($ch->channel_id==$currentChannelId) selected="selected" @endif value="{{$ch->channel_id}}">{{$ch->channel}}</option>
                                         @endforeach 
-                                        <option value="All">Select</option>
+                                        
                                     </select>
                                 </div>
                             </div>
@@ -130,6 +130,37 @@
                                     var v = {{$spost->channel_id}};                                    
                                     $("#selectBoxFilter20").val(v);
                                     $("#selectBoxFilter20").select2();
+                                    
+                                     $('#selectBoxFilter20').change(function(){
+                                        $.get("{{ url('article/dropdown1')}}",
+                                { option: $(this).attr("value") + '&level=' },
+                                        function(data) {
+                                        var Box = $('#selectBoxFilter2');
+                                                Box.empty();
+                                                Box.append("<option value=''>Please Select</option>");
+                                                $.each(data, function(index, element) {
+                                                Box.append("<option value='" + element + "'>" + index + "</option>");
+                                                });
+                                                 $("#selectBoxFilter2").select2();
+                                        });
+                                        
+                                        
+                                        
+                                         $.get("{{ url('article/event')}}",
+                        { option: $(this).attr("value") },
+                                function(data) {
+                                var eventBox = $('#eventid');
+                                        eventBox.empty();
+                                        eventBox.append("<option value=''>Please Select</option>");
+                                        $.each(data, function(index, element) {
+                                        eventBox.append("<option value='" + element + "'>" + index + "</option>");
+                                        });
+                                         $("#eventid").select2();  
+                                });
+                                      
+                                    });
+                                    
+                                    
                                     
                                 });
                             </script>

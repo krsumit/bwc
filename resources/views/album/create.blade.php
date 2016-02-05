@@ -5,7 +5,6 @@
 
 @section('content')
 <?php
-
 //print_r($p1);exit;
 ?>
 <div class="panel">
@@ -13,233 +12,235 @@
         <div class="panel-logo"></div>
         <div class="panel-header">
             <h1><small>Create New Album</small></h1>
-            
+
         </div>
-       
-		   <div class="panel-header">
-            <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
+
+        <div class="panel-header">
+ <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
         </div>
-        
-                    <script type="text/javascript">
-        $(function () {
-            $("#jstree").jstree({ 
-                "json_data" : {
-                    "data" : [
-										{
-                            "data" : { 
-                                "title" : "Channel", 
-                                "attr" : { "href" : "#Channel" } 
-                            }
-                        },			
-                       
-                        {
-                            "data" : { 
-                                "title" : "Album Feature", 
-                                "attr" : { "href" : "#al-feature" } 
-                            }
-                        },
-                                                {
-                            "data" : { 
-                                "title" : "Tags", 
-                                "attr" : { "href" : "#tags" } 
-                            }
-                        },]
-                },
-                "plugins" : [ "themes", "json_data", "ui" ]
-            })
-            .bind("click.jstree", function (event) {
-                var node = $(event.target).closest("li");
-                document.location.href = node.find('a').attr("href");
-                return false;
-            })
-            .delegate("a", "click", function (event, data) { event.preventDefault(); });
-        });
-    </script>
+
+        <script type="text/javascript">
+            $(function () {
+                $("#jstree").jstree({
+                    "json_data": {
+                        "data": [
+                            {
+                                "data": {
+                                    "title": "Channel",
+                                    "attr": {"href": "#Channel"}
+                                }
+                         },
+                            {
+                                "data": {
+                                    "title": "Album Feature",
+                                    "attr": {"href": "#al-feature"}
+                                }
+                            },
+                            {
+                                "data": {
+                                    "title": "Tags",
+                                    "attr": {"href": "#tags"}
+                                }
+                            }, ]
+                    },
+                    "plugins": ["themes", "json_data", "ui"]
+                })
+                        .bind("click.jstree", function (event) {
+                            var node = $(event.target).closest("li");
+                            document.location.href = node.find('a').attr("href");
+                            return false;
+                        })
+                        .delegate("a", "click", function (event, data) {
+                            event.preventDefault();
+                        });
+            });
+        </script>
         <div class="sidebarMenuHolder">
-        <div class="JStree">
-            <div class="Jstree_shadow_top"></div>
-            <div id="jstree"></div>
-            <div class="Jstree_shadow_bottom"></div>
-        </div>
-    </div>    </div>
+            <div class="JStree">
+                <div class="Jstree_shadow_top"></div>
+                <div id="jstree"></div>
+                <div class="Jstree_shadow_bottom"></div>
+            </div>
+        </div>    </div>
     <div class="panel-slider">
         <div class="panel-slider-center">
             <div class="panel-slider-arrow"></div>
         </div>
     </div>
 </div>
-        <div class="main-content">
-            <div class="breadcrumb-container">
-    <ul class="xbreadcrumbs">
-        <li>
-            <a href="/dashboard">
-                <i class="icon-photon home"></i>
-            </a>
-        </li>
-                <li>
-            <a href="#">Album &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
-            <ul class="breadcrumb-sub-nav">
-                                 <li>
-                            <a href="<?php echo url('album/create') ?>">Create New Album</a>
-                        </li>
-						<li>
-                            <a href="<?php echo url('album/list/deleted') ?>">Published Album</a>
-                        </li>
-						<li>
-                            <a href="<?php echo url('album/list/deleted') ?>">Deleted Album</a>
-                        </li>
-						
-						<li>
-                            <a href="#">Reports</a>
-                        </li>
-						<li>
-                            <a href="#">Help</a>
-                        </li>
-                            </ul>
-        </li>
-                <li class="current">
-            <a href="javascript:;">Create New Album</a>
-        </li>
-    </ul>
-</div>            <header>
-                <i class="icon-big-notepad"></i>
-                <h2><small>New Album</small></h2>
-            </header>
-<!--            <form class="form-horizontal" id="fileupload" action="" method="POST" enctype="multipart/form-data">-->
-              {!! Form::open(array('url'=>'album/','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
-                {!! csrf_field() !!}    
-                
-                <div class="container-fluid"  style="display:none">
-                        <div class="form-legend" id="Notifications">Notifications</div>
-                        <!--Notifications begin-->
-                        <div class="control-group row-fluid" >
-                            <div class="span12 span-inset">
-                                <div class="alert alert-success alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Success Notification</strong>
-                                    <span>Your data has been successfully modified.</span>
-                                </div>
-                                <div class="alert alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Alert Notification</strong>
-                                    <span>No result found.</span>
-                                </div>
-                                <div class="alert alert-error alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Error Notification</strong>
-                                    <span>Please select a valid search criteria.</span>
-                                </div>
-								
-                            </div>
-                        </div>
-                        <!--Notifications end-->
-                </div>
-               <div class="container-fluid">
+<div class="main-content">
+    <div class="breadcrumb-container">
+        <ul class="xbreadcrumbs">
+            <li>
+                <a href="/dashboard">
+                    <i class="icon-photon home"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#">Album &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                <ul class="breadcrumb-sub-nav">
+                    <li>
+                        <a href="<?php echo url('album/create') ?>">Create New Album</a>
+                    </li>
+                    <li>
+                        <a href="<?php echo url('album/list/deleted') ?>">Published Album</a>
+                    </li>
+                    <li>
+                        <a href="<?php echo url('album/list/deleted') ?>">Deleted Album</a>
+                    </li>
 
-                        <div class="form-legend" id="Channel">Channel</div>
+                    <li>
+                        <a href="#">Reports</a>
+                    </li>
+                    <li>
+                        <a href="#">Help</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="current">
+                <a href="javascript:;">Create New Album</a>
+            </li>
+        </ul>
+    </div>            <header>
+        <i class="icon-big-notepad"></i>
+        <h2><small>New Album</small></h2>
+    </header>
+    <!--            <form class="form-horizontal" id="fileupload" action="" method="POST" enctype="multipart/form-data">-->
+    {!! Form::open(array('url'=>'album/','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
+    {!! csrf_field() !!}    
 
-						<!--Select Box with Filter Search begin-->
-                        <div  class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label" for="selectBoxFilter">Channel</label>
-                            </div>
-							<div class="span9">
-                                <div class="controls">
-                                    <select name="channel"  id="channel" class="formattedelement">
-                                        <option selected="" value="">Please Select-</option>
-                                            @foreach($channels as $channel)
-                                            <option value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
-                                            @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <script>
-                                $().ready(function(){
-                                    $("#channel").select2();
-                                });
-                            </script>
-                        </div>
-						
-                        <!--Select Box with Filter Search end-->					
+    <div class="container-fluid"  style="display:none">
+        <div class="form-legend" id="Notifications">Notifications</div>
+        <!--Notifications begin-->
+        <div class="control-group row-fluid" >
+            <div class="span12 span-inset">
+                <div class="alert alert-success alert-block">
+                    <i class="icon-alert icon-alert-info"></i>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>This is Success Notification</strong>
+                    <span>Your data has been successfully modified.</span>
                 </div>
-                       
-                   <div class="container-fluid">  
-					   <div class="form-legend" id="al-feature">Album Feature 
-						</div>
-						<div id="Photo-feature"  class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Feature Title </label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                   <input type="text" name="title" id="title">
-                                </div>
-                            </div>
-                        </div>
-						<div id="Text_Area_Resizable" class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label">Feature Description</label>
-                            </div>
-                            <div class="span9">
-                                <div class="controls">
-                                    <textarea  rows="4" class="" id="featuredesc" name="featuredesc"></textarea>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        
-                         <!--Drag And Drop Upload begin-->
-                        <div id="Drag_And_Drop_Upload" class="control-group row-fluid">
-                            <div class="span3">
-                                <label class="control-label" for="inputField">
-                                    Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: 1200px X 600px). "><i class="icon-photon info-circle"></i></a>
-                                </label>
-                            </div>
-                            <div class="span9 row-fluid" >
-                                <div class=" fileupload-buttonbar">
-            <div class="col-lg-7">
-                <!-- The fileinput-button span is used to style the file input field as button -->
-                <span class="btn btn-success fileinput-button">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    <span>Add files...</span>
-                    <input type="file" name="files[]" multiple>
-                </span>
-                <button type="submit" class="btn btn-primary start">
-                    <i class="glyphicon glyphicon-upload"></i>
-                    <span>Start upload</span>
-                </button>
-                <button type="reset" class="btn btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Cancel upload</span>
-                </button>
-                <button type="button" class="btn btn-danger delete">
-                    <i class="glyphicon glyphicon-trash"></i>
-                    <span>Delete</span>
-                </button>
-                <input type="checkbox" class="toggle">
-                <!-- The global file processing state -->
-                <span class="fileupload-process"></span>
-            </div>
-            <!-- The global progress state -->
-            <div class="col-lg-5 fileupload-progress fade">
-                <!-- The global progress bar -->
-                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                    <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                <div class="alert alert-block">
+                    <i class="icon-alert icon-alert-info"></i>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>This is Alert Notification</strong>
+                    <span>No result found.</span>
                 </div>
-                <!-- The extended global progress state -->
-                <div class="progress-extended">&nbsp;</div>
+                <div class="alert alert-error alert-block">
+                    <i class="icon-alert icon-alert-info"></i>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>This is Error Notification</strong>
+                    <span>Please select a valid search criteria.</span>
+                </div>
+
             </div>
         </div>
-        <!-- The table listing the files available for upload/download -->
-        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
-                            </div>
+        <!--Notifications end-->
+    </div>
+    <div class="container-fluid">
 
+        <div class="form-legend" id="Channel">Channel</div>
+
+        <!--Select Box with Filter Search begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter">Channel</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="channel"  id="channel" class="formattedelement">
+                        @foreach($channels as $channel)
+                        <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <script>
+                $().ready(function () {
+                    $("#channel").select2();
+                });
+            </script>
+        </div>
+
+        <!--Select Box with Filter Search end-->					
+    </div>
+
+    <div class="container-fluid">  
+        <div class="form-legend" id="al-feature">Album Feature 
+        </div>
+        <div id="Photo-feature"  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label">Feature Title </label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <input type="text" name="title" id="title">
+                </div>
+            </div>
+        </div>
+        <div id="Text_Area_Resizable" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label">Feature Description</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <textarea  rows="4" class="" id="featuredesc" name="featuredesc"></textarea>
+                </div>
+            </div>
+        </div>
+
+
+        <!--Drag And Drop Upload begin-->
+        <div id="Drag_And_Drop_Upload" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="inputField">
+                    Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: 1200px X 600px) (File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}}  ). "><i class="icon-photon info-circle"></i></a>
+                </label>
+            </div>
+            <div class="span9 row-fluid" >
+                <div class=" fileupload-buttonbar">
+                    <div class="col-lg-7">
+
+                        <!-- The fileinput-button span is used to style the file input field as button -->
+                        <span class="btn btn-success fileinput-button">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>Add files...</span>
+                            <input type="file" name="files[]" multiple>
+                        </span>
+                        <button type="submit" class="btn btn-primary start">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Start upload</span>
+                        </button>
+                        <button type="reset" class="btn btn-warning cancel">
+                            <i class="glyphicon glyphicon-ban-circle"></i>
+                            <span>Cancel upload</span>
+                        </button>
+                        <button type="button" class="btn btn-danger delete">
+                            <i class="glyphicon glyphicon-trash"></i>
+                            <span>Delete</span>
+                        </button>
+                        <input type="checkbox" class="toggle">
+                        <!-- The global file processing state -->
+                        <span class="fileupload-process"></span>
+                    </div>
+                    <!-- The global progress state -->
+                    <div class="col-lg-5 fileupload-progress fade">
+                        <!-- The global progress bar -->
+                        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar progress-bar-success" style="width:0%;"></div>
                         </div>
-              	  </div>
-                     <div class="container-fluid">
+                        <!-- The extended global progress state -->
+                        <div class="progress-extended">&nbsp;</div>
+                    </div>
+                </div>
+                <!-- The table listing the files available for upload/download -->
+                <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+                <input type="text" style="height: 0;visibility: hidden;width: 0;" id="uploadedImages" name="uploadedImages">
+            </div>
+
+        </div>
+    </div>
+    <div class="container-fluid">
 
         <div class="form-legend" id="tags">Tags</div>
         <!--Select Box with Filter Search begin-->
@@ -272,214 +273,215 @@
             </div>
             <!-- Add Tag to Tags Table - Ajax request -->
             <script>
-                                $().ready(function() {
-                        var token = $('input[name=_token]');
-                                // process the form
-                                $("#attachTag").click(function(){
-                        if ($('input[name=addtags]').val().trim().length == 0){
-                        alert('Please enter tage'); return false;
+                $().ready(function () {
+                    var token = $('input[name=_token]');
+                    // process the form
+                    $("#attachTag").click(function () {
+                        if ($('input[name=addtags]').val().trim().length == 0) {
+                            alert('Please enter tage');
+                            return false;
                         }
 
                         $.ajax({
-                        type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                                url         : '/article/addTag', // the url where we want to POST
-                                data        :   { tag : $('input[name=addtags]').val() },
-                                dataType    : 'json', // what type of data do we expect back from the server
-                                encode      : true,
-                                beforeSend  :function(data){
+                            type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                            url: '/article/addTag', // the url where we want to POST
+                            data: {tag: $('input[name=addtags]').val()},
+                            dataType: 'json', // what type of data do we expect back from the server
+                            encode: true,
+                            beforeSend: function (data) {
                                 $('#attachTag').hide();
-                                        $('#attachTag').siblings('img').show();
-                                },
-                                complete    :function(data){
+                                $('#attachTag').siblings('img').show();
+                            },
+                            complete: function (data) {
                                 $('#attachTag').show();
-                                        $('#attachTag').siblings('img').hide();
-                                },
-                                success     :  function(data){
+                                $('#attachTag').siblings('img').hide();
+                            },
+                            success: function (data) {
 
-                                $.each(data, function(key, val){
+                                $.each(data, function (key, val) {
 
-                                $("#Taglist").tokenInput("add", val);
+                                    $("#Taglist").tokenInput("add", val);
                                 });
-                                 $('input[name=addtags]').val('');
+                                $('input[name=addtags]').val('');
 //                                        alert('Tag Saved');
 //                                        $("#Taglist").tokenInput("add", [{"id":"2","name":"Coal Scam"},{"id":"4","name":"Cuisine"},{"id":"7","name":"Education"},{"id":"15","name":"Election"},{"id":"208","name":"testtag1"},{"id":"1","name":"Modi"},{"id":"207","name":"tagtest"},{"id":"210","name":"ankita"}]);
 //                                         //$("#Taglist").tokenInput("add", {id: 9992, name: "test22"});
-                                },
-                                headers: {
+                            },
+                            headers: {
                                 'X-CSRF-TOKEN': token.val()
-                                }
+                            }
                         })
-                        });
-                                $("#Taglist").tokenInput("/tags/getJson", {
+                    });
+                    $("#Taglist").tokenInput("/tags/getJson", {
                         theme: "facebook",
-                                searchDelay: 300,
-                                minChars: 4,
-                                preventDuplicates: true,
-                        });
-                        });            </script>
+                        searchDelay: 300,
+                        minChars: 4,
+                        preventDuplicates: true,
+                    });
+                });</script>
         </div>                       
         <!--Select Box with Filter Search end-->
     </div>
 
 
-                
 
-   
-      
-                
-			 <div class="container-fluid">
-             	<div class="control-group row-fluid">
-					<div class="span12 span-inset">
-					
-							 <label class="checkbox" >
-                                   <input type="checkbox" class="uniformCheckbox" value="checkbox1" name="is_sponsored">
-                                    <a href="#" target="_blank">This Is  Sponsored</a>
-                                </label>
-                                            
-                                            			 <label class="checkbox" >
-                                   <input type="checkbox" class="uniformCheckbox" value="checkbox1" name="is_featured">
-                                    <a href="#" target="_blank">This Is  Featured</a>
-                                </label>
-                                            
-					<script>
-                        $().ready(function(){
-                            $(".uniformCheckbox").uniform();
-                        });            
-                    </script>			
-						
-					</div>
-                 
-				</div>
-                
-				<div class="control-group row-fluid">
-                            <div class="span12 span-inset">
-                                 <button value="P" name="status" type="submit" class="btn btn-warning">Publish</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>	
-                               
-							
-                            </div>
-                        </div>
-                  </div>
-			
-        <input type="hidden" id="uploadedImages" name="uploadedImages">
 
-        {!! Form::close() !!}
+
+
+
+    <div class="container-fluid">
+        <div class="control-group row-fluid">
+            <div class="span12 span-inset">
+
+                <label class="checkbox" >
+                    <input type="checkbox" class="uniformCheckbox" value="checkbox1" name="is_sponsored">
+                    <a href="#" target="_blank">This Is  Sponsored</a>
+                </label>
+
+                <label class="checkbox" >
+                    <input type="checkbox" class="uniformCheckbox" value="checkbox1" name="is_featured">
+                    <a href="#" target="_blank">This Is  Featured</a>
+                </label>
+
+                <script>
+                    $().ready(function () {
+                        $(".uniformCheckbox").uniform();
+                    });
+                </script>			
+
+            </div>
+
         </div>
+
+        <div class="control-group row-fluid">
+            <div class="span12 span-inset">
+                <button value="P" name="status" type="submit" class="btn btn-warning">Publish</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>	
+
+
+            </div>
+        </div>
+    </div>
+
+
+
+    {!! Form::close() !!}
+</div>
 
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
-{% for (var i=0, file; file=o.files[i]; i++) { %}
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-upload fade">
-        <td>
-            <span class="preview"></span>
-        </td>
-        <td>
-            <p class="name">{%=file.name%}</p>
-            <strong class="error text-danger"></strong>
-        </td>
-        <td>
-            <p class="size">Processing...</p>
-            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
-        </td>
-        <td>
-            {% if (!i && !o.options.autoUpload) { %}
-                <button class="btn btn-primary start" disabled>
-                    <i class="glyphicon glyphicon-upload"></i>
-                    <span>Start</span>
-                </button>
-            {% } %}
-            {% if (!i) { %}
-                <button class="btn btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Cancel</span>
-                </button>
-            {% } %}
-        </td>
+    <td>
+    <span class="preview"></span>
+    </td>
+    <td>
+    <p class="name">{%=file.name%}</p>
+    <strong class="error text-danger"></strong>
+    </td>
+    <td>
+    <p class="size">Processing...</p>
+    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+    </td>
+    <td>
+    {% if (!i && !o.options.autoUpload) { %}
+    <button class="btn btn-primary start" disabled>
+    <i class="glyphicon glyphicon-upload"></i>
+    <span>Start</span>
+    </button>
+    {% } %}
+    {% if (!i) { %}
+    <button class="btn btn-warning cancel">
+    <i class="glyphicon glyphicon-ban-circle"></i>
+    <span>Cancel</span>
+    </button>
+    {% } %}
+    </td>
     </tr>
-{% } %}
+    {% } %}
 </script>
 <!-- The template to display files available for download -->
 <script id="template-download" type="text/x-tmpl">
-{% for (var i=0, file; file=o.files[i]; i++) { %}
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade">
-       <td colspan="4">            
-        <table width="100%">
-        <tr>
-                 
-                 <td>
-            <span class="preview">
-                {% if (file.thumbnailUrl) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
-                {% } %}
-            </span>
-        </td>
-        <td>
-            <p class="name">
-                {% if (file.url) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
-                {% } else { %}
-                    <span>{%=file.name%}</span>
-                {% } %}
-            </p>
-            {% if (file.error) { %}
-                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
-            {% } %}
-        </td>
-        <td>
-            <span class="size">{%=o.formatFileSize(file.size)%}</span>
-        </td>
-        <td>
-            {% if (file.deleteUrl) { %}
-                <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-                    <i class="glyphicon glyphicon-trash"></i>
-                    <span>Delete</span>
-                </button>
-                <input type="checkbox" name="delete" value="1" class="toggle">
-            {% } else { %}
-                <button class="btn btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Cancel</span>
-                </button>
-            {% } %}
-        </td>
-                         
-                         
-     </tr>   
-     
-     
-     <tr>
-            <td colspan="1">Title</td>
-             <td colspan="3"><input type="text" name="imagetitle[{%=file.name%}]"/></td>    
-   </tr>
-   
+    <td colspan="4">            
+    <table width="100%">
     <tr>
-            <td colspan="1">Description</td>
-             <td colspan="3"><textarea name="imagedesc[{%=file.name%}]"></textarea></td>    
-   </tr>
- <tr>
-            <td colspan="1">Photo Source</td>
-             <td colspan="3"><input type="text" name="photosource[{%=file.name%}]"/></textarea></td>    
-   </tr>
-   <tr>
-            <td colspan="1">Source Url</td>
-             <td colspan="3"><input type="text"  name="sourceurl[{%=file.name%}]"/></textarea></td>    
-   </tr>
-   <tr>
-            <td colspan="1">Photograph By</td>
-             <td colspan="3"><input type="text" name="photographby[{%=file.name%}]"/></textarea></td>    
-   </tr>
-   
-   </table>   
-  </td>           
-               
- </tr>
-    
-    
-    
-    
-    
-    
-    
-{% } %}
+
+    <td>
+    <span class="preview">
+    {% if (file.thumbnailUrl) { %}
+    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+    {% } %}
+    </span>
+    </td>
+    <td>
+    <p class="name">
+    {% if (file.url) { %}
+    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+    {% } else { %}
+    <span>{%=file.name%}</span>
+    {% } %}
+    </p>
+    {% if (file.error) { %}
+    <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+    {% } %}
+    </td>
+    <td>
+    <span class="size">{%=o.formatFileSize(file.size)%}</span>
+    </td>
+    <td>
+    {% if (file.deleteUrl) { %}
+    <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+    <i class="glyphicon glyphicon-trash"></i>
+    <span>Delete</span>
+    </button>
+    <input type="checkbox" name="delete" value="1" class="toggle">
+    {% } else { %}
+    <button class="btn btn-warning cancel">
+    <i class="glyphicon glyphicon-ban-circle"></i>
+    <span>Cancel</span>
+    </button>
+    {% } %}
+    </td>
+
+
+    </tr>   
+
+
+    <tr>
+    <td colspan="1">Title</td>
+    <td colspan="3"><input type="text" name="imagetitle[{%=file.name%}]"/></td>    
+    </tr>
+
+    <tr>
+    <td colspan="1">Description</td>
+    <td colspan="3"><textarea name="imagedesc[{%=file.name%}]"></textarea></td>    
+    </tr>
+    <tr>
+    <td colspan="1">Photo Source</td>
+    <td colspan="3"><input type="text" name="photosource[{%=file.name%}]"/></textarea></td>    
+    </tr>
+    <tr>
+    <td colspan="1">Source Url</td>
+    <td colspan="3"><input type="text"  name="sourceurl[{%=file.name%}]"/></textarea></td>    
+    </tr>
+    <tr>
+    <td colspan="1">Photograph By</td>
+    <td colspan="3"><input type="text" name="photographby[{%=file.name%}]"/></textarea></td>    
+    </tr>
+
+    </table>   
+    </td>           
+
+    </tr>
+
+
+
+
+
+
+
+    {% } %}
 </script>
 <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
 <!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
@@ -505,102 +507,102 @@
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-validate.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-ui.js') }}"></script>
 <script>
-  $(document).ready(function(){
-    $('#fileupload').fileupload({
-        // Uncomment the following to send cross-domain cookies:
-        //xhrFields: {withCredentials: true},
-        url: '<?php echo url('quickbyte/image/upload') ?>',
-        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-        maxFileSize: 10000000
-    });
-  });
-     
-     
-              
-     $('#fileupload').bind('fileuploaddone', function (e, data) {
-    //console.log(e);
-    var dataa=JSON.parse(data.jqXHR.responseText);
-    //console.log(dataa['files']['0']['name']);
-    $.each(dataa['files'], function(index, element) {
-        //console.log(element.name);
-        if($('#uploadedImages').val().trim())        // validation ends here           
+                                            $(document).ready(function () {
+                                                $('#fileupload').fileupload({
+                                                    // Uncomment the following to send cross-domain cookies:
+                                                    //xhrFields: {withCredentials: true},
+                                                    url: '<?php echo url('quickbyte/image/upload') ?>',
+                                                    acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+                                                    maxFileSize: 10000000
+                                                });
+                                            });
 
-            $('#uploadedImages').val($('#uploadedImages').val()+','+element.name);
-        else
-            $('#uploadedImages').val(element.name);    
-    });
-     
-    });
-    $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
-    // console.log(data);
-     var file=getArg(data.url,'file');
-     var images= $('#uploadedImages').val().split(',');
-     images.splice(images.indexOf(file),1);
-     $('#uploadedImages').val(images.join());
-      //$('#imagesname').val($('#imagesname').val().replace(','+));
-     
-    });
-    
 
-function getArg(url,name){
-    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
-    if (results==null){
-       return null;
-    }
-    else{
-       return results[1] || 0;
-    }
-}
+
+                                            $('#fileupload').bind('fileuploaddone', function (e, data) {
+                                                //console.log(e);
+                                                var dataa = JSON.parse(data.jqXHR.responseText);
+                                                //console.log(dataa['files']['0']['name']);
+                                                $.each(dataa['files'], function (index, element) {
+                                                    //console.log(element.name);
+                                                    if ($('#uploadedImages').val().trim())        // validation ends here           
+                                                        $('#uploadedImages').val($('#uploadedImages').val() + ',' + element.name);
+                                                    else
+                                                        $('#uploadedImages').val(element.name);
+                                                });
+
+                                            });
+                                            $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
+                                                // console.log(data);
+                                                var file = getArg(data.url, 'file');
+                                                var images = $('#uploadedImages').val().split(',');
+                                                images.splice(images.indexOf(file), 1);
+                                                $('#uploadedImages').val(images.join());
+                                                //$('#imagesname').val($('#imagesname').val().replace(','+));
+
+                                            });
+
+
+                                            function getArg(url, name) {
+                                                var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
+                                                if (results == null) {
+                                                    return null;
+                                                }
+                                                else {
+                                                    return results[1] || 0;
+                                                }
+                                            }
 
 
 
 // Validation start hee
-     
-     $("#fileupload").validate({
-                    errorElement: "span",
-                            errorClass: "error",
-                            //$("#pageSubmit").onclick: true,
-                            onclick: true,
-                            invalidHandler: function(event, validator) {
-                         
-                                    for (var i in validator.errorMap) {
-                                        
-                                            if($('#'+i).hasClass('formattedelement')){
-                                                $('#'+i).siblings('.formattedelement').addClass('error');
-                                                
-                                        }
-                                   
-                                }
-                             },
-                            rules: {
-                            "req": {
-                            required: true
-                            },
-                                    "channel": {
-                                        required: true
-                                    },
-                                    "author_type": {
-                                    required: true,
-                                            
-                                    },
-                                    "title": {
-                                    required: true
-                                    },
-                                    "featuredesc":{
-                                    required: true
-                                    }
-                            }
-                    });
-              
-          $('select.formattedelement').change(function(){
-           if($(this).val().trim()!='')
-            $(this).siblings('.formattedelement').removeClass('error');
-            $(this).siblings('span.error').remove();
-          }) ;  
-          
-       // Validation ends here    
+
+                                            $("#fileupload").validate({
+                                                errorElement: "span",
+                                                errorClass: "error",
+                                                //$("#pageSubmit").onclick: true,
+                                                onclick: true,
+                                                invalidHandler: function (event, validator) {
+
+                                                    for (var i in validator.errorMap) {
+
+                                                        if ($('#' + i).hasClass('formattedelement')) {
+                                                            $('#' + i).siblings('.formattedelement').addClass('error');
+
+                                                        }
+
+                                                    }
+                                                },
+                                                rules: {
+                                                    "req": {
+                                                        required: true
+                                                    },
+                                                    "channel": {
+                                                        required: true
+                                                    },
+                                                    "author_type": {
+                                                        required: true,
+                                                    },
+                                                    "title": {
+                                                        required: true
+                                                    },
+                                                    "featuredesc": {
+                                                        required: true
+                                                    },
+                                                    "uploadedImages": {
+                                                        required: true
+                                                    }
+                                                }
+                                            });
+
+                                            $('select.formattedelement').change(function () {
+                                                if ($(this).val().trim() != '')
+                                                    $(this).siblings('.formattedelement').removeClass('error');
+                                                $(this).siblings('span.error').remove();
+                                            });
+
+                                            // Validation ends here    
 
 </script>
 @stop
-    
-    
+

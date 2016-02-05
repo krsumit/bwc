@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 use App\Author;
 use App\Tag;
 use Illuminate\Http\Request;
-
+use App\Right;
 use DB;
 use Session;
 use App\Album;
@@ -17,6 +17,12 @@ use Aws\Laravel\AwsServiceProvider;
 
 class AlbumController extends Controller
 {
+    private $rightObj;
+    public function __construct() {
+         $this->rightObj= new Right();
+    
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -24,28 +30,40 @@ class AlbumController extends Controller
      */
     public function index($option)
     {
+       
         //echo count($arr);exit;
         //
         if(!Session::has('users')){
             return redirect()->intended('/auth/login');
         }
         $uid = Session::get('users')->id;
-        $rightLabel = "";
+        
+        $rightId='';
         switch($option){
             case "published":
                 $valid = '1';
-                $rightLabel = "publishedAlbum";
+                $rightId=57;
                 break;
+            
             case "deleted":
                 $valid = '0';
-                $rightLabel = "deletedAlbum";
+                $rightId=58;
                 break;
         }
+        
        
+        /* Right mgmt start */
+        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
+        $channels=$this->rightObj->getAllowedChannels($rightId);
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+      
         //Get QB Array
         $q = Album::where('album.valid',$valid)
                 ->select('album.id','album.title','album.updated_at','photos.photopath')
                 ->leftJoin('photos','album.id','=','photos.owner_id')
+                ->where('album.channel_id','=',$currentChannelId)
                 ->where(function($qbytes){
                     $qbytes->whereNull('photos.owned_by')->orWhere('photos.owned_by','album') ;
                 }) ;
@@ -59,24 +77,10 @@ class AlbumController extends Controller
                 }
             }
 
-
-
         $albums=$q->groupby('album.id')->paginate(config('constants.recordperpage'));
-        //qbytes = QuickByte::where('status',$status)->get();
-       // echo count($qbytes);exit;
-        $arrRights = AlbumController::getRights($uid);
-//echo '<pre>';
-//       print_r($arrRights);exit;
-//        echo $rightLabel;echo '<br>';
-        foreach($arrRights as $eachRight) {
-            if ($rightLabel == $eachRight->label){
-               //echo json_encode($albums);exit;
-                return view('album.'.$option, compact('albums'));
-            }
-        }
-       // echo 'test';exit;
-       // exit;
-        return redirect('/dashboard');
+    
+                return view('album.'.$option, compact('albums','channels','currentChannelId'));
+            
 
     }
 
@@ -92,14 +96,24 @@ class AlbumController extends Controller
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
+        
+         /* Right mgmt start */
+        $rightId=59;
+        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
+        $channels=$this->rightObj->getAllowedChannels($rightId);
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        
+        /* Right mgmt end */
+        
+        
         //$asd = fopen("/home/sudipta/log.log", 'a+');
         $uid = Session::get('users')->id;
-        $channels = AlbumController::getUserChannels($uid);
         $authors = Author::where('author_type_id','=',2)->get();
         $tags = Tag::where('valid','1')->get();
         $p1= DB::table('author_type')->where('valid','1')->whereIn('author_type_id',[1,2])->lists('label','author_type_id');
         //fclose($asd);
-        return view('album.create', compact('uid','channels','p1','authors','tags'));
+        return view('album.create', compact('uid','channels','p1','authors','tags','currentChannelId'));
     }
     /*
      * Get Page Rights of the User
@@ -167,6 +181,15 @@ class AlbumController extends Controller
         //echo '<pre>';
        // print_r($request->all());exit;
 
+         /* Right mgmt start */
+        $rightId=59;
+        $currentChannelId=$request->channel;
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        
+        /* Right mgmt end */
+        
+        
         $album = new Album();
 
         // Add Arr Data to Album Table //
@@ -220,12 +243,12 @@ class AlbumController extends Controller
         //Redircting to specifi locationn with proper message
         if($request->status == 'P') {
             Session::flash('message', 'Your album has been Published successfully.');
-            return redirect('/album/list/published');
+            return redirect('/album/list/published?channel='.$request->channel);
         }
       
         if($request->status == 'D') {
             Session::flash('message', 'Your album has deleted successfully.');
-            return redirect('/album/list/deleted');
+            return redirect('/album/list/deleted?channel='.$request->channel);
         }
     }
 
@@ -237,6 +260,7 @@ class AlbumController extends Controller
      */
     public function show($id)
     {   
+        
         $album=Album::find($id);
         $photos=DB::table('photos')
                 ->where('owned_by','album')
@@ -246,7 +270,18 @@ class AlbumController extends Controller
                 ->select('tags_id as id','tag as name')
                 ->whereIn('tags_id',explode(',',$album->tags))->get());
         $uid = Session::get('users')->id;
-        $channels = AlbumController::getUserChannels($uid);
+        
+         /* Right mgmt start */
+        $rightId=59;
+        $currentChannelId=$album->channel_id;
+        $channels=$this->rightObj->getAllowedChannels($rightId);
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        
+        /* Right mgmt end */
+        
+        
+       // $channels = AlbumController::getUserChannels($uid);
         return view('album.edit', compact('album','photos','tags','channels'));
        
     }
@@ -271,6 +306,15 @@ class AlbumController extends Controller
      */
     public function update(Request $request)
     {//Update album
+        
+         /* Right mgmt start */
+        $rightId=59;
+        $currentChannelId=$request->channel;
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        
+        /* Right mgmt end */
+        
         $album = Album::find($request->id);
         // Add Arr Data to Article Table //
         $album->channel_id = $request->channel;
@@ -322,12 +366,12 @@ class AlbumController extends Controller
         //If it's puublished
         if($request->status == 'P') {
             Session::flash('message', 'Your album has been Published successfully.');
-            return redirect('/album/list/published');
+            return redirect('/album/list/published?channel='.$request->channel);
         }
         // If deleted
         if($request->status == 'D') {
             Session::flash('message', 'Your Album has been dumped successfully.');
-            return redirect('/album/list/deleted');
+            return redirect('/album/list/deleted?channel='.$request->channel);
         }
        
         //fclose($asd);

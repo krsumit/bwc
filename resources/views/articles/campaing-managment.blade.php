@@ -13,16 +13,17 @@
         </div>
         <div class="panel-search container-fluid">
             <form class="form-horizontal" method="get" action="">
-                    <input id="panelSearch" required  placeholder="Search" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">
-                    <button class="btn btn-search" type="submit"></button>
-                     @if(isset($_GET['keyword'])) 
-                     <a href="/campaing/add-management"><button class="btn btn-default" type="button">Reset</button></a>
-                   @endif
+                <input name="channel" type="hidden" value="{{$currentChannelId}}" />
+                <input id="panelSearch" required  placeholder="Search" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">
+                <button class="btn btn-search" type="submit"></button>
+                @if(isset($_GET['keyword'])) 
+                <a href="/campaing/add-management?channel={{$currentChannelId}}"><button class="btn btn-default" type="button">Reset</button></a>
+                @endif
 
-             </form>
+            </form>
         </div>
-        
-					<br><br>
+
+        <br><br>
         <div class="panel-header">
  <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
         </div>
@@ -105,8 +106,8 @@
                         <strong>This is Success Notification</strong>
                         <span>{{ Session::get('message') }}</span>
                     </div>
-                      @endif 
-                   
+                    @endif 
+
                 </div>
             </div>
             <!--Notifications end-->
@@ -123,36 +124,49 @@
                 <div class="span9">
                     <div class="controls">
                         <select name="channel" id="selectBoxFilter20">
-                            <option  value="">Please select </option>
-                             @foreach($channels as $channel)
-								<option value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
-							@endforeach
+                            @foreach($channels as $channel)
+                            <option @if($channel->channel_id ==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>
                 <script>
                     $().ready(function () {
                         $("#selectBoxFilter20").select2();
+                        $("#selectBoxFilter20").change(function () {
+                            $(this).find("option:selected").each(function () {
+
+                                if ($(this).attr("value").trim().length != 0) {
+
+                                window.location = '{{url("campaing/add-management")}}' + '?channel=' + $(this).attr("value").trim();
+                            }
+
+                            else if ($(this).attr("value") == "none") {
+
+                            $("#quote_list").hide();
+                        }
+
+                        });
                     });
-                </script>
+                    });                </script>
             </div>
 
             <!--Select Box with Filter Search end-->
 
             <!--Select Box with Filter Search begin-->
-          
+
 
             <!--Select Box with Filter Search end-->		
         </div>
         <input type="hidden" name="cid" id="cid" value="">
         <input type="hidden" name="p_photo" id="photo" value="">
-        
-        
+
+
         <div class="container-fluid">
 
             <div class="form-legend" id="fb">Campaign</div>
 
-           
+
             <div id="Article-Details" class="control-group row-fluid">
                 <div class="span3">
                     <label class="control-label">Title </label>
@@ -176,7 +190,7 @@
                 </div>
             </div>
             <!--Text Area Resizable end-->
-                <div id="File_Upload" class="control-group row-fluid">
+            <div id="File_Upload" class="control-group row-fluid">
                 <div class="span3">
                     <label class="control-label">Photo</label>
                 </div>
@@ -193,13 +207,13 @@
         <div class="control-group row-fluid">
             <div class="span12 span-inset">
                 <button type="submit" class="btn btn-info">Save</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
-                
+
             </div>
         </div>
 
 
- 
-       <div class="container-fluid">
+
+        <div class="container-fluid">
 
 
             <!--Sortable Responsive Media Table begin-->
@@ -210,34 +224,34 @@
                             <tr>
                                 <th>Image</th>
                                 <th>Name</th>
-                                
+
                                 <th><input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectall"></th>
                             </tr>
                         </thead>
                         <tbody>
-                             @foreach($posts as $a)
+                            @foreach($posts as $a)
                             <tr class="gradeX" id="rowCur{{$a->campaign_id}}">
                                 <td style="width:160px;"><img src="{{$a->url}}" alt="user" style="width:70%;" /></td>
                                 <td ><a href="#"onclick="getEditcampaing({{$a->campaign_id}})">{{$a->title}}</a></td>
-                               
+
                                 <td  class="center"><input type="checkbox" class="uniformCheckbox" value="{{$a->campaign_id}}" name="checkItem[]"></td>
                             </tr>
                             @endforeach
-                            
+
 
                         </tbody>
                     </table>
 
                 </div>
             </div>
-              <div class="dataTables_paginate paging_bootstrap pagination">
-                    
-                 {!! $posts->appends(Input::get())->render() !!}
-                </div>
+            <div class="dataTables_paginate paging_bootstrap pagination">
+
+                {!! $posts->appends(Input::get())->render() !!}
+            </div>
             <!--Sortable Responsive Media Table end-->
-                    
+
         </div><!-- end container -->
-       
+
         <script>
             $(document).ready(function () {
                 $('#tableSortable').dataTable({
@@ -251,49 +265,49 @@
                 //                            $("#simpleSelectBox").select2({
                 //                                dropdownCssClass: 'noSearch'
                 //                            }); 
-                
-                
-                 $('#selectall').click(function(){
-                            if($(this).is(':checked')) {
-                                $('input[name="checkItem[]"]').each(function(){
-                                    $(this).attr('checked','checked');
-                                });
-                            }else{
-                                 $('input[name="checkItem[]"]').each(function(){
-                                    $(this).removeAttr('checked');
-                                });
-                            }
-                         });
+
+
+                $('#selectall').click(function () {
+                    if ($(this).is(':checked')) {
+                        $('input[name="checkItem[]"]').each(function () {
+                            $(this).attr('checked', 'checked');
+                        });
+                    } else {
+                        $('input[name="checkItem[]"]').each(function () {
+                            $(this).removeAttr('checked');
+                        });
+                    }
+                });
             });
-            
-             function deleteAuthor() {
-                        var ids = '';
-                        var checkedVals = $('input[name="checkItem[]"]:checkbox:checked').map(function () {
-                            var row = 'rowCur' + this.value;
-                           
-                            return this.value;
-                        }).get();
-                        
-                       // alert(2);
-                        var ids = checkedVals.join(",");
-                        //alert(ids);return false;
-                        $.get("{{ url('/campaing/delete/')}}",
-                                {option: ids},
-                        function (data) {
-                            $.each(checkedVals, function (i, e) {
-                                var row = 'rowCur' + e;
-                                $("#" + row).remove();
-                            });
-                            $('#notificationdiv').show();
-                            $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
+
+            function deleteAuthor() {
+                var ids = '';
+                var checkedVals = $('input[name="checkItem[]"]:checkbox:checked').map(function () {
+                    var row = 'rowCur' + this.value;
+
+                    return this.value;
+                }).get();
+
+                // alert(2);
+                var ids = checkedVals.join(",");
+                //alert(ids);return false;
+                $.get("{{ url('/campaing/delete/?channel=').$currentChannelId}}",
+                        {option: ids},
+                function (data) {
+                    $.each(checkedVals, function (i, e) {
+                        var row = 'rowCur' + e;
+                        $("#" + row).remove();
+                    });
+                    $('#notificationdiv').show();
+                    $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
                                 <i class="icon-alert icon-alert-info"></i><button type="button" class="close" data-dismiss="alert">\n\
                                 &times;</button><strong>This is Success Notification</strong>\n\
                                 <span></span>Selected records dumped.</div>');
-                           
-                            //alert(1);
-                        });
-                    }
-                    
+
+                    //alert(1);
+                });
+            }
+
         </script>
 
         <div class="control-group row-fluid">
@@ -304,85 +318,85 @@
     </form>
 </div>
 <script>
-    function validatecampaingData(){
-           var valid = 1;
-                $('.author_error').remove();
-                $('#new input').removeClass('error');
-                $('#new textarea').removeClass('error');
-            if ($('select[name=channel]').val().trim() == 0){
-                valid = 0;
-                $('select[name=channel]').addClass('error');
-                $('select[name=channel]').after(errorMessage('Please enter channel'));
-                }
-            if ($('input[name=title]').val().trim() == 0){
-                valid = 0;
-                $('input[name=title]').addClass('error');
-                $('input[name=title]').after(errorMessage('Please enter title'));
-                }
-            
-            
-                                    //alert(valid);
-            if (valid == 0)
-                return false;
-                else
-                return true;
+    function validatecampaingData() {
+        var valid = 1;
+        $('.author_error').remove();
+        $('#new input').removeClass('error');
+        $('#new textarea').removeClass('error');
+        if ($('select[name=channel]').val().trim() == 0) {
+            valid = 0;
+            $('select[name=channel]').addClass('error');
+            $('select[name=channel]').after(errorMessage('Please enter channel'));
         }
-    function errorMessage($msg){
-return '<span class="error author_error">' + $msg + '</span>';
+        if ($('input[name=title]').val().trim() == 0) {
+            valid = 0;
+            $('input[name=title]').addClass('error');
+            $('input[name=title]').after(errorMessage('Please enter title'));
         }
-  function getEditcampaing(id) {
-                    //alert(id);
-                    $.get("{{ url('/campaing/edit/')}}",
-                            {option: id},
-                            function (data) {
-                                //add to relevant fields
-                                //alert(data);
-                                
-                                var result = jQuery.parseJSON(data);
-                                
-                                var one;
-                                var two;
-                                $.each(result, function(index, element) {
-                                    //alert(index);
-                                    //alert(element);
-                                    if(index == 0) {
-                                        one = element;
-                                    }else{
-                                        two = element;
-                                    }
-                                });
-                                $.each(one, function(ind, ele) {
-                                    $.each(ele, function(index, element) {
-                                      
-                                        //alert(index);
-                                         // alert(element);
-                                        //alert(element);
-                                        if (index == 'campaign_id') {
-                                           
-                                            $('#cid').val(element);
-                                        }
-                                        if (index == 'title') {
-                                            
-                                            $('#title').val(element);
-                                        }
-                                        if (index == 'description') {
-                                            
-                                            $('#description').val(element);
-                                        }
-                                        
-                                        
-                                      
-                                        if (index == 'url') {  
-                                             //var p="";
-                                              $('#photo').val(element);
-                                     
-                                        }
-                                        
-                                    });
-                                });
-                                //Loop on all tags, select the one selected
-                                
-                            });
-                }              
- </script>
+
+
+        //alert(valid);
+        if (valid == 0)
+            return false;
+        else
+            return true;
+    }
+    function errorMessage($msg) {
+        return '<span class="error author_error">' + $msg + '</span>';
+    }
+    function getEditcampaing(id) {
+        //alert(id);
+        $.get("{{ url('/campaing/edit/')}}",
+                {option: id},
+        function (data) {
+            //add to relevant fields
+            //alert(data);
+
+            var result = jQuery.parseJSON(data);
+
+            var one;
+            var two;
+            $.each(result, function (index, element) {
+                //alert(index);
+                //alert(element);
+                if (index == 0) {
+                    one = element;
+                } else {
+                    two = element;
+                }
+            });
+            $.each(one, function (ind, ele) {
+                $.each(ele, function (index, element) {
+
+                    //alert(index);
+                    // alert(element);
+                    //alert(element);
+                    if (index == 'campaign_id') {
+
+                        $('#cid').val(element);
+                    }
+                    if (index == 'title') {
+
+                        $('#title').val(element);
+                    }
+                    if (index == 'description') {
+
+                        $('#description').val(element);
+                    }
+
+
+
+                    if (index == 'url') {
+                        //var p="";
+                        $('#photo').val(element);
+
+                    }
+
+                });
+            });
+            //Loop on all tags, select the one selected
+
+        });
+    }
+</script>
 @stop

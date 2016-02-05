@@ -18,8 +18,11 @@ Route::get('/', function () {
 });
 */
 Route::get('/dashboard', ['middleware' => 'auth',   'uses' => function () {
-//    echo '<pre>';
-//   //print_r(Auth::user()); exit;;
+    //echo '<pre>';
+   //    echo print_r($_COOKIE);
+    //   print_r(Auth::user());exit;
+  //  echo '<pre>';
+ //print_r(Auth::user()); exit;;
 //    if(Auth::guest()){
 //        echo '1'; exit;
 //    }else{
@@ -70,7 +73,6 @@ Route::get('child', function () {
 
 // Article - Module
 Route::get('article/create', ['middleware' => 'auth',   'uses' => 'ArticlesController@create']);
-Route::get('article/createtest', ['middleware' => 'auth',   'uses' => 'ArticlesController@createTest']);
 Route::get('article/list/{option}', ['middleware' => 'auth',   'uses' => 'ArticlesController@index']);
 
 //Route::get('article/list/{option}',['middleware' => 'auth', 'uses' => 'ArticlesController@index','as' => 'search']);
@@ -82,7 +84,6 @@ Route::post('article/image/upload', ['middleware' => 'auth',   'uses' => 'Articl
 Route::get('article/image/upload','ArticlesController@imageUpload');
 //Route::delete('article/image/upload', 'ArticlesController@imageUpload');
 Route::post('article', ['middleware' => 'auth',   'uses' => 'ArticlesController@store' ]);
-Route::post('article/teststore', ['middleware' => 'auth',   'uses' => 'ArticlesController@storeTest' ]);
 Route::get('article/publishscheduled','ArticlesController@publishScheduledArticle');
 Route::get('profile', ['middleware' => 'auth',   'uses' => 'ArticlesController@create' ]);
 /*
@@ -148,7 +149,7 @@ Route::get('article/dropdown1', function(){
             break;
     }
     //fwrite($l,"\n Key ID ".$type);
-    $arrSubCat = DB::table('category'.$type)->where($key_id, $input)->orderBy('name')->lists('category'.$type.'_id','name');
+    $arrSubCat = DB::table('category'.$type)->where('valid','=','1')->where($key_id, $input)->orderBy('name')->lists('category'.$type.'_id','name');
 
     return $arrSubCat;
 });
@@ -160,7 +161,7 @@ Route::get('/article/event/', function(){
     $option = Input::get('option');
     $eventList = DB::table('event')
         ->where('channel_id',$option)
-        ->orWhere('channel_id', '=', '')
+        ->where('valid','=','1')    
         ->lists('event_id','title');
     return $eventList;
 });
@@ -169,7 +170,7 @@ Route::get('/article/event/', function(){
  */
 Route::get('/article/campaign/', function(){
     $option = Input::get('option');
-    $campaignList = DB::table('campaign')->where('channel_id',$option)->lists('campaign_id','title');
+    $campaignList = DB::table('campaign')->where('valid','=','1')->where('channel_id',$option)->lists('campaign_id','title');
     return $campaignList;
 });
 /*
@@ -177,7 +178,7 @@ Route::get('/article/campaign/', function(){
  */
 Route::get('/article/magazine/', function(){
     $option = Input::get('option');
-    $magazineList = DB::table('magazine')->where('channel_id',$option)->lists('magazine_id','title');
+    $magazineList = DB::table('magazine')->where('valid','=','1') ->where('channel_id',$option)->lists('magazine_id','title');
     return $magazineList;
 });
 
@@ -410,6 +411,7 @@ Route::post('sposts/update', ['middleware' => 'auth',   'uses' => 'SponsoredPost
 //Route::match(['get', 'post'], 'sposts/upload', ['middleware' => 'auth',   'uses' => 'SponsoredPostsController@uploadImg']);
 Route::post('sposts', ['middleware' => 'auth',   'uses' => 'SponsoredPostsController@store' ]);
 Route::match(['get', 'post'], '/sposts/delete', ['as' => '/sposts/delete', 'uses' => 'SponsoredPostsController@destroy']);
+Route::get('sposts/publish','SponsoredPostsController@publishBulk');
 Route::get('sposts/{id}','SponsoredPostsController@show');
 Route::post('sposts/image/upload', ['middleware' => 'auth',   'uses' => 'SponsoredPostsController@imageUpload' ]);
 Route::get('sposts/image/upload','SponsoredPostsController@imageUpload');
@@ -418,11 +420,33 @@ Route::get('sposts/image/upload','SponsoredPostsController@imageUpload');
  * CMS Rights - Management
  */
 Route::get('rights/', ['middleware' => 'auth',   'uses' => 'RightsController@index']);
-Route::get('rights/edit', ['middleware' => 'auth',   'uses' => 'RightsController@edit']);
+//Route::get('rights/edit', ['middleware' => 'auth',   'uses' => 'RightsController@edit']);
 Route::post('rights', ['middleware' => 'auth',   'uses' => 'RightsController@store' ]);
 Route::post('rights/manage', ['middleware' => 'auth',   'uses' => 'RightsController@update' ]);
 Route::match(['get', 'post'], '/rights/delete', ['as' => '/rights/delete', 'uses' => 'RightsController@destroy']);
 Route::get('rights/{id}','RightsController@edit');
+// Roles management
+Route::get('roles/manage',['middleware' => 'auth','uses' => 'RightsController@manageRole']);
+Route::get('roles/add', ['middleware' => 'auth',   'uses' => 'RightsController@addRole']);
+Route::get('roles/edit/{id}', ['middleware' => 'auth',   'uses' => 'RightsController@editRole']);
+Route::post('roles/store', ['middleware' => 'auth',   'uses' => 'RightsController@storeRole']);
+Route::post('roles/update', ['middleware' => 'auth',   'uses' => 'RightsController@updateRole']);
+Route::match(['get', 'post'], 'roles/delete', ['as' => 'roles/delete', 'uses' => 'RightsController@destroyRole']);
+Route::get('roles/get/channel/permission',['middleware' => 'auth','uses' => 'RightsController@getRoleChannelPermission']);
+
+/*Video routs start here */
+Route::get('video/create', ['middleware' => 'auth',   'uses' => 'VideoController@create']);
+Route::get('video/list', ['middleware' => 'auth',   'uses' => 'VideoController@index']);
+Route::post('video/update', ['middleware' => 'auth',   'uses' => 'VideoController@update' ]);
+Route::match(['get', 'post'], 'video/upload', ['middleware' => 'auth',   'uses' => 'VideoController@uploadImg']);
+Route::post('video', ['middleware' => 'auth',   'uses' => 'VideoController@store' ]);
+Route::match(['get', 'post'], '/video/delete', ['as' => '/video/delete', 'uses' => 'VideoController@destroy']);
+Route::match(['get', 'post'], '/video/publish', ['as' => '/video/publish', 'uses' => 'VideoController@publishBulk']);
+Route::get('video/{id}','VideoController@show');
+Route::post('video/image/upload', ['middleware' => 'auth',   'uses' => 'VideoController@imageUpload' ]);
+Route::get('video/image/upload','VideoController@imageUpload');
+
+/*Video routs end here */
 
 
 //Test Purpose - Get

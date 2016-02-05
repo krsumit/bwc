@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Author;
 use App\Tag;
 use Illuminate\Http\Request;
-
+use App\Right;
 use DB;
 use Session;
 use App\QuickByte;
@@ -21,6 +21,11 @@ use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 class QuickBytesController extends Controller
 {
+    
+    private $rightObj;
+    public function __construct() {
+         $this->rightObj= new Right();
+    } 
     /**
      * Display a listing of the resource.
      *
@@ -28,7 +33,7 @@ class QuickBytesController extends Controller
      */
     public function index($option)
     {
-        //echo count($arr);exit;
+      //echo 'test';exit;
         //
         if(!Session::has('users')){
             return redirect()->intended('/auth/login');
@@ -38,18 +43,27 @@ class QuickBytesController extends Controller
         switch($option){
             case "published":
                 $status = 'P';
-                $rightLabel = "publishedQBs";
+                $rightId='24';
+                //$rightLabel = "publishedQBs";
                 break;
             case "deleted":
                 $status = 'D';
-                $rightLabel = "deletedQBs";
+                $rightId='25';
+               // $rightLabel = "deletedQBs";
                 break;
-        }
-         //Get QB Array
-         //DB::enableQueryLog();
+        }   
+       
+        /* Right mgmt start */
+        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
+        $channels=$this->rightObj->getAllowedChannels($rightId);
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+        
         
         $q = QuickByte::where('status',$status)
                 ->select('quickbyte.id','quickbyte.title','quickbyte.publish_date','photos.photopath')
+                ->where('quickbyte.channel_id','=',$currentChannelId)
                 ->leftJoin('photos',function($leftjoin){
                     $leftjoin->on('quickbyte.id','=','photos.owner_id')
                             ->where('photos.owned_by','=','quickbyte');
@@ -71,23 +85,23 @@ class QuickBytesController extends Controller
 
 
 
-        $qbytes=$q->groupby('quickbyte.id')->paginate(config('constants.recordperpage'));
+        $qbytes=$q->groupby('quickbyte.id')->orderBy('quickbyte.updated_at','desc')->paginate(config('constants.recordperpage'));
         //qbytes = QuickByte::where('status',$status)->get();
         
         //$query = DB::getQueryLog();
         //$lastQuery = end($query);
        // print_r($lastQuery);exit;
         //echo count($qbytes);exit;
-        $arrRights = QuickBytesController::getRights($uid);
+        //$arrRights = QuickBytesController::getRights($uid);
         
-        foreach($arrRights as $eachRight) {
-            if ($rightLabel == $eachRight->label){
+//        foreach($arrRights as $eachRight) {
+//            if ($rightLabel == $eachRight->label){
                // echo json_encode($qbytes);exit;
-                return view('quickbytes.'.$option, compact('qbytes'));
-            }
-        }
+                return view('quickbytes.'.$option, compact('qbytes','channels','currentChannelId'));
+//            }
+//        }
 
-        return redirect('/dashboard');
+       // return redirect('/dashboard');
 
     }
 
@@ -102,16 +116,25 @@ class QuickBytesController extends Controller
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
+        
+        /* Right mgmt start */
+        $rightId=23;
+        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
+        $channels=$this->rightObj->getAllowedChannels($rightId);
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+        
+        
         //$asd = fopen("/home/sudipta/log.log", 'a+');
         $uid = Session::get('users')->id;
-        $channels = QuickBytesController::getUserChannels($uid);
         $authors = Author::where('author_type_id','=',2)->get();
-        $category = DB::table('category')->where('valid','1')->orderBy('name')->get();
+        $category = DB::table('category')->where('channel_id',$currentChannelId)->where('valid','1')->orderBy('name')->get();
         
-        //$tags = Tag::where('valid','1')->get();
+        $tags = Tag::where('valid','1')->get();
         $p1= DB::table('author_type')->where('valid','1')->whereIn('author_type_id',[1,2])->lists('label','author_type_id');
         //fclose($asd);
-        return view('quickbytes.create', compact('category','uid','channels','p1','authors','tags'));
+        return view('quickbytes.create', compact('category','uid','channels','p1','authors','tags','currentChannelId'));
     }
     /*
      * Get Page Rights of the User
@@ -174,6 +197,15 @@ class QuickBytesController extends Controller
 		 if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
+        
+        /* Right mgmt start */
+        $rightId=23;
+        $currentChannelId=$request->channel;
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+        
+        
         //Session's User Id
       // echo count($request->Ltopics);
         $uid = $request->user()->id;
@@ -315,7 +347,7 @@ class QuickBytesController extends Controller
            
         if($request->status == 'P') {
             Session::flash('message', 'Your Quickbte has been Published successfully.');
-            return redirect('/quickbyte/list/published');
+            return redirect('/quickbyte/list/published?channel='.$request->channel);
         }
       
 //        if($request->status == 'D') {
@@ -339,11 +371,21 @@ class QuickBytesController extends Controller
      */
     public function show($id)
     {
-		 if (!Session::has('users')) {
+	 if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
         
         $quickbyte=QuickByte::find($id);
+        
+        /* Right mgmt start */
+        $rightId=23;
+        $currentChannelId=$quickbyte->channel_id;
+        $channels=$this->rightObj->getAllowedChannels($rightId);
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+        
+        
         //print_r($quickbyte);
 //exit;       //$arq=  explode($quickbyte->topics);exit;
         $arrTopics = DB::table('topics')
@@ -360,7 +402,7 @@ class QuickBytesController extends Controller
                 ->select('tags_id as id','tag as name')
                 ->whereIn('tags_id',explode(',',$quickbyte->tags))->get());
         $uid = Session::get('users')->id;
-        $channels = QuickBytesController::getUserChannels($uid);
+        //$channels = QuickBytesController::getUserChannels($uid);
         $authors = Author::where('author_type_id','=',$quickbyte->author_type)->get();
         $p1= DB::table('author_type')->where('valid','1')->whereIn('author_type_id',[1,2])->lists('label','author_type_id');
         //Quickbytecategory 
@@ -399,7 +441,7 @@ class QuickBytesController extends Controller
             }
             
         }
-         $category = DB::table('category')->where('valid','1')->orderBy('name')->get();
+         $category = DB::table('category')->where('channel_id','=',$currentChannelId)->where('valid','1')->orderBy('name')->get();
         
         
         return view('quickbytes.edit', compact('quickbyte','arrTopics','photos','tags','channels','authors','p1','acateg','category'));
@@ -431,6 +473,14 @@ class QuickBytesController extends Controller
         }
 		//QuickByte
         //print_r($request->all());exit;
+        
+         /* Right mgmt start */
+        $rightId=23;
+        $currentChannelId=$request->channel;
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+        
         $quickbyte = QuickByte::find($request->id);
         // Add Arr Data to Article Table //
         $quickbyte->channel_id = $request->channel;
@@ -555,12 +605,12 @@ class QuickBytesController extends Controller
         //If has been Saved by Editor
         if($request->status == 'P') {
             Session::flash('message', 'Your Quickbte has been Published successfully.');
-            return redirect('/quickbyte/list/published');
+            return redirect('/quickbyte/list/published?channel='.$request->channel);
         }
       
         if($request->status == 'D') {
             Session::flash('message', 'Your Article has been Saved successfully.');
-            return redirect('/quickbyte/list/deleted');
+            return redirect('/quickbyte/list/deleted?channel='.$request->channel);
         }
        
         //fclose($asd);

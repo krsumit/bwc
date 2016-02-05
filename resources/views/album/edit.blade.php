@@ -151,7 +151,6 @@
 							<div class="span9">
                                 <div class="controls">
                                     <select name="channel"  id="channel" class="formattedelement">
-                                        <option selected="" value="">Please Select</option>
                                             @foreach($channels as $channel)
                                             <option @if($channel->channel_id==$album->channel_id) selected @endif; value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
                                             @endforeach
@@ -228,7 +227,7 @@
                         <div id="Drag_And_Drop_Upload" class="control-group row-fluid">
                             <div class="span3">
                                 <label class="control-label" for="inputField">
-                                    Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: 1200px X 600px)."><i class="icon-photon info-circle"></i></a>
+                                    Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: 1200px X 600px) (File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}}  )."><i class="icon-photon info-circle"></i></a>
                                 </label>
                             </div>
                             <div class="span9 row-fluid" >

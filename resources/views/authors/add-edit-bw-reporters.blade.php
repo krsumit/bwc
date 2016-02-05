@@ -204,7 +204,7 @@
             </div>
             <div id="File_Upload" class="control-group row-fluid">
                 <div class="span3">
-                    <label class="control-label">Photo</label>
+                    <label class="control-label">Photo(File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}})</label>
                 </div>
                 <div class="span9">
                     <div class="fileupload fileupload-new" data-provides="fileupload">

@@ -6,6 +6,7 @@ use App\Author;
 use App\Tag;
 use Illuminate\Http\Request;
 use DB;
+use App\Right;
 use Session;
 use App\Debate;
 use App\DebateCategory;
@@ -30,12 +31,31 @@ class DebateController extends Controller {
      *
      * @return Response
      */
+    
+    private $rightObj;
+    public function __construct() {
+         $this->rightObj= new Right();
+    
+    }
+    
+    
     public function index() {
         //echo 'published debate'; exit;
+        
+        
         $uid = Session::get('users')->id;
         
+        /* Right mgmt start */
+        $rightId=79;
+        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
+        $channels=$this->rightObj->getAllowedChannels($rightId);
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
         
-        $deb=  Debate::where('valid','1');
+        
+        
+        $deb=  Debate::where('valid','1')->where('channel_id','=',$currentChannelId);
         $deb->orderBy('created_at','desc');
        
         if (isset($_GET['searchin'])) {
@@ -51,7 +71,7 @@ class DebateController extends Controller {
 
         $debates = $deb->paginate(config('constants.recordperpage'));
         //echo count($debates); exit;
-        return view('debate.published', compact('debates'));
+        return view('debate.published', compact('debates','channels','currentChannelId'));
        
     }
 
@@ -62,10 +82,16 @@ class DebateController extends Controller {
      */
     public function create() {
         
+        /* Right mgmt start */
+        $rightId=81;
+        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
+        $channels=$this->rightObj->getAllowedChannels($rightId);
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
         $uid = Session::get('users')->id;
-        $channels = DebateController::getUserChannels($uid);
-        $category = DB::table('category')->where('valid', '1')->orderBy('name')->get();
-        return view('debate.create', compact('category', 'uid', 'channels'));
+        $category = DB::table('category')->where('channel_id','=',$currentChannelId)->where('valid', '1')->orderBy('name')->get();
+        return view('debate.create', compact('category', 'uid', 'channels','currentChannelId'));
     }
 
     /*
@@ -113,6 +139,16 @@ class DebateController extends Controller {
      */
     public function store(Request $request) {
          // echo $request->is_featured; 
+        
+        /* Right mgmt start */
+        $rightId=81;
+        $currentChannelId=$request->channel;
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+        
+        
+        
         if($request->is_featured){
             //echo 'test'; exit;
             $this->validate($request,[
@@ -268,7 +304,7 @@ class DebateController extends Controller {
         
        
             Session::flash('message', 'Your Debate has been Published successfully.');
-            return redirect('/debate/published');
+            return redirect('/debate/published?channel='.$request->channel);
     }
 
     /**
@@ -281,6 +317,17 @@ class DebateController extends Controller {
         $uid = Session::get('users')->id;
         
         $debateDetail=  Debate::find($id);
+        
+        
+         /* Right mgmt start */
+        $rightId=81;
+        $currentChannelId=$debateDetail->channel_id;
+        $channels=$this->rightObj->getAllowedChannels($rightId);
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+        
+        
         $debatetags= json_encode(DebateTag::select('tags.tags_id as id', 'tags.tag as name')
                 ->join('tags','tags.tags_id','=','debate_tag.tag_id')
                 ->where('tags.valid','1')
@@ -322,7 +369,7 @@ class DebateController extends Controller {
             
         }
         //print_r($acateg); exit;
-         $category = DB::table('category')->where('valid','1')->orderBy('name')->get();
+        // $category = DB::table('category')->where('valid','1')->orderBy('name')->get();
          $debateVideo = Video::where('owned_by', '=', 'debate')
                         ->where('owner_id', '=', $id)->first();
          $debatePhotos = Photo::where('owned_by', '=', 'debate')
@@ -339,8 +386,8 @@ class DebateController extends Controller {
           //print_r($debateDetail); exit;
           
         //echo $exprtnts[0]->view;exit;
-        $channels = DebateController::getUserChannels($uid);
-        $category = DB::table('category')->where('valid', '1')->orderBy('name')->get();
+        
+        $category = DB::table('category')->where('channel_id','=',$currentChannelId)->where('valid', '1')->orderBy('name')->get();
         return view('debate.edit', compact('category','acateg','uid', 'channels','debateDetail','debatetags','debatePhotos','debateVideo','exprtnts'));
     }
 
@@ -352,6 +399,15 @@ class DebateController extends Controller {
      * @return Response
      */
     public function update(Request $request) {
+        
+          /* Right mgmt start */
+        $rightId=81;
+        $currentChannelId=$request->channel;
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+        
+        
         if($request->is_featured && !trim($request->debate_old_featured_image)){
             //echo 'test'; exit;
             $this->validate($request,[
@@ -520,10 +576,8 @@ class DebateController extends Controller {
             $photo->save();
         } 
         Session::flash('message', 'Your Debate has been updated successfully.');
-        return redirect('/debate/published');
+        return redirect('/debate/published?channel='.$request->channel);
 
-        
-        
     }
 
     /**

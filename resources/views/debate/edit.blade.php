@@ -151,7 +151,6 @@
             <div class="span9">
                 <div class="controls">
                     <select name="channel"  id="channel" class="formattedelement">
-                        <option selected="" value="">Please Select-</option>
                         @foreach($channels as $channel)
                         <option @if($channel->channel_id==$debateDetail->channel_id) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
                         @endforeach
@@ -161,6 +160,28 @@
             <script>
                 $().ready(function () {
                     $("#channel").select2();
+                    
+                    $('#channel').change(function(){
+                        //alert(1);
+                                $.get("{{ url('article/dropdown1')}}",
+                                { option: $(this).attr("value") + '&level=' },
+                                        function(data) {
+                                        var Box = $('#selectBoxFilter2');
+                                                Box.empty();
+                                                Box.append("<option value=''>Please Select</option>");
+                                                $.each(data, function(index, element) {
+                                                Box.append("<option value='" + element + "'>" + index + "</option>");
+                                                });
+                                                $("#selectBoxFilter2").select2();
+                                                $('#selectBoxFilter3').html("<option value=''>Please Select</option>");
+                                                $("#selectBoxFilter3").select2();
+                                                $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
+                                                $('#selectBoxFilter4').select2();
+                                                $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                                $('#selectBoxFilter5').select2();
+                                        });
+                        });
+                    
                 });
             </script>
         </div>
@@ -180,7 +201,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <textarea  rows="4" name="title" id="title" class="no-resize">{{$debateDetail->title}}</textarea>
+                    <textarea  rows="3" name="title" id="title" class="no-resize">{{$debateDetail->title}}</textarea>
 
                 </div>
             </div>
@@ -193,7 +214,7 @@
                 <div class="controls">
 
 
-                    <textarea id="debatedesc" name="debatedesc" rows="2" class="auto-resize">{{$debateDetail->description}}</textarea>
+                    <textarea id="debatedesc" name="debatedesc" rows="5" class="auto-resize">{{$debateDetail->description}}</textarea>
                     <script>
 //                        elRTE.prototype.options.panels.web2pyPanel = [
 //                            'pastetext','bold', 'italic','underline','justifyleft', 'justifyright',
@@ -343,6 +364,93 @@
                             $('#selectBoxFilter5').select2();
                         });
                     });
+                    
+                 $('#pageSubmit').click(doCheck);   
+                     function doCheck(){  
+                     var checkvalid=1;
+                     $('.error.noborder').remove();
+                     //alert($('#debate_old_featured_image').val().trim());
+                         if(($('#is_featured').is(":checked")) && ($('#debate_old_featured_image').val().trim()=='')){
+                             if($('#debateimage').val()==''){
+                                 checkvalid=0;
+                                  $('.dbt_featured_image').append('<div class="error noborder">Please select featured image.</div>');
+                             }
+                         }
+                         
+                    
+                     $("#fileupload").validate({
+                        errorElement: "span",
+                            errorClass: "error",
+                            //$("#pageSubmit").onclick: true,
+                            onclick: true,
+                            invalidHandler: function(event, validator) {
+                         
+                                    for (var i in validator.errorMap) {
+                                        
+                                            if($('#'+i).hasClass('formattedelement')){
+                                                $('#'+i).siblings('.formattedelement').addClass('error');
+                                                
+                                        }
+                                   
+                                }
+                             },
+                            rules: {
+                            "req": {
+                            required: true
+                            },
+                                    "channel": {
+                                        required: true
+                                    },
+                                    "title": {
+                                    required: true
+                                    },
+                                    "debatedesc": {
+                                    required: true
+                                    },
+                                    "expertname1": {
+                                    required: true
+                                    },
+                                    "expertdesing1": {
+                                    required: true
+                                    },
+                                    "expertview1": {
+                                    required: true
+                                    },
+                                   "expertimage1": {
+                                    required: true,
+                                    accept: "image/*",
+                                    maxFileSize: {
+                                        "unit": "MB",
+                                        "size": 2
+                                    }
+                                    },
+                                    "expertname2": {
+                                    required: true
+                                    },
+                                    "expertdesing2": {
+                                    required: true
+                                    },
+                                    "expertview2": {
+                                    required: true
+                                    },
+                                   "expertimage2": {
+                                    required: true,
+                                    accept: "image/*",
+                                    maxFileSize: {
+                                        "unit": "MB",
+                                        "size": 2
+                                    }
+                                    }
+                                     
+                            }
+                    });
+                     
+                    if(!$("#fileupload").valid())
+                                checkvalid=0;
+                    if(checkvalid==0)
+                        return false;
+                    } 
+                    
                 });</script>
         </div>
         <div id="categories" class="control-group row-fluid">
@@ -637,7 +745,7 @@
             <div class="span12 span-inset">
 
                 <label class="checkbox" >
-                    <input type="checkbox" class="uniformCheckbox" @if($debateDetail->is_featured=='1' || old('is_featured')) checked="checked" @endif value="checkbox1" name="is_featured">
+                    <input type="checkbox" id="is_featured" class="uniformCheckbox" @if($debateDetail->is_featured=='1' || old('is_featured')) checked="checked" @endif value="checkbox1" name="is_featured">
                     <a href="#" target="_blank"> Make this a featured Debate</a>
                 </label>
                 <script>
@@ -653,12 +761,12 @@
             <div class="span3">
                 <label class="control-label">Upload Featured Image</label>
             </div>
-            <div class="span9">
+            <div class="span9 dbt_featured_image">
                 <div class="fileupload fileupload-new" data-provides="fileupload">
                     <div class="input-append">
                         <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" name="debateimage" id="debateimage"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
                          @if(isset($debatePhotos))<img src="{{config('constants.awsbaseurl').config('constants.debatefeatured').$debatePhotos->photopath}}" width="100" height="100" style="padding-left: 5px;" />
-                         <input type="hidden" value="{{$debatePhotos->photopath}}" name="debate_old_featured_image"/>@endif
+                         <input type="hidden" value="{{$debatePhotos->photopath}}" name="debate_old_featured_image" id="debate_old_featured_image"/>@endif
                     </div>
                 </div>
             </div>
@@ -667,7 +775,7 @@
 
         <div class="control-group row-fluid">
             <div class="span12 span-inset">
-                <button value="P" name="status" class="btn btn-warning" type="submit">Publish</button>
+                <button value="P" name="status" id="pageSubmit" class="btn btn-warning" type="submit">Publish</button>
                 <img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>	
                 <!--                                
                                                <button type="button" class="btn btn-success">Publish</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>

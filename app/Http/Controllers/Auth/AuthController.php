@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use Auth;
 use App\User;
+use App\UserRight;
 use Validator;
 use Request;
 use App\Http\Controllers\Controller;
@@ -92,6 +93,7 @@ class AuthController extends Controller
     {
         
         Auth::logout();
+         Session::flush();
         return redirect()->guest('auth/login');
     }
     
@@ -132,11 +134,16 @@ class AuthController extends Controller
             //$data12 = $data->session()->all();
            // echo "Hereljlcsc;";
             $user = Auth::user();
-            //print_r($user);
-           // print Auth::check();
-            //echo 'redirecting to dashboard';exit;
-           // echo Session::get('url.intended'); exit;//, url('/')); exit;
-            if(strpos(Session::get('url.intended'), 'logout')=== false){
+	     Auth::check();
+	     $id=$user->id;
+	     
+	     $userRights=array();
+	    $rights= UserRight::where('user_id',$id)->where('right_for','1')->distinct()->get();
+	     foreach($rights as $right){
+                $userRights[]=$right->rights_id;
+            }
+            Session::put('user_rights',$userRights);           
+	    if(strpos(Session::get('url.intended'), 'logout')=== false){
                 return redirect()->intended('/dashboard');
             }else{
                 return redirect('/dashboard');
