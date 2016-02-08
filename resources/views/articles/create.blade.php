@@ -1588,6 +1588,20 @@
 
               
                 <div id="dropdown1" class="tab-pane fade active in">
+                    
+                    <p>Browse recent related images : <button class="btn btn-success"  onclick = "document.getElementById('light').style.display = 'block';
+        document.getElementById('fade').style.display = 'block'" name="status" type="button">Browse</button>
+                        
+
+                    </p>
+                    <div id="light" class="white_content">
+                        <div style="width:100%">
+                            <a href = "javascript:void(0)" class="close_popu"  onclick = "document.getElementById('light').style.display = 'none';
+        document.getElementById('fade').style.display = 'none'">Close</a>
+                        </div>
+                        <div>Image selection process coming soon</div>
+                    </div>
+                    <div id="fade" class="black_overlay"></div>
                      
                     <!--                    <div class="control-group row-fluid">
                                             <div class="span3">

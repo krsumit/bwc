@@ -1331,7 +1331,7 @@ function migratequotesTage() {
                                 . "article_type=?,article_published_date=?,article_slug=?,article_status=?,important_article=?,video_Id=?,display_to_homepage=?,is_exclusive=?,"
                                 . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,article_location_country=?,article_location_state=?,hide_image=? where article_id=?");
                         $articleUpdateStmt->bind_param('sssisssiiiiiissiiii', $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
-                                , $pubDate, $articleRow['slug'], $status, $articleRow['video_Id'],$articleRow['important'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'],$articleRow['canonical_options'],$articleRow['video_type'],$articleRow['canonical_url'], $articleRow['country'], $articleRow['state'], $articleRow['hide_image'], $articleRow['article_id']
+                                , $pubDate, $articleRow['slug'], $status,$articleRow['important'],$articleRow['video_Id'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'],$articleRow['canonical_options'],$articleRow['video_type'],$articleRow['canonical_url'], $articleRow['country'], $articleRow['state'], $articleRow['hide_image'], $articleRow['article_id']
                         );
                         $articleUpdateStmt->execute();
                         if ($articleUpdateStmt->affected_rows) {
@@ -1357,7 +1357,7 @@ function migratequotesTage() {
                         $articleInsertStmt = $this->conn2->prepare("insert articles set article_id=?,article_title=?,article_description=?,article_summary=?,"
                                 . "article_type=?,article_published_date=?,article_slug=?,article_status=?,video_Id=?,important_article=?,display_to_homepage=?,is_exclusive=?,"
                                 . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,article_location_country=?,article_location_state=?,is_old=?,hide_image=?");
-                        $articleInsertStmt->bind_param('isssisssiiiiiiii', $articleRow['article_id'], $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
+                        $articleInsertStmt->bind_param('isssisssiiiiiissiiii', $articleRow['article_id'], $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
                                 , $pubDate, $articleRow['slug'], $status, $articleRow['video_Id'],$articleRow['important'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'],$articleRow['canonical_options'],$articleRow['video_type'],$articleRow['canonical_url'], $articleRow['country'], $articleRow['state'],$articleRow['is_old'],$articleRow['hide_image']);
                         $articleInsertStmt->execute();
                         //print_r($articleInsertStmt);exit;
@@ -2253,7 +2253,7 @@ function migrateFeaturImage($featurId,  $condition) {
             while ($masterVideoRow = $masterVideoResults->fetch_assoc()) {
                 // print_r($authorRow); exit;
                 $masterVideoId = $masterVideoRow['id'];
-                $checkmasterVideoExistResultSet = $this->conn2->query("select id, video_title,video_summary, video_name,video_thumb_name,tags,created_at,updated_at from video_master where id=$authorId");
+                $checkmasterVideoExistResultSet = $this->conn2->query("select video_id, video_title,video_summary, video_name,video_thumb_name,tags,created_at,updated_at from video_master where video_id=$masterVideoId");
                 if ($checkmasterVideoExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
                     $masterVideoUpdateStmt = $this->conn2->prepare("update video_master set video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=? where video_id=?");

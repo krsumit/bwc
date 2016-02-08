@@ -66,8 +66,8 @@
                                     //alert(ind);
                                     //alert(elem.length);
                                     $.each(elem, function(index, element) {
-                                        //alert(index);
-                                        //alert(element);
+                                      //  alert(index);
+                                       // alert(element);
                                         if ((index == 'id') && (addID == true)) {
                                             $('#faid').val(element);
                                         }
@@ -81,7 +81,7 @@
                                             $('#title').val(element);
                                         }
                                         if (index == 'photopath') {
-                                            $('#photo').val(element);
+                                            $('#photo_photo').val(element);
                                             $('input[name=mediaSel]').val('photo');
                                         }
                                         if (index == 'code') {
@@ -105,7 +105,7 @@
                                         if (index == 'position2_title') {
                                             $('#position2_title').val(element);
                                         }
-                                        if (index == 'position2val_photo') {
+                                        if (index == 'position2_photo') {
                                             $('#position2val_photo').val(element);
                                         
                                         }
@@ -119,7 +119,7 @@
                                         if (index == 'position3_title') {
                                             $('#position3_title').val(element);
                                         }
-                                        if (index == 'position3val_photo') {
+                                        if (index == 'position3_photo') {
                                             $('#position3val_photo').val(element);
                                         
                                         }

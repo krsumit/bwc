@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers; 
 
 use App\FeatureBox;
 use Illuminate\Http\Request;
@@ -230,10 +230,11 @@ class FeatureBoxController extends Controller {
         //Retrieve Generated ID
         $fid = $featureB->id;
 
-
-
+       // echo $request->mediaSel;
+//die;
         //For Image or Video Added:
         if($request->mediaSel == 'photo' ){
+            //echo 'sumit';
             
             $photo = new Photo();
             if($request->photo !=''){
@@ -273,7 +274,9 @@ class FeatureBoxController extends Controller {
             $photo->owner_id = $fid;
             $photo->valid = '1';
             $photo->save();
-            $pid = $photo->photo_id;
+          echo  $pid = $photo->photo_id; 
+         //echo  $fid;
+          //die;
             //Updating Feature Article
             $fBEdit = FeatureBox::find($fid);
             $fBEdit->photo_id = $pid;
