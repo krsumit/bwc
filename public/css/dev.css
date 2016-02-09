@@ -15,9 +15,9 @@ div.error .select2-choice{background-color: #f4c8c5!important;background-image:n
 .authorimagespn input{margin-top: 10px;}
 
 /* Article image selection pop-up css start */
-    .black_overlay{
+   /* .black_overlay{
         display: none;
-        position: absolute;
+        position: relative;
         top: 0%;
         left: 0%;
         width: 100%;
@@ -44,5 +44,5 @@ div.error .select2-choice{background-color: #f4c8c5!important;background-image:n
     }
     .close_popu{
         float: right;
-    }
+    }*/
 /* Article image selection pop-up css end */

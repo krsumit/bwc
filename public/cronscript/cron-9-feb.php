@@ -95,13 +95,9 @@ class Cron {
                 $this->migrateDebate();  
                  break;
             case 'sendreport': 
-                //echo 'test'; exit;
-               $this->generateReport();
-               break;	
-            case 'campaing': 
-                //echo 'test'; exit;
-               $this->migrateCampaing();
-               break;	
+				 //echo 'test'; exit;
+				$this->generateReport();
+				break;	
         endswitch;
 
         $_SESSION['message'] = $this->message;
@@ -228,9 +224,9 @@ class Cron {
                     if ($checkResult->num_rows > 0) {  //echo 'test';exit;
                         if($photoshootRow['valid']=='1'){//echo 'sumit'; exit();
                             
-                            $photoshootUpdateStmt = $this->conn2->prepare("update photo_shoot set photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,photo_shoot_published_date=?,photo_shoot_updated_at=?,campaign_id=? where photo_shoot_id=?");
+                            $photoshootUpdateStmt = $this->conn2->prepare("update photo_shoot set photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,photo_shoot_published_date=?,photo_shoot_updated_at=? where photo_shoot_id=?");
                             //echo 'sumit';
-                            $photoshootUpdateStmt->bind_param('ssiissii',$photoshootRow['title'],$photoshootRow['description'],$photoshootRow['sponsored'],$photoshootRow['featured'],$photoshootRow['created_at'],$photoshootRow['updated_at'],$id) or die($this->conn2->error);
+                            $photoshootUpdateStmt->bind_param('ssiissi',$photoshootRow['title'],$photoshootRow['description'],$photoshootRow['sponsored'],$photoshootRow['featured'],$photoshootRow['created_at'],$photoshootRow['updated_at'],$id) or die($this->conn2->error);
                             //echo 'abcd'.$this->conn2->error;exit;
                             $photoshootUpdateStmt->execute();
                             //print_r($photoshootUpdateStmt);exit;
@@ -255,9 +251,9 @@ class Cron {
                     }else{//echo 'test4';exit;
                         
                              $insertStmt = $this->conn2->prepare("insert into photo_shoot set photo_shoot_id=?,"
-                                     . "photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,photo_shoot_published_date=?,photo_shoot_updated_at=?,campaign_id=?");
-                            $insertStmt->bind_param('issiissi',$photoshootRow['id']
-                                    ,$photoshootRow['title'],$photoshootRow['description'],$photoshootRow['sponsored'],$photoshootRow['featured'],$photoshootRow['created_at'],$photoshootRow['updated_at'],$photoshootRow['campaign_id']);
+                                     . "photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,photo_shoot_published_date=?,photo_shoot_updated_at=?");
+                            $insertStmt->bind_param('issiiss',$photoshootRow['id']
+                                    ,$photoshootRow['title'],$photoshootRow['description'],$photoshootRow['sponsored'],$photoshootRow['featured'],$photoshootRow['created_at'],$photoshootRow['updated_at']);
                             $insertStmt->execute();
                             //print_r($insertStmt);exit;
                             // echo $articleInsertStmt->insert_id;exit;    
@@ -1159,9 +1155,9 @@ function migratequotesTage() {
                     if ($checkResult->num_rows > 0) {
                         if($quickBytesRow['status']=='P'){                            
                             $updateStmt = $this->conn2->prepare("update quick_bytes set quick_byte_author_type=?,"
-                                     . "quick_byte_author_id=?,quick_byte_title=?,quick_byte_description=?,quick_byte_sponsered=?,quick_byte_published_date=?,campaign_id=? where quick_byte_id=?") or die ($this->conn2->error) ;
-                            $updateStmt->bind_param('iissisii',$quickBytesRow['author_type'],$quickBytesRow['author_id']
-                                    ,$quickBytesRow['title'],$quickBytesRow['description'],$quickBytesRow['sponsored'],$quickBytesRow['publish_date'],$quickBytesRow['campaign_id'],$quickBytesRow['id']) or die ($this->conn2->error);
+                                     . "quick_byte_author_id=?,quick_byte_title=?,quick_byte_description=?,quick_byte_sponsered=?,quick_byte_published_date=? where quick_byte_id=?") or die ($this->conn2->error) ;
+                            $updateStmt->bind_param('iissisi',$quickBytesRow['author_type'],$quickBytesRow['author_id']
+                                    ,$quickBytesRow['title'],$quickBytesRow['description'],$quickBytesRow['sponsored'],$quickBytesRow['publish_date'],$quickBytesRow['id']) or die ($this->conn2->error);
                             $updateStmt->execute() or die ($this->conn2->error);
                             //print_r($articleInsertStmt);exit;
                             // echo $articleInsertStmt->insert_id;exit;    
@@ -1210,9 +1206,9 @@ function migratequotesTage() {
                             //echo '<pre>';
                             //print_r($quickBytesRow);exit;
                             $insertStmt = $this->conn2->prepare("insert into quick_bytes set quick_byte_id=?,quick_byte_author_type=?,	"
-                                     . "quick_byte_author_id=?,quick_byte_title=?,quick_byte_description=?,quick_byte_sponsered=?,quick_byte_published_date=?,campaign_id=?") or die ($this->conn2->error) ;
-                            $insertStmt->bind_param('iiissisi',$quickBytesRow['id'],$quickBytesRow['author_type'],$quickBytesRow['author_id']
-                                    ,$quickBytesRow['title'],$quickBytesRow['description'],$quickBytesRow['sponsored'],$quickBytesRow['publish_date'],$quickBytesRow['campaign_id']) or die ($this->conn2->error);
+                                     . "quick_byte_author_id=?,quick_byte_title=?,quick_byte_description=?,quick_byte_sponsered=?,quick_byte_published_date=?") or die ($this->conn2->error) ;
+                            $insertStmt->bind_param('iiissis',$quickBytesRow['id'],$quickBytesRow['author_type'],$quickBytesRow['author_id']
+                                    ,$quickBytesRow['title'],$quickBytesRow['description'],$quickBytesRow['sponsored'],$quickBytesRow['publish_date']) or die ($this->conn2->error);
                             $insertStmt->execute() or die ($this->conn2->error);
                             //print_r($articleInsertStmt);exit;
                             // echo $articleInsertStmt->insert_id;exit;    
@@ -1285,7 +1281,6 @@ function migratequotesTage() {
          $this->conn->query("update articles set status='P' where status='SD' and concat(publish_date,' ',publish_time) <= '".date('Y-m-d h:i:s')."'") or die($this->conn->error);; 
         //echo date('Y-m-d h:i:s'); exit;
         //exit;
-        $this->migrateCampaing();
         $this->migrateAuthor();
         $this->migrateCategory();
         $this->migrateTag();
@@ -1334,9 +1329,9 @@ function migratequotesTage() {
                         $status = 'published';
                         $articleUpdateStmt = $this->conn2->prepare("update articles set article_title=?,article_description=?,article_summary=?,"
                                 . "article_type=?,article_published_date=?,article_slug=?,article_status=?,important_article=?,video_Id=?,display_to_homepage=?,is_exclusive=?,"
-                                . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,article_location_country=?,article_location_state=?,hide_image=?,campaign_id=? where article_id=?");
-                        $articleUpdateStmt->bind_param('sssisssiiiiiissiiiii', $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
-                                , $pubDate, $articleRow['slug'], $status, $articleRow['important'], $articleRow['video_Id'],$articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'],$articleRow['canonical_options'],$articleRow['video_type'],$articleRow['canonical_url'], $articleRow['country'], $articleRow['state'], $articleRow['hide_image'],$articleRow['campaign_id'], $articleRow['article_id']
+                                . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,article_location_country=?,article_location_state=?,hide_image=? where article_id=?");
+                        $articleUpdateStmt->bind_param('sssisssiiiiiissiiii', $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
+                                , $pubDate, $articleRow['slug'], $status,$articleRow['important'],$articleRow['video_Id'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'],$articleRow['canonical_options'],$articleRow['video_type'],$articleRow['canonical_url'], $articleRow['country'], $articleRow['state'], $articleRow['hide_image'], $articleRow['article_id']
                         );
                         $articleUpdateStmt->execute();
                         if ($articleUpdateStmt->affected_rows) {
@@ -1361,9 +1356,9 @@ function migratequotesTage() {
                         $status = 'published';
                         $articleInsertStmt = $this->conn2->prepare("insert articles set article_id=?,article_title=?,article_description=?,article_summary=?,"
                                 . "article_type=?,article_published_date=?,article_slug=?,article_status=?,video_Id=?,important_article=?,display_to_homepage=?,is_exclusive=?,"
-                                . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,article_location_country=?,article_location_state=?,is_old=?,hide_image=?,campaign_id=?");
-                        $articleInsertStmt->bind_param('isssisssiiiiiissiiiii', $articleRow['article_id'], $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
-                                , $pubDate, $articleRow['slug'], $status, $articleRow['video_Id'],$articleRow['important'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'],$articleRow['canonical_options'],$articleRow['video_type'],$articleRow['canonical_url'], $articleRow['country'], $articleRow['state'],$articleRow['is_old'],$articleRow['hide_image'],$articleRow['campaign_id']);
+                                . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,article_location_country=?,article_location_state=?,is_old=?,hide_image=?");
+                        $articleInsertStmt->bind_param('isssisssiiiiiissiiii', $articleRow['article_id'], $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
+                                , $pubDate, $articleRow['slug'], $status, $articleRow['video_Id'],$articleRow['important'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'],$articleRow['canonical_options'],$articleRow['video_type'],$articleRow['canonical_url'], $articleRow['country'], $articleRow['state'],$articleRow['is_old'],$articleRow['hide_image']);
                         $articleInsertStmt->execute();
                         //print_r($articleInsertStmt);exit;
                         // echo $articleInsertStmt->insert_id;exit;    
@@ -2261,16 +2256,16 @@ function migrateFeaturImage($featurId,  $condition) {
                 $checkmasterVideoExistResultSet = $this->conn2->query("select video_id, video_title,video_summary, video_name,video_thumb_name,tags,created_at,updated_at from video_master where video_id=$masterVideoId");
                 if ($checkmasterVideoExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
-                    $masterVideoUpdateStmt = $this->conn2->prepare("update video_master set video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=? where video_id=?");
-                    $masterVideoUpdateStmt->bind_param('sssssssisi', $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'],$masterVideoRow['updated_at'],$masterVideoRow['campaign_id'],$masterVideoRow['video_by'],$masterVideoId);
+                    $masterVideoUpdateStmt = $this->conn2->prepare("update video_master set video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=? where video_id=?");
+                    $masterVideoUpdateStmt->bind_param('sssssssi', $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'],$masterVideoRow['updated_at'], $masterVideoId);
                     $masterVideoUpdateStmt->execute();
                     if ($masterVideoUpdateStmt->affected_rows)
                         $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                    // echo  $_SESSION['noofupd'];
                 }else {
-                    $masterVideoInsertStmt = $this->conn2->prepare("insert into video_master set video_id=?,video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=?");
+                    $masterVideoInsertStmt = $this->conn2->prepare("insert into video_master set video_id=?,video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?");
                     //echo $this->conn2->error; exit;
-                    $masterVideoInsertStmt->bind_param('isssssssis', $masterVideoRow['id'], $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'],$masterVideoRow['updated_at'],$masterVideoRow['campaign_id'],$masterVideoRow['video_by']);
+                    $masterVideoInsertStmt->bind_param('isssssss', $masterVideoRow['id'], $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'],$masterVideoRow['updated_at']);
                     $masterVideoInsertStmt->execute();
                     if ($masterVideoInsertStmt->affected_rows) {
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
@@ -2286,57 +2281,8 @@ function migrateFeaturImage($featurId,  $condition) {
         $updatecronstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' mastervideo(s) inserted and ' . $_SESSION['noofupd'] . ' mastervideo(s) updated.</h5>';
     }
- //video module end here 
- //
- //
-    //campain module start here 
-   function migrateCampaing() {
-        $_SESSION['noofins'] = 0;
-        $_SESSION['noofupd'] = 0;
-        $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='campaing' order by  start_time desc limit 0,1") or die($this->conn->error);
-        $condition = '';
-        if ($cronresult->num_rows > 0) {
-            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
-           // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
-        }
 
-        $campaingResults = $this->conn->query("SELECT * FROM campaign where channel_id=1 $condition");
-        //echo $authorResults->num_rows; exit;
-        if ($campaingResults->num_rows > 0) {
-
-            while ($campaingRow = $campaingResults->fetch_assoc()) {
-                // print_r($authorRow); exit;
-                $campaingId = $campaingRow['id'];
-                $checkmasterVideoExistResultSet = $this->conn2->query("select campaign_id, campaing_title,campaing_status, campaing_pdate from campaing where campaing_id=$campaingId");
-                if ($checkmasterVideoExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
-                    //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
-                    $masterVideoUpdateStmt = $this->conn2->prepare("update campaign set campaing_title=?,campaing_status=?,campaing_pdate=? where campaign_id=?");
-                    $masterVideoUpdateStmt->bind_param('sisi', $campaignRow['title'], $campaignRow['valid'], $campaignRow['updated_at'], $campaingId);
-                    $masterVideoUpdateStmt->execute();
-                    if ($masterVideoUpdateStmt->affected_rows)
-                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
-                   // echo  $_SESSION['noofupd'];
-                }else {
-                    $campaignInsertStmt = $this->conn2->prepare("insert into video_master set campaing_id=? campaing_title=?,campaing_status=?,campaing_pdate=?");
-                    //echo $this->conn2->error; exit;
-                    $campaignInsertStmt->bind_param('isis', $campaignRow['id'], $campaignRow['title'], $campaignRow['valid'], $masterVideoRow['updated_at']);
-                    $campaignInsertStmt->execute();
-                    if ($campaignInsertStmt->affected_rows) {
-                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
-                    }
-                }
-            }
-        }
-
-        $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='campaing',start_time=?,end_time=?");
-        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
-        $updatecronstmt->execute();
-        $updatecronstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' campaing(s) inserted and ' . $_SESSION['noofupd'] . ' campaing(s) updated.</h5>';
-    }
-//campain module end here 
+   
 
 }
 

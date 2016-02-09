@@ -448,6 +448,11 @@ Route::get('video/image/upload','VideoController@imageUpload');
 
 /*Video routs end here */
 
+/* Api route start here */
+
+Route::match(['get', 'post'], 'api/video','ApiController@videoApi');
+
+/* Api route ends here*/
 
 //Test Purpose - Get
 Route::get('newform', function () {
