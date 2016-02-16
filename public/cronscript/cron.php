@@ -2194,6 +2194,7 @@ function migrateFeaturImage($featurId,  $condition) {
         
         function generateReport(){
 			$template=file_get_contents('editorial.html');
+		//live	$template=file_get_contents('/var/www/html/public/cronscript/editorial.html');
 		//echo 'test'; exit;
 		 $start_published_date=date('Y-m-d H:i:s', strtotime("last Sunday")-604800); //echo '<br>';
 		 $end_published_date=date('Y-m-d H:i:s', strtotime("last Saturday")+86399);  //echo '<br>';
@@ -2232,9 +2233,10 @@ function migrateFeaturImage($featurId,  $condition) {
 		$headers  = 'MIME-Version: 1.0' . "\r\n";
         $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
         $from_email="reports@bwbusinessworld.com";
+        $sub = '=?UTF-8?B?'.base64_encode("Weekly Report – Article Contribution to Digital").'?=';
         $headers .= 'From: '.$from_email."\r\n".'Reply-To: '.$from_email."\r\n" .'X-Mailer: PHP/' . phpversion();
-        mail("anurag.batra@businessworld.in,yamini@businessworld.in,sudipta@businessworld.in,shekhar@businessworld.in","Weekly Report – Article Contribution to Digital",$mailbody,$headers);
-		//echo $mailbody; exit;
+		//anurag.batra@businessworld.in,yamini@businessworld.in,sudipta@businessworld.in,
+        mail("anurag.batra@businessworld.in,sudipta@businessworld.in,shekhar@businessworld.in",$sub,$mailbody,$headers);
 		}
         // Debate Video
         
@@ -2289,8 +2291,9 @@ function migrateFeaturImage($featurId,  $condition) {
  //video module end here 
  //
  //
-    //campain module start here 
+   //campain module start here 
    function migrateCampaing() {
+       //echo 'sumit';exit;
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
@@ -2305,22 +2308,23 @@ function migrateFeaturImage($featurId,  $condition) {
         //echo $authorResults->num_rows; exit;
         if ($campaingResults->num_rows > 0) {
 
-            while ($campaingRow = $campaingResults->fetch_assoc()) {
-                // print_r($authorRow); exit;
-                $campaingId = $campaingRow['id'];
-                $checkmasterVideoExistResultSet = $this->conn2->query("select campaign_id, campaing_title,campaing_status, campaing_pdate from campaing where campaing_id=$campaingId");
+            while ($campaignRow = $campaingResults->fetch_assoc()) {
+                 //print_r($campaingRow); exit;
+                $campaingId = $campaignRow['campaign_id'];
+                $checkmasterVideoExistResultSet = $this->conn2->query("select campaing_id, campaing_title,campaing_status, campaing_pdate from campaign where campaing_id=$campaingId");
                 if ($checkmasterVideoExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
-                    $masterVideoUpdateStmt = $this->conn2->prepare("update campaign set campaing_title=?,campaing_status=?,campaing_pdate=? where campaign_id=?");
+                    $masterVideoUpdateStmt = $this->conn2->prepare("update campaign set campaing_title=?,campaing_status=?,campaing_pdate=? where campaing_id=?");
                     $masterVideoUpdateStmt->bind_param('sisi', $campaignRow['title'], $campaignRow['valid'], $campaignRow['updated_at'], $campaingId);
                     $masterVideoUpdateStmt->execute();
                     if ($masterVideoUpdateStmt->affected_rows)
                         $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                    // echo  $_SESSION['noofupd'];
                 }else {
-                    $campaignInsertStmt = $this->conn2->prepare("insert into video_master set campaing_id=? campaing_title=?,campaing_status=?,campaing_pdate=?");
+                    //echo 'sumit'; exit;
+                    $campaignInsertStmt = $this->conn2->prepare("insert into campaign set campaing_id=?, campaing_title=?,campaing_status=?,campaing_pdate=?");
                     //echo $this->conn2->error; exit;
-                    $campaignInsertStmt->bind_param('isis', $campaignRow['id'], $campaignRow['title'], $campaignRow['valid'], $masterVideoRow['updated_at']);
+                    $campaignInsertStmt->bind_param('isis', $campaignRow['campaign_id'], $campaignRow['title'], $campaignRow['valid'], $campaignRow['updated_at']);
                     $campaignInsertStmt->execute();
                     if ($campaignInsertStmt->affected_rows) {
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;

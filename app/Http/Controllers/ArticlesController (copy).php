@@ -497,9 +497,9 @@ class ArticlesController extends Controller {
         $article->event_id = $request->event;
         if($request->hide_image)
         $article->hide_image= $request->hide_image;   
-        if($request->video_Id !='' &&  $request->video_Id !='0'){
+        if($request->video_Id !=''){
            $article->video_type = 'uploadedvideo' ;
-        }elseif ($request->videoCode !=''){
+        }else{
             $article->video_type = 'embededvideocode' ;
         }
         $article->video_Id = $request->video_Id;
@@ -769,6 +769,7 @@ class ArticlesController extends Controller {
                     $articleImage->save();
            // echo $key; exit;
         }
+        
         $images = explode(',', $request->uploadedImages);
 
         $s3 = AWS::createClient('s3');
@@ -918,13 +919,11 @@ class ArticlesController extends Controller {
         $article->video_Id = $request->video_Id;
         if($request->hide_image)
         $article->hide_image= $request->hide_image;
-        //print_r($request->all());
-       if($request->video_Id !=''){
+        if($request->video_Id !=''){
            $article->video_type = 'uploadedvideo' ;
-        }elseif ($request->videoCode !=''){
+        }else{
             $article->video_type = 'embededvideocode' ;
         }
-        exit;
         $article->campaign_id = $request->campaign;
         //$article->publish_date = 0;//$request->datepicked;
         //$article->publish_time = 0;//$request->timepicked;
@@ -1304,34 +1303,10 @@ class ArticlesController extends Controller {
         return 'success';
     }
     
-//   function relatedImage(Request $request){ //13803,13546
-//       //echo $query="select *,count(*) as cs,MATCH(tag) AGAINST ('".$request->search_key."') as score from tags join article_tags on tags.tags_id=article_tags.tags_id where MATCH(tag) AGAINST ('".$request->search_key."') group by tags.tags_id order by article_tags.updated_at desc,score desc limit 5"; exit;
-//       $query="select *,MATCH(tag) AGAINST ('".$request->search_key."') as score from tags where MATCH(tag) AGAINST ('".$request->search_key."') order by updated_at desc,score desc limit 20";
-//       $tags=DB::select($query);
-//       $related_images=array();
-//       $imgids=array();
-//       $cond='';
-//      // $rtags=array();
-//       foreach($tags as $tag){
-//           if(count($imgids)>0){
-//               $cond=' and photo_id not in ('.implode(',',$imgids).')';
-//           }
-//          $imagequery="select photo_id,photopath,photo_by from photos where valid='1' and photopath!='' and owned_by='article' $cond and owner_id in(SELECT articles.article_id FROM `articles` inner join article_tags on articles.article_id=article_tags.article_id WHERE  article_tags.tags_id=".$tag->tags_id.") order by updated_at desc";
-//          $images=DB::select($imagequery);
-//            foreach($images as $image){
-//                $imgids[]=$image->photo_id;
-//             $related_images[]=array('image_url'=>config('constants.awsbaseurl').config('constants.awarticleimagethumbtdir').$image->photopath,'image_id'=>$image->photo_id,'tag_name'=>$tag->tag,'tag_id'=>$tag->tags_id,'photo_by'=>$image->photo_by,'image_name'=>$image->photopath);
-//          }
-//          
-//        }
-//       
-//       return json_encode($related_images);
-//   }
-    
-    function relatedImage(Request $request){//13803,13546
+   function relatedImage(Request $request){//13803,13546
      //$query="select *,MATCH(tag) AGAINST ('".$request->search_key."') as score from tags where MATCH(tag) AGAINST ('".$request->search_key."') order by updated_at desc,score desc limit 5";
        $total=25;
-       $query="select *,count(*) as cs from tags join (select * from article_tags order by updated_at desc ) as article_tags on tags.tags_id=article_tags.tags_id where (tag like '%".$request->search_key." %' or tag like '% ".$request->search_key."%'  or tag like '".$request->search_key."' ) group by tags.tags_id order by article_tags.updated_at desc,cs desc limit 5"; 
+       $query="select *,count(*) as cs,MATCH(tag) AGAINST ('".$request->search_key."') as score from tags join (select * from article_tags order by updated_at desc ) as article_tags on tags.tags_id=article_tags.tags_id where MATCH(tag) AGAINST ('".$request->search_key."') group by tags.tags_id order by article_tags.updated_at desc,score desc limit 5";
        $tags=DB::select($query);
        $related_images=array();
        $imgids=array();
@@ -1339,10 +1314,9 @@ class ArticlesController extends Controller {
       // print_r($tags);
        usort($tags,array($this,'compareByCount'));
        //print_r($tags);exit;
-       //  print_r($tags);
-       if(count($tags)>0){
-        $minlimit=ceil($total/count($tags));
-        $maxlimit=ceil($total/count($tags));
+     // print_r($tags);
+       $minlimit=ceil($total/count($tags));
+       $maxlimit=ceil($total/count($tags));
       //echo $limit;exit;
       // $rtags=array();
        foreach($tags as $tag){
@@ -1350,26 +1324,22 @@ class ArticlesController extends Controller {
                $cond=' and photo_id not in ('.implode(',',$imgids).')';
            }
            //echo $maxlimit;
-          $imagequery="select photo_id,photopath,photo_by from photos where valid='1' and photopath!='' and owned_by='article' $cond and owner_id in(SELECT articles.article_id FROM `articles` inner join article_tags on articles.article_id=article_tags.article_id WHERE  article_tags.tags_id=".$tag->tags_id." order by article_tags.updated_at desc) order by updated_at desc limit ".$maxlimit;
+          $imagequery="select photo_id,photopath,photo_by from photos where valid='1' and photopath!='' and owned_by='article' $cond and owner_id in(SELECT articles.article_id FROM `articles` inner join article_tags on articles.article_id=article_tags.article_id WHERE  article_tags.tags_id=".$tag->tags_id." order by article_tags.updated_at desc) order by updated_at desc";
           $images=DB::select($imagequery);
           if(count($images)<$maxlimit){
               $maxlimit=$maxlimit+($minlimit-count($images));
           }else{
               $maxlimit=$minlimit;
           }
-          //echo count($images).' ######'.$maxlimit.'##### <br>';
             foreach($images as $image){
                 $imgids[]=$image->photo_id;
              $related_images[]=array('image_url'=>config('constants.awsbaseurl').config('constants.awarticleimagethumbtdir').$image->photopath,'image_id'=>$image->photo_id,'tag_name'=>$tag->tag,'tag_id'=>$tag->tags_id,'photo_by'=>$image->photo_by,'image_name'=>$image->photopath);
           }
           
         }
-       }else{
-           json_encode(array('error'=>'No result found'));
-       }
+       
        return json_encode($related_images);
    }
-   
   public static function compareByCount($a, $b) {
     return strcmp($a->cs, $b->cs);
   }

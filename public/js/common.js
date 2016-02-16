@@ -3,7 +3,7 @@ $(window).resize(resizeFunction);
 var widgetsLoaded = [];
 
 
-function resizeFunction(){
+function resizeFunction() {
     setSidebarHeight();
     setBlankWidgets();
     resizeEnd();
@@ -14,7 +14,7 @@ function resizeFunction(){
     $('.mobMMExpanded').removeClass('mobMMExpanded');
 }
 
-function readyFunction(){
+function readyFunction() {
     setSidebarHeight();
     mainMenuFunction();
     setBlankWidgets(true);
@@ -22,50 +22,50 @@ function readyFunction(){
 
 
     // INIT BREADCRUMBS
-    
+
     $('.xbreadcrumbs').xBreadcrumbs();
 
-    
+
     // TOOLTIP HOVER FOR .bootstrap-tooltip ELEMENTS
-    
+
     $('.bootstrap-tooltip').tooltip();
-    
-    
+
+
     // PNOTIFY DEFAULT OPTIONS
-    
+
     $.pnotify.defaults.delay -= 4500;
     $.pnotify.defaults.history = false;
-    
-    
+
+
     // JSTREE DUMMY THEME (REQUIRED TO AVOID CHANGING THE PLUGIN TO IGNORE THE ORIGINAL CSS SINCE LESS IS USED)
     $.jstree._themes = "css/plugins/jstree/";
-    
-    
+
+
     // CUSTOM SCROLLBAR FOR SIDE PANEL
-    
+
     $(".sidebarMenuHolder").mCustomScrollbar({
-        scrollButtons:{
-            enable:true
+        scrollButtons: {
+            enable: true
         },
-        advanced:{
+        advanced: {
             updateOnBrowserResize: true,
-            updateOnContentResize:true
+            updateOnContentResize: true
         }
     });
-    
-    
+
+
     // SCROLLBAR SHADOWS
-    
+
     $(".Jstree_shadow_top").prependTo(".sidebarMenuHolder");
     $(".Jstree_shadow_bottom").appendTo(".sidebarMenuHolder");
-    
-    
+
+
     // PANEL STATE CONTROL
-    
-    $('.panel-slider-arrow').on('click', function(){
+
+    $('.panel-slider-arrow').on('click', function () {
         $('.panel, .main-content').toggleClass('retracted');
 
-        if ($('.panel').is('.retracted')){
+        if ($('.panel').is('.retracted')) {
             $.cookie('jsTreeMenu', 'retracted', {
                 expires: 7,
                 path: '/'
@@ -78,7 +78,7 @@ function readyFunction(){
             });
         }
 
-        if($.cookie('jsTreeMenuNotification')!='true') {
+        if ($.cookie('jsTreeMenuNotification') != 'true') {
             $.cookie('jsTreeMenuNotification', 'true', {
                 expires: 7,
                 path: '/'
@@ -100,32 +100,35 @@ function readyFunction(){
 
 // MAIN MENU FUNCTION
 
-function mainMenuFunction () {
-    setTimeout(function(){
+function mainMenuFunction() {
+    setTimeout(function () {
         $('.nav-fixed-left').removeAttr('style');
     }, 300);
-    $('.nav-side-menu > li').on('mouseleave', function(){
-        if ($('.nav-fixed-left').css('top') != '0px') return;
+    $('.nav-side-menu > li').on('mouseleave', function () {
+        if ($('.nav-fixed-left').css('top') != '0px')
+            return;
         var $subMenu = $(this).find('ul');
         $subMenu.fadeOut(100);
-        setTimeout(function(){
+        setTimeout(function () {
             $subMenu.removeAttr('style');
-        },200);
+        }, 200);
     });
-    $('.nav-side-menu > li').on('click', function(){
+    $('.nav-side-menu > li').on('click', function () {
         //console.log('test');
         var $touchedMenu = $(this).find('ul');
         var $subMenu = $('.sub-nav ul').not($touchedMenu);
         $('.nav-side-menu > li').not(this).removeClass('nav-active');
         $(this).toggleClass('nav-active');
-        if ($('.nav-fixed-left').css('top') == '0px') $subMenu.fadeOut(100);
-        setTimeout(function(){
+        if ($('.nav-fixed-left').css('top') == '0px')
+            $subMenu.fadeOut(100);
+        setTimeout(function () {
             $subMenu.removeAttr('style');
         }, 200);
     });
-    $('.btn-mobile-menus .btn').on('click', function(){
-        if ($(this).is('.active-menu')) $('.active-menu').removeClass('active-menu');
-        else{
+    $('.btn-mobile-menus .btn').on('click', function () {
+        if ($(this).is('.active-menu'))
+            $('.active-menu').removeClass('active-menu');
+        else {
             $('.active-menu').removeClass('active-menu');
             $(this).addClass('active-menu');
         }
@@ -137,19 +140,20 @@ function mainMenuFunction () {
             $('.mobMMExpanded').removeClass('mobMMExpanded');
             $('.nav-fixed-topright').addClass('mobMMExpanded');
         }
-        else $('.mobMMExpanded').removeClass('mobMMExpanded');
+        else
+            $('.mobMMExpanded').removeClass('mobMMExpanded');
     });
 }
 
 
 // SETS SIDEBAR HEIGHT BASED ON TOTAL WINDOW HEIGHT
 
-function setSidebarHeight(){
-    if( $('.panel-slider-center .panel-slider-arrow').css('position') != 'absolute'){
+function setSidebarHeight() {
+    if ($('.panel-slider-center .panel-slider-arrow').css('position') != 'absolute') {
         $win_hei = $(window).height();
         $(".sidebarMenuHolder").height($win_hei - 185);
     }
-    else{
+    else {
         $(".sidebarMenuHolder").height(300);
     }
 }
@@ -158,12 +162,14 @@ function setSidebarHeight(){
 // BALANCE NUMBER OF DASHBOARD WIDGETS
 
 var lastWidgetPerRow;
-function setBlankWidgets(onReady){
-    if (!$('body').is('.body-dashboard')) return;
+function setBlankWidgets(onReady) {
+    if (!$('body').is('.body-dashboard'))
+        return;
     var widgetPerRow;
 
     widgetPerRow = parseInt($('.dashboard-widget-group').css('background-position'), 10);
-    if (widgetPerRow == lastWidgetPerRow) return;
+    if (widgetPerRow == lastWidgetPerRow)
+        return;
 
     $('.blank-widget').remove();
     var currentWidgetCount = $('.widget-holder').length;
@@ -178,8 +184,8 @@ function setBlankWidgets(onReady){
 
 // GENERATES BLANK WIDGET
 
-function createBlankWidget (data) {
-    var html =  $(data).appendTo('#photon_widgets');
+function createBlankWidget(data) {
+    var html = $(data).appendTo('#photon_widgets');
 }
 
 
@@ -203,17 +209,17 @@ function autoGrowField(f, max) {
     /* Now adjust the height */
     var scrollH = f.scrollHeight;
     // console.log(scrollH);
-    if( scrollH > f.style.height.replace(/[^0-9]/g,'') ){
-        f.style.height = scrollH+20+'px';
+    if (scrollH > f.style.height.replace(/[^0-9]/g, '')) {
+        f.style.height = scrollH + 20 + 'px';
     }
 }
 
-function jstreeHover(){
+function jstreeHover() {
     $('.overflowing').removeClass('overflowing');
-    if( $('.panel-slider-center .panel-slider-arrow').css('position') != 'absolute'){
-        setTimeout(function() {
+    if ($('.panel-slider-center .panel-slider-arrow').css('position') != 'absolute') {
+        setTimeout(function () {
             $('.jstree li').each(function () {
-                if (isTextOverflowing($(this))){
+                if (isTextOverflowing($(this))) {
                     var title = $('>a', this).text();
                     $(this).tooltip({
                         title: title,
@@ -226,7 +232,7 @@ function jstreeHover(){
     }
 }
 
-function showColorChanger(){
+function showColorChanger() {
 
 }
 
@@ -234,7 +240,7 @@ function showColorChanger(){
 
 function isTextOverflowing($elem) {
     returnVal = false;
-    if($elem.get(0).offsetWidth < $elem.get(0).scrollWidth) {
+    if ($elem.get(0).offsetWidth < $elem.get(0).scrollWidth) {
         returnVal = true;
         $elem.addClass('overflowing');
     }
@@ -245,9 +251,9 @@ function isTextOverflowing($elem) {
 // ON RESIZE END FUNCTION
 
 var isResizing;
-function resizeEnd () {
+function resizeEnd() {
     clearTimeout(isResizing);
-    isResizing = setTimeout(function() {
+    isResizing = setTimeout(function () {
         // RESIZE END LOGIC BELOW:
         jstreeHover();
     }, 300);
@@ -255,6 +261,7 @@ function resizeEnd () {
 
 // FLIP WIDGET
 
-function flipit (elem) {
+function flipit(elem) {
     $(elem).parents('.widget-holder').toggleClass('flip-it');
 }
+

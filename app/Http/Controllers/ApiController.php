@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Video;
 use Illuminate\Http\Request;
 use App\Article;
@@ -142,7 +141,6 @@ class ApiController extends Controller {
     //Function to delte video from aws in case of any exception
     function deleteAwsObject($awsdir, $name) {
         $this->aws_obj->deleteObject(array(
-            'ACL' => 'public-read',
             'Bucket' => config('constants.awbucket'),
             'Key' => $awsdir . $name
         ));

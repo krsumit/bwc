@@ -4,7 +4,7 @@
 
 
 @section('content')
- <style> .none { display:none; } </style>
+<style> .none { display:none; } </style>
 <div class="panel">
     <div class="panel-content filler">
         <div class="panel-logo"></div>
@@ -23,35 +23,34 @@
              alert('here in 3');
              return false;
              } */
-             $('#draftSubmit').click(function(){
-               $("#fileupload").validate().cancelSubmit = true;
-             });
-             $('#dumpSubmit').click(function(){
-               $('span.error').remove();
-               $('div.error.noborder').remove();
-               $('.error').removeClass('error');
-             });             
-             
-            $('#pageSubmit').click(doClick);
-            $('#saveSchedule').click(doClick);
-            $('#publishSubmit').click(doClick);
+            $('#draftSubmit').click(function(){
+            $("#fileupload").validate().cancelSubmit = true;
+            });
+                    $('#dumpSubmit').click(function(){
+            $('span.error').remove();
+                    $('div.error.noborder').remove();
+                    $('.error').removeClass('error');
+            });
+                    $('#pageSubmit').click(doClick);
+                    $('#saveSchedule').click(doClick);
+                    $('#publishSubmit').click(doClick);
                     //$('#dumpSubmit').click(doClick);
                             //$('#pageSubmit','#dumpSubmit','#publishSubmit').click(function() {}
-                                    function doClick(){ 
-                                       // alert(1);
-                                        var checkvalid=1;
-                                        //alert(1);
-                                    //$('.btn-success').click(function() {}
-                                   var as = $('#maxi').elrte('val');
-                                   $('.error.elrte-error').remove();
-                                   $('.error.author-error').remove();
-                                   $('.error.noborder').remove();
-                                   $('#maxi').parent('div').removeClass('error');
-                                    if(as.length==0){
-                                       // alert(1);
-                                       $('#maxi').parent('div').addClass('error');
-                                        $('.elrte-wrapper').after('<span class="error elrte-error" style="display:block;" >Article description is required. </span>');
-                                        checkvalid=0;
+                                    function doClick(){
+                                    // alert(1);
+                                    var checkvalid = 1;
+                                            //alert(1);
+                                            //$('.btn-success').click(function() {}
+                                            var as = $('#maxi').elrte('val');
+                                            $('.error.elrte-error').remove();
+                                            $('.error.author-error').remove();
+                                            $('.error.noborder').remove();
+                                            $('#maxi').parent('div').removeClass('error');
+                                            if (as.length == 0){
+                                    // alert(1);
+                                    $('#maxi').parent('div').addClass('error');
+                                            $('.elrte-wrapper').after('<span class="error elrte-error" style="display:block;" >Article description is required. </span>');
+                                            checkvalid = 0;
                                     }
 //                                    else if (as.length < 500 || as.length > 80000){
 //                                         //alert(2);
@@ -67,17 +66,17 @@
 //                                     $('#channel_sel').focus();
 //                                     return false;
 //                                     }
-                                    
+
 //                                    if ($('#simpleSelectAuthor').val() == '') {
 //                                            alert('Please Select Author Type');
 //                                            $('#simpleSelectAuthor').focus();
 //                                            return false;
 //                                    } else 
                                     if (($('#authortype').val() != '') && ($('#authortype').val() != '1') && $('#simpleSelectBox1').val() == '') {
-                                            //alert('Please Select Author Name');
-                                            $('#simpleSelectBox1').after('<span class="error author-error">Author name is required.</span>');
+                                    //alert('Please Select Author Name');
+                                    $('#simpleSelectBox1').after('<span class="error author-error">Author name is required.</span>');
                                             $('#simpleSelectBox1').siblings('div').addClass('error');
-                                           checkvalid=0;
+                                            checkvalid = 0;
                                     }
 //                                    if ($('#selectBoxFilter2').val() == '')
 //                                    {
@@ -86,26 +85,25 @@
 //                                             checkvalid=0;
 //                                    }
 //                                    
-                                   
-                                    
-                                     $("#fileupload").validate({
-                                         
-                                      
+
+
+                                    $("#fileupload").validate({
+
+
                                     errorElement: "span",
                                             errorClass: "error",
                                             //$("#pageSubmit").onclick: true,
                                             onclick: true,
                                             invalidHandler: function(event, validator) {
-                         
-                                                    for (var i in validator.errorMap) { ///alert(i);
 
-                                                            if($('#'+i).hasClass('formattedelement')){
-                                                                $('#'+i).siblings('.formattedelement').addClass('error');
+                                            for (var i in validator.errorMap) { ///alert(i);
 
-                                                        }
+                                            if ($('#' + i).hasClass('formattedelement')){
+                                            $('#' + i).siblings('.formattedelement').addClass('error');
+                                            }
 
-                                                }
-                                             },
+                                            }
+                                            },
                                             rules: {
                                             "req": {
                                             required: true
@@ -117,7 +115,7 @@
                                                     required: true
                                                     },
                                                     "authortype":{
-                                                      required: true  
+                                                    required: true
                                                     },
                                                     "title":{
                                                     required: true,
@@ -127,36 +125,27 @@
                                                     required: true
                                                     },
                                                     "summary":{
-                                                    required: true,    
-                                                    rangelength: [100, 800]
+                                                    required: true,
+                                                            rangelength: [100, 800]
                                                     },
-                                                   
-                                                 
                                             }
                                     });
-                                    
-                                    
-                                            if(!$("#fileupload").valid())
-                                                checkvalid=0;
-                                            if(checkvalid==0){
-                                                $('#submitsection').prepend('<div class="error noborder">An error has occured. Please check the above form.</div>');
-                                                return false;
-                                            }   
-                                           // else
-                                                // $("#fileupload").submit();
+                                            if (!$("#fileupload").valid())
+                                            checkvalid = 0;
+                                            if (checkvalid == 0){
+                                    $('#submitsection').prepend('<div class="error noborder">An error has occured. Please check the above form.</div>');
+                                            return false;
+                                    }
+                                    // else
+                                    // $("#fileupload").submit();
 
                                     }
-                                      $('select.formattedelement').change(function(){
-                                    if($(this).val().trim()!='')
-                                     $(this).siblings('.formattedelement').removeClass('error');
-                                     $(this).siblings('span.error').remove();
-                                   }) ; 
-
-
+                            $('select.formattedelement').change(function(){
+                            if ($(this).val().trim() != '')
+                                    $(this).siblings('.formattedelement').removeClass('error');
+                                    $(this).siblings('span.error').remove();
                             });
-        
-          
-        </script>
+                    });        </script>
 
         <script type="text/javascript">
                             $(function () {
@@ -223,14 +212,14 @@
                                     "attr" : { "href" : "#photos-videos" }
                             }
                             },
-                            @if(in_array('12',Session::get('user_rights')))
-                                    {
-                                    "data" : {
-                                    "title" : "Schedule for Upload",
-                                            "attr" : { "href" : "#schedule-for-upload" }
-                                    }
-                                    },
-                             @endif
+                                    @if (in_array('12', Session::get('user_rights')))
+                            {
+                            "data" : {
+                            "title" : "Schedule for Upload",
+                                    "attr" : { "href" : "#schedule-for-upload" }
+                            }
+                            },
+                                    @endif
 
 
                             ]
@@ -312,35 +301,35 @@
     </header>
     {!! Form::open(array('url'=>'article/','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
     {!! csrf_field() !!}
-  <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
+    <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
-             <div class="form-legend" id="Notifications">Notifications</div>
+         <div class="form-legend" id="Notifications">Notifications</div>
 
-            <!--Notifications begin-->
-            <div class="control-group row-fluid" >
-                <div class="span12 span-inset">
-                    @if (Session::has('message'))
-                    <div class="alert alert-success alert-block" style="">
-                        <i class="icon-alert icon-alert-info"></i>
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>This is Success Notification</strong>
-                        <span>{{ Session::get('message') }}</span>
-                    </div>
-                    @endif
-
-                    @if (Session::has('error'))
-                    <div class="alert alert-error alert-block">
-                        <i class="icon-alert icon-alert-info"></i>
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>This is Error Notification</strong>
-                        <span>{{ Session::get('error') }}</span>
-                    </div>
-                    @endif
+        <!--Notifications begin-->
+        <div class="control-group row-fluid" >
+            <div class="span12 span-inset">
+                @if (Session::has('message'))
+                <div class="alert alert-success alert-block" style="">
+                    <i class="icon-alert icon-alert-info"></i>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>This is Success Notification</strong>
+                    <span>{{ Session::get('message') }}</span>
                 </div>
-            </div>
-            <!--Notifications end-->
+                @endif
 
+                @if (Session::has('error'))
+                <div class="alert alert-error alert-block">
+                    <i class="icon-alert icon-alert-info"></i>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>This is Error Notification</strong>
+                    <span>{{ Session::get('error') }}</span>
+                </div>
+                @endif
+            </div>
         </div>
+        <!--Notifications end-->
+
+    </div>
 
     <div class="container-fluid">
         <div class="form-legend" id="Author-Detail">Author Detail
@@ -364,8 +353,8 @@
                 </div>
             </div>
             <script>
-                        //simpleSelectAuthor
-                       $().ready(function(){
+                                //simpleSelectAuthor
+                                $().ready(function(){
                         $("#authortype").select2({
                         dropdownCssClass: 'noSearch'
                         });
@@ -377,10 +366,10 @@
             <ul class="nav nav-tabs" id="iconsTab">
                 <li class="active"><a data-toggle="tab" href="#existing">Choose From Existing</a></li>
                 <!-- Add Author Section Only if Rights -->
-                @if(count(array_diff(array('9','44','45'), Session::get('user_rights'))) != count(array('9','44','45')))
+                {{-- @if(count(array_diff(array('9','44','45'), Session::get('user_rights'))) != count(array('9','44','45')))
                 <li class=""><a data-toggle="tab" href="#new">Add A New Author</a></li>
                 @endif
-                
+                --}}
             </ul>
             <div class="tab-content">
                 <div id="existing" class="tab-pane fade active in">
@@ -415,7 +404,7 @@
                                 </select>
                             </div>
                         </div>
-                        <script> 
+                        <script>
                                             $().ready(function(){
                                     $("#simpleSelectBox2").select2({
                                     //dropdownCssClass: 'noSearch'
@@ -483,7 +472,7 @@
                                                 });
                                 }
 
-                                else if ($(this).attr("value") == "1"){ 
+                                else if ($(this).attr("value") == "1"){
 
                                 $("#tabarea").hide();
                                 }
@@ -501,26 +490,26 @@
                                                         $.each(data, function (index, element) {
                                                         simpleSelectBox1.append("<option value='" + element + "'>" + index + "</option>");
                                                         });
-                                                         $("#simpleSelectBox1").select2();
+                                                        $("#simpleSelectBox1").select2();
                                                 });
                                 }
                                 }
                                 });
                                 }).change();
-                                $('#simpleSelectBox1').change(function(){
-                                  var val1=$(this).val();
-                                  if(val1.trim()){
-                                       $('#simpleSelectBox2').find('option').each(function() {
-                                            if($(this).val() == val1) {
-                                                $(this).attr("disabled","disabled");
-                                              //  $('#test').html($(this).text());
-                                            }else{
-                                                $(this).removeAttr('disabled');
-                                            }
-                                            $('#simpleSelectBox2').select2();
-                                            //alert('done');
-                                        });
-                                  }
+                                        $('#simpleSelectBox1').change(function(){
+                                var val1 = $(this).val();
+                                        if (val1.trim()){
+                                $('#simpleSelectBox2').find('option').each(function() {
+                                if ($(this).val() == val1) {
+                                $(this).attr("disabled", "disabled");
+                                        //  $('#test').html($(this).text());
+                                } else{
+                                $(this).removeAttr('disabled');
+                                }
+                                $('#simpleSelectBox2').select2();
+                                        //alert('done');
+                                });
+                                }
                                 })
                                 });</script>
 
@@ -528,145 +517,145 @@
 
                 <div id="new" class="tab-pane fade entypo ">
                     <!--<form name="addAuthorForm" method="post" enctype="multipart/form-data" id="addAuthorForm">-->
-<!--                    <div class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label" >&nbsp;</label>
-                        </div>
-                        <div class="span3">
-                            <label class="radio">
-                                <input type="radio" id="author_type" name="author_type" class="uniformRadio" value="4">
-                                Columnist
-                            </label>
-                        </div>
-                        <div class="span3">
-                            <label class="radio">
-                                <input  type="radio"  id="author_type" name="author_type" class="uniformRadio" value="3">
-                                Guest Author
-                            </label>
-                        </div>
-                        <div class="span3">
-                            <label class="radio">
-                                <input  type="radio"  id="author_type" name="author_type" class="uniformRadio" value="2" checked>
-                                BW Reporter
-                            </label>
-                        </div>
-
-                        <script>
-                                            $().ready(function(){
-                                    $(".uniformRadio").uniform({
-                                    radioClass: 'uniformRadio'
-                                    });
-                                    });</script>
-
-                    </div>
-
-                    <div class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label" for="inputField">Name</label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls">
-                                <input id="inputField" id="name" name="Name" type="text">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label" for="inputField">Bio</label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls">
-                                <textarea  rows="3" id="Bio" class="" name="Bio"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label" for="inputField">Email</label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls">
-                                <input id="inputField" name="email" type="email">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label" for="inputField">Mobile</label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls">
-                                <input id="inputField" name="mobile" type="text">
-                            </div>
-                        </div>
-                    </div>
-                    <div id="File_Upload" class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label">Photo</label>
-                        </div>
-                        <div class="span9 ">
-                            <div class="controls authorimagespn">
-                                
-                            </div>
-                            <div class="fileupload fileupload-new" data-provides="fileupload">
-                                <div class="input-append">
-                                    <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div>
-                                    <span class="btn btn-file  authorimagespn">
-                                        <span class="fileupload-new">Select file</span>
-                                        <span class="fileupload-exists">Change</span>
-                                       <input type="file" name="photo" id="photo">
-                                        </span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label" for="inputField">Twitter</label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls">
-                                <input id="inputField" name="twitter" type="text">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div  class="control-group row-fluid" id="ch-reporter" style="display:none;">
-                        <div class="span3">
-                            <label class="control-label" for="selectBoxFilter">Choose Column</label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls">
-                                <select name="column_id" id="selectBoxFilter221">
-                                    <option value="" selected>Please Select</option>
-                                    @foreach( $columns as $column)
-                                    <option value="{{ $column->column_id }}">{{ $column->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <script>
-                                            $().ready(function(){
-                                    $("#selectBoxFilter221").select2();
-                                    });</script>                            
-                    </div>
-
-                    <div class="control-group row-fluid">
-                        <div class="span12 span-inset">
-                            <button class="btn btn-warning pull-right" id="addabut" type="button" style="display:block;">Add</button>
-                            <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:7%; display:none; margin-left:15px;float:right;"/>
-                        </div>
-                    </div>-->
+                    <!--                    <div class="control-group row-fluid">
+                                            <div class="span3">
+                                                <label class="control-label" >&nbsp;</label>
+                                            </div>
+                                            <div class="span3">
+                                                <label class="radio">
+                                                    <input type="radio" id="author_type" name="author_type" class="uniformRadio" value="4">
+                                                    Columnist
+                                                </label>
+                                            </div>
+                                            <div class="span3">
+                                                <label class="radio">
+                                                    <input  type="radio"  id="author_type" name="author_type" class="uniformRadio" value="3">
+                                                    Guest Author
+                                                </label>
+                                            </div>
+                                            <div class="span3">
+                                                <label class="radio">
+                                                    <input  type="radio"  id="author_type" name="author_type" class="uniformRadio" value="2" checked>
+                                                    BW Reporter
+                                                </label>
+                                            </div>
+                    
+                                            <script>
+                                                                $().ready(function(){
+                                                        $(".uniformRadio").uniform({
+                                                        radioClass: 'uniformRadio'
+                                                        });
+                                                        });</script>
+                    
+                                        </div>
+                    
+                                        <div class="control-group row-fluid">
+                                            <div class="span3">
+                                                <label class="control-label" for="inputField">Name</label>
+                                            </div>
+                                            <div class="span9">
+                                                <div class="controls">
+                                                    <input id="inputField" id="name" name="Name" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group row-fluid">
+                                            <div class="span3">
+                                                <label class="control-label" for="inputField">Bio</label>
+                                            </div>
+                                            <div class="span9">
+                                                <div class="controls">
+                                                    <textarea  rows="3" id="Bio" class="" name="Bio"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group row-fluid">
+                                            <div class="span3">
+                                                <label class="control-label" for="inputField">Email</label>
+                                            </div>
+                                            <div class="span9">
+                                                <div class="controls">
+                                                    <input id="inputField" name="email" type="email">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group row-fluid">
+                                            <div class="span3">
+                                                <label class="control-label" for="inputField">Mobile</label>
+                                            </div>
+                                            <div class="span9">
+                                                <div class="controls">
+                                                    <input id="inputField" name="mobile" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="File_Upload" class="control-group row-fluid">
+                                            <div class="span3">
+                                                <label class="control-label">Photo</label>
+                                            </div>
+                                            <div class="span9 ">
+                                                <div class="controls authorimagespn">
+                                                    
+                                                </div>
+                                                <div class="fileupload fileupload-new" data-provides="fileupload">
+                                                    <div class="input-append">
+                                                        <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div>
+                                                        <span class="btn btn-file  authorimagespn">
+                                                            <span class="fileupload-new">Select file</span>
+                                                            <span class="fileupload-exists">Change</span>
+                                                           <input type="file" name="photo" id="photo">
+                                                            </span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group row-fluid">
+                                            <div class="span3">
+                                                <label class="control-label" for="inputField">Twitter</label>
+                                            </div>
+                                            <div class="span9">
+                                                <div class="controls">
+                                                    <input id="inputField" name="twitter" type="text">
+                                                </div>
+                                            </div>
+                                        </div>
+                    
+                                        <div  class="control-group row-fluid" id="ch-reporter" style="display:none;">
+                                            <div class="span3">
+                                                <label class="control-label" for="selectBoxFilter">Choose Column</label>
+                                            </div>
+                                            <div class="span9">
+                                                <div class="controls">
+                                                    <select name="column_id" id="selectBoxFilter221">
+                                                        <option value="" selected>Please Select</option>
+                                                        @foreach( $columns as $column)
+                                                        <option value="{{ $column->column_id }}">{{ $column->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <script>
+                                                                $().ready(function(){
+                                                        $("#selectBoxFilter221").select2();
+                                                        });</script>                            
+                                        </div>
+                    
+                                        <div class="control-group row-fluid">
+                                            <div class="span12 span-inset">
+                                                <button class="btn btn-warning pull-right" id="addabut" type="button" style="display:block;">Add</button>
+                                                <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:7%; display:none; margin-left:15px;float:right;"/>
+                                            </div>
+                                        </div>-->
                     <!--</form>-->
                 </div>
                 <script>
                                     // magic.js
                                     $(document).ready(function() {
-                                         $(".uniformRadio").uniform({
-                                    radioClass: 'uniformRadio'
-                                    });
-                            //var csrf_token = $('meta[name="csrf-token"]').attr('content');
-                            var token = $('input[name=_token]');
+                            $(".uniformRadio").uniform({
+                            radioClass: 'uniformRadio'
+                            });
+                                    //var csrf_token = $('meta[name="csrf-token"]').attr('content');
+                                    var token = $('input[name=_token]');
                                     // process the form
                                     $("#addabut").click(function(){
                             //$("#addAuthorForm").on('click',function(event){}
@@ -704,13 +693,13 @@
                                             },
                                             success     :  function(data){
                                             if (data.status == 'success'){
-                                                alert('Author saved');
-                                                $("#new input[type='text']").val('');
-                                                $("#new input[type='email']").val('');
-                                                $('#new textarea').val('');
-                                                $('input[name=photo]').remove();
-                                                $('.authorimagespn').append('<input type="file" name="photo" id="photo">');
-                                                $('#iconsTab').find('li').eq(0).find('a').trigger('click')
+                                            alert('Author saved');
+                                                    $("#new input[type='text']").val('');
+                                                    $("#new input[type='email']").val('');
+                                                    $('#new textarea').val('');
+                                                    $('input[name=photo]').remove();
+                                                    $('.authorimagespn').append('<input type="file" name="photo" id="photo">');
+                                                    $('#iconsTab').find('li').eq(0).find('a').trigger('click')
                                             } else{
                                             $('#addabut').before(errorMessage(data.msg));
                                             }
@@ -773,16 +762,16 @@
                                     }
                                     }
                                     if ($('input[name=mobile]').val().trim() == 0){
-                                            valid = 0;
+                                    valid = 0;
                                             $('input[name=mobile]').addClass('error');
                                             $('input[name=mobile]').after(errorMessage('Please enter mobile'));
-                                    }else {
-                                        var regex=/^(\d{1,3}[- ]?)?\d{10}$/;
-                                        if(!regex.test($('input[name=mobile]').val())){
-                                             valid = 0;
-                                             $('input[name=mobile]').addClass('error');
-                                             $('input[name=mobile]').after(errorMessage('Please enter valid mobile'));
-                                        }
+                                    } else {
+                                    var regex = /^(\d{1,3}[- ]?)?\d{10}$/;
+                                            if (!regex.test($('input[name=mobile]').val())){
+                                    valid = 0;
+                                            $('input[name=mobile]').addClass('error');
+                                            $('input[name=mobile]').after(errorMessage('Please enter valid mobile'));
+                                    }
                                     }
                                     if ($('input[name=photo]').val().trim() == 0){
                                     valid = 0;
@@ -815,8 +804,8 @@
             <div class="span9">
                 <div class="controls">
                     <select name="channel_sel" id="channel_sel" class="required channel_sel formattedelement">
-                       @foreach($channels as $channel)
-                       <option value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                        @foreach($channels as $channel)
+                        <option value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
                         @endforeach
                     </select>
                     <span for="channel_sel1" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
@@ -847,7 +836,7 @@
                                                 $.each(data, function(index, element) {
                                                 Box.append("<option value='" + element + "'>" + index + "</option>");
                                                 });
-                                            $("#campaign_id").select2();
+                                                $("#campaign_id").select2();
                                         });
                                 $.get("{{ url('article/magazine')}}",
                                 { option: $(this).attr("value") },
@@ -869,7 +858,6 @@
                                                 $.each(data, function(index, element) {
                                                 Box.append("<option value='" + element + "'>" + index + "</option>");
                                                 });
-                                                
                                                 $("#category1").select2();
                                                 $('#selectBoxFilter3').html("<option value=''>Please Select</option>");
                                                 $("#selectBoxFilter3").select2();
@@ -877,7 +865,6 @@
                                                 $('#selectBoxFilter4').select2();
                                                 $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
                                                 $('#selectBoxFilter5').select2();
-                            
                                         });
                         });
                         });</script>
@@ -889,53 +876,53 @@
     <div class="container-fluid">
         <div class="form-legend" id="Channel">Canonical</div>
         <div id="Text_Area_Resizable" class="control-group row-fluid">
-               <div class="span3">
-                   <label class="control-label">Is this article published  elsewhere</label>
-               </div>
-               <div class="span3">
-                                <label class="radio">
+            <div class="span3">
+                <label class="control-label">Is this article published  elsewhere</label>
+            </div>
+            <div class="span3">
+                <label class="radio">
 
-                                    <input id="ifyes" type="radio" name="canonical_options" class="uniformRadio" value="1">
+                    <input id="ifyes" type="radio" name="canonical_options" class="uniformRadio" value="1">
 
-                                    Yes
+                    Yes
 
-                                </label>
-                   
-                  <!-- <div class="controls">
-                       <input type="radio" value="1" name="canonical_options" id="ifyes" />Yes
-                       <input type="radio"  value="0"name="canonical_options" id="ifno" checked/>No
-                   </div>-->
-               </div>
+                </label>
+
+                <!-- <div class="controls">
+                     <input type="radio" value="1" name="canonical_options" id="ifyes" />Yes
+                     <input type="radio"  value="0"name="canonical_options" id="ifno" checked/>No
+                 </div>-->
+            </div>
+            <div class="span3">
+                <label class="radio">
+
+                    <input id="ifno" checked="checked" type="radio" name="canonical_options" class="uniformRadio" value="0">
+
+                    No
+
+                </label>
+
+                <!-- <div class="controls">
+                     <input type="radio" value="1" name="canonical_options" id="ifyes" />Yes
+                     <input type="radio"  value="0"name="canonical_options" id="ifno" checked/>No
+                 </div>-->
+            </div>
+
+        </div>
+        <div id="canonical" class="control-group row-fluid">
+            <div id="Text_Area_Resizable" class="control-group row-fluid" >
                 <div class="span3">
-                                <label class="radio">
-
-                                    <input id="ifno" checked="checked" type="radio" name="canonical_options" class="uniformRadio" value="0">
-
-                                    No
-
-                                </label>
-                   
-                  <!-- <div class="controls">
-                       <input type="radio" value="1" name="canonical_options" id="ifyes" />Yes
-                       <input type="radio"  value="0"name="canonical_options" id="ifno" checked/>No
-                   </div>-->
-               </div>
-           
-           </div>
-           <div id="canonical" class="control-group row-fluid">
-               <div id="Text_Area_Resizable" class="control-group row-fluid" >
-                   <div class="span3">
-                       <label class="control-label">Enter Canonical Url </label>
-                   </div>
-                   <div class="span9">
-                       <div class="controls">
-                           <input type="text" name="canonical_url" id="canonical_url">
-                       </div>
-                   </div>
-               </div>
-       </div>
+                    <label class="control-label">Enter Canonical Url </label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <input type="text" name="canonical_url" id="canonical_url">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    
+
     <div class="container-fluid">
         <div class="form-legend" id="Article-Details">Article Details
 
@@ -977,39 +964,32 @@
                     <textarea name="description" id="maxi" rows="2" class="auto-resize required formattedtextareat"></textarea>
                     <span for="description" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
                     <script>
-                        
-                        elRTE.prototype.options.panels.web2pyPanel = [
-                            'pastetext','bold', 'italic','underline','justifyleft', 'justifyright',
-                           'justifycenter', 'justifyfull','forecolor','hilitecolor','fontsize','link',
-                           'image', 'insertorderedlist', 'insertunorderedlist'];
- 
-                        elRTE.prototype.options.toolbars.web2pyToolbar = ['web2pyPanel','tables'];
- 
+
+                                        elRTE.prototype.options.panels.web2pyPanel = [
+                                                'pastetext', 'bold', 'italic', 'underline', 'justifyleft', 'justifyright',
+                                                'justifycenter', 'justifyfull', 'forecolor', 'hilitecolor', 'fontsize', 'link',
+                                                'image', 'insertorderedlist', 'insertunorderedlist'];
+                                        elRTE.prototype.options.toolbars.web2pyToolbar = ['web2pyPanel', 'tables'];
                                         $('#maxi').elrte({
-                                        lang: "en",
+                                lang: "en",
                                         styleWithCSS: false,
                                         height: 200,
                                         toolbar: 'web2pyToolbar'
                                 });
-                     
-                                  $(document).ready(function() { 
-                                      
-                                      $("#canonical").addClass("none");
-                                    $(':radio[id=ifno]').change(function() {
-                                        $("#canonical").addClass("none");
-                                    });
-                                    $(':radio[id=ifyes]').change(function() {
-                                        $("#canonical").removeClass("none");
-                                        
-                                    });
-                                 });                       
-                                            
-                    
-                    </script>
+                                        $(document).ready(function() {
+
+                                $("#canonical").addClass("none");
+                                        $(':radio[id=ifno]').change(function() {
+                                $("#canonical").addClass("none");
+                                });
+                                        $(':radio[id=ifyes]').change(function() {
+                                $("#canonical").removeClass("none");
+                                });
+                                });                    </script>
                 </div>
-          </div>
+            </div>
         </div>
-  
+
         <!--WYSIWYG Editor - Full Options end-->
 
     </div><!-- end container1 -->
@@ -1031,8 +1011,8 @@
             </div>
             <script>
                                 $().ready(function(){
-                                $("#Ltopics").pickList();
-                                });
+                        $("#Ltopics").pickList();
+                        });
                                 $("#genTopic").click(function(){
                         var token = $('input[name=_token]');
                                 //alert($('#maxi').elrte('val'));
@@ -1065,7 +1045,6 @@
                                                         if (selectedarray.indexOf(element.id) >= 0)
                                                         selectedop = 'selected';
                                                         dataoption += "<option " + selectedop + " value='" + element.id + "'>" + element.topic + "</option>";
-
                                                 });
                                                 dataoption += '</select>';
                                                 $(".ltopicsparentdiv").html(dataoption);
@@ -1115,11 +1094,9 @@
                         $(this).find("option:selected").each(function(){
                         if ($(this).attr("value") == "1"){
                         $("#tabState").show();
-                       
                         } else{
                         $("#selectBoxFilter7").select2();
-                        $("#tabState").hide();
-                        
+                                $("#tabState").hide();
                         }
 
                         });
@@ -1205,12 +1182,11 @@
                                         $.each(data, function(index, element) {
                                         selectBoxFilter3.append("<option value='" + element + "'>" + index + "</option>");
                                         });
-                                         $("#selectBoxFilter3").select2();
-                                         $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
-                                         $('#selectBoxFilter4').select2();
-                                         $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
-                                         $('#selectBoxFilter5').select2();
-                                         
+                                        $("#selectBoxFilter3").select2();
+                                        $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
+                                        $('#selectBoxFilter4').select2();
+                                        $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                        $('#selectBoxFilter5').select2();
                                 });
                         });
                         });</script>
@@ -1240,9 +1216,9 @@
                                         $.each(data, function(index, element) {
                                         selectBoxFilter4.append("<option value='" + element + "'>" + index + "</option>");
                                         });
-                                         $('#selectBoxFilter4').select2();
-                                         $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
-                                         $('#selectBoxFilter5').select2();
+                                        $('#selectBoxFilter4').select2();
+                                        $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                        $('#selectBoxFilter5').select2();
                                 });
                         });
                         });</script>
@@ -1271,7 +1247,7 @@
                                         $.each(data, function(index, element) {
                                         selectBoxFilter5.append("<option value='" + element + "'>" + index + "</option>");
                                         });
-                                         $('#selectBoxFilter5').select2();
+                                        $('#selectBoxFilter5').select2();
                                 });
                         });
                         });</script>
@@ -1466,7 +1442,7 @@
                                 minChars: 4,
                                 preventDuplicates: true,
                         });
-                        });            </script>
+                        });</script>
         </div>                       
         <!--Select Box with Filter Search end-->
     </div>
@@ -1478,9 +1454,9 @@
     <div class="container-fluid">
 
         <div class="form-legend" id="photos-videos">Photos & Videos</div>
-       
+
         <!--Tabs begin-->
-        
+
         <div  class="control-group row-fluid span-inset">
             <ul class="nav nav-tabs" id="myTab">
                 <!--                <li class="dropdown active">
@@ -1499,8 +1475,8 @@
             </ul>
             <div class="tab-content">
                 <div id="tab-example1" class="tab-pane fade">
-                   <div class="control-group row-fluid"> 
-                    <div class="span3">
+                    <div class="control-group row-fluid"> 
+                        <div class="span3">
                             <label class="radio">
 
                                 <input id="embedcodevideo" checked="checked" type="radio" name="vodeo" class="uniformRadio" value="1">
@@ -1509,8 +1485,8 @@
 
                             </label>
 
-                    </div>
-                    <div class="span3">
+                        </div>
+                        <div class="span3">
                             <label class="radio">
 
                                 <input id="videoid" type="radio" name="vodeo" class="uniformRadio" value="1">
@@ -1519,83 +1495,101 @@
 
                             </label>
 
+                        </div>
                     </div>
-                   </div>
-                    
+
                     <div id="embedcodevideodetails" >
-                    <div class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label">Title</label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls">
-                                <input type="text" name="videoTitle" id="inputSpan9">
+                        <div class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label">Title</label>
+                            </div>
+                            <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="videoTitle" id="inputSpan9">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label">  Embed Code (300/300)</label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls">
-                                <textarea  rows="4" name="videoCode" class="no-resize"></textarea>
+                        <div class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label">  Embed Code (300/300)</label>
+                            </div>
+                            <div class="span9">
+                                <div class="controls">
+                                    <textarea  rows="4" name="videoCode" class="no-resize"></textarea>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label">Source</label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls">
-                                <input type="text" name="videoSource" id="inputSpan9">
+                        <div class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label">Source</label>
+                            </div>
+                            <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="videoSource" id="inputSpan9">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label">URL</label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls">
-                                <input type="text" name="videoURL" id="inputSpan9">
+                        <div class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label">URL</label>
                             </div>
+                            <div class="span9">
+                                <div class="controls">
+                                    <input type="text" name="videoURL" id="inputSpan9">
+                                </div>
+                            </div>
+
+
                         </div>
-                       
-                        
-                    </div>
                     </div>
                     <div id="videocode">
-                    <div class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label">Video ID</label>
-                        </div>
-                     <div class="span9">
-                            <div class="controls">
-                                <input type="text" class="valid" name="video_Id" id="video_Id"/>
+                        <div class="control-group row-fluid">
+                            <div class="span3">
+                                <label class="control-label">Video ID</label>
+                            </div>
+                            <div class="span9">
+                                <div class="controls">
+                                    <input type="text" class="valid" name="video_Id" id="video_Id"/>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    </div>
-<!--                    <div class="control-group row-fluid">
-                        <div class="span12 span-inset">
-                            <div style="float:right; width:11%; margin-bottom:5px;"><button class="btn btn-warning" id="addvideobutton" name="addvideobutton" type="button" style="display:block;">Submit</button>
-                                <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:50%; display:block; margin-left:15px;"/></div>
-                        </div>
-                    </div> -->
+                    <!--                    <div class="control-group row-fluid">
+                                            <div class="span12 span-inset">
+                                                <div style="float:right; width:11%; margin-bottom:5px;"><button class="btn btn-warning" id="addvideobutton" name="addvideobutton" type="button" style="display:block;">Submit</button>
+                                                    <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:50%; display:block; margin-left:15px;"/></div>
+                                            </div>
+                                        </div> -->
                 </div>
 
-              
+
                 <div id="dropdown1" class="tab-pane fade active in">
-                    
+                    <div class="related_image " >
+                        <div>
+                            Browse recent related images : <input type="text" name="related_image_search" id="related_image_search" />
+                            <button class="btn btn-success" onclick="searchRelated()" id="related_image_button"  name="status" type="button" style="margin-bottom:0px !important;">Search</button>
+                            
+                        </div>
+                        <div class="relaed_image_box_outer hide" >
+                            <img src="{{ asset('images/photon/preloader/76.gif')}}" class="loader-img-related-content hide" alt="loader" />
+                            <div class="relaed_image_box">
+
+                            </div>
+                            <div class="related-img-selection-done"  >
+                                <button class="btn btn-success hide related_action_button" onclick="relatedImageSelected()" id="related_selected_button" name="related_selected" type="button" >Upload</button>
+                                <button class="btn btn-danger delete related_action_button" onclick="closeRelated()" type="button"><i class="glyphicon glyphicon-trash"></i><span>Close</span>
+                                    </button>
+                                <img src="{{ asset('images/photon/preloader/76.gif')}}" class="loader-img-selected hide" alt="loader" />
+                            </div>
+                        </div>
+                    </div>
 <!--                    <p>Browse recent related images : <button class="btn btn-success"  onclick = "document.getElementById('light').style.display = 'block';
         document.getElementById('fade').style.display = 'block'" name="status" type="button">Browse</button>
                         
 
                     </p>-->
-                    
-                     
+
+
                     <!--                    <div class="control-group row-fluid">
                                             <div class="span3">
                                                 <label class="control-label">Upload Image 1</label>
@@ -1663,7 +1657,7 @@
                     <div class="control-group row-fluid">
                         <div class="span3">
                             <label class="control-label" for="inputField">
-                                Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: 680px X 372px) (File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}})."><i class="icon-photon info-circle"></i></a>
+                                Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: {{config('constants.dimension_article')}}) (File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}})."><i class="icon-photon info-circle"></i></a>
                             </label>
                         </div>
                         <div class="span9 row-fluid" >
@@ -1756,18 +1750,18 @@
                     </div>
 
                 </div>
-             
+
             </div>
         </div>
         <!-- Uploaded Image and Video Ids -->
-        
+
 <!--        <input type="hidden" id="uploadedVideos" name="uploadedVideos[]">-->
 
-         <label class="checkbox" >
-                    <input type="checkbox" name="hide_image" class="uniformCheckbox2" value="1">
-                           <a href="javascript:;">Do Not Show Images On Landing Page</a>
-       </label>
-       
+        <label class="checkbox" >
+            <input type="checkbox" name="hide_image" class="uniformCheckbox2" value="1">
+            <a href="javascript:;">Do Not Show Images On Landing Page</a>
+        </label>
+
     </div><!--end container-->
     <script>
                         // magic.js
@@ -1805,46 +1799,46 @@
                 //var csrf_token = $('meta[name="csrf-token"]').attr('content');
                 var token = $('input[name=_token]');
                         // process the form - For Add Image in Album
-                /*        $("#addvideobutton").click(function(){
-                // get the form data
-                var formData = new FormData();
-                        formData.append('title', $('input[name=videoTitle]').val());
-                        formData.append('code', $('textarea[name=videoCode]').val());
-                        formData.append('source', $('input[name=videoSource]').val());
-                        formData.append('url', $('input[name=videoURL]').val());
-                        formData.append('channel_id', $('select[name=channel_sel]').val());
-                        formData.append('owner', 'article');
-                        // process the form
-                        $.ajax({
-                        type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                                //method      : 'POST',
-                                url         : '/article/addVideos', // the url where we want to POST
-                                //files       :  true,
-                                data        :  formData,
-                                dataType    : 'json', // what type of data do we expect back from the server
-                                contentType :  false,
-                                processData :  false,
-                                success     :  function(respText){
-                                theResponse = respText;
-                                        alert(theResponse);
-                                        //Assign returned ID to hidden array element
-                                        $('#uploadedVideos').val(theResponse);
-                                        //alert($('#uploadedVideos').val());
-                                },
-                                headers: {
-                                'X-CSRF-TOKEN': token.val()
-                                }
-                        })
-                        // using the done promise callback
-                        .done(function(data) {
-
-                        // log data to the console so we can see
-                        console.log(data);
-                                // here we will handle errors and validation messages
-                        });
-                        // stop the form from submitting the normal way and refreshing the page
-                        //event.preventDefault();
-                });   */
+                        /*        $("#addvideobutton").click(function(){
+                         // get the form data
+                         var formData = new FormData();
+                         formData.append('title', $('input[name=videoTitle]').val());
+                         formData.append('code', $('textarea[name=videoCode]').val());
+                         formData.append('source', $('input[name=videoSource]').val());
+                         formData.append('url', $('input[name=videoURL]').val());
+                         formData.append('channel_id', $('select[name=channel_sel]').val());
+                         formData.append('owner', 'article');
+                         // process the form
+                         $.ajax({
+                         type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                         //method      : 'POST',
+                         url         : '/article/addVideos', // the url where we want to POST
+                         //files       :  true,
+                         data        :  formData,
+                         dataType    : 'json', // what type of data do we expect back from the server
+                         contentType :  false,
+                         processData :  false,
+                         success     :  function(respText){
+                         theResponse = respText;
+                         alert(theResponse);
+                         //Assign returned ID to hidden array element
+                         $('#uploadedVideos').val(theResponse);
+                         //alert($('#uploadedVideos').val());
+                         },
+                         headers: {
+                         'X-CSRF-TOKEN': token.val()
+                         }
+                         })
+                         // using the done promise callback
+                         .done(function(data) {
+                         
+                         // log data to the console so we can see
+                         console.log(data);
+                         // here we will handle errors and validation messages
+                         });
+                         // stop the form from submitting the normal way and refreshing the page
+                         //event.preventDefault();
+                         });   */
                         // process the form - For Add Image in Album
                         $("#addphotobutton").click(function(){
                 //$("#addAuthorForm").on('click',function(event){}
@@ -1907,26 +1901,21 @@
                         //event.preventDefault();
                 });
                 });
-      
-    $(document).ready(function() {
-     $("#videocode").addClass("none");                  
-   $(':radio[id=videoid]').change(function() {
-      
-   $("#videocode").removeClass("none");
-   $("#embedcodevideodetails").addClass("none");
+                        $(document).ready(function() {
+                $("#videocode").addClass("none");
+                        $(':radio[id=videoid]').change(function() {
 
+                $("#videocode").removeClass("none");
+                        $("#embedcodevideodetails").addClass("none");
+                        });
+                        $(':radio[id=embedcodevideo]').change(function() {
 
-});
-$(':radio[id=embedcodevideo]').change(function() {
-    
-   $("#embedcodevideodetails").removeClass("none");
-   $("#videocode").addClass("none");
+                $("#embedcodevideodetails").removeClass("none");
+                        $("#videocode").addClass("none");
+                        });
+                });    </script>
 
-});
-  });                         
-    </script>
-
-      @if(in_array('12',Session::get('user_rights')))
+    @if(in_array('12',Session::get('user_rights')))
 
     <div class="container-fluid">
 
@@ -1966,54 +1955,52 @@ $(':radio[id=embedcodevideo]').change(function() {
         <script>
                             $(function(){
                             $("#datepicker").datepicker({
-                                 minDate: 0,
-            dateFormat: "yy-mm-dd"
+                            minDate: 0,
+                                    dateFormat: "yy-mm-dd"
                             });
-                                  
-                             $.timeEntry.setDefaults({show24Hours: true,showSeconds: true});   
-                            $('#timeEntry').timeEntry().change();
+                                    $.timeEntry.setDefaults({show24Hours: true, showSeconds: true});
+                                    $('#timeEntry').timeEntry().change();
                             });</script> 
     </div>
 
     @endif
-  
+
 
     <div class="container-fluid">
 
-             <div class="control-group row-fluid">
-                    <div class="span12 span-inset">
-        
-                        <label class="checkbox" >
-                            <input type="checkbox" name="for_homepage" class="uniformCheckbox" value="checkbox1" checked >
-                            <a href="#" target="_blank">Publish this to Home Page.</a>
-                        </label>
-                        <script>
-                                            $().ready(function(){
-                                    $(".uniformCheckbox").uniform();
-                                    });</script>
-        
-                        <label class="checkbox" >
-                            <input type="checkbox" name="important" class="uniformCheckbox2" value="checkbox1">
-                            <a href="#" target="_blank">This article is important.</a>
-                        </label>
-                        <script>
-                                            $().ready(function(){
-                                    $(".uniformCheckbox2").uniform();
-                                    });</script>
-        
-                        <label class="checkbox" >
-                            <input type="checkbox" name="web_exclusive" class="uniformCheckbox3" value="checkbox1">
-                            <a href="#" target="_blank">Web Exclusive.</a>
-                        </label>
-                        <script>
-                                            $().ready(function(){
-                                    $(".uniformCheckbox3").uniform();
-                                    });
-                        </script>
-        
-        
-                    </div>
-                </div>
+        <div class="control-group row-fluid">
+            <div class="span12 span-inset">
+
+                <label class="checkbox" >
+                    <input type="checkbox" name="for_homepage" class="uniformCheckbox" value="checkbox1" checked >
+                    <a href="#" target="_blank">Publish this to Home Page.</a>
+                </label>
+                <script>
+                                    $().ready(function(){
+                            $(".uniformCheckbox").uniform();
+                            });</script>
+
+                <label class="checkbox" >
+                    <input type="checkbox" name="important" class="uniformCheckbox2" value="checkbox1">
+                    <a href="#" target="_blank">This article is important.</a>
+                </label>
+                <script>
+                                    $().ready(function(){
+                            $(".uniformCheckbox2").uniform();
+                            });</script>
+
+                <label class="checkbox" >
+                    <input type="checkbox" name="web_exclusive" class="uniformCheckbox3" value="checkbox1">
+                    <a href="#" target="_blank">Web Exclusive.</a>
+                </label>
+                <script>
+                                    $().ready(function(){
+                            $(".uniformCheckbox3").uniform();
+                            });                        </script>
+
+
+            </div>
+        </div>
 
         <div class="control-group row-fluid" id="submitsection">
             <div class="span12 span-inset">
@@ -2023,7 +2010,7 @@ $(':radio[id=embedcodevideo]').change(function() {
                 @if(in_array('12',Session::get('user_rights')))
                 <button type="submit" name="status" value="P" id="publishSubmit" class="btn btn-success">Publish</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
                 @endif
-               
+
                 <button type="reset" name="status" value="D" id="dumpSubmit" class="btn btn-danger">Dump</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
 
             </div>
@@ -2038,88 +2025,88 @@ $(':radio[id=embedcodevideo]').change(function() {
 </html> -->
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
-{% for (var i=0, file; file=o.files[i]; i++) { %}
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-upload fade">
-        <td>
-            <span class="preview"></span>
-        </td>
-        <td>
-            <p class="name">{%=file.name%}</p>
-            <strong class="error text-danger"></strong>
-        </td>
-        <td>
-            <p class="size">Processing...</p>
-            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
-        </td>
-        <td>
-            {% if (!i && !o.options.autoUpload) { %}
-                <button class="btn btn-primary start" disabled>
-                    <i class="glyphicon glyphicon-upload"></i>
-                    <span>Start</span>
-                </button>
-            {% } %}
-            {% if (!i) { %}
-                <button class="btn btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Cancel</span>
-                </button>
-            {% } %}
-        </td>
+    <td>
+    <span class="preview"></span>
+    </td>
+    <td>
+    <p class="name">{%=file.name%}</p>
+    <strong class="error text-danger"></strong>
+    </td>
+    <td>
+    <p class="size">Processing...</p>
+    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+    </td>
+    <td>
+    {% if (!i && !o.options.autoUpload) { %}
+    <button class="btn btn-primary start" disabled>
+    <i class="glyphicon glyphicon-upload"></i>
+    <span>Start</span>
+    </button>
+    {% } %}
+    {% if (!i) { %}
+    <button class="btn btn-warning cancel">
+    <i class="glyphicon glyphicon-ban-circle"></i>
+    <span>Cancel</span>
+    </button>
+    {% } %}
+    </td>
     </tr>
-{% } %}
+    {% } %}
 </script>
 <!-- The template to display files available for download -->
 <script id="template-download" type="text/x-tmpl">
-{% for (var i=0, file; file=o.files[i]; i++) { %}
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
     <tr class="template-download fade">
     <td colspan="4">            
     <table width="100%">
     <tr>             
-        <td>
-            <span class="preview">
-                {% if (file.thumbnailUrl) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
-                {% } %}
-            </span>
-        </td>
-        <td>
-            <p class="name">
-                {% if (file.url) { %}
-                    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
-                {% } else { %}
-                    <span>{%=file.name%}</span>
-                {% } %}
-            </p>
-            {% if (file.error) { %}
-                <div><span class="label label-danger">Error</span> {%=file.error%}</div>
-            {% } %}
-        </td>
-        <td>
-            <span class="size">{%=o.formatFileSize(file.size)%}</span>
-        </td>
-        <td>
-            {% if (file.deleteUrl) { %}
-                <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
-                    <i class="glyphicon glyphicon-trash"></i>
-                    <span>Delete</span>
-                </button>
-                <input type="checkbox" name="delete" value="1" class="toggle">
-            {% } else { %}
-                <button class="btn btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Cancel</span>
-                </button>
-            {% } %}
-        </td>
- </tr>
-<tr>
-            <td colspan="1">Photograph By</td>
-             <td colspan="3"><input type="text" name="photographby[{%=file.name%}]"/></textarea></td>    
-   </tr>
+    <td>
+    <span class="preview">
+    {% if (file.thumbnailUrl) { %}
+    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+    {% } %}
+    </span>
+    </td>
+    <td>
+    <p class="name">
+    {% if (file.url) { %}
+    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+    {% } else { %}
+    <span>{%=file.name%}</span>
+    {% } %}
+    </p>
+    {% if (file.error) { %}
+    <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+    {% } %}
+    </td>
+    <td>
+    <span class="size">{%=o.formatFileSize(file.size)%}</span>
+    </td>
+    <td>
+    {% if (file.deleteUrl) { %}
+    <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+    <i class="glyphicon glyphicon-trash"></i>
+    <span>Delete</span>
+    </button>
+    <input type="checkbox" name="delete" value="1" class="toggle">
+    {% } else { %}
+    <button class="btn btn-warning cancel">
+    <i class="glyphicon glyphicon-ban-circle"></i>
+    <span>Cancel</span>
+    </button>
+    {% } %}
+    </td>
+    </tr>
+    <tr>
+    <td colspan="1">Photograph By</td>
+    <td colspan="3"><input type="text" name="photographby[{%=file.name%}]"/></textarea></td>    
+    </tr>
     </table>   
     </td>    
     </tr>
-{% } %}
+    {% } %}
 </script>
 <script type="text/javascript" src="{{ asset('js/tmpl.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/load-image.all.min.js') }}"></script>
@@ -2132,49 +2119,46 @@ $(':radio[id=embedcodevideo]').change(function() {
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-validate.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-ui.js') }}"></script>
 <script>
-    $(document).ready(function(){
-$('#fileupload').fileupload({
-        // Uncomment the following to send cross-domain cookies:
-        //xhrFields: {withCredentials: true},
-        url: '<?php echo url('article/image/upload') ?>',
-        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-        maxFileSize: 10000000
-    });
-    $('.authorimagespn').append('<input type="file" name="photo" id="photo">'); 
-     });
-     $('#fileupload').bind('fileuploaddone', function (e, data) {
-    //console.log(e);
-    var dataa=JSON.parse(data.jqXHR.responseText);
-    //console.log(dataa['files']['0']['name']);
-    $.each(dataa['files'], function(index, element) {
-        //console.log(element.name);
-        if($('#uploadedImages').val().trim())
-            $('#uploadedImages').val($('#uploadedImages').val()+','+element.name);
-        else
-            $('#uploadedImages').val(element.name);    
-    });
-     
-    });
-    $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
-    // console.log(data);
-     var file=getArg(data.url,'file');
-     var images= $('#uploadedImages').val().split(',');
-     images.splice(images.indexOf(file),1);
-     $('#uploadedImages').val(images.join());
-      //$('#imagesname').val($('#imagesname').val().replace(','+));
-     
-    });
-    
+                                            $(document).ready(function(){
+                                    $('#fileupload').fileupload({
+                                    // Uncomment the following to send cross-domain cookies:
+                                    //xhrFields: {withCredentials: true},
+                                    url: '<?php echo url('article/image/upload') ?>',
+                                            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+                                            maxFileSize: 10000000
+                                    });
+                                            $('.authorimagespn').append('<input type="file" name="photo" id="photo">');
+                                    });
+                                            $('#fileupload').bind('fileuploaddone', function (e, data) {
+                                    //console.log(e);
+                                    var dataa = JSON.parse(data.jqXHR.responseText);
+                                            //console.log(dataa['files']['0']['name']);
+                                            $.each(dataa['files'], function(index, element) {
+                                            //console.log(element.name);
+                                            if ($('#uploadedImages').val().trim())
+                                                    $('#uploadedImages').val($('#uploadedImages').val() + ',' + element.name);
+                                                    else
+                                                    $('#uploadedImages').val(element.name);
+                                            });
+                                    });
+                                            $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
+                                    // console.log(data);
+                                    var file = getArg(data.url, 'file');
+                                            var images = $('#uploadedImages').val().split(',');
+                                            images.splice(images.indexOf(file), 1);
+                                            $('#uploadedImages').val(images.join());
+                                            //$('#imagesname').val($('#imagesname').val().replace(','+));
 
-function getArg(url,name){
-    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
-    if (results==null){
-       return null;
-    }
-    else{
-       return results[1] || 0;
-    }
-}
+                                    });
+                                            function getArg(url, name){
+                                            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
+                                                    if (results == null){
+                                            return null;
+                                            }
+                                            else{
+                                            return results[1] || 0;
+                                            }
+                                            }
 
 
 </script>

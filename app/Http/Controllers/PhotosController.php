@@ -151,6 +151,7 @@ class PhotosController extends Controller
         switch ($photo->owned_by):
         case 'article':
            // echo config('constants.awbucket').config('constants.awarticleimagethumbtdir').$photo->photopath;exit;
+            if(count(Photo::where('photopath','=',$photo->photopath)->get())==0){
             $s3->deleteObjects(array(
 			'Bucket'     => config('constants.awbucket'),
                         'Delete'=>array(
@@ -170,6 +171,7 @@ class PhotosController extends Controller
                             ) 
                         )			
             ));
+            }
            break;
         case 'quickbyte':
             $s3->deleteObjects(array(

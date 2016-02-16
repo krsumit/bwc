@@ -13,7 +13,17 @@ div.error .select2-choice{background-color: #f4c8c5!important;background-image:n
 .error.elrte-error,.error.author-error{display:block!important;}
 .error.noborder{border:none!important;}
 .authorimagespn input{margin-top: 10px;}
-
+/* related image section start */
+.related_image_element{width: 92px;margin: 10px;float:left; height:145px; overflow: hidden;}
+.relaed_image_box{overflow: hidden; float: left;}
+.related-img-tag-name{font-size: 12px; float: left;}
+#related_image_search{width: 300px;}
+.inline_image{float:left !important; padding: 0 !important; margin:2px !important;}
+.relaed_image_box_outer{background: #f6f6f6; border-radius: 5px;border:1px solid #cccccc;float:left; margin-bottom: 15px; width: 98.5%; padding: 5px;}
+.related-img-selection-done{float:right;}
+#related_image_error{text-align: center; margin-top: -10px; margin-bottom: 10px;}
+.related_image{overflow: hidden}
+/* related image ends */
 /* Article image selection pop-up css start */
    /* .black_overlay{
         display: none;

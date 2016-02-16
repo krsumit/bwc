@@ -451,10 +451,10 @@
                 <li class="active"><a data-toggle="tab" href="#existing">Choose From Existing</a></li>
                 <!-- Add Author Section Only if Rights -->
               
-                @if(count(array_diff(array('9','44','45'), Session::get('user_rights'))) != count(array('9','44','45')))
+                {{-- @if(count(array_diff(array('9','44','45'), Session::get('user_rights'))) != count(array('9','44','45')))
                 <li class=""><a data-toggle="tab" href="#new">Add A New Author</a></li>
                 @endif
-                
+                --}}
             </ul>
             <div class="tab-content">
                 <div id="existing" class="tab-pane fade  active in">
@@ -1628,11 +1628,31 @@
                 </div>-->
 
                 <div id="dropdown1" class="tab-pane fade active in">
+                    
+                    <div class="related_image " >
+                        <div>
+                            Browse recent related images : <input type="text" name="related_image_search" id="related_image_search" />
+                            <button class="btn btn-success" onclick="searchRelated()" id="related_image_button"  name="status" type="button" style="margin-bottom:0px !important;">Search</button>
+                            
+                        </div>
+                        <div class="relaed_image_box_outer hide" >
+                            <img src="{{ asset('images/photon/preloader/76.gif')}}" class="loader-img-related-content hide" alt="loader" />
+                            <div class="relaed_image_box">
+
+                            </div>
+                            <div class="related-img-selection-done"  >
+                                <button class="btn btn-success hide related_action_button" onclick="relatedImageSelected()" id="related_selected_button" name="related_selected" type="button" >Upload</button>
+                                <button class="btn btn-danger delete related_action_button" onclick="closeRelated()" type="button"><i class="glyphicon glyphicon-trash"></i><span>Close</span>
+                                    </button>
+                                <img src="{{ asset('images/photon/preloader/76.gif')}}" class="loader-img-selected hide" alt="loader" />
+                            </div>
+                        </div>
+                    </div>
                     <!--Sortable Responsive Media Table begin-->
                         <div class="row-fluid">
                             <div class="span12">
                                 @if(count($photos)>0)
-                                <table class="table table-striped table-responsive" id="tableSortableResMed">
+                                <table class="table table-striped table-responsive uploaded-image-list" id="tableSortableResMed">
                                     <thead class="cf sorthead">
                                         <tr>
                                             <th>Image</th>
@@ -1644,7 +1664,7 @@
                                     </thead>
                                     <tbody>
                                         @foreach($photos as $photo)
-                                        <tr id="row{{$photo->photo_id}}">
+                                        <tr id="row{{$photo->photo_id}}" title="{{$photo->photopath}}">
                                             <td>
                                                 <img src="{{ config('constants.awsbaseurl').config('constants.awarticleimagethumbtdir').$photo->photopath}}" alt="article" />
                                             </td>
@@ -1666,7 +1686,7 @@
                            <div class="control-group row-fluid">
                         <div class="span3">
                             <label class="control-label" for="inputField">
-                                Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: 680px X 372px) (File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}}  )."><i class="icon-photon info-circle"></i></a>
+                                Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: {{config('constants.dimension_article')}}) (File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}}  )."><i class="icon-photon info-circle"></i></a>
                             </label>
                         </div>
                         <div class="span9 row-fluid" >

@@ -85,7 +85,10 @@
                                             
                                             $('#description').val(element);
                                         }
-                                       
+                                       if (index == 'quotes_image') {
+                                            
+                                            $('#edit_quotes_image').val(element);
+                                        }
                                        if (index == 'tag') {  
                                              //var p="";
                                              $.each(element, function(index, element2) {
@@ -293,7 +296,7 @@
         {!! Form::open(array('url'=>'quotes/','class'=> 'form-horizontal','id'=>'validation_form','onsubmit'=>'return addqueatsfunction()')) !!}
         {!! csrf_field() !!}
             <div class="container-fluid"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
-
+                 <input type="hidden" name="edit_quotes_image" id="edit_quotes_image" value="">
                 <div id="Notifications" class="form-legend" >Notifications</div>
 
                 <!--Notifications begin-->
@@ -374,7 +377,22 @@
                         </div>
                     </div>
                     <!--Text Area Resizable end-->
-
+                      <!--Text field Resizable begin-->
+                    <div class="control-group row-fluid" id="photourl">
+                    <div class="span3">
+                        <label class="control-label">Quote Image</label>
+                    </div>
+                    <div class="span9">
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                            <div class="input-append">
+                                <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span>
+                                    <input type="file" name="quotes_image" id="quotes_image" value="" />
+                                </span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <!--Text field Resizable end-->
                     <!--Select Box with Filter Search begin-->
                   
                     <!--Select Box with Filter Search end-->

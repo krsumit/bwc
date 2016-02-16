@@ -198,6 +198,11 @@ class QuotesController extends Controller
         $Quote->description = $request->description;
         $Quote->q_category_id = 'category';
         $Quote->channel_id = $request->channel_sel;
+        if($request->quotes_image !=''){
+        $Quote->quotes_image = $request->quotes_image;
+        }else{
+         $Quote->quotes_image = $request->edit_quotes_image;  
+        }
         $Quote->valid = '1';
         $Quote->q_tags = $request->Taglist;
 

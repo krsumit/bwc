@@ -79,9 +79,9 @@
 <script type="text/javascript" src="{{ asset('js/plugins/prettify/prettify.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/bootstrapSwitch.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/mfupload.js') }}"></script>
-
 <script type="text/javascript" src="{{ asset('js/common.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/jquery.tokeninput.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/custom.js') }}"></script>
 
         <!--<script>
             $().ready(function() {
