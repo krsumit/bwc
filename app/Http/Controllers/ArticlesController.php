@@ -754,20 +754,21 @@ class ArticlesController extends Controller {
 //            DB::table('videos')->where('video_id', $request->uploadedVideos)
 //                ->update(['owner_id' => $id]);
         //Photos table (article_id)- Save
-
-        foreach($request->get('rimage') as $key => $value){
-                    $oldPhoto=Photo::find($key);
-                    $articleImage = new Photo();
-                    $articleImage->photopath = $oldPhoto->photopath;
-                    $articleImage->photo_by = $value;
-                    $articleImage->channel_id = $request->channel_sel;
-                    $articleImage->owned_by ='article';
-                    $articleImage->owner_id =$id;
-                    $articleImage->active ='1';
-                    $articleImage->created_at = date('Y-m-d H:i:s');
-                    $articleImage->updated_at = date('Y-m-d H:i:s');
-                    $articleImage->save();
-           // echo $key; exit;
+        if($request->get('rimage')){
+            foreach($request->get('rimage') as $key => $value){
+                        $oldPhoto=Photo::find($key);
+                        $articleImage = new Photo();
+                        $articleImage->photopath = $oldPhoto->photopath;
+                        $articleImage->photo_by = $value;
+                        $articleImage->channel_id = $request->channel_sel;
+                        $articleImage->owned_by ='article';
+                        $articleImage->owner_id =$id;
+                        $articleImage->active ='1';
+                        $articleImage->created_at = date('Y-m-d H:i:s');
+                        $articleImage->updated_at = date('Y-m-d H:i:s');
+                        $articleImage->save();
+               // echo $key; exit;
+            }
         }
         $images = explode(',', $request->uploadedImages);
 
@@ -1054,21 +1055,22 @@ class ArticlesController extends Controller {
 //            DB::table('videos')->where('video_id', $request->uploadedVideos)
 //                ->update(['owner_id' => $id]);
         //Photos table (article_id + channel_id)- Save
-        foreach($request->get('rimage') as $key => $value){
-                    $oldPhoto=Photo::find($key);
-                    $articleImage = new Photo();
-                    $articleImage->photopath = $oldPhoto->photopath;
-                    $articleImage->photo_by = $value;
-                    $articleImage->channel_id = $request->channel_sel;
-                    $articleImage->owned_by ='article';
-                    $articleImage->owner_id =$id;
-                    $articleImage->active ='1';
-                    $articleImage->created_at = date('Y-m-d H:i:s');
-                    $articleImage->updated_at = date('Y-m-d H:i:s');
-                    $articleImage->save();
-           // echo $key; exit;
+        if($request->get('rimage')){ 
+            foreach($request->get('rimage') as $key => $value){
+                        $oldPhoto=Photo::find($key);
+                        $articleImage = new Photo();
+                        $articleImage->photopath = $oldPhoto->photopath;
+                        $articleImage->photo_by = $value;
+                        $articleImage->channel_id = $request->channel_sel;
+                        $articleImage->owned_by ='article';
+                        $articleImage->owner_id =$id;
+                        $articleImage->active ='1';
+                        $articleImage->created_at = date('Y-m-d H:i:s');
+                        $articleImage->updated_at = date('Y-m-d H:i:s');
+                        $articleImage->save();
+               // echo $key; exit;
+            }
         }
-        
         $images = explode(',', $request->uploadedImages);
         //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
 
