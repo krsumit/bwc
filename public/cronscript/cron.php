@@ -2193,8 +2193,8 @@ function migrateFeaturImage($featurId,  $condition) {
         
         
         function generateReport(){
-			$template=file_get_contents('editorial.html');
-		//live	$template=file_get_contents('/var/www/html/public/cronscript/editorial.html');
+		//$template=file_get_contents('editorial.html');
+		$template=file_get_contents('/var/www/html/public/cronscript/editorial.html');
 		//echo 'test'; exit;
 		 $start_published_date=date('Y-m-d H:i:s', strtotime("last Sunday")-604800); //echo '<br>';
 		 $end_published_date=date('Y-m-d H:i:s', strtotime("last Saturday")+86399);  //echo '<br>';
