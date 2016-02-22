@@ -189,7 +189,8 @@
 
             <div id="File_Upload" class="control-group row-fluid">
                 <div class="span3">
-                    <label class="control-label">Upload Image(File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}})</label>
+                    <label class="control-label">Upload Image(Size {{config('constants.dimension_event')}}, File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}})</label>
+                    
                 </div>
                 <div class="span9">
                     <div class="fileupload fileupload-new" data-provides="fileupload">
@@ -198,6 +199,7 @@
                             @if(trim($a->imagepath))
                             <image src="{{ config('constants.awsbaseurl').config('constants.awaevent').$a->imagepath}}" style="margin-left: 10px;" height="50" width="50" />
                             @endif;
+                            <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_event')}}')">&nbsp;Need to crop images? Click here</a>
                         </div>
                         
                     </div>

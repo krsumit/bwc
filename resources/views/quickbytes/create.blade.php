@@ -54,6 +54,12 @@
                                     "attr": {"href": "#topics"}
                                 }
                             },
+                             {
+                            "data" : {
+                            "title" : "Assign This QB To A Campaign",
+                                    "attr" : { "href" : "#assign-article-to-a-campaign" }
+                            }
+                            },
                             {
                                 "data": {
                                     "title": "Categories",
@@ -182,6 +188,20 @@
                     $("#channel").select2();
 
                     $('#channel').change(function () {
+                        
+                          $.get("{{ url('article/campaign')}}",
+                                { option: $(this).attr("value") },
+                                        function(data) {
+                                        var Box = $('#campaign_id');
+                                                Box.empty();
+                                                Box.append("<option value=''>Please Select</option>");
+                                                $.each(data, function(index, element) {
+                                                Box.append("<option value='" + element + "'>" + index + "</option>");
+                                                });
+                                                $("#campaign_id").select2();
+                             });
+                                        
+                        
                         $.get("{{ url('article/dropdown1')}}",
                                 {option: $(this).attr("value") + '&level='},
                         function (data) {
@@ -326,7 +346,7 @@
         <div id="Drag_And_Drop_Upload" class="control-group row-fluid">
             <div class="span3">
                 <label class="control-label" for="inputField">
-                    Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: 680px X 372px) (File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}}  )."><i class="icon-photon info-circle"></i></a>
+                    Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: {{config('constants.dimension_qb')}}) (File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}}  )."><i class="icon-photon info-circle"></i></a>
                 </label>
             </div>
             <div class="span9 row-fluid" >
@@ -352,6 +372,7 @@
                             <span>Delete</span>
                         </button>
                         <input type="checkbox" class="toggle">
+                        <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_qb')}}')">Need to crop images? Click here</a>
                         <!-- The global file processing state -->
                         <span class="fileupload-process"></span>
                     </div>
@@ -543,6 +564,35 @@
         <!--Select Box with Filter Search end-->
     </div>
 
+    <div class="container-fluid">
+
+        <div class="form-legend" id="assign-article-to-a-campaign">Assign this article to a Campaign</div>
+
+        <!--Select Box with Filter Search begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="campaign">Campaign</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="campaign" id="campaign_id">
+                        <option  value="">Please Select</option>
+                        @foreach($campaign as $campaigns)
+                        <option value="{{ $campaigns->campaign_id }}">{{ $campaigns->title }}</option>
+                        @endforeach
+                    </select>
+                    <span for="campaign" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
+                   
+                </div>
+            </div>
+            <script>
+                                $().ready(function(){
+                        $("#campaign_id").select2();
+                        });</script>
+        </div>
+        <!--Select Box with Filter Search end-->
+
+    </div><!--end container-->
 
     <div class="container-fluid">
 

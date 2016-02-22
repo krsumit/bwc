@@ -925,7 +925,7 @@ class ArticlesController extends Controller {
         }elseif ($request->videoCode !=''){
             $article->video_type = 'embededvideocode' ;
         }
-        exit;
+        //exit;
         $article->campaign_id = $request->campaign;
         //$article->publish_date = 0;//$request->datepicked;
         //$article->publish_time = 0;//$request->timepicked;

@@ -1,4 +1,4 @@
-<?php
+    <?php
 return [
 'articleimagedir' => 'uploads/article/',
 'articleimagethambtdir' => 'uploads/article/articlethamb/',
@@ -43,6 +43,7 @@ return [
 'awsbaseurl'=>'http://d1s8mqgwixvb29.cloudfront.net/',    
 'recordperpage' => '20',
 'maxfilesize'=>'10',
+'maxfilesizevideo'=>'200',
 'filesizein'=>'MB',
 'dimension_article'=>'870X470',
 'dimension_qb'=>'870X470',

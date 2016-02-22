@@ -652,7 +652,7 @@
                              <div class="control-group row-fluid">
                         <div class="span3">
                             <label class="control-label" for="inputField">
-                                Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos."><i class="icon-photon info-circle"></i></a>
+                                Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: {{config('constants.dimension_spost')}}) (File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}}  )."><i class="icon-photon info-circle"></i></a>
                             </label>
                         </div>
                         <div class="span9 row-fluid" >
@@ -677,6 +677,7 @@
                                         <span>Delete</span>
                                     </button>
                                     <input type="checkbox" class="toggle">
+                                    <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_spost')}}')">Need to crop images? Click here</a>
                                     <!-- The global file processing state -->
                                     <span class="fileupload-process"></span>
                                 </div>

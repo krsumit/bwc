@@ -151,7 +151,7 @@ class PhotosController extends Controller
         switch ($photo->owned_by):
         case 'article':
            // echo config('constants.awbucket').config('constants.awarticleimagethumbtdir').$photo->photopath;exit;
-            if(count(Photo::where('photopath','=',$photo->photopath)->get())==0){
+            if(count(Photo::where('photopath','=',$photo->photopath)->get())==1){
             $s3->deleteObjects(array(
 			'Bucket'     => config('constants.awbucket'),
                         'Delete'=>array(
@@ -222,4 +222,12 @@ class PhotosController extends Controller
         endswitch;
         $photo->delete();
     }
+    
+   function cropImage(Request $request){
+       $sizeArray=  explode('X',$request->dimension);
+      // print_r($sizeArray); exit;
+      // echo 'tests'; exit;
+      return view('layouts.crop', compact('sizeArray'));
+   } 
+    
 }

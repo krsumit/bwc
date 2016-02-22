@@ -99,7 +99,9 @@ function removeRelated(id){
 }
 
 
-
+function cropImage(url){
+    window.open(url, "popupWindow", "width=1200,height=800,scrollbars=yes");
+}
 
 
 /*

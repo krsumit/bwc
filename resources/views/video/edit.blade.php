@@ -1,6 +1,6 @@
 @extends('layouts/master')
 
-@section('title', 'Edit Album - BWCMS')
+@section('title', 'Edit Video - BWCMS')
 
 
 @section('content')
@@ -160,7 +160,7 @@
             <!--Text Area Resizable end-->
                  <div id="File_Upload" class="control-group row-fluid">
                     <div class="span3">
-                        <label class="control-label">Upload A Video </label>
+                        <label class="control-label">Upload A Video (File Size<={{config('constants.maxfilesizevideo').' '.config('constants.filesizein')}}) </label>
                     </div>
                     <div class="span9">
                         <div class="fileupload fileupload-new" data-provides="fileupload">
@@ -176,15 +176,16 @@
                 </div>
                 <div id="File_Upload" class="control-group row-fluid">
                     <div class="span3">
-                        <label class="control-label">Upload A Thumbnail Image</label>
+                        <label class="control-label">Upload A Thumbnail Image (Size:{{config('constants.dimension_video')}}, File Size<={{config('constants.maxfilesize').' '.config('constants.filesizein')}})</label>
                     </div>
                     <div class="span9">
                         <div class="fileupload fileupload-new" data-provides="fileupload">
                             <div class="input-append">
                                 <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" name="video_thumb_name"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                            <td width="20%">
+                                <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_video')}}')">&nbsp;Need to crop images? Click here</a>                                
+                                <div>
                                 <img style="width: 70px;height: 70px;margin-left: 5px;" src="{{ config('constants.awsbaseurl').config('constants.awvideothumb').$video->video_thumb_name}}" alt="user" style="width:12%;" />
-                                    </td>
+                                </div>
                             
                             </div>
                             
@@ -275,7 +276,66 @@
         
         <!--Select Box with Filter Search end-->
     </div>  
-                
+       
+         <div class="container-fluid">
+
+        <div class="form-legend" id="assign-article-to-a-campaign">Assign this Video to a Campaign</div>
+
+        <!--Select Box with Filter Search begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="campaign">Campaign</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="campaign"  id="campaign_id">
+                         <option value="">Please Select</option>
+                     
+                        @foreach($campaign as $campaigns)
+                        @if($video->campaign_id == $campaigns->campaign_id)
+                        <option selected value="{{ $campaigns->campaign_id }}">{{ $campaigns->title }}</option>
+                        @else
+                        <option value="{{ $campaigns->campaign_id }}">{{ $campaigns->title }}</option>
+                        @endif
+                        @endforeach
+                       
+                    </select>
+                    <span for="campaign" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
+                    <!--<div class="control-group row-fluid">
+                                    <div class="span12 span-inset">
+                                    <button class="btn btn-warning" type="button" style="display:block; float:left;">Delete</button>
+                                     <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;"/>
+                                      <button type="button" class="btn btn-primary" style="display:block; float:left; margin-left:5px;">Attach</button>
+                                      <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;"/>
+                                    </div>
+                            </div>-->
+                </div>
+            </div>
+
+            <script>
+                        $().ready(function(){
+                $("#campaign_id").select2();
+                 $('#channel').change(function () {
+
+                        $.get("{{ url('article/campaign')}}",
+                        { option: $(this).attr("value") },
+                                function(data) {
+                                var Box = $('#campaign_id');
+                                        Box.empty();
+                                        Box.append("<option value=''>Please Select</option>");
+                                        $.each(data, function(index, element) {
+                                        Box.append("<option value='" + element + "'>" + index + "</option>");
+                                        });
+                                        $("#campaign_id").select2();
+                                });
+                        });
+                        
+                });</script>
+        </div>
+        <!--Select Box with Filter Search end-->
+
+    </div>
+        
         <div class="control-group row-fluid">
             <div class="span12 span-inset">
                 <button  type="submit" class="btn btn-info">Save</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>

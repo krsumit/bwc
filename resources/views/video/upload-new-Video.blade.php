@@ -1,6 +1,6 @@
 @extends('layouts/master')
 
-@section('title', 'Create New Album - BWCMS')
+@section('title', 'Create New Video - BWCMS')
 
 
 @section('content')
@@ -19,7 +19,7 @@
  <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
         </div>
 
-        
+
         <div class="sidebarMenuHolder">
             <div class="JStree">
                 <div class="Jstree_shadow_top"></div>
@@ -43,7 +43,7 @@
             </li>
             <li>
                 <a href="/video/create">Video</a>
-                
+
             </li>
             <li class="current">
                 <a href="javascript:;">Add Video</a>
@@ -52,119 +52,119 @@
     </div>            <header>
         <i class="icon-big-notepad"></i>
         <h2><small>Add Video</small></h2>
-        
+
     </header>
-    
-   {!! Form::open(array('url'=>'video/','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
-        {!! csrf_field() !!} 
-        <div class="container-fluid " id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
-            <div class="form-legend" id="Notifications">Notifications</div>
+    {!! Form::open(array('url'=>'video/','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
+    {!! csrf_field() !!} 
+    <div class="container-fluid " id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
-            <!--Notifications begin-->
-            <div class="control-group row-fluid">
-                <div class="span12 span-inset">
-                    
-                        @if(Session::has('message'))
-                    <div class="alert alert-success alert-block">
-                        <i class="icon-alert icon-alert-info"></i>
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>This is Success Notification</strong>
-                        <span>{{ Session::get('message') }}</span>
-                    </div>
-                    @endif
-                   
+         <div class="form-legend" id="Notifications">Notifications</div>
+
+        <!--Notifications begin-->
+        <div class="control-group row-fluid">
+            <div class="span12 span-inset">
+
+                @if(Session::has('message'))
+                <div class="alert alert-success alert-block">
+                    <i class="icon-alert icon-alert-info"></i>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>This is Success Notification</strong>
+                    <span>{{ Session::get('message') }}</span>
+                </div>
+                @endif
+
+            </div>
+        </div>
+        <!--Notifications end-->
+
+    </div>
+
+    <div class="container-fluid">
+
+        <div id="channel" class="form-legend">Channel</div>
+
+        <!--Select Box with Filter Search begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter">Channel</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="channel" id="selectBoxFilter20">
+
+                        @foreach($channels as $channel)
+                        <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
-            <!--Notifications end-->
-
+            <script>
+                $().ready(function () {
+                $("#selectBoxFilter20").select2();
+                });                </script>
         </div>
 
-        <div class="container-fluid">
+        <!--Select Box with Filter Search end-->					
+    </div>
 
-            <div id="channel" class="form-legend">Channel</div>
 
-            <!--Select Box with Filter Search begin-->
-            <div  class="control-group row-fluid">
+    <div class="container-fluid">
+
+        <div id="video" class="form-legend" id="Tabs">Videos</div>
+
+        <div id="tab-example1" class="tab-pane fade active in">
+            <div class="control-group row-fluid">
                 <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Channel</label>
+                    <label class="control-label">Title</label>
                 </div>
                 <div class="span9">
                     <div class="controls">
-                        <select name="channel" id="selectBoxFilter20">
-                      
-                            @foreach($channels as $channel)
-                               <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
-                            @endforeach
-                        </select>
+                        <input name="video_title" id="video_title" type="text">
                     </div>
                 </div>
-                <script>
-                    $().ready(function () {
-                        $("#selectBoxFilter20").select2();
-                    });
-                </script>
             </div>
-
-            <!--Select Box with Filter Search end-->					
-        </div>
-
-
-        <div class="container-fluid">
-
-            <div id="video" class="form-legend" id="Tabs">Videos</div>
-
-            <div id="tab-example1" class="tab-pane fade active in">
-                <div class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Title</label>
-                    </div>
-                    <div class="span9">
-                        <div class="controls">
-                            <input name="video_title" id="video_title" type="text">
-                        </div>
+            <!--Text Area Resizable begin-->
+            <div id="Text_Area_Resizable" class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label">Summary (800 Characters)</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <textarea  rows="4" class="" name="video_summary"></textarea>
                     </div>
                 </div>
-                <!--Text Area Resizable begin-->
-                <div id="Text_Area_Resizable" class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Summary (800 Characters)</label>
-                    </div>
-                    <div class="span9">
-                        <div class="controls">
-                            <textarea  rows="4" class="" name="video_summary"></textarea>
-                        </div>
-                    </div>
-                </div>
+            </div>
             <!--Text Area Resizable end-->
-                 <div id="File_Upload" class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Upload A Video </label>
-                    </div>
-                    <div class="span9">
-                        <div class="fileupload fileupload-new" data-provides="fileupload">
-                            <div class="input-append">
-                                <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" name="video_name"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                            </div>
+            <div id="File_Upload" class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label">Upload A Video (File Size<={{config('constants.maxfilesizevideo').' '.config('constants.filesizein')}}) </label>
+                </div>
+                <div class="span9">
+                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                        <div class="input-append">
+                            <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" name="video_name"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
                         </div>
                     </div>
                 </div>
-                <div id="File_Upload" class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label">Upload A Thumbnail Image</label>
-                    </div>
-                    <div class="span9">
-                        <div class="fileupload fileupload-new" data-provides="fileupload">
-                            <div class="input-append">
-                                <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" name="video_thumb_name"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                            </div>
+            </div>
+            <div id="File_Upload" class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label">Upload A Thumbnail Image(Size:{{config('constants.dimension_video')}}, File Size<={{config('constants.maxfilesize').' '.config('constants.filesizein')}})</label>
+                </div>
+                <div class="span9">
+                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                        <div class="input-append">
+                            <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" name="video_thumb_name"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                            <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_video')}}')">&nbsp;Need to crop images? Click here</a>
                         </div>
                     </div>
-                </div>   
-            </div>
-        </div><!--end container-->
- 
-        <div class="container-fluid">
+                </div>
+            </div>   
+        </div>
+    </div><!--end container-->
+
+    <div class="container-fluid">
 
         <div class="form-legend" id="tags">Tags</div>
         <!--Select Box with Filter Search begin-->
@@ -198,7 +198,23 @@
             <!-- Add Tag to Tags Table - Ajax request -->
             <script>
                                 $().ready(function() {
-                        var token = $('input[name=_token]');
+
+
+                        $('#selectBoxFilter20').change(function () {
+
+                        $.get("{{ url('article/campaign')}}",
+                        { option: $(this).attr("value") },
+                                function(data) {
+                                var Box = $('#campaign_id');
+                                        Box.empty();
+                                        Box.append("<option value=''>Please Select</option>");
+                                        $.each(data, function(index, element) {
+                                        Box.append("<option value='" + element + "'>" + index + "</option>");
+                                        });
+                                        $("#campaign_id").select2();
+                                });
+                        });
+                                var token = $('input[name=_token]');
                                 // process the form
                                 $("#attachTag").click(function(){
                         if ($('input[name=addtags]').val().trim().length == 0){
@@ -225,7 +241,7 @@
 
                                 $("#Taglist").tokenInput("add", val);
                                 });
-                                 $('input[name=addtags]').val('');
+                                        $('input[name=addtags]').val('');
 //                                        alert('Tag Saved');
 //                                        $("#Taglist").tokenInput("add", [{"id":"2","name":"Coal Scam"},{"id":"4","name":"Cuisine"},{"id":"7","name":"Education"},{"id":"15","name":"Election"},{"id":"208","name":"testtag1"},{"id":"1","name":"Modi"},{"id":"207","name":"tagtest"},{"id":"210","name":"ankita"}]);
 //                                         //$("#Taglist").tokenInput("add", {id: 9992, name: "test22"});
@@ -241,66 +257,94 @@
                                 minChars: 4,
                                 preventDuplicates: true,
                         });
-                        });            </script>
+                        });</script>
         </div>                       
         <!--Select Box with Filter Search end-->
     </div>
 
-      <div class="control-group row-fluid">
-            <div class="span12 span-inset">
-                <button  type="submit" class="btn btn-info">Save</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+    <div class="container-fluid">
+
+        <div class="form-legend" id="assign-article-to-a-campaign">Assign this video to a Campaign</div>
+
+        <!--Select Box with Filter Search begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="campaign">Campaign</label>
             </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="campaign" id="campaign_id">
+                        <option  value="">Please Select</option>
+                        @foreach($campaign as $campaigns)
+                        <option value="{{ $campaigns->campaign_id }}">{{ $campaigns->title }}</option>
+                        @endforeach
+                    </select>
+                    <span for="campaign" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
+
+                </div>
+            </div>
+            <script>
+                                $().ready(function(){
+                        $("#campaign_id").select2();
+                        });</script>
         </div>
-        <!--	end container-->
+        <!--Select Box with Filter Search end-->
+
+    </div>
+
+    <div class="control-group row-fluid">
+        <div class="span12 span-inset">
+            <button  type="submit" class="btn btn-info">Save</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+        </div>
+    </div>
+    <!--	end container-->
 
     {!! Form::close() !!}
 </div>
 <script>
-     $("#fileupload").validate({
-                    errorElement: "span",
-                            errorClass: "error",
-                            //$("#pageSubmit").onclick: true,
-                            onclick: true,
-                            invalidHandler: function(event, validator) {
-                         
-                                    for (var i in validator.errorMap) {
-                                        
-                                            if($('#'+i).hasClass('formattedelement')){
-                                                $('#'+i).siblings('.formattedelement').addClass('error');
-                                                
-                                        }
-                                   
-                                }
-                             },
-                            rules: {
-                            "req": {
+                    $("#fileupload").validate({
+            errorElement: "span",
+                    errorClass: "error",
+                    //$("#pageSubmit").onclick: true,
+                    onclick: true,
+                    invalidHandler: function(event, validator) {
+
+                    for (var i in validator.errorMap) {
+
+                    if ($('#' + i).hasClass('formattedelement')){
+                    $('#' + i).siblings('.formattedelement').addClass('error');
+                    }
+
+                    }
+                    },
+                    rules: {
+                    "req": {
+                    required: true
+                    },
+                            "channel": {
                             required: true
                             },
-                                    "channel": {
-                                        required: true
-                                    },
-                                    "video_thumb_name": {
-                                    required: true,
+                            "video_thumb_name": {
+                            required: true,
                                     accept: "image/*"
-                                            
-                                    },
-                                    "video_title": {
-                                    required: true
-                                    },
-                                    "video_summary":{
-                                    rangelength: [100, 800]
-                                    },
-                                    "video_name":{
-                                    required: true,
+
+                            },
+                            "video_title": {
+                            required: true
+                            },
+                            "video_summary":{
+                            rangelength: [100, 800]
+                            },
+                            "video_name":{
+                            required: true,
                                     accept: "video/*",
                                     maxFileSize: {
-                                        "unit": "MB",
-                                        "size": 200
+                                    "unit": "MB",
+                                            "size": 200
                                     }
-                                    },
-                                     
-                            }
-                    });
+                            },
+                    }
+            });
 </script>
 @stop
 

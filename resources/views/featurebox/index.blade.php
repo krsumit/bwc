@@ -364,7 +364,7 @@
                     <div class="span3">
                         <label class="radio">
                             <input id="v_embd" type="radio" name="mediaSel" class="uniformRadio" value="video">
-                            Video
+                            Video  
                         </label>
                     </div>
                 </div>
@@ -395,7 +395,7 @@
 
                 <div class="control-group row-fluid" id="photourl">
                     <div class="span3">
-                        <label class="control-label">Photo</label>
+                        <label class="control-label">Photo( Size:{{config('constants.dimension_featurebox')}}, File Size<={{config('constants.maxfilesize').' '.config('constants.filesizein')}}) </label>
                     </div>
                     <div class="span9">
                         <div class="fileupload fileupload-new" data-provides="fileupload">
@@ -403,6 +403,7 @@
                                 <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span>
                                     <input type="file" name="photo" id="photo" />
                                 </span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_featurebox')}}')">&nbsp;Need to crop images? Click here</a>
                             </div>
                         </div>
                     </div>

@@ -230,7 +230,7 @@ class Cron {
                             
                             $photoshootUpdateStmt = $this->conn2->prepare("update photo_shoot set photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,photo_shoot_published_date=?,photo_shoot_updated_at=?,campaign_id=? where photo_shoot_id=?");
                             //echo 'sumit';
-                            $photoshootUpdateStmt->bind_param('ssiissii',$photoshootRow['title'],$photoshootRow['description'],$photoshootRow['sponsored'],$photoshootRow['featured'],$photoshootRow['created_at'],$photoshootRow['updated_at'],$id) or die($this->conn2->error);
+                            $photoshootUpdateStmt->bind_param('ssiissii',$photoshootRow['title'],$photoshootRow['description'],$photoshootRow['sponsored'],$photoshootRow['featured'],$photoshootRow['created_at'],$photoshootRow['updated_at'],$photoshootRow['campaign_id'],$id) or die($this->conn2->error);
                             //echo 'abcd'.$this->conn2->error;exit;
                             $photoshootUpdateStmt->execute();
                             //print_r($photoshootUpdateStmt);exit;

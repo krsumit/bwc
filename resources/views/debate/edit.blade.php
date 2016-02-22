@@ -577,7 +577,7 @@
         <!--File Upload begin-->
         <div id="File_Upload" class="control-group row-fluid">
             <div class="span3">
-                <label class="control-label">Expert Photo</label>
+                <label class="control-label">Expert Photo(Size:{{config('constants.dimension_debate_expert')}}, File Size<={{config('constants.maxfilesize').' '.config('constants.filesizein')}})</label>
             </div>
             <div class="span9">
                 <div class="fileupload fileupload-new" data-provides="fileupload">
@@ -585,6 +585,7 @@
                         <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" id="expertimage1" name="expertimage1"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
                         @if(isset($exprtnts[0]))<img src="{{config('constants.awsbaseurl').config('constants.debateexpert').$exprtnts[0]->expert_photo}}" width="100" height="100" style="padding-left: 5px;" />@endif
                         <input type="hidden" name="expert_old_image1" value="@if(isset($exprtnts[0])){{$exprtnts[0]->expert_photo}}@endif"/>
+                        <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_debate_expert')}}')">&nbsp;Need to crop images? Click here</a>
                     </div>
                 </div>
             </div>
@@ -652,7 +653,7 @@
         <!--File Upload begin-->
         <div id="File_Upload" class="control-group row-fluid">
             <div class="span3">
-                <label class="control-label">Expert Photo</label>
+                <label class="control-label">Expert Photo(Size:{{config('constants.dimension_debate_expert')}}, File Size<={{config('constants.maxfilesize').' '.config('constants.filesizein')}})</label>
             </div>
             <div class="span9">
                 <div class="fileupload fileupload-new" data-provides="fileupload">
@@ -660,6 +661,7 @@
                         <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" id="expertimage2" name="expertimage2" ></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
                         @if(isset($exprtnts[1]))<img src="{{config('constants.awsbaseurl').config('constants.debateexpert').$exprtnts[1]->expert_photo}}" width="100" height="100" style="padding-left: 5px;" />@endif
                         <input type="hidden" name="expert_old_image2" value="@if(isset($exprtnts[1])){{$exprtnts[1]->expert_photo}}@endif"/>
+                        <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_debate_expert')}}')">&nbsp;Need to crop images? Click here</a>
                     </div>
                 </div>
             </div>
@@ -759,7 +761,7 @@
         <!--File Upload begin-->
         <div id="File_Upload" class="control-group row-fluid">
             <div class="span3">
-                <label class="control-label">Upload Featured Image</label>
+                <label class="control-label">Upload Featured Image(Size:{{config('constants.dimension_debate')}}, File Size<={{config('constants.maxfilesize').' '.config('constants.filesizein')}})</label>
             </div>
             <div class="span9 dbt_featured_image">
                 <div class="fileupload fileupload-new" data-provides="fileupload">
@@ -767,6 +769,7 @@
                         <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" name="debateimage" id="debateimage"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
                          @if(isset($debatePhotos))<img src="{{config('constants.awsbaseurl').config('constants.debatefeatured').$debatePhotos->photopath}}" width="100" height="100" style="padding-left: 5px;" />
                          <input type="hidden" value="{{$debatePhotos->photopath}}" name="debate_old_featured_image" id="debate_old_featured_image"/>@endif
+                         <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_debate')}}')">&nbsp;Need to crop images? Click here</a>
                     </div>
                 </div>
             </div>

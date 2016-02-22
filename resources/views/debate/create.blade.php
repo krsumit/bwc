@@ -549,12 +549,13 @@
         <!--File Upload begin-->
         <div id="File_Upload" class="control-group row-fluid">
             <div class="span3">
-                <label class="control-label">Expert Photo</label>
+                <label class="control-label">Expert Photo(Size:{{config('constants.dimension_debate_expert')}}, File Size<={{config('constants.maxfilesize').' '.config('constants.filesizein')}})</label>
             </div>
             <div class="span9">
                 <div class="fileupload fileupload-new" data-provides="fileupload">
                     <div class="input-append">
                         <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" id="expertimage1" name="expertimage1"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                        <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_debate_expert')}}')">&nbsp;Need to crop images? Click here</a>
                     </div>
                 </div>
             </div>
@@ -622,12 +623,13 @@
         <!--File Upload begin-->
         <div id="File_Upload" class="control-group row-fluid">
             <div class="span3">
-                <label class="control-label">Expert Photo</label>
+                <label class="control-label">Expert Photo(Size:{{config('constants.dimension_debate_expert')}}, File Size<={{config('constants.maxfilesize').' '.config('constants.filesizein')}})</label>
             </div>
             <div class="span9">
                 <div class="fileupload fileupload-new" data-provides="fileupload">
                     <div class="input-append">
                         <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" id="expertimage2" name="expertimage2" ></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                        <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_debate_expert')}}')">&nbsp;Need to crop images? Click here</a>
                     </div>
                 </div>
             </div>
@@ -727,12 +729,13 @@
         <!--File Upload begin-->
         <div id="File_Upload" class="control-group row-fluid">
             <div class="span3">
-                <label class="control-label">Upload Featured Image</label>
+                <label class="control-label">Upload Featured Image(Size:{{config('constants.dimension_debate')}}, File Size<={{config('constants.maxfilesize').' '.config('constants.filesizein')}})</label>
             </div>
             <div class="span9 dbt_featured_image">
                 <div class="fileupload fileupload-new" data-provides="fileupload">
                     <div class="input-append">
                         <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" name="debateimage" id="debateimage"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                        <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_debate')}}')">&nbsp;Need to crop images? Click here</a>
                     </div>
                 </div>
             </div>

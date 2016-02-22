@@ -73,6 +73,7 @@ class VideoController extends Controller
      */
     public function create()
     {
+        
 		
         //Authenticate User
         if (!Session::has('users')) {
@@ -93,9 +94,10 @@ class VideoController extends Controller
         //$channels = VideoController::getUserChannels($uid);
         $authors = Author::where('author_type_id','=',2)->get();
         $tags = Tag::where('valid','1')->get();
+        $campaign = DB::table('campaign')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
         $p1= DB::table('author_type')->where('valid','1')->whereIn('author_type_id',[1,2])->lists('label','author_type_id');
         //fclose($asd);
-        return view('video.upload-new-Video', compact('uid','channels','p1','authors','tags','currentChannelId'));
+        return view('video.upload-new-Video', compact('uid','channels','p1','authors','tags','currentChannelId','campaign'));
     }
     /*
      * Get Page Rights of the User
@@ -225,6 +227,7 @@ class VideoController extends Controller
         $video->video_summary = $request->video_summary;
         $video->tags = $request->Taglist;
         $video->video_status = '1';
+        $video->campaign_id = $request->campaign;
         $video->save();
         
 //        echo '1111111112221<pre>';
@@ -260,9 +263,10 @@ class VideoController extends Controller
        $tags=  json_encode(DB::table('tags')
                 ->select('tags_id as id','tag as name')
                 ->whereIn('tags_id',explode(',',$video->tags))->get());
+       $campaign = DB::table('campaign')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
         $uid = Session::get('users')->id;
         //$channels = VideoController::getUserChannels($uid);
-        return view('video.edit', compact('video','tags','channels'));
+        return view('video.edit', compact('video','tags','channels','campaign'));
        
     }
 
@@ -358,12 +362,13 @@ class VideoController extends Controller
         $video->video_summary = $request->video_summary;
         $video->tags = $request->Taglist;
         $video->video_status = '1';
+        $video->campaign_id = $request->campaign;
         $video->save();
         
        
             
         Session::flash('message', 'Your Video has been Published successfully.');
-        return redirect('/video/list');
+        return redirect('/video/list?channel='.$request->channel);
        
        
     }

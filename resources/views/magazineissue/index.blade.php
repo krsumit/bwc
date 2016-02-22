@@ -235,12 +235,13 @@
 
             <div id="File_Upload" class="control-group row-fluid">
                 <div class="span3">
-                    <label class="control-label">Cover Photo</label>
+                    <label class="control-label">Cover Photo(Size:{{config('constants.dimension_magz')}}, File Size<={{config('constants.maxfilesize').' '.config('constants.filesizein')}})</label>
                 </div>
                 <div class="span9">
                     <div class="fileupload fileupload-new" data-provides="fileupload">
                         <div class="input-append">
                             <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input name="photo" type="file"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                            <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_magz')}}')">&nbsp;Need to crop images? Click here</a>
                         </div>
                     </div>
                 </div>

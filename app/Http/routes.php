@@ -304,10 +304,10 @@ Route::get('tags/getJson','TagsController@returnJson');
  *  Adds Images from CreateArticle to Images Table - Ajax Request
  */
 Route::match(['get', 'post'], 'article/addPhotos', ['as' => 'article/addPhotos', 'uses' => 'PhotosController@store']);
-
 /*
  *  Delete Image from Create Article Form - Ajax Request
  */
+Route::get('photo/crop', ['middleware' => 'auth',   'uses' => 'PhotosController@cropImage']);
 Route::match(['get', 'post'], 'article/delPhotos', ['as' => 'article/delPhotos', 'uses' => 'PhotosController@destroy']);
 
 /*

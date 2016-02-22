@@ -130,11 +130,11 @@ class QuickBytesController extends Controller
         $uid = Session::get('users')->id;
         $authors = Author::where('author_type_id','=',2)->get();
         $category = DB::table('category')->where('channel_id',$currentChannelId)->where('valid','1')->orderBy('name')->get();
-        
+        $campaign = DB::table('campaign')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
         $tags = Tag::where('valid','1')->get();
         $p1= DB::table('author_type')->where('valid','1')->whereIn('author_type_id',[1,2])->lists('label','author_type_id');
         //fclose($asd);
-        return view('quickbytes.create', compact('category','uid','channels','p1','authors','tags','currentChannelId'));
+        return view('quickbytes.create', compact('category','uid','channels','p1','authors','tags','currentChannelId','campaign'));
     }
     /*
      * Get Page Rights of the User
@@ -230,6 +230,7 @@ class QuickBytesController extends Controller
         $quickbyte->add_date = date('Y-m-d H:i:s');
         $quickbyte->publish_date = date('Y-m-d H:i:s');
         $quickbyte->status = 'P';
+        $quickbyte->campaign_id = $request->campaign;
         $quickbyte->created_at = date('Y-m-d H:i:s');
         $quickbyte->updated_at = date('Y-m-d H:i:s');
         //$article->publish_date = 0;//$request->datepicked;
@@ -406,7 +407,9 @@ class QuickBytesController extends Controller
         $authors = Author::where('author_type_id','=',$quickbyte->author_type)->get();
         $p1= DB::table('author_type')->where('valid','1')->whereIn('author_type_id',[1,2])->lists('label','author_type_id');
         //Quickbytecategory 
+        //echo $currentChannelId; exit;
         $acateg2 = DB::table('quickbyte_category')->where('quickbyte_id','=',$id)->get();
+        $campaign = DB::table('campaign')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
         $cateStr = array();
         $acateg = array();
         foreach($acateg2 as $ac) {
@@ -444,7 +447,7 @@ class QuickBytesController extends Controller
          $category = DB::table('category')->where('channel_id','=',$currentChannelId)->where('valid','1')->orderBy('name')->get();
         
         
-        return view('quickbytes.edit', compact('quickbyte','arrTopics','photos','tags','channels','authors','p1','acateg','category'));
+        return view('quickbytes.edit', compact('quickbyte','arrTopics','photos','tags','channels','authors','p1','acateg','category','campaign'));
         // print_r($phots);exit;
         //
     }
@@ -491,6 +494,7 @@ class QuickBytesController extends Controller
         $quickbyte->tags = $request->Taglist;
         $quickbyte->topics = (count($request->Ltopics)>0)?implode(',',$request->Ltopics):'';
         $quickbyte->sponsored = ($request->is_sponsored)?'1':'0';
+        $quickbyte->campaign_id = $request->campaign;
         //$quickbyte->add_date = date('Y-m-d H:i:s');
         //$quickbyte->publish_date = date('Y-m-d H:i:s');
         $quickbyte->status = $request->status;
