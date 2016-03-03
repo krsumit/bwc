@@ -196,6 +196,141 @@
             </div>
         </div><!--end container-->
 
+<div class="container-fluid">
+
+        <div class="form-legend" id="categories">Categories</div>
+
+        <!--Select Box with Filter Search begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter">Categories</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="category1" id="selectBoxFilter2" class="formattedelement">
+                        @if(count($acateg)>0)
+                        <option selected="" value="{{ $acateg[0]['category_id'] }}">{{$acateg[0]['name']}}</option>
+                        @else
+                        <option selected="selected" value="">Please Select</option>
+                        @endif
+                        @foreach($category as $key )
+                        <option value="{{ $key->category_id }}">{{ $key->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function(){
+                $("#selectBoxFilter2").select2();
+                $('#selectBoxFilter2').change(function(){
+                $.get("{{ url('article/dropdown1')}}",
+                { option: $(this).attr("value") + '&level=_two' },
+                        function(data) {
+                        var selectBoxFilter3 = $('#selectBoxFilter3');
+                                selectBoxFilter3.empty();
+                                selectBoxFilter3.append("<option selected='' value=''>Please Select</option>");
+                                $.each(data, function(index, element) {
+                                selectBoxFilter3.append("<option value='" + element + "'>" + index + "</option>");
+                                });
+                                $("#selectBoxFilter3").select2();
+                                $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
+                                $('#selectBoxFilter4').select2();
+                                $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                $('#selectBoxFilter5').select2();
+                        });
+                });
+                });</script>
+        </div>
+        <div id="categories" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter"></label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="category2" id="selectBoxFilter3">
+                        @if(count($acateg)>1)
+                        <option selected="" value="{{ $acateg[1]['category_id'] }}">{{$acateg[1]['name']}}</option>
+                        @endif
+                        <option value="">Please Select</option>
+                    </select>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function(){
+                $("#selectBoxFilter3").select2();
+                $('#selectBoxFilter3').change(function(){
+                $.get("{{ url('article/dropdown1')}}",
+                { option: $(this).attr("value") + '&level=_three' },
+                        function(data) {
+                        var selectBoxFilter4 = $('#selectBoxFilter4');
+                                selectBoxFilter4.empty();
+                                selectBoxFilter4.append("<option selected='' value=''>Please Select</option>");
+                                $.each(data, function(index, element) {
+                                selectBoxFilter4.append("<option value='" + element + "'>" + index + "</option>");
+                                });
+                                $('#selectBoxFilter4').select2();
+                                $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                $('#selectBoxFilter5').select2();
+                        });
+                });
+                });</script>
+        </div>
+        <div id="categories" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter"></label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="category3" id="selectBoxFilter4">
+                        @if(count($acateg)>2)
+                        <option selected="" value="{{ $acateg[2]['category_id'] }}">{{ $acateg[2]['name'] }}</option>
+                        @endif
+                        <option value="">Please Select</option>
+                    </select>
+                </div>
+            </div>
+            <script>
+                $(document).ready(function(){
+                $("#selectBoxFilter4").select2();
+                $('#selectBoxFilter4').change(function(){
+                $.get("{{ url('article/dropdown1')}}",
+                { option: $(this).attr("value") + '&level=_four' },
+                        function(data) {
+                        var selectBoxFilter5 = $('#selectBoxFilter5');
+                                selectBoxFilter5.empty();
+                                selectBoxFilter5.append("<option selected='' value=''>Please Select</option>");
+                                $.each(data, function(index, element) {
+                                selectBoxFilter5.append("<option value='" + element + "'>" + index + "</option>");
+                                });
+                                $('#selectBoxFilter5').select2();
+                        });
+                        
+                });
+                });</script>
+        </div>
+        <div id="categories" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter"></label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="category4" id="selectBoxFilter5">
+                        @if(count($acateg)>3)
+                        <option selected="" value="{{ $acateg[3]['category_id'] }}">{{$acateg[3]['name']}}</option>
+                        @endif
+                        <option value="">Please Select</option>
+                    </select>
+                </div>
+            </div>
+            <script>
+                $().ready(function(){
+                $("#selectBoxFilter5").select2();
+                });</script>
+        </div>
+        <!--Select Box with Filter Search end-->
+
+    </div> 
+
     <div class="container-fluid"> 
         <div class="control-group row-fluid" id="Multiple_Select_Box_with_Filter_Search">
             <div class="control-group row-fluid">    
@@ -328,6 +463,24 @@
                                         });
                                         $("#campaign_id").select2();
                                 });
+                                
+                             $.get("{{ url('article/dropdown1')}}",
+                                { option: $(this).attr("value") + '&level=' },
+                                        function(data) {
+                                        var Box = $('#selectBoxFilter2');
+                                                Box.empty();
+                                                Box.append("<option value=''>Please Select</option>");
+                                                $.each(data, function(index, element) {
+                                                Box.append("<option value='" + element + "'>" + index + "</option>");
+                                                });
+                                                $("#selectBoxFilter2").select2();
+                                                $('#selectBoxFilter3').html("<option value=''>Please Select</option>");
+                                                $("#selectBoxFilter3").select2();
+                                                $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
+                                                $('#selectBoxFilter4').select2();
+                                                $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                                $('#selectBoxFilter5').select2();
+                                        });     
                         });
                         
                 });</script>

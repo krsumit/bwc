@@ -163,6 +163,130 @@
             </div>   
         </div>
     </div><!--end container-->
+	
+		
+            <div class="container-fluid">
+
+        <div class="form-legend" id="categories">Categories</div>
+
+        <!--Select Box with Filter Search begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter">Categories</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="category1" id="category1" class="formattedelement">
+                        <option  value="">Please Select</option>
+                        @foreach($category as $key )
+                        <option value="{{ $key->category_id }}">{{ $key->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <script>
+                                $(document).ready(function(){
+                        $("#category1").select2();
+                                $('#category1').change(function(){
+                        $.get("{{ url('article/dropdown1')}}",
+                        { option: $(this).attr("value") + '&level=_two' },
+                                function(data) {
+                                var selectBoxFilter3 = $('#selectBoxFilter3');
+                                        selectBoxFilter3.empty();
+                                        selectBoxFilter3.append("<option value=''>Please Select</option>");
+                                        $.each(data, function(index, element) {
+                                        selectBoxFilter3.append("<option value='" + element + "'>" + index + "</option>");
+                                        });
+                                         $("#selectBoxFilter3").select2();
+                                         $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
+                                         $('#selectBoxFilter4').select2();
+                                         $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                         $('#selectBoxFilter5').select2();
+                                         
+                                });
+                        });
+                        });</script>
+        </div>
+        <div id="categories" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter"></label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="category2" id="selectBoxFilter3">
+                        <option  value="">Please Select</option>
+
+                    </select>
+                </div>
+            </div>
+            <script>
+                                $(document).ready(function(){
+                        $("#selectBoxFilter3").select2();
+                        $('#selectBoxFilter3').change(function(){
+                        $.get("{{ url('article/dropdown1')}}",
+                        { option: $(this).attr("value") + '&level=_three' },
+                                function(data) {
+                                var selectBoxFilter4 = $('#selectBoxFilter4');
+                                        selectBoxFilter4.empty();
+                                        selectBoxFilter4.append("<option selected='' value=''>Please Select</option>");
+                                        $.each(data, function(index, element) {
+                                        selectBoxFilter4.append("<option value='" + element + "'>" + index + "</option>");
+                                        });
+                                         $('#selectBoxFilter4').select2();
+                                         $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                         $('#selectBoxFilter5').select2();
+                                });
+                        });
+                        });</script>
+        </div>
+        <div id="categories" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter"></label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="category3" id="selectBoxFilter4">
+                        <option  value="">Please Select</option>
+                    </select>
+                </div>
+            </div>
+            <script>
+                                $(document).ready(function(){
+                        $("#selectBoxFilter4").select2();
+                                $('#selectBoxFilter4').change(function(){
+                        $.get("{{ url('article/dropdown1')}}",
+                        { option: $(this).attr("value") + '&level=_four' },
+                                function(data) {
+                                var selectBoxFilter5 = $('#selectBoxFilter5');
+                                        selectBoxFilter5.empty();
+                                        selectBoxFilter5.append("<option value=''>Please Select</option>");
+                                        $.each(data, function(index, element) {
+                                        selectBoxFilter5.append("<option value='" + element + "'>" + index + "</option>");
+                                        });
+                                         $('#selectBoxFilter5').select2();
+                                });
+                        });
+                        });</script>
+        </div>
+        <div id="categories" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter"></label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="category4" id="selectBoxFilter5">
+                        <option  value="">Please Select</option>
+                    </select>
+                </div>
+            </div>
+            <script>
+                                $().ready(function(){
+                        $("#selectBoxFilter5").select2();
+                        });</script>
+        </div>
+        <!--Select Box with Filter Search end-->
+
+    </div>
 
     <div class="container-fluid">
 
@@ -213,7 +337,30 @@
                                         });
                                         $("#campaign_id").select2();
                                 });
+                          
+                          
+                             $.get("{{ url('article/dropdown1')}}",
+                                {option: $(this).attr("value") + '&level='},
+							function (data) {
+                            var Box = $('#category1');
+                            Box.empty();
+                            Box.append("<option value=''>Please Select</option>");
+                            $.each(data, function (index, element) {
+                                Box.append("<option value='" + element + "'>" + index + "</option>");
+                            });
+                            $("#category1").select2();
+                            $('#selectBoxFilter3').html("<option value=''>Please Select</option>");
+                            $("#selectBoxFilter3").select2();
+                            $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
+                            $('#selectBoxFilter4').select2();
+                            $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                            $('#selectBoxFilter5').select2();
+                        });     
+                             
+                                
                         });
+                        
+                        
                                 var token = $('input[name=_token]');
                                 // process the form
                                 $("#attachTag").click(function(){

@@ -2193,30 +2193,56 @@ function migrateFeaturImage($featurId,  $condition) {
         
         
         function generateReport(){
+            
+            //echo date('d:m:y H:i:s'); exit;
 		//$template=file_get_contents('editorial.html');
+                //$path=$_SERVER['DOCUMENT_ROOT'].'/'.'cronscript/'; 
 		$template=file_get_contents('/var/www/html/public/cronscript/editorial.html');
 		//echo 'test'; exit;
 		 $start_published_date=date('Y-m-d H:i:s', strtotime("last Sunday")-604800); //echo '<br>';
 		 $end_published_date=date('Y-m-d H:i:s', strtotime("last Saturday")+86399);  //echo '<br>';
-		 $query="select authors.name,ar.cs,ar.views_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '".$start_published_date."' and '".$end_published_date."'   group by article_author.author_id) ar on authors.author_id=ar.author_id where authors.author_type_id='2' order by ar.cs desc;
-";
+		
+                $countQuery="select author_type.author_type_id,author_type.label,count(*) as cs,sum(view_count) as noofview  from articles inner join author_type on articles.author_type=author_type.author_type_id  where  concat(publish_date,' ',publish_time) between '$start_published_date' and '$end_published_date' group by author_type.author_type_id";
+                 
+                 $countRsult=$this->conn->query($countQuery);
+                 $total_stories=0;
+                 $repor_type_tdata='<tr>
+                	<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Reporter Type</b></th>
+                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>No Of Stories</b></th>
+                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Total views</b></th>
+                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Average views per article</b></th>
+                    </tr>';
+                 while($rowCount=$countRsult->fetch_assoc()){
+                     $total_stories+=$rowCount['cs'];
+                     $repor_type_tdata.='<tr>
+                	<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.$rowCount['label'].'</td>
+                       <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.$rowCount['cs'].'</td>
+                       <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.$rowCount['noofview'].'</td>
+                       <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.ceil($rowCount['noofview']/$rowCount['cs']).'</td>
+                    </tr>';
+                 }
+                
+            //echo $repor_type_tdata; exit;
+                  $query="select authors.name,ar.cs,ar.views_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '".$start_published_date."' and '".$end_published_date."'   group by article_author.author_id) ar on authors.author_id=ar.author_id where authors.author_type_id='2' order by ar.cs desc;
+"; 
 		$rst=$this->conn->query($query);
 		//echo '<pre>';
 		
-		$reportdata='<tr>
+		$reportdata='
+                    <tr>
                 	<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Reporter</b></th>
-                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Story</b></th>
+                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>No Of Stories</b></th>
                     <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Total Views</b></th>
                     <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Average views per article</b></th>
                 </tr>';
-        $total_stories=0;
+      
 		while($row=$rst->fetch_assoc()){
 			$storycount=0;
 			$viewcount=0;
 			$avgView=0;
 			//print_r($row);
 			if($row['cs']>0){
-			$total_stories+=$row['cs'];	
+			//$total_stories+=$row['cs'];	
 			$storycount=$row['cs'];
 			$viewcount=$row['views_count'];
 			if($viewcount>0) $avgView=intval($viewcount/$storycount);
@@ -2229,14 +2255,15 @@ function migrateFeaturImage($featurId,  $condition) {
                 </tr>';
 		}
 		
-		$mailbody=str_replace(array('[from_date]','[to_date]','[total_stories]','[reporters_data]',),array($start_published_date, $end_published_date,$total_stories,$reportdata),$template);
+		$mailbody=str_replace(array('[from_date]','[to_date]','[total_stories]','[reporters_data]','[reporters_type_data]'),array($start_published_date, $end_published_date,$total_stories,$reportdata,$repor_type_tdata),$template);
 		$headers  = 'MIME-Version: 1.0' . "\r\n";
+               // echo  $mailbody; exit;
         $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
         $from_email="reports@bwbusinessworld.com";
         $sub = '=?UTF-8?B?'.base64_encode("Weekly Report – Article Contribution to Digital").'?=';
         $headers .= 'From: '.$from_email."\r\n".'Reply-To: '.$from_email."\r\n" .'X-Mailer: PHP/' . phpversion();
 		//anurag.batra@businessworld.in,yamini@businessworld.in,sudipta@businessworld.in,
-        mail("anurag.batra@businessworld.in,sudipta@businessworld.in,shekhar@businessworld.in",$sub,$mailbody,$headers);
+        mail("anurag.batra@businessworld.in,yamini@businessworld.in,sudipta@businessworld.in,shekhar@businessworld.in",$sub,$mailbody,$headers);
 		}
         // Debate Video
         
@@ -2254,29 +2281,48 @@ function migrateFeaturImage($featurId,  $condition) {
         }
 
         $masterVideoResults = $this->conn->query("SELECT * FROM video_master where channel_id=1 $condition");
-        //echo $authorResults->num_rows; exit;
+        //echo $masterVideoResults->num_rows; exit;
         if ($masterVideoResults->num_rows > 0) {
+            
+            $catMapArray = array();
+            $videoCatDataRst = $this->conn2->query("select * from channel_category");
+            while ($videoCatDataRow = $videoCatDataRst->fetch_assoc()) {
+                $key = $videoCatDataRow['cms_cat_id'] . '_' . $videoCatDataRow['cms_cat_level'];
+                $catMapArray[$key] = $videoCatDataRow['category_id'];
+            }
+            $this->categoryMapping = $catMapArray;
 
             while ($masterVideoRow = $masterVideoResults->fetch_assoc()) {
-                // print_r($authorRow); exit;
+                //print_r($masterVideoRow); exit;
                 $masterVideoId = $masterVideoRow['id'];
                 $checkmasterVideoExistResultSet = $this->conn2->query("select video_id, video_title,video_summary, video_name,video_thumb_name,tags,created_at,updated_at from video_master where video_id=$masterVideoId");
                 if ($checkmasterVideoExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
                     $masterVideoUpdateStmt = $this->conn2->prepare("update video_master set video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=? where video_id=?");
+                    //echo $this->conn2->error; exit;
                     $masterVideoUpdateStmt->bind_param('sssssssisi', $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'],$masterVideoRow['updated_at'],$masterVideoRow['campaign_id'],$masterVideoRow['video_by'],$masterVideoId);
-                    $masterVideoUpdateStmt->execute();
-                    if ($masterVideoUpdateStmt->affected_rows)
+                    $masterVideoUpdateStmt->execute() or die ($this->conn2->error);
+                    //print_r($masterVideoUpdateStmt);exit;
+                    
+                        $iid=$masterVideoRow['id'];
+                        //echo $iid ; exit;
+                        $this->callVideoRelatedContent($iid);
                         $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                    // echo  $_SESSION['noofupd'];
-                }else {
+                }else {//echo 'going to insert';exit;
                     $masterVideoInsertStmt = $this->conn2->prepare("insert into video_master set video_id=?,video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=?");
                     //echo $this->conn2->error; exit;
                     $masterVideoInsertStmt->bind_param('isssssssis', $masterVideoRow['id'], $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'],$masterVideoRow['updated_at'],$masterVideoRow['campaign_id'],$masterVideoRow['video_by']);
-                    $masterVideoInsertStmt->execute();
-                    if ($masterVideoInsertStmt->affected_rows) {
+                    $masterVideoInsertStmt->execute() or die ($this->conn2->error);
+                    //print_r($masterVideoInsertStmt);exit;
+                            // echo $articleInsertStmt->insert_id;exit;    
+                    if ($masterVideoInsertStmt->insert_id) {
+                        $iid=$masterVideoInsertStmt->insert_id; 
+                        $masterVideoInsertStmt->close();
+                        $this->callVideoRelatedContent($iid);
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
                     }
+                   
                 }
             }
         }
@@ -2288,8 +2334,34 @@ function migrateFeaturImage($featurId,  $condition) {
         $updatecronstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' mastervideo(s) inserted and ' . $_SESSION['noofupd'] . ' mastervideo(s) updated.</h5>';
     }
+    
+    function callVideoRelatedContent($id) {
+       //echo $id ; exit;
+        $delStmt = $this->conn2->prepare("delete from video_category where video_id=?") or die($this->conn2->error);
+        $delStmt->bind_param('i', $id) or die($this->conn2->error);
+        $delStmt->execute();
+        $delStmt->close();
+        //echo 'test'; exit;
+        $videoCatRst = $this->conn->query("select * from video_category where video_id=$id");
+        while (($videoCatRow = $videoCatRst->fetch_assoc())) {
+            
+            $catInsertStmt = $this->conn2->prepare("insert into video_category  set v_category_id=?,video_id=?,category_id=?,level=?") or die($this->conn2->error);
+            $catInsertStmt->bind_param('iiii',$videoCatRow['v_category_id'],$id,$this->categoryMapping[$videoCatRow['category_id'].'_'.$videoCatRow['level']],$videoCatRow['level']) or die($this->conn2->error) ;
+            $catInsertStmt->execute() or die($this->conn2->error) ;
+            $catInsertStmt->close();
+        }
+        
+    }
+
+   
+    
+    
+    
+    
+    
+    
  //video module end here 
- //
+    
  //
    //campain module start here 
    function migrateCampaing() {

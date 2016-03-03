@@ -8,6 +8,7 @@ use Input;
 use Session;
 use App\Right;
 use App\MasterVideo;
+use App\VideoCategory;
 use App\Http\Requests;
 use App\Http\Controllers\Auth;
 use App\Http\Controllers\AuthorsController;
@@ -39,6 +40,7 @@ class VideoController extends Controller
         $rightId=62;
         $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
         $channels=$this->rightObj->getAllowedChannels($rightId);
+        
         if(!$this->rightObj->checkRights($currentChannelId,$rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
@@ -84,6 +86,7 @@ class VideoController extends Controller
         $rightId=65;
         $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
         $channels=$this->rightObj->getAllowedChannels($rightId);
+        $category = DB::table('category')->where('channel_id',$currentChannelId)->where('valid','1')->orderBy('name')->get();
         if(!$this->rightObj->checkRights($currentChannelId,$rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
@@ -97,7 +100,7 @@ class VideoController extends Controller
         $campaign = DB::table('campaign')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
         $p1= DB::table('author_type')->where('valid','1')->whereIn('author_type_id',[1,2])->lists('label','author_type_id');
         //fclose($asd);
-        return view('video.upload-new-Video', compact('uid','channels','p1','authors','tags','currentChannelId','campaign'));
+        return view('video.upload-new-Video', compact('uid','channels','p1','authors','tags','currentChannelId','campaign','category'));
     }
     /*
      * Get Page Rights of the User
@@ -188,6 +191,9 @@ class VideoController extends Controller
                                 'Key'    => config('constants.awvideo').$filename,
                                 'SourceFile'   => $destination_path.$filename,
                         ));
+            
+            
+            unlink($destination_path.$filename);
                   
         }
 
@@ -229,11 +235,21 @@ class VideoController extends Controller
         $video->video_status = '1';
         $video->campaign_id = $request->campaign;
         $video->save();
+        $id = $video->id;
         
-//        echo '1111111112221<pre>';
-//        print_r($request->all()); exit;
-        //Redircting to specifi locationn with proper message
-       
+       //video Category - Save
+            for ($i = 1; $i <= 4; $i++) {
+                $video_category = new VideoCategory();
+                $video_category->video_id = $id;
+                $label = "category" . $i;
+                if ($request->$label == '') {
+                    break;
+                }
+                $video_category->category_id = $request->$label;
+                $video_category->level = $i;
+                $video_category->save();
+            }
+
             Session::flash('message', 'Your video has been Upload successfully.');
             return redirect('/video/list?channel='.$request->channel);
         
@@ -264,9 +280,62 @@ class VideoController extends Controller
                 ->select('tags_id as id','tag as name')
                 ->whereIn('tags_id',explode(',',$video->tags))->get());
        $campaign = DB::table('campaign')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
+       $category = DB::table('category')->where('channel_id','=',$currentChannelId)->where('valid','1')->orderBy('name')->get();
+       $acateg2 = DB::table('video_category')
+                    ->where('video_id', '=', $id)->get();
+        
+        $cateStr = array();
+        $acateg = array();
+        
+        foreach ($acateg2 as $ac) {
+            $lable = 'c' . $ac->level;
+            $cateStr[$lable] = $ac->category_id;
+                    
+            switch ($ac->level) {
+                case "1":
+                    $catlbl = DB::table('category')->where('category_id', '=', $ac->category_id)->get();
+                    $acateg[0]['level'] = 1;
+                    $acateg[0]['category_id'] = $ac->category_id;
+                    $acateg[0]['name'] = $catlbl[0]->name;
+                    break;
+                case "2":
+                    $catlbl = DB::table('category_two')->where('category_two_id', '=', $ac->category_id)->get();
+                    $acateg[1]['level'] = 2;
+                    $acateg[1]['category_id'] = $ac->category_id;
+                    $acateg[1]['name'] = $catlbl[0]->name;
+                    ;
+                    break;
+                case "3":
+                    $catlbl = DB::table('category_three')->where('category_three_id', '=', $ac->category_id)->get();
+                    $acateg[2]['level'] = 3;
+                    $acateg[2]['category_id'] = $ac->category_id;
+                    $acateg[2]['name'] = $catlbl[0]->name;
+                    break;
+                case "4":
+                    $catlbl = DB::table('category_four')->where('category_four_id', '=', $ac->category_id)->get();
+                    $acateg[3]['level'] = 4;
+                    $acateg[3]['category_id'] = $ac->category_id;
+                    $acateg[3]['name'] = $catlbl[0]->name;
+                    ;
+                    break;
+            }
+            
+        }
+
+        if (!isset($acateg[0])) {
+            unset($acateg[1]);
+            unset($acateg[2]);
+            unset($acateg[3]);
+        } elseif (!isset($acateg[1])) {
+            unset($acateg[2]);
+            unset($acateg[3]);
+        } elseif (!isset($acateg[2])) {
+            unset($acateg[3]);
+        }
+       
         $uid = Session::get('users')->id;
         //$channels = VideoController::getUserChannels($uid);
-        return view('video.edit', compact('video','tags','channels','campaign'));
+        return view('video.edit', compact('video','tags','channels','campaign','acateg','category'));
        
     }
 
@@ -320,6 +389,9 @@ class VideoController extends Controller
                                 'Key'    => config('constants.awvideo').$filename,
                                 'SourceFile'   => $destination_path.$filename,
                         ));
+           if($result['@metadata']['statusCode']==200){
+            unlink($destination_path.$filename);
+             }
                   
         }else{
             $video->video_name = $request->video_name_second;
@@ -336,7 +408,7 @@ class VideoController extends Controller
             
             
             $s3 = AWS::createClient('s3');
-            $oldPhotos=Video::where('id',$request->faid)->get();
+            $oldPhotos=MasterVideo::where('id',$request->faid)->get();
             foreach($oldPhotos as $ph){
                 $s3->deleteObject(array(
 			'Bucket'     => config('constants.awbucket'),
@@ -364,6 +436,22 @@ class VideoController extends Controller
         $video->video_status = '1';
         $video->campaign_id = $request->campaign;
         $video->save();
+        
+        $id = $request->id;
+        DB::table('video_category')->where('video_id','=',$id)->delete();
+        //video Category - update
+        for ($i = 1; $i <= 4; $i++) {
+            $video_category = new VideoCategory();
+            $video_category->video_id = $id;
+            $label = "category" . $i;
+            if ($request->$label == '') {
+                break;
+            }
+            $video_category->category_id = $request->$label;
+            $video_category->level = $i;
+            $video_category->save();
+        }
+        
         
        
             

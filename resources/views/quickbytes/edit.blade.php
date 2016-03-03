@@ -208,7 +208,7 @@
                                                 Box.append("<option value='" + element + "'>" + index + "</option>");
                                                 });
                                                 $("#selectBoxFilter2").select2();
-                                                $('#selectBoxFilter3').select2();
+                                                $('#selectBoxFilter3').html("<option value=''>Please Select</option>");
                                                 $("#selectBoxFilter3").select2();
                                                 $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
                                                 $('#selectBoxFilter4').select2();
