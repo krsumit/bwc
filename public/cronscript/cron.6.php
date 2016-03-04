@@ -9,12 +9,10 @@ class Cron {
     var $categoryMapping;
 
     function __construct() {
-        $this->conn = new mysqli(HOST, USER, PASS, DATABASE) or die($this->conn->connect_errno);
-        mysqli_set_charset($this->conn,"utf8");
-        $this->conn2 = new mysqli(LHOST, LUSER, LPASS, LDATABASE) or die($this->conn2->connect_errro);
-        mysqli_set_charset($this->conn2,"utf8");
+	//echo 'test'; exit;
+        $this->conn = new mysqli('localhost', 'root', 'sumit123', '10feb2016cms') or die($this->conn->connect_errno);
+        $this->conn2 = new mysqli('localhost', 'root', 'sumit123', 'new_bw_website') or die($this->conn2->connect_errro);
     }
-
     function migrateData($section) { 
 		//$this->migrateArticleAuthor('1','2');exit;
         // print_r($arr);exit;
@@ -838,7 +836,6 @@ function migratequotesTage() {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
-       
 //        $catresults = $this->conn->query("SELECT category_id as id,name,channel_id as parent_id,valid,'1' as level  FROM category where channel_id='1' $condition
 //union
 //select category_two_id as id,name,category_id as parent,valid,'2' as level from category_two where 1=1 $condition
@@ -849,8 +846,7 @@ function migratequotesTage() {
 //        
 //        echo $catresults->num_rows;exit;
         $catresults = $this->conn->query("SELECT category_id as id,name,channel_id as parent_id,valid,'1' as level  FROM category where channel_id='1' $condition");
-        //echo $catresults->num_rows;exit;
-        
+        //echo $catresults->num_rows;exit;    
         while ($catrow = $catresults->fetch_assoc()) {
             $categoryCheckStmt = $this->conn2->prepare("select category_id,category_name from channel_category where cms_cat_id=? and cms_cat_level=?");
             $categoryCheckStmt->bind_param('ii', $catrow['id'], $catrow['level']);
@@ -868,7 +864,6 @@ function migratequotesTage() {
                 if ($localUpdateStmt->affected_rows)
                     $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                 $this->migrateSubCategory($catId, $catrow['id'], 2, $cronLastExecutionTime);
-                
             } else { // if category not exist, create new category
                 $categoryCheckStmt->free_result();
 
@@ -879,13 +874,11 @@ function migratequotesTage() {
                 $localcatstmt->execute();
                 if ($localcatstmt->insert_id) {
                     $this->migrateSubCategory($localcatstmt->insert_id, $catrow['id'], 2, $cronLastExecutionTime);
-                    
                     $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
                 }
             }
             $categoryCheckStmt->free_result();
         }
-        //$this->migrateSubCategoryDirect($condition);
         $cronEndTime = date('Y-m-d H:i:s');
         $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='category',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
@@ -893,67 +886,7 @@ function migratequotesTage() {
         $updatecorstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' category/categories inserted and ' . $_SESSION['noofupd'] . ' category/categories updated.</h5>';
     }
-    
-	function migrateSubCategoryDirect($condition){
-		//	echo $condition; exit;
-		//$condition='and 1=1';
-		$query2 = "select category_two_id as id,name,category_id as parent,valid from category_two where 1 $condition group by category_id";
-		
-		$catresults2 = $this->conn->query($query2);
-		//echo $catresults2->num_rows; exit;
-		if($catresults2->num_rows > 0){
-			while ($catrow = $catresults2->fetch_assoc()) {
 
-                                $categoryCheckStmt = $this->conn2->prepare("select category_id,category_name from channel_category where cms_cat_id=? and cms_cat_level=1") or die($this->conn2->error);
-                               
-                               $categoryCheckStmt->bind_param('i',  $catrow['parent']);
-                                $categoryCheckStmt->execute();
-                                $categoryCheckStmt->store_result();
-                                if ($categoryCheckStmt->num_rows > 0) {
-                                    $categoryCheckStmt->bind_result($catId, $catName);
-                                    $categoryCheckStmt->fetch();
-                                    $categoryCheckStmt->free_result();
-                                }
-                  //    echo $catId.'##'.$catPid;exit;          
-				$this->migrateSubCategory($catId,$catrow['parent'],2,$condition);
-			}
-		}
-		$query3 = "select category_three_id as id,name,category_two_id as parent,valid from category_three where 1 $condition group by category_two_id";
-		$catresults3 = $this->conn->query($query3);
-		
-		if($catresults3->num_rows > 0){
-			while ($catrow = $catresults3->fetch_assoc()) {
-                                $categoryCheckStmt = $this->conn2->prepare("select category_id,category_name from channel_category where cms_cat_id=? and cms_cat_level=2");
-                                $categoryCheckStmt->bind_param('i', $catrow['parent']);
-                                $categoryCheckStmt->execute();
-                                $categoryCheckStmt->store_result();
-                                if ($categoryCheckStmt->num_rows > 0) {
-                                    $categoryCheckStmt->bind_result($catId, $catName);
-                                    $categoryCheckStmt->fetch();
-                                    $categoryCheckStmt->free_result();
-                                }
-				$this->migrateSubCategory($catId,$catrow['parent'],3,$condition);
-			}
-		}
-		$query4 = "select category_four_id as id,name,category_three_id as parent,valid from category_four where 1 $condition group by category_three_id";
-		$catresults4 = $this->conn->query($query4);
-		echo $catresults4->num_rows; exit;
-		if($catresults4->num_rows > 0){
-			while ($catrow = $catresults4->fetch_assoc()) {
-                                 $categoryCheckStmt = $this->conn2->prepare("select category_id,category_name from channel_category where cms_cat_id=? and cms_cat_level=3");
-                                $categoryCheckStmt->bind_param('i', $catrow['parent']);
-                                $categoryCheckStmt->execute();
-                                $categoryCheckStmt->store_result();
-                                if ($categoryCheckStmt->num_rows > 0) {
-                                    $categoryCheckStmt->bind_result($catId, $catName);
-                                    $categoryCheckStmt->fetch();
-                                    $categoryCheckStmt->free_result();
-                                }
-				$this->migrateSubCategory($catId,$catrow['parent'],4,$condition);
-			}
-		}
-		
-	}
     function migrateSubCategory($frontparentId, $cmsParentId, $cmsLevel, $cronLastExecutionTime) {
         $condition = '';
         if ($cronLastExecutionTime) {
@@ -2409,7 +2342,7 @@ function migrateFeaturImage($featurId,  $condition) {
         //echo 'test'; exit;
         $videoCatRst = $this->conn->query("select * from video_category where video_id=$id");
         while (($videoCatRow = $videoCatRst->fetch_assoc())) {
-            
+            echo $id.'---'.$videoCatRow['category_id'].'---'.$videoCatRow['level'].'---'.$this->categoryMapping[$videoCatRow['category_id'].'_'.$videoCatRow['level']].'<br>';
             $catInsertStmt = $this->conn2->prepare("insert into video_category  set v_category_id=?,video_id=?,category_id=?,level=?") or die($this->conn2->error);
             $catInsertStmt->bind_param('iiii',$videoCatRow['v_category_id'],$id,$this->categoryMapping[$videoCatRow['category_id'].'_'.$videoCatRow['level']],$videoCatRow['level']) or die($this->conn2->error) ;
             $catInsertStmt->execute() or die($this->conn2->error) ;

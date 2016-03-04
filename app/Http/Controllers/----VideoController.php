@@ -9,7 +9,6 @@ use Session;
 use App\Right;
 use App\MasterVideo;
 use App\VideoCategory;
-use App\VideoTag;
 use App\Http\Requests;
 use App\Http\Controllers\Auth;
 use App\Http\Controllers\AuthorsController;
@@ -232,22 +231,12 @@ class VideoController extends Controller
         $video->channel_id = $request->channel;
         $video->video_title = $request->video_title;
         $video->video_summary = $request->video_summary;
-        #$video->tags = $request->Taglist;
+        $video->tags = $request->Taglist;
         $video->video_status = '1';
         $video->campaign_id = $request->campaign;
         $video->save();
         $id = $video->id;
-         //Video Tags - Save
-        if ($request->Taglist) {
-            $videoids = explode(',', $request->Taglist);
-            $videoids = array_unique($videoids);
-            foreach ($videoids as $key => $value) {
-                $video_tags = new VideoTag();
-                $video_tags->video_id = $id;
-                $video_tags->tags_id = $value;
-                $video_tags->save();
-            }
-        }
+        
        //video Category - Save
             for ($i = 1; $i <= 4; $i++) {
                 $video_category = new VideoCategory();
@@ -286,16 +275,10 @@ class VideoController extends Controller
         if(!$this->rightObj->checkRights($currentChannelId,$rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
-       $tags = json_encode(DB::table('tags')
-                        ->select('tags.tags_id as id', 'tags.tag as name')
-                        ->join('video_tags', 'tags.tags_id', '=', 'video_tags.tags_id')
-                        ->where('tags.valid', '1')
-                        ->where('video_tags.valid', '1')
-                        ->where('video_tags.video_id', $id)
-                        ->get()); 
-       #$tags=  json_encode(DB::table('tags')
-                #->select('tags_id as id','tag as name')
-                #->whereIn('tags_id',explode(',',$video->tags))->get());
+        
+       $tags=  json_encode(DB::table('tags')
+                ->select('tags_id as id','tag as name')
+                ->whereIn('tags_id',explode(',',$video->tags))->get());
        $campaign = DB::table('campaign')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
        $category = DB::table('category')->where('channel_id','=',$currentChannelId)->where('valid','1')->orderBy('name')->get();
        $acateg2 = DB::table('video_category')
@@ -449,36 +432,12 @@ class VideoController extends Controller
         $video->channel_id = $request->channel;
         $video->video_title = $request->video_title;
         $video->video_summary = $request->video_summary;
-        #$video->tags = $request->Taglist;
+        $video->tags = $request->Taglist;
         $video->video_status = '1';
         $video->campaign_id = $request->campaign;
         $video->save();
         
         $id = $request->id;
-        
-        //Video Tags - Save New: Delete Old
-        $arrExistingTags = DB::table('video_tags')->where('video_id', '=', $id)->get(); 
-       
-        if (count($arrExistingTags) > 0) {
-            foreach ($arrExistingTags as $eachTag) {
-                $delTag = VideoTag::find($eachTag->v_tags_id);
-                $delTag->delete();
-            }
-        }
-        //Add New Tags
-        if ($request->Taglist) {
-            $videoids = explode(',', $request->Taglist);
-            $videoids = array_unique($videoids);
-            foreach ($videoids as $key => $value) {
-                $video_tags = new VideoTag();
-                $video_tags->video_id = $id;
-                $video_tags->tags_id = $value;
-                $video_tags->save();
-            }
-        }        
-        
-        
-        
         DB::table('video_category')->where('video_id','=',$id)->delete();
         //video Category - update
         for ($i = 1; $i <= 4; $i++) {
