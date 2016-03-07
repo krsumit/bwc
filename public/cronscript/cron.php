@@ -7,12 +7,14 @@ class Cron {
     var $message;
     var $keyarray;
     var $categoryMapping;
+    var $channelId;
 
     function __construct() {
         $this->conn = new mysqli(HOST, USER, PASS, DATABASE) or die($this->conn->connect_errno);
         mysqli_set_charset($this->conn,"utf8");
         $this->conn2 = new mysqli(LHOST, LUSER, LPASS, LDATABASE) or die($this->conn2->connect_errro);
         mysqli_set_charset($this->conn2,"utf8");
+        $this->channelId=1;
     }
 
     function migrateData($section) { 
@@ -828,6 +830,7 @@ function migratequotesTage() {
     }    
     
     function migrateCategory() {
+        //echo 'test'; exit;
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
@@ -885,22 +888,25 @@ function migratequotesTage() {
             }
             $categoryCheckStmt->free_result();
         }
-        //$this->migrateSubCategoryDirect($condition);
+        //echo $condition; exit;
+        $this->migrateSubCategoryDirect($cronLastExecutionTime);
         $cronEndTime = date('Y-m-d H:i:s');
         $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='category',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
-        $updatecorstmt->execute();
-        $updatecorstmt->close();
+        //$updatecorstmt->execute();
+        //$updatecorstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' category/categories inserted and ' . $_SESSION['noofupd'] . ' category/categories updated.</h5>';
     }
     
-	function migrateSubCategoryDirect($condition){
-		//	echo $condition; exit;
-		//$condition='and 1=1';
+	function migrateSubCategoryDirect($cronLastExecutionTime){
+		$condition = '';
+                if ($cronLastExecutionTime) {
+                    $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+                }
 		$query2 = "select category_two_id as id,name,category_id as parent,valid from category_two where 1 $condition group by category_id";
 		
 		$catresults2 = $this->conn->query($query2);
-		//echo $catresults2->num_rows; exit;
+		//echo $catresults2->num_rows.'--'; exit;
 		if($catresults2->num_rows > 0){
 			while ($catrow = $catresults2->fetch_assoc()) {
 
@@ -914,8 +920,9 @@ function migratequotesTage() {
                                     $categoryCheckStmt->fetch();
                                     $categoryCheckStmt->free_result();
                                 }
-                  //    echo $catId.'##'.$catPid;exit;          
-				$this->migrateSubCategory($catId,$catrow['parent'],2,$condition);
+                  //    echo $catId.'##'.$catPid;exit;  
+                                if($this->getCategoryChannel($catrow['parent'],1)==$this->channelId)
+                                    $this->migrateSubCategory($catId,$catrow['parent'],2,$cronLastExecutionTime);
 			}
 		}
 		$query3 = "select category_three_id as id,name,category_two_id as parent,valid from category_three where 1 $condition group by category_two_id";
@@ -923,6 +930,7 @@ function migratequotesTage() {
 		
 		if($catresults3->num_rows > 0){
 			while ($catrow = $catresults3->fetch_assoc()) {
+                            //print_r($catrow); // exit;
                                 $categoryCheckStmt = $this->conn2->prepare("select category_id,category_name from channel_category where cms_cat_id=? and cms_cat_level=2");
                                 $categoryCheckStmt->bind_param('i', $catrow['parent']);
                                 $categoryCheckStmt->execute();
@@ -932,12 +940,14 @@ function migratequotesTage() {
                                     $categoryCheckStmt->fetch();
                                     $categoryCheckStmt->free_result();
                                 }
-				$this->migrateSubCategory($catId,$catrow['parent'],3,$condition);
+                                //echo $catId.'--'.$catrow['parent']; exit;
+                                if($this->getCategoryChannel($catrow['parent'],2)==$this->channelId)
+                                    $this->migrateSubCategory($catId,$catrow['parent'],3,$cronLastExecutionTime);
 			}
 		}
 		$query4 = "select category_four_id as id,name,category_three_id as parent,valid from category_four where 1 $condition group by category_three_id";
 		$catresults4 = $this->conn->query($query4);
-		echo $catresults4->num_rows; exit;
+		//echo $catresults4->num_rows; exit;
 		if($catresults4->num_rows > 0){
 			while ($catrow = $catresults4->fetch_assoc()) {
                                  $categoryCheckStmt = $this->conn2->prepare("select category_id,category_name from channel_category where cms_cat_id=? and cms_cat_level=3");
@@ -949,11 +959,36 @@ function migratequotesTage() {
                                     $categoryCheckStmt->fetch();
                                     $categoryCheckStmt->free_result();
                                 }
-				$this->migrateSubCategory($catId,$catrow['parent'],4,$condition);
+                                if($this->getCategoryChannel($catrow['parent'],3)==$this->channelId)
+                                    $this->migrateSubCategory($catId,$catrow['parent'],4,$cronLastExecutionTime);
 			}
 		}
 		
 	}
+    function getCategoryChannel($catId,$level){
+            if($level==1){
+                $query = "SELECT category_id,channel_id FROM `category` WHERE category_id=$catId";
+		$catresults = $this->conn->query($query);
+                $catrow = $catresults->fetch_assoc();
+                return $catrow['channel_id'];
+                
+            }else if($level==2){
+                $query2 = "select category_two_id as id,name,category_id as parent,valid from category_two where category_two_id=$catId";
+		$catresults2 = $this->conn->query($query2);
+                $catrow = $catresults2->fetch_assoc();
+                return $this->getCategoryChannel($catrow['parent'],1); 
+            }else if($level==3){
+               $query3 = "select category_three_id as id,name,category_two_id as parent,valid from category_three where category_three_id=$catId";
+               $catresults3 = $this->conn->query($query3);
+               $catrow = $catresults3->fetch_assoc();
+               return $this->getCategoryChannel($catrow['parent'],2); 
+            }else if($level==4){
+               $query4 = "select category_four_id as id,name,category_three_id as parent,valid from category_four where category_four_id=$catId";
+               $catresults4 = $this->conn->query($query4);
+               $catrow = $catresults4->fetch_assoc();
+               return $this->getCategoryChannel($catrow['parent'],3);
+            }
+    }    
     function migrateSubCategory($frontparentId, $cmsParentId, $cmsLevel, $cronLastExecutionTime) {
         $condition = '';
         if ($cronLastExecutionTime) {
@@ -966,6 +1001,7 @@ function migratequotesTage() {
         } elseif ($cmsLevel == '4') {
             $query = "select category_four_id as id,name,category_three_id as parent,valid from category_four where category_three_id='$cmsParentId' $condition";
         }
+        //echo $query; exit;
         $catresults = $this->conn->query($query);
         if ($catresults->num_rows > 0) {
             while ($catrow = $catresults->fetch_assoc()) {
@@ -2345,7 +2381,7 @@ function migrateFeaturImage($featurId,  $condition) {
            // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $masterVideoResults = $this->conn->query("SELECT * FROM video_master where channel_id=1 $condition");
+        $masterVideoResults = $this->conn->query("SELECT * FROM video_master where channel_id=1  $condition");
         //echo $masterVideoResults->num_rows; exit;
         if ($masterVideoResults->num_rows > 0) {
             

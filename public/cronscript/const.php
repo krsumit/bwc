@@ -1,5 +1,5 @@
 <?php
-
+/*
 date_default_timezone_set('Asia/Calcutta');
 define('HOST','cmsdb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com');
 define('USER','bwcms');
@@ -10,18 +10,18 @@ define('DATABASE','bwcms');
 define('LHOST','websitedb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com');
 define('LUSER','bwwebsite');
 define('LPASS','bwwebpass');
-define('LDATABASE','websitedb');
-/*
+define('LDATABASE','websitedb');*/
+
 date_default_timezone_set('Asia/Calcutta');
 define('HOST','localhost');
 define('USER','root');
 define('PASS','admin');
-define('DATABASE','17novlivecms');
+define('DATABASE','10feb2016cms');
 
 
 define('LHOST','localhost');
 define('LUSER','root');
 define('LPASS','admin');
-define('LDATABASE','17novlivewebsite');*/
+define('LDATABASE','17novlivewebsite');
 
 
