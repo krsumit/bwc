@@ -165,12 +165,18 @@ class VideoController extends Controller
     public function store(Request $request)
     { 
         /* Right mgmt start */
+       // echo 'test'; exit;
+        //echo '<pre>';
         $rightId=65;
+      //  print_r($_POST);
+      //  print_r($_FILES);
+      //  print_r($request->all()); 
         $currentChannelId=$request->channel;
         if(!$this->rightObj->checkRights($currentChannelId,$rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
         
+        //echo 'test'; exit;
         $uid = $request->user()->id;
         $video = new MasterVideo();
        if($request ->video_name !=''){
@@ -183,7 +189,7 @@ class VideoController extends Controller
             $video->video_name = $filename;
             
             
-            $s3 = AWS::createClient('s3');
+           $s3 = AWS::createClient('s3');
             
             
             $result=$s3->putObject(array(
@@ -194,7 +200,7 @@ class VideoController extends Controller
                         ));
             
             
-            unlink($destination_path.$filename);
+            unlink($destination_path.$filename);  
                   
         }
 

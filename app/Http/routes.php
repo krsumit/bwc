@@ -440,7 +440,7 @@ Route::get('video/create', ['middleware' => 'auth',   'uses' => 'VideoController
 Route::get('video/list', ['middleware' => 'auth',   'uses' => 'VideoController@index']);
 Route::post('video/update', ['middleware' => 'auth',   'uses' => 'VideoController@update' ]);
 Route::match(['get', 'post'], 'video/upload', ['middleware' => 'auth',   'uses' => 'VideoController@uploadImg']);
-Route::post('video', ['middleware' => 'auth',   'uses' => 'VideoController@store' ]);
+Route::post('video','VideoController@store');
 Route::match(['get', 'post'], '/video/delete', ['as' => '/video/delete', 'uses' => 'VideoController@destroy']);
 Route::match(['get', 'post'], '/video/publish', ['as' => '/video/publish', 'uses' => 'VideoController@publishBulk']);
 Route::get('video/{id}','VideoController@show');

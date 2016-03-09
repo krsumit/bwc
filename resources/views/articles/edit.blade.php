@@ -737,7 +737,7 @@
                     </div>
                     <!--</form>-->
                 </div>
-                <script>
+<!--                <script>
                             // magic.js
                             $(document).ready(function() {
                     //var csrf_token = $('meta[name="csrf-token"]').attr('content');
@@ -785,7 +785,7 @@
                             // stop the form from submitting the normal way and refreshing the page
                             //event.preventDefault();
                     });
-                    });</script>
+                    });</script>-->
             </div>
         </div>
     </div><!-- end container1 -->

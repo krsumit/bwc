@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 use App\ArticleAuthor;
 use App\ArticleCategory;

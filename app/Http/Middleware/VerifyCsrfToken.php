@@ -12,7 +12,9 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
-        'api/*'
+        'api/*',
+		'video/*',
+		'video*',
     ];
    
     public function handle($request,Closure $next)
@@ -20,6 +22,7 @@ class VerifyCsrfToken extends BaseVerifier
         if($request->input('_token')) {
         if ( \Session::getToken() != $request->input('_token')) {
             Session::flash('error', 'Someting has goen wrong, please try again.');
+           // echo 'test'; exit;
             //return redirect('/dashboard');
             return redirect($_SERVER['HTTP_REFERER']);
         }
