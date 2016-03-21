@@ -86,8 +86,10 @@
                                             $('#description').val(element);
                                         }
                                        if (index == 'quotes_image') {
-                                            
-                                            $('#edit_quotes_image').val(element);
+                                            //alert(1);
+                                          var image =  $('#edit_quotes_image').val(element);
+					$('#quets_image img').attr('src','https://s3-ap-southeast-1.amazonaws.com/bwmedia/quotesimage/'+element);
+					
                                         }
                                        if (index == 'tag') {  
                                              //var p="";
@@ -293,7 +295,7 @@
             <h2><small>Quotes</small></h2>
 
         </header>
-        {!! Form::open(array('url'=>'quotes/','class'=> 'form-horizontal','id'=>'validation_form','onsubmit'=>'return addqueatsfunction()')) !!}
+        {!! Form::open(array('url'=>'quotes/','class'=> 'form-horizontal','id'=>'validation_form','enctype'=>'multipart/form-data','onsubmit'=>'return addqueatsfunction()')) !!}
         {!! csrf_field() !!}
             <div class="container-fluid"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
                  <input type="hidden" name="edit_quotes_image" id="edit_quotes_image" value="">
@@ -388,6 +390,8 @@
                                 <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span>
                                     <input type="file" name="quotes_image" id="quotes_image" value="" />
                                 </span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+				<div id="quets_image"><img src="" style="width:129px;"></div>
+				
                             </div>
                         </div>
                     </div>

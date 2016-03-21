@@ -10,7 +10,8 @@ use PhpParser\Node\Expr\Array_;
 use Session;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use Aws\Laravel\AwsFacade as AWS;
+use Aws\Laravel\AwsServiceProvider;
 class QuotesController extends Controller
 {
     /**
@@ -193,16 +194,42 @@ class QuotesController extends Controller
             $Quote = new Quote();
             $Quote->add_date = date('Y-m-d H:i:s');
         }
-
+	if($request ->quotes_image !=''){
+            $destination_path = 'uploads/';
+            $file = $request->file('quotes_image');
+          //  fwrite($asd, " File name:".$file."  \n");
+            $filename = str_random(6) . '_' . $request->file('quotes_image')->getClientOriginalName();
+            //$file->move($destination_path, $filename);
+            $request->file('quotes_image')->move($destination_path, $filename);
+             $Quote->quotes_image = $filename;
+            
+            
+            $s3 = AWS::createClient('s3');
+            $oldPhotos=Quote::where('quote_id',$request->qid)->get();
+            foreach($oldPhotos as $ph){
+                $s3->deleteObject(array(
+			'Bucket'     => config('constants.awbucket'),
+			'Key'    => config('constants.quotesimage').$ph->quotes_image
+                        ));
+            }
+            
+            $result=$s3->putObject(array(
+                                'ACL'=>'public-read',
+                                'Bucket'     => config('constants.awbucket'),
+                                'Key'    => config('constants.quotesimage').$filename,
+                                'SourceFile'   => $destination_path.$filename,
+                        ));
+                  if($result['@metadata']['statusCode']==200){
+                        unlink($destination_path . $filename);
+                }
+        }else{
+         $Quote->quotes_image = $request->edit_quotes_image;  
+        }
         $Quote->quote = 'quote';
         $Quote->description = $request->description;
         $Quote->q_category_id = 'category';
         $Quote->channel_id = $request->channel_sel;
-        if($request->quotes_image !=''){
-        $Quote->quotes_image = $request->quotes_image;
-        }else{
-         $Quote->quotes_image = $request->edit_quotes_image;  
-        }
+        
         $Quote->valid = '1';
         $Quote->q_tags = $request->Taglist;
 
