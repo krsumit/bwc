@@ -1,15 +1,17 @@
 <?php
-/*define('HOST','localhost');
-define('USER','root');
-define('PASS','sumit123');
-define('DATABASE','bwcms2');
+date_default_timezone_set('Asia/Calcutta');
+define('HOST','cmsdb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com');
+define('USER','bwcms');
+define('PASS','bwpassword2015');
+define('DATABASE','bwcms');
 
 
-define('LHOST','localhost');
-define('LUSER','root');
-define('LPASS','sumit123');
-define('LDATABASE','bw_website');
-*/
+define('LHOST','channelwebsite.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com');
+define('LUSER','bwchannelsuser');
+define('LPASS','bwchannelsuser2016');
+define('LDATABASE','bw_sc');
+
+/*
 define('HOST','localhost');
 define('USER','root');
 define('PASS','admin');
@@ -20,3 +22,4 @@ define('LHOST','localhost');
 define('LUSER','root');
 define('LPASS','admin');
 define('LDATABASE','bwsc');
+*/

@@ -64,7 +64,7 @@ class VideoController extends Controller
             }
             
 
-       $videos=$q->where('channel_id','=',$currentChannelId)->groupby('id')->paginate(config('constants.recordperpage'));
+       $videos=$q->where('channel_id','=',$currentChannelId)->orderBy('id','desc')->paginate(config('constants.recordperpage'));
        return view('video.published', compact('videos','channels','currentChannelId'));
 
     }

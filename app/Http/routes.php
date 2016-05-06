@@ -449,6 +449,18 @@ Route::get('video/image/upload','VideoController@imageUpload');
 
 /*Video routs end here */
 
+/* Newsletter start here*/
+Route::get('newsletter/create', ['middleware' => 'auth',   'uses' => 'MasternewsletterController@create']);
+Route::get('newsletter/manage/{id}',['middleware' => 'auth',   'uses' => 'MasternewsletterController@show']);
+Route::get('newsletter', ['middleware' => 'auth',   'uses' => 'MasternewsletterController@index']);
+Route::post('newsletter', ['middleware' => 'auth',   'uses' => 'MasternewsletterController@store' ]);
+Route::post('newsletter/update', ['middleware' => 'auth',   'uses' => 'MasternewsletterController@update' ]);
+Route::post('newsletter/assign', ['middleware' => 'auth',   'uses' => 'MasternewsletterController@assign' ]);
+Route::match(['get', 'post'], 'newsletter/delete', ['middleware' => 'auth', 'uses' => 'MasternewsletterController@destroy']);
+Route::match(['get', 'post'], 'newsletter/deletens', ['middleware' => 'auth', 'uses' => 'MasternewsletterController@destroyNewsletter']);
+
+/* Newsletter end here*/
+
 /* Api route start here */
 
 Route::match(['get', 'post'], 'api/video','ApiController@videoApi');

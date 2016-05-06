@@ -69,7 +69,7 @@ class Cron {
         $_SESSION['message'] = $this->message;
     }
 
-    function migrateBwAuthor() { 
+    function migrateBwAuthor() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
@@ -90,16 +90,16 @@ class Cron {
                 $checkAthorExistResultSet = $this->conn2->query("select author_id,author_name from author where author_id=$authorId");
                 if ($checkAthorExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
-                    $authorUpdateStmt = $this->conn2->prepare("update author set author_name=?,author_photo=?,author_bio=?,author_type=?,column_id=?,valid=?,updated_at=? where author_id=?");
-                    $authorUpdateStmt->bind_param('sssiiisi', $authorRow['name'], $authorRow['photo'], $authorRow['bio'], $authorRow['author_type_id'], $authorRow['column_id'], $authorRow['valid'],$authorRow['updated_at'], $authorId);
+                    $authorUpdateStmt = $this->conn2->prepare("update author set author_name=?,author_photo=?,author_bio=?,author_type=?,column_id=?,valid=? where author_id=?");
+                    $authorUpdateStmt->bind_param('sssiiii', $authorRow['name'], $authorRow['photo'], $authorRow['bio'], $authorRow['author_type_id'], $authorRow['column_id'], $authorRow['valid'], $authorId);
                     $authorUpdateStmt->execute();
                     if ($authorUpdateStmt->affected_rows)
                         $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                    // echo  $_SESSION['noofupd'];
                 }else {
-                    $authorInsertStmt = $this->conn2->prepare("insert into author set author_id=?,author_name=?,author_photo=?,author_bio=?,author_type=?,column_id=?,valid=?,updated_at=?");
+                    $authorInsertStmt = $this->conn2->prepare("insert into author set author_id=?,author_name=?,author_photo=?,author_bio=?,author_type=?,column_id=?,valid=?");
                     //echo $this->conn2->error; exit;
-                    $authorInsertStmt->bind_param('isssiiis', $authorRow['author_id'], $authorRow['name'], $authorRow['photo'], $authorRow['bio'], $authorRow['author_type_id'], $authorRow['column_id'], $authorRow['valid'],$authorRow['updated_at']);
+                    $authorInsertStmt->bind_param('isssiii', $authorRow['author_id'], $authorRow['name'], $authorRow['photo'], $authorRow['bio'], $authorRow['author_type_id'], $authorRow['column_id'], $authorRow['valid']);
                     $authorInsertStmt->execute();
                     if ($authorInsertStmt->affected_rows) {
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
@@ -379,7 +379,7 @@ function migrateSubCategory($frontparentId, $cmsParentId, $cmsLevel, $cronLastEx
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $tagResults = $this->conn->query("SELECT tags_id as id,tag,valid  FROM tags where channel_id = $this->channelId  $condition");
+        $tagResults = $this->conn->query("SELECT tags_id as id,tag,valid  FROM tags where 1  $condition");
         //echo $tagResults->num_rows;exit;
         if ($tagResults->num_rows > 0) {
             while ($tagrow = $tagResults->fetch_assoc()) {
@@ -518,9 +518,9 @@ function migrateBwArticle() {
                         $status = 'published';
                         $articleUpdateStmt = $this->conn2->prepare("update articles set article_title=?,article_description=?,article_summary=?,"
                                 . "article_type=?,article_published_date=?,article_slug=?,article_status=?,important_article=?,video_Id=?,display_to_homepage=?,is_exclusive=?,"
-                                . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,article_location_country=?,article_location_state=?,hide_image=?,updated_at=? where article_id=?") or die($this->conn2->error);;
-                        $articleUpdateStmt->bind_param('sssisssiiiiiissiiisi', $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
-                                , $pubDate, $articleRow['slug'], $status,$articleRow['important'],$articleRow['video_Id'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'],$articleRow['canonical_options'],$articleRow['video_type'],$articleRow['canonical_url'], $articleRow['country'], $articleRow['state'], $articleRow['hide_image'],$articleRow['updated_at'], $articleRow['article_id']
+                                . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,article_location_country=?,article_location_state=?,hide_image=? where article_id=?") or die($this->conn2->error);;
+                        $articleUpdateStmt->bind_param('sssisssiiiiiissiiii', $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
+                                , $pubDate, $articleRow['slug'], $status, $articleRow['video_Id'],$articleRow['important'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'],$articleRow['canonical_options'],$articleRow['video_type'],$articleRow['canonical_url'], $articleRow['country'], $articleRow['state'], $articleRow['hide_image'], $articleRow['article_id']
                         );
                         $articleUpdateStmt->execute();
                         if ($articleUpdateStmt->affected_rows) {
@@ -546,10 +546,10 @@ function migrateBwArticle() {
                         
                         $articleInsertStmt = $this->conn2->prepare("insert articles set article_id=?,article_title=?,article_description=?,article_summary=?,"
                                 . "article_type=?,article_published_date=?,article_slug=?,article_status=?,video_Id=?,important_article=?,display_to_homepage=?,is_exclusive=?,"
-                                . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,article_location_country=?,article_location_state=?,is_old=?,hide_image=?,updated_at=?") or die($this->conn2->error);
+                                . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,article_location_country=?,article_location_state=?,is_old=?,hide_image=?") or die($this->conn2->error);
                        
-                        $articleInsertStmt->bind_param('isssisssiiiiiissiiiis', $articleRow['article_id'], $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
-                                , $pubDate, $articleRow['slug'], $status, $articleRow['video_Id'],$articleRow['important'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'],$articleRow['canonical_options'],$articleRow['video_type'],$articleRow['canonical_url'], $articleRow['country'], $articleRow['state'],$articleRow['is_old'],$articleRow['hide_image'],$articleRow['updated_at']) or die($this->conn2->error);
+                        $articleInsertStmt->bind_param('isssisssiiiiiissiiii', $articleRow['article_id'], $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
+                                , $pubDate, $articleRow['slug'], $status, $articleRow['video_Id'],$articleRow['important'], $articleRow['for_homepage'],$articleRow['web_exclusive'], $articleRow['magazine_id'],$articleRow['canonical_options'],$articleRow['video_type'],$articleRow['canonical_url'], $articleRow['country'], $articleRow['state'],$articleRow['is_old'],$articleRow['hide_image']) or die($this->conn2->error);
                        
                         $articleInsertStmt->execute() or die($this->conn2->error);;
                         //print_r($articleInsertStmt);exit;
@@ -1167,60 +1167,35 @@ function migrateBwArticle() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwdmastervideo' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwscmastervideo' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
-            // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+           // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $masterVideoResults = $this->conn->query("SELECT * FROM video_master where channel_id=$this->channelId  $condition");
-        //echo $masterVideoResults->num_rows; exit;
+        $masterVideoResults = $this->conn->query("SELECT * FROM video_master where channel_id=$this->channelId $condition");
+        //echo $authorResults->num_rows; exit;
         if ($masterVideoResults->num_rows > 0) {
 
-            $catMapArray = array();
-            $videoCatDataRst = $this->conn2->query("select * from channel_category");
-            while ($videoCatDataRow = $videoCatDataRst->fetch_assoc()) {
-                $key = $videoCatDataRow['cms_cat_id'] . '_' . $videoCatDataRow['cms_cat_level'];
-                $catMapArray[$key] = $videoCatDataRow['category_id'];
-            }
-            $this->categoryMapping = $catMapArray;
-
             while ($masterVideoRow = $masterVideoResults->fetch_assoc()) {
-                //print_r($masterVideoRow); exit;
+                // print_r($authorRow); exit;
                 $masterVideoId = $masterVideoRow['id'];
-                $checkmasterVideoExistResultSet = $this->conn2->query("select video_id, video_title,video_summary, video_name,video_thumb_name,tags,created_at,updated_at from video_master where video_id=$masterVideoId");
+                $checkmasterVideoExistResultSet = $this->conn2->query("select id, video_title,video_summary, video_name,video_thumb_name,tags,created_at,updated_at from video_master where id=$authorId");
                 if ($checkmasterVideoExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
-                    if($masterVideoRow['video_status']=='1'){//echo 'sumit'; exit();
-                    $masterVideoUpdateStmt = $this->conn2->prepare("update video_master set video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=? where video_id=?");
+                    $masterVideoUpdateStmt = $this->conn2->prepare("update video_master set video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=? where video_id=?");
+                    $masterVideoUpdateStmt->bind_param('sssssssi', $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'],$masterVideoRow['updated_at'], $masterVideoId);
+                    $masterVideoUpdateStmt->execute();
+                    if ($masterVideoUpdateStmt->affected_rows)
+                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                   // echo  $_SESSION['noofupd'];
+                }else {
+                    $masterVideoInsertStmt = $this->conn2->prepare("insert into video_master set video_id=?,video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?");
                     //echo $this->conn2->error; exit;
-                    $masterVideoUpdateStmt->bind_param('sssssssisi', $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'], $masterVideoRow['updated_at'], $masterVideoRow['campaign_id'], $masterVideoRow['video_by'], $masterVideoId);
-                    $masterVideoUpdateStmt->execute() or die($this->conn2->error);
-                    //print_r($masterVideoUpdateStmt);exit;
-
-                    $iid = $masterVideoRow['id'];
-                    //echo $iid ; exit;
-                    $this->callVideoRelatedContent($iid);
-                    $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
-                    } else {
-                        $delStmt = $this->conn2->prepare("delete from video_master where video_id=?");
-                        $delStmt->bind_param('i', $masterVideoId);
-                        $delStmt->execute();
-                        
-                    }
-                    // echo  $_SESSION['noofupd'];
-                } else {//echo 'going to insert';exit;
-                    $masterVideoInsertStmt = $this->conn2->prepare("insert into video_master set video_id=?,video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=?");
-                    //echo $this->conn2->error; exit;
-                    $masterVideoInsertStmt->bind_param('isssssssis', $masterVideoRow['id'], $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'], $masterVideoRow['updated_at'], $masterVideoRow['campaign_id'], $masterVideoRow['video_by']);
-                    $masterVideoInsertStmt->execute() or die($this->conn2->error);
-                    //print_r($masterVideoInsertStmt);exit;
-                    // echo $articleInsertStmt->insert_id;exit;    
-                    if ($masterVideoInsertStmt->insert_id) {
-                        $iid = $masterVideoInsertStmt->insert_id;
-                        $masterVideoInsertStmt->close();
-                        $this->callVideoRelatedContent($iid);
+                    $masterVideoInsertStmt->bind_param('isssssss', $masterVideoRow['id'], $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'],$masterVideoRow['updated_at']);
+                    $masterVideoInsertStmt->execute();
+                    if ($masterVideoInsertStmt->affected_rows) {
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
                     }
                 }
@@ -1228,42 +1203,11 @@ function migrateBwArticle() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwdmastervideo',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwscmastervideo',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' mastervideo(s) inserted and ' . $_SESSION['noofupd'] . ' mastervideo(s) updated.</h5>';
-    }
-
-    function callVideoRelatedContent($id) {
-        //echo $id ; exit;
-        $delStmt = $this->conn2->prepare("delete from video_category where video_id=?") or die($this->conn2->error);
-        $delStmt->bind_param('i', $id) or die($this->conn2->error);
-        $delStmt->execute();
-        $delStmt->close();
-        //echo 'test'; exit;
-        $videoCatRst = $this->conn->query("select * from video_category where video_id=$id");
-        while (($videoCatRow = $videoCatRst->fetch_assoc())) {
-
-            $catInsertStmt = $this->conn2->prepare("insert into video_category  set v_category_id=?,video_id=?,category_id=?,level=?") or die($this->conn2->error);
-            $catInsertStmt->bind_param('iiii', $videoCatRow['v_category_id'], $id, $this->categoryMapping[$videoCatRow['category_id'] . '_' . $videoCatRow['level']], $videoCatRow['level']) or die($this->conn2->error);
-            $catInsertStmt->execute() or die($this->conn2->error);
-            $catInsertStmt->close();
-        }
-
-        // Deleting tag if already exist
-        $delStmt = $this->conn2->prepare("delete from video_tags where video_id=?") or die($this->conn2->error);
-        $delStmt->bind_param('i', $id) or die($this->conn2->error);
-        $delStmt->execute();
-        $delStmt->close();
-        // Inserting tags
-        $videoTagRst = $this->conn->query("select * from video_tags where video_id=$id");
-        while (($videoTagRow = $videoTagRst->fetch_assoc())) {
-            $tagInsertStmt = $this->conn2->prepare("insert into video_tags  set v_tags_id=?,video_id=?,tags_id=?") or die($this->conn2->error);
-            $tagInsertStmt->bind_param('iii', $videoTagRow['v_tags_id'], $id, $videoTagRow['tags_id']) or die($this->conn2->error);
-            $tagInsertStmt->execute() or die($this->conn2->error);
-            $tagInsertStmt->close();
-        }
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' bwscmastervideo(s) inserted and ' . $_SESSION['noofupd'] . ' bwscmastervideo(s) updated.</h5>';
     }
 
 

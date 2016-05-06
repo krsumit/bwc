@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 use App\Video;
 use Illuminate\Http\Request;
@@ -12,6 +11,8 @@ use App\Http\Controllers\Controller;
 use App\Classes\Zebra_Image;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
+use Illuminate\Support\Facades\DB;
+
 
 class ApiController extends Controller {
 
@@ -28,6 +29,7 @@ class ApiController extends Controller {
         if ($request->has('access_key') && $request->has('article_id') && $request->has('video_url') && $request->has('thumb_url')) {
             if ($this->key == trim($request->access_key)) {
                 $article = Article::find($request->article_id);
+                
                 if ($article) {
                     $this->aws_obj = $s3 = AWS::createClient('s3');
                     $dir = $_SERVER['DOCUMENT_ROOT'] . '/files/';
@@ -95,7 +97,21 @@ class ApiController extends Controller {
                         $video->video_summary = $article->summary;
                         $video->video_thumb_name = $image_name;
                         $video->save();
+                        
+                         $articleVideo=DB::table('articles')->leftjoin('video_master','articles.video_id','=','video_master.id')
+                                ->select('article_id','video_type','video_id','id','video_by','video_name','video_thumb_name')
+                                ->where('article_id',$request->article_id)->first();
+                         if($articleVideo->video_id && trim($articleVideo->video_by)=='gist'){ // Deleting old gist video
+                             $this->deleteAwsObject(config('constants.awvideothumb'), $articleVideo->video_thumb_name);
+                             $this->deleteAwsObject(config('constants.awvideothumb_small'), $articleVideo->video_thumb_name);
+                             $this->deleteAwsObject(config('constants.awvideo'), $articleVideo->video_name);
+                             $oldVideo=MasterVideo::find($articleVideo->id);
+                             $oldVideo->video_status='0';
+                             $oldVideo->save();
+                         }
                         if ($video->id) {
+                            if(trim($articleVideo->video_by)!='inhouse'){ // Link Video to article (If old video is not inhouse) 
+                            //DB::select("select article_id,video_type,video_id,id,video_by,video_name from articles left join video_master on articles.video_id=video_master.id where article_id=92170");
                             $article->video_type = 'uploadedvideo';
                             $article->video_Id = $video->id;
                             if ($article->save()) {
@@ -108,6 +124,10 @@ class ApiController extends Controller {
                                 $this->deleteAwsObject(config('constants.awvideothumb_small'), $image_name);
                                 $this->deleteAwsObject(config('constants.awvideo'), $video_name);
                                 $msgArray = array('code' => '201', 'msg' => 'Error while linking the video with article, Please try again.');
+                            }
+                            }else{ // No need to connect
+                               $msgArray = array('code' => '200', 'msg' => 'Congrats, upload but can\'t link with article becasue article already has inhouse video');
+
                             }
                         }
                     } else {

@@ -2334,6 +2334,7 @@ class Cron {
                 $checkmasterVideoExistResultSet = $this->conn2->query("select video_id, video_title,video_summary, video_name,video_thumb_name,tags,created_at,updated_at from video_master where video_id=$masterVideoId");
                 if ($checkmasterVideoExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
+                    if($masterVideoRow['video_status']=='1'){//echo 'sumit'; exit();
                     $masterVideoUpdateStmt = $this->conn2->prepare("update video_master set video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=? where video_id=?");
                     //echo $this->conn2->error; exit;
                     $masterVideoUpdateStmt->bind_param('sssssssisi', $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'], $masterVideoRow['updated_at'], $masterVideoRow['campaign_id'], $masterVideoRow['video_by'], $masterVideoId);
@@ -2344,6 +2345,12 @@ class Cron {
                     //echo $iid ; exit;
                     $this->callVideoRelatedContent($iid);
                     $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                    } else {
+                        $delStmt = $this->conn2->prepare("delete from video_master where video_id=?");
+                        $delStmt->bind_param('i', $masterVideoId);
+                        $delStmt->execute();
+                        
+                    }
                     // echo  $_SESSION['noofupd'];
                 } else {//echo 'going to insert';exit;
                     $masterVideoInsertStmt = $this->conn2->prepare("insert into video_master set video_id=?,video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=?");
@@ -2400,7 +2407,6 @@ class Cron {
             $tagInsertStmt->close();
         }
     }
-
     //video module end here 
     //
    //campain module start here 

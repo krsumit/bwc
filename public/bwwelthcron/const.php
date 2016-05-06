@@ -5,8 +5,7 @@ define('USER','bwcms');
 define('PASS','bwpassword2015');
 define('DATABASE','bwcms');
 
-
 define('LHOST','channelwebsite.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com');
 define('LUSER','bwchannelsuser');
 define('LPASS','bwchannelsuser2016');
-define('LDATABASE','bwdisrupt');
+define('LDATABASE','bw_wealth');

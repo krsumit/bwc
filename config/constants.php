@@ -1,4 +1,4 @@
-    <?php
+<?php
 return [
 'articleimagedir' => 'uploads/article/',
 'articleimagethambtdir' => 'uploads/article/articlethamb/',

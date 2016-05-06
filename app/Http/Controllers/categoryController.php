@@ -380,7 +380,7 @@ public function subcategoryindex()
         }
         return;
     }
-     public function destroysfour()
+    public function destroysfour()
     {
         if (isset($_GET['option'])) {
             $id = $_GET['option'];
