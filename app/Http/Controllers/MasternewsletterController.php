@@ -128,7 +128,7 @@ class MasternewsletterController extends Controller {
                     group_concat(authors.name) as name'))
                         ->where('status', 'P')
                         ->where('articles.channel_id',$currentChannelId)
-                        ->whereRaw("concat(publish_date,' ',publish_time)>= now() - INTERVAL 1000 DAY")
+                        ->whereRaw("concat(publish_date,' ',publish_time)>= now() - INTERVAL 1 DAY")
                         ->whereRaw("articles.article_id not in (select article_id from master_newsletter_articles where master_newsletter_id=$id and is_deleted=0)")
                         ->groupBy('articles.article_id')->get();
 
@@ -170,6 +170,10 @@ class MasternewsletterController extends Controller {
             $newArticle->updated_at = date('Y-m-d H:i:s');
             $newArticle->save();
         }
+        
+        exec("/usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=newsletter'");
+        //exec("/usr/bin/php /var/www/html/public/hotcron/cronjob.php 'section=newsletter'");
+
         Session::flash('message', 'Your article(s) assigned in newsletter.');
         return redirect('/newsletter/manage/' . $request->newsletterId);
     }

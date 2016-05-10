@@ -36,7 +36,9 @@ class Cron {
              case 'sponsorviewcount':
                 $this->Sponsorviewcount();
                 break;
-            
+            case 'newsletter':
+                $this->migrateMasterNewsLetter();
+                break;
             case 'category':
                 $this->migrateBwCategory();
                 break;

@@ -229,5 +229,15 @@ class PhotosController extends Controller
       // echo 'tests'; exit;
       return view('layouts.crop', compact('sizeArray'));
    } 
+   
+   
+   function resizeCropImage(Request $request){
+       $sizeArray=  explode('X',$request->dimension);
+      // print_r($sizeArray); exit;
+      // echo 'tests'; exit;
+      return view('layouts.resize', compact('sizeArray'));
+   } 
+   
+   
     
 }

@@ -75,8 +75,9 @@ class Cron {
             case 'article':
                 $this->migrateArticle();
                 break;
-            //case 'magazine': 
-            //    $this->migrateMagazine();
+            case 'newsletter':
+                $this->migrateMasterNewsLetter();
+                break;
             case 'topics' :
                 $this->migrateTopics();
                 break;
@@ -104,7 +105,8 @@ class Cron {
                 $this->migrateCampaing();
                 break;
         endswitch;
-
+		$key= md5(date('dmY').'businessworld');
+		echo file_get_contents('http://businessworld.in/create-json/'.$key);
         $_SESSION['message'] = $this->message;
     }
 
@@ -2313,7 +2315,7 @@ class Cron {
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
-            // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
         $masterVideoResults = $this->conn->query("SELECT * FROM video_master where channel_id=1  $condition");
@@ -2352,7 +2354,8 @@ class Cron {
                         
                     }
                     // echo  $_SESSION['noofupd'];
-                } else {//echo 'going to insert';exit;
+                   } else {//echo 'going to insert';exit;
+                    if($masterVideoRow['video_status']=='1'){
                     $masterVideoInsertStmt = $this->conn2->prepare("insert into video_master set video_id=?,video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=?");
                     //echo $this->conn2->error; exit;
                     $masterVideoInsertStmt->bind_param('isssssssis', $masterVideoRow['id'], $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'], $masterVideoRow['updated_at'], $masterVideoRow['campaign_id'], $masterVideoRow['video_by']);
@@ -2365,6 +2368,12 @@ class Cron {
                         $this->callVideoRelatedContent($iid);
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
                     }
+                  } else {
+                        $delStmt = $this->conn2->prepare("delete from video_master where video_id=?");
+                        $delStmt->bind_param('i', $masterVideoRow['id']);
+                        $delStmt->execute();
+                        
+                    }  
                 }
             }
         }
@@ -2460,6 +2469,99 @@ class Cron {
     }
 
 //campain module end here 
+function migrateMasterNewsLetter() {
+    
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='masternewsletter' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
+        //echo 'sumit' ;exit;
+        $masterNewsLetterResults = $this->conn->query("SELECT * FROM master_newsletter where channel_id= 1  $condition");
+       // echo $masterNewsLetterResults->num_rows; exit;
+        if ($masterNewsLetterResults->num_rows > 0) {
+
+            
+
+            while ($masterNewsLetterRow = $masterNewsLetterResults->fetch_assoc()) {
+                //print_r($masterNewsLetterRow); exit;
+                $masterNewsLetterId = $masterNewsLetterRow['id'];
+                $checkmasterNewsLettertResultSet = $this->conn2->query("select * from master_newsletter where id=$masterNewsLetterId");
+                if ($checkmasterNewsLettertResultSet->num_rows > 0) { //echo 'going to update';exit;  
+                    //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
+                    if($masterNewsLetterRow['is_deleted']=='0'){//echo 'sumit'; exit();
+                    $masterNewsLetterUpdateStmt = $this->conn2->prepare("update master_newsletter set title=?,created_at=?,updated_at=? where id=?");
+                    //echo $this->conn2->error; exit;
+                    $masterNewsLetterUpdateStmt->bind_param('sssi', $masterNewsLetterRow['title'], $masterNewsLetterRow['created_at'], $masterNewsLetterRow['updated_at'], $masterNewsLetterId);
+                    $masterNewsLetterUpdateStmt->execute() or die($this->conn2->error);
+                    //print_r($masterNewsLetterUpdateStmt);exit;
+
+                    $iid = $masterNewsLetterRow['id'];
+                    //echo $iid ; exit;
+                    $this->callNewsLetterRelatedContent($iid);
+                    $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                    } else {
+                        $delStmt = $this->conn2->prepare("delete from master_newsletter where id=?");
+                        $delStmt->bind_param('i', $masterNewsLetterId);
+                        $delStmt->execute();
+                        
+                    }
+                    // echo  $_SESSION['noofupd'];
+                } else {//echo 'going to insert';exit;
+                    if($masterNewsLetterRow['is_deleted']=='0'){
+                    $masterNewsLetterInsertStmt = $this->conn2->prepare("insert into master_newsletter set id=?,title=?,created_at=?,updated_at=?");
+                    //echo $this->conn2->error; exit;
+                    $masterNewsLetterInsertStmt->bind_param('isss', $masterNewsLetterRow['id'], $masterNewsLetterRow['title'],$masterNewsLetterRow['created_at'], $masterNewsLetterRow['updated_at']);
+                    $masterNewsLetterInsertStmt->execute() or die($this->conn2->error);
+                    //print_r($masterNewsLetterInsertStmt);exit;
+                    // echo $masterNewsLetterInsertStmt->insert_id;exit;    
+                    if ($masterNewsLetterInsertStmt->insert_id) {
+                        $iid = $masterNewsLetterInsertStmt->insert_id;
+                        $masterNewsLetterInsertStmt->close();
+                        $this->callNewsLetterRelatedContent($iid);
+                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                    }
+                  } else {
+                        $delStmt = $this->conn2->prepare("delete from master_newsletter where id=?");
+                        $delStmt->bind_param('i', $masterNewsLetterId);
+                        $delStmt->execute();
+                        
+                    }  
+                }
+            }
+        }
+
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='masternewsletter',start_time=?,end_time=?");
+        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecronstmt->execute();
+        $updatecronstmt->close();
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' masternewsletter(s) inserted and ' . $_SESSION['noofupd'] . ' masternewsletter(s) updated.</h5>';
+    }
+
+    function callNewsLetterRelatedContent($id) {
+        //echo $id ; exit;
+        $delStmt = $this->conn2->prepare("delete from master_newsletter_articles where master_newsletter_id=?") or die($this->conn2->error);
+        $delStmt->bind_param('i', $id) or die($this->conn2->error);
+        $delStmt->execute();
+        $delStmt->close();
+        //echo 'test'; exit;
+        $masterNewsLetterArticleRst = $this->conn->query("select * from master_newsletter_articles where master_newsletter_id=$id");
+        while (($masterNewsLetterArticleRow = $masterNewsLetterArticleRst->fetch_assoc())) {
+
+            $masterNewsLetterArticleInsertStmt = $this->conn2->prepare("insert into master_newsletter_articles  set master_newsletter_id=?,article_id=?,is_deleted=?,updated_at=?") or die($this->conn2->error);
+            $masterNewsLetterArticleInsertStmt->bind_param('iiis', $masterNewsLetterArticleRow['master_newsletter_id'],  $masterNewsLetterArticleRow['article_id'], $masterNewsLetterArticleRow['is_deleted'], $masterNewsLetterArticleRow['updated_at']) or die($this->conn2->error);
+            $masterNewsLetterArticleInsertStmt->execute() or die($this->conn2->error);
+            $masterNewsLetterArticleInsertStmt->close();
+        }
+
+       
+        
+    }
 }
 
 ?>

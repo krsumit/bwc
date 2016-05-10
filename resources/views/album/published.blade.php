@@ -21,11 +21,11 @@
 
                 <label class="radio">
                     <input type="radio"  @if(isset($_GET['searchin'])) @if($_GET['searchin']=='title') checked @endif @endif required name="searchin" class="uniformRadio" value="title">
-                           Search by Article Title
+                           Search by Album  Title
                 </label>
                 <label class="radio">
                     <input type="radio" @if(isset($_GET['searchin'])) @if($_GET['searchin']=='id') checked @endif @endif required name="searchin" class="uniformRadio" value="id">
-                           Search by Article ID
+                           Search by Album ID
                 </label>
 
             </form>
