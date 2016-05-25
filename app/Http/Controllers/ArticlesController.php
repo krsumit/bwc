@@ -20,6 +20,7 @@ use App\Country;
 use App\State;
 use App\Author;
 use App\NewsType;
+use App\MasterVideo;
 use App\Http\Controllers\Auth;
 use App\Http\Controllers\AuthorsController;
 use App\Http\Requests;
@@ -328,8 +329,8 @@ class ArticlesController extends Controller {
                 ->select('article_topics.*', 'topics.topic')
                 ->get();
 
-        $arrPhotos = Photo::where('owned_by', '=', 'article')
-                        ->where('owner_id', '=', $id)->get();
+        //$arrPhotos = Photo::where('owned_by', '=', 'article')
+        //                ->where('owner_id', '=', $id)->count(); 
         //Get Video
         $arrVideo = Video::where('owned_by', '=', 'article')
                         ->where('owner_id', '=', $id)->get();
@@ -382,7 +383,7 @@ class ArticlesController extends Controller {
         $photos = DB::table('photos')->where('valid', '1')
                 ->where('owned_by', 'article')
                 ->where('owner_id', $article->article_id)
-                ->get();
+                ->get(); 
     
         return view('articles.edit', compact('article', 'rights', 'channels', 'p1', 'postAs', 'country', 'states', 'newstype', 'category', 'magazine', 'event', 'campaign', 'columns', 'tags', 'photos', 'acateg', 'arrAuth', 'arrTags', 'arrVideo', 'userTup', 'arrTopics'));
     }
@@ -479,6 +480,8 @@ class ArticlesController extends Controller {
         
         /* Right mgmt end */
        
+       
+        
         $uid = $request->user()->id;
         //fwrite($asd, "Step 3.2 In Article POST Function ".$uid." \n");
         $article = Article::find($request->id);
@@ -770,11 +773,42 @@ class ArticlesController extends Controller {
             }
         }
         $images = explode(',', $request->uploadedImages);
+        $images=  array_filter($images);
+          
+        if(count($images)==0){
+                  
+        $photosCount = DB::table('photos')->where('valid', '1')
+                ->where('owned_by', 'article')
+                ->where('owner_id', $article->article_id)
+                ->count(); 
+                if( ($photosCount==0) && (trim($request->video_Id)!='') && (trim($request->video_Id) !='0')) {
+                            $selectedvideo=MasterVideo::find($request->video_Id);
+                            if($selectedvideo->video_by=='inhouse'){
+                                 $source=config('constants.awsbaseurl').config('constants.awvideothumb').urlencode($selectedvideo->video_thumb_name);
+                                $dest = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $selectedvideo->video_thumb_name;
+                                if(copy($source, $dest)){
+                                    $images[]=$selectedvideo->video_thumb_name;
+                                   //$request->photographby[$selectedvideo->video_thumb_name]='';
+                                }
+                            }
 
+                }
+        }
+        
+        
+        //print_r($images); exit;
+        //exit;
         $s3 = AWS::createClient('s3');
         //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
         foreach ($images as $image) { //echo $request->uploadedImages; exit;
-            if (isset($request->photographby[$image])) {
+            //if (isset($request->photographby[$image])) {
+                
+//                
+//                echo '<pre>';
+//         print_r($request->all());
+//         exit;
+         
+         
                 $source = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $image;
                 $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
                 $dest = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagedir') . $image;
@@ -843,12 +877,13 @@ class ArticlesController extends Controller {
 //                }
 
                     unlink($source);
-                    unlink($source_thumb);
+                    if(is_file($source_thumb))
+                        unlink($source_thumb);
                     //unlink($dest);
                     $articleImage = new Photo();
                     $articleImage->photopath = $image;
                     $articleImage->imagefullPath = '';
-                    $articleImage->photo_by = $request->photographby[$image];
+                    $articleImage->photo_by = isset($request->photographby[$image])?$request->photographby[$image]:'';
                     $articleImage->channel_id = $request->channel_sel;
                     $articleImage->owned_by = 'article';
                     $articleImage->owner_id = $id;
@@ -857,7 +892,7 @@ class ArticlesController extends Controller {
                     $articleImage->updated_at = date('Y-m-d H:i:s');
                     $articleImage->save();
                 }
-            }
+            //}
         }
 
 
@@ -1071,11 +1106,28 @@ class ArticlesController extends Controller {
             }
         }
         $images = explode(',', $request->uploadedImages);
+        $images=  array_filter($images);
         //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
+        
+        if(count($images)==0){
+                if((trim($request->video_Id)!='') && (trim($request->video_Id) !='0')) {
+                            $selectedvideo=MasterVideo::find($request->video_Id);
+                            if($selectedvideo->video_by=='inhouse'){
+                                $source=config('constants.awsbaseurl').config('constants.awvideothumb').urlencode($selectedvideo->video_thumb_name);
+                                $dest = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $selectedvideo->video_thumb_name;
+                                if(copy($source, $dest)){
+                                    $images[]=$selectedvideo->video_thumb_name;
+                                }
+                            }
+
+                }
+        }
+        
+        
 
         $s3 = AWS::createClient('s3');
         foreach ($images as $image) { //echo 'foreach--';
-            if (isset($request->photographby[$image])) {
+            //if (isset($request->photographby[$image])) {
 
                 $source = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $image;
                 $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
@@ -1142,12 +1194,13 @@ class ArticlesController extends Controller {
                     //}
                     // echo 'before unlink'; exit;
                     unlink($source);
-                    unlink($source_thumb);
+                    if(is_file($source_thumb))
+                        unlink($source_thumb);
                     //unlink($dest);
                     $articleImage = new Photo();
                     $articleImage->photopath = $image;
                     $articleImage->imagefullPath = '';
-                    $articleImage->photo_by = $request->photographby[$image];
+                    $articleImage->photo_by =  isset($request->photographby[$image])?$request->photographby[$image]:'';
                     $articleImage->channel_id = $request->channel_sel;
                     $articleImage->owned_by = 'article';
                     $articleImage->owner_id = $id;
@@ -1156,7 +1209,7 @@ class ArticlesController extends Controller {
                     $articleImage->updated_at = date('Y-m-d H:i:s');
                     $articleImage->save();
                 }
-            }
+         //   }
         }
 
         //}

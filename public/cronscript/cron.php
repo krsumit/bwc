@@ -2239,7 +2239,7 @@ class Cron {
         $start_published_date = date('Y-m-d H:i:s', strtotime("last Sunday") - 604800); //echo '<br>';
         $end_published_date = date('Y-m-d H:i:s', strtotime("last Saturday") + 86399);  //echo '<br>';
 
-        $countQuery = "select author_type.author_type_id,author_type.label,count(*) as cs,sum(view_count) as noofview  from articles inner join author_type on articles.author_type=author_type.author_type_id  where  concat(publish_date,' ',publish_time) between '$start_published_date' and '$end_published_date' group by author_type.author_type_id";
+        $countQuery = "select author_type.author_type_id,author_type.label,count(*) as cs,sum(view_count) as noofview  from articles inner join author_type on articles.author_type=author_type.author_type_id  where  concat(publish_date,' ',publish_time) between '$start_published_date' and '$end_published_date' and channel_id=1 group by author_type.author_type_id";
 
         $countRsult = $this->conn->query($countQuery);
         $total_stories = 0;
@@ -2260,7 +2260,7 @@ class Cron {
         }
 
         //echo $repor_type_tdata; exit;
-        $query = "select authors.name,ar.cs,ar.views_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '" . $start_published_date . "' and '" . $end_published_date . "'   group by article_author.author_id) ar on authors.author_id=ar.author_id where authors.author_type_id='2' order by ar.cs desc;
+        $query = "select authors.name,ar.cs,ar.views_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '" . $start_published_date . "' and '" . $end_published_date . "' and articles.channel_id=1  group by article_author.author_id) ar on authors.author_id=ar.author_id where authors.author_type_id='2' order by ar.cs desc;
 ";
         $rst = $this->conn->query($query);
         //echo '<pre>';
@@ -2300,7 +2300,7 @@ class Cron {
         $from_email = "reports@bwbusinessworld.com";
         $sub = '=?UTF-8?B?' . base64_encode("Weekly Report – Article Contribution to Digital") . '?=';
         $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
-        //anurag.batra@businessworld.in,yamini@businessworld.in,sudipta@businessworld.in,
+        //anurag.batra@businessworld.in,yamini@businessworld.in,sudipta@businessworld.in,anurag.batra@businessworld.in,yamini@businessworld.in,
         mail("anurag.batra@businessworld.in,yamini@businessworld.in,sudipta@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
     }
 
@@ -2478,7 +2478,7 @@ function migrateMasterNewsLetter() {
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
-             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+             //$condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
         //echo 'sumit' ;exit;
         $masterNewsLetterResults = $this->conn->query("SELECT * FROM master_newsletter where channel_id= 1  $condition");
@@ -2543,7 +2543,7 @@ function migrateMasterNewsLetter() {
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' masternewsletter(s) inserted and ' . $_SESSION['noofupd'] . ' masternewsletter(s) updated.</h5>';
     }
 
-    function callNewsLetterRelatedContent($id) {
+     function callNewsLetterRelatedContent($id) {
         //echo $id ; exit;
         $delStmt = $this->conn2->prepare("delete from master_newsletter_articles where master_newsletter_id=?") or die($this->conn2->error);
         $delStmt->bind_param('i', $id) or die($this->conn2->error);
@@ -2552,11 +2552,17 @@ function migrateMasterNewsLetter() {
         //echo 'test'; exit;
         $masterNewsLetterArticleRst = $this->conn->query("select * from master_newsletter_articles where master_newsletter_id=$id");
         while (($masterNewsLetterArticleRow = $masterNewsLetterArticleRst->fetch_assoc())) {
-
-            $masterNewsLetterArticleInsertStmt = $this->conn2->prepare("insert into master_newsletter_articles  set master_newsletter_id=?,article_id=?,is_deleted=?,updated_at=?") or die($this->conn2->error);
-            $masterNewsLetterArticleInsertStmt->bind_param('iiis', $masterNewsLetterArticleRow['master_newsletter_id'],  $masterNewsLetterArticleRow['article_id'], $masterNewsLetterArticleRow['is_deleted'], $masterNewsLetterArticleRow['updated_at']) or die($this->conn2->error);
+	if ($masterNewsLetterArticleRow['is_deleted']=='0'){
+            $masterNewsLetterArticleInsertStmt = $this->conn2->prepare("insert into master_newsletter_articles  set master_newsletter_id=?,article_id=?,sequence=?,is_deleted=?,updated_at=?") or die($this->conn2->error);
+            $masterNewsLetterArticleInsertStmt->bind_param('iiiis', $masterNewsLetterArticleRow['master_newsletter_id'],  $masterNewsLetterArticleRow['article_id'],$masterNewsLetterArticleRow['sequence'],$masterNewsLetterArticleRow['is_deleted'], $masterNewsLetterArticleRow['updated_at']) or die($this->conn2->error);
             $masterNewsLetterArticleInsertStmt->execute() or die($this->conn2->error);
             $masterNewsLetterArticleInsertStmt->close();
+	} else {
+           $delStmt = $this->conn2->prepare("delete from master_newsletter_articles where article_id=?");
+           $delStmt->bind_param('i', $masterNewsLetterArticleRow['article_id']);
+           $delStmt->execute();
+                        
+          } 
         }
 
        

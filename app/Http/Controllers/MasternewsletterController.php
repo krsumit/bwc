@@ -108,6 +108,7 @@ class MasternewsletterController extends Controller {
      * @return Response
      */
     public function show($id) {
+        // echo $_GET['margin']; exit;
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
@@ -120,6 +121,13 @@ class MasternewsletterController extends Controller {
         $channels = $this->rightObj->getAllowedChannels($rightId);
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
+        
+         $margin=1;
+        if(isset($_GET['margin'])){
+            $margin=$_GET['margin'];
+        }
+        $margin=110;
+        
         /* Right mgmt end */
         $latestArticles = DB::table('articles')
                         ->Leftjoin('article_author', 'articles.article_id', '=', 'article_author.article_id')
@@ -128,9 +136,11 @@ class MasternewsletterController extends Controller {
                     group_concat(authors.name) as name'))
                         ->where('status', 'P')
                         ->where('articles.channel_id',$currentChannelId)
-                        ->whereRaw("concat(publish_date,' ',publish_time)>= now() - INTERVAL 1 DAY")
+                        ->whereRaw("concat(publish_date,' ',publish_time)>= now() - INTERVAL ? DAY",[$margin])
                         ->whereRaw("articles.article_id not in (select article_id from master_newsletter_articles where master_newsletter_id=$id and is_deleted=0)")
-                        ->groupBy('articles.article_id')->get();
+                        ->groupBy('articles.article_id')
+			->orderBy('articles.publish_date','DESC')
+			->orderBy('articles.publish_time','DESC')->get();	
 
         $assignedArticles = DB::table('articles')
                 ->join('master_newsletter_articles', 'articles.article_id', '=', 'master_newsletter_articles.article_id')
@@ -142,17 +152,11 @@ class MasternewsletterController extends Controller {
                 ->where('master_newsletter_articles.is_deleted', '0')
                 ->where('articles.status', 'P')
                 ->groupBy('articles.article_id')
-                ->orderBy('master_newsletter_articles.updated_at', 'desc')
+                ->orderBy('master_newsletter_articles.sequence')
+		->orderBy('articles.publish_date','DESC')
+		->orderBy('articles.publish_time','DESC')
                 ->get();
-        ;
-
-
-
-
-        //echo count($latestArticles); exit;
-        //exit;
-
-        return view('maternewsletter.edit', compact('channels', 'newsletter', 'latestArticles', 'assignedArticles', 'currentChannelId'));
+        return view('maternewsletter.edit', compact('channels', 'newsletter', 'latestArticles', 'assignedArticles', 'currentChannelId','margin'));
     }
 
     /**
@@ -161,6 +165,21 @@ class MasternewsletterController extends Controller {
      * @param  int  $id
      * @return Response
      */
+    
+    /* */
+    
+    // Sorting articles within a newsletter
+    // @param int $id , Request  as $request
+    public function sortNewsletter($id,Request $request) {
+        $newLetterId=$id;
+        foreach($request->item as $k => $itm){
+            $newsLetterArticle=NewsletterArticles::find($itm);
+            $newsLetterArticle->sequence=$k+1;
+            $newsLetterArticle->updated_at = date('Y-m-d H:i:s');
+            $newsLetterArticle->save();
+        }
+    }   
+    //End end of sorting newsletter
     public function assign(Request $request) {
 
         foreach ($request->checkItem as $articleId) {
@@ -171,7 +190,20 @@ class MasternewsletterController extends Controller {
             $newArticle->save();
         }
         
-        exec("/usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=newsletter'");
+        $newsletter = Newsletter::find($request->newsletterId);
+        $newsletter->updated_at=date('Y-m-d H:i:s');
+        $newsletter->save();
+        
+        if($newsletter->channel_id=='1')
+            exec("/usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=newsletter'");
+        elseif($newsletter->channel_id=='2')
+             exec("/usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=newsletter'");
+        elseif($newsletter->channel_id=='5')
+             exec("/usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=newsletter'");
+	elseif($newsletter->channel_id=='3')
+             exec("/usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=newsletter'"); 
+
+
         //exec("/usr/bin/php /var/www/html/public/hotcron/cronjob.php 'section=newsletter'");
 
         Session::flash('message', 'Your article(s) assigned in newsletter.');
@@ -207,8 +239,8 @@ class MasternewsletterController extends Controller {
         
         $newsletter->channel_id = $request->channel_sel;
         $newsletter->title = $title;
-        $newsletter->save();
         if($request->deactivate){
+
             $newsletter->status=0;
             Session::flash('message', 'Your Newsletter has been updated successfully.');
         }
@@ -218,6 +250,7 @@ class MasternewsletterController extends Controller {
         }else{
             Session::flash('message', 'Your Newsletter has been updated successfully.');
         }
+        $newsletter->save();
         Session::flash('message', 'Your Newsletter has been updated successfully.');
         return redirect('/newsletter?channel=' . $currentChannelId);
     }
@@ -247,11 +280,27 @@ class MasternewsletterController extends Controller {
         if (isset($_GET['option'])) {
             $id = $_GET['option'];
         }
+        
         //echo $id ; exit;
         $na = NewsletterArticles::find($id);
         $na->is_deleted = 1;
         $na->updated_at = date('Y-m-d H:i:s');
         $na->save();
+        
+        $newsletter=Newsletter::find($na->master_newsletter_id);
+        $newsletter->updated_at=date('Y-m-d H:i:s');
+        $newsletter->update();
+        
+        if($newsletter->channel_id=='1')
+            exec("/usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=newsletter'");
+        elseif($newsletter->channel_id=='2')
+             exec("/usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=newsletter'");
+        elseif($newsletter->channel_id=='5')
+             exec("/usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=newsletter'");
+	elseif($newsletter->channel_id=='3')
+             exec("/usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=newsletter'"); 
+        
+        
         return 'success';
     }
     

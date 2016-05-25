@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Author;
 use App\Tag;
 use Illuminate\Http\Request;

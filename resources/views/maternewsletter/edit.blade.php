@@ -153,14 +153,22 @@
                 <div class="span12">
 
                     <div class="controls pull-right">
-                        <select name="selectBoxFilter" id="selectBoxFilter6" >
-                            <option value="Beige">24 Hours</option>
-<!--                            <option value="Black">48 Hours</option>-->
+                        <select name="daysfilter" id="daysfilter" >
+                            <option value="1" @if($margin==1) selected="selected" @endif >24 Hours</option>
+                            <option value="2" @if($margin==2) selected="selected" @endif >2 Days</option>
+                            <option value="3" @if($margin==3) selected="selected" @endif >3 Days</option>
+                            <option value="5" @if($margin==5) selected="selected" @endif >5 Days</option>
+                            <option value="7" @if($margin==7) selected="selected" @endif >7 Days</option>
+                            <option value="15" @if($margin==15) selected="selected" @endif >15 Days</option>
+                            <option value="30" @if($margin==30) selected="selected" @endif >1 Month</option>
                         </select>
                     </div>
                     <script>
                         $().ready(function () {
-                            $("#selectBoxFilter6").select2();
+                            $("#daysfilter").select2();
+                            $("#daysfilter").change(function(){
+                                 window.location = '{{url("/newsletter/manage/".$newsletter->id)}}' + '?margin=' + $(this).attr("value").trim();
+                            });
                         });
                     </script>
 
@@ -176,7 +184,7 @@
                         </thead>
                         <tbody>
                              @foreach($latestArticles as $article)
-                            <tr class="gradeX">
+                            <tr class="gradeX" >
                                 <td>{{$article->article_id}}</a></td>
                                 <td>{{$article->title}} </td>
                                 <td class="center">{{$article->publish_date}}</td>
@@ -197,8 +205,9 @@
                 $(document).ready(function () {
                     $('#tableSortable2, #tableSortableRes, #tableSortableResMed').dataTable({
                         "sPaginationType": "bootstrap",
+                        "iDisplayLength": 50,
                          "aaSorting": [],
-                        "aoColumnDefs": [{"bSortable": false, "aTargets": [4]}],
+                        "aoColumnDefs": [{"bSortable": false, "aTargets": [4]}],    
                         "fnInitComplete": function () {
                             $(".dataTables_wrapper select").select2({
                                 dropdownCssClass: 'noSearch'
@@ -257,7 +266,7 @@
                         </thead>
                         <tbody>
                             @foreach($assignedArticles as $article)
-                            <tr class="gradeX">
+                            <tr class="gradeX" id="item_<?php echo $article->asigned_id;?>">
                                 <td>{{$article->article_id}}</a></td>
                                 <td>{{$article->title}} </td>
                                 <td class="center">{{$article->publish_date}}</td>
@@ -276,6 +285,7 @@
                 $(document).ready(function () {
                     $('#tableSortable, #tableSortableRes, #tableSortableResMed').dataTable({
                         "sPaginationType": "bootstrap",
+                        "iDisplayLength": 50,
                         "aaSorting": [],
                         "aoColumnDefs": [{"bSortable": false, "aTargets": [4]}],
                         "fnInitComplete": function () {
@@ -323,6 +333,31 @@
                 }
                 
             </script>
+            
+            <script>
+
+//alert(1);
+  $("#tableSortable tbody").sortable({
+      appendTo: "parent",
+      helper: "clone",
+      update: function (event, ui) {
+        //alert($(this).html());
+        var data = $(this).sortable('serialize');
+        //alert(data);    
+        // POST to server using $.post or $.ajax
+                $.ajax({
+                    data: data,
+                    type: 'POST',
+                        url: '{{ url("/newsletter/sort/".$newsletter->id)}}'
+                });
+        
+    }
+  }).disableSelection();
+
+  //alert(2);
+</script>
+
+
         </div>
 
         </div>

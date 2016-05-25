@@ -1711,7 +1711,11 @@
                                         <span>Delete</span>
                                     </button>
                                     <input type="checkbox" class="toggle">
-                                     <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_article')}}')">Need to crop images? Click here</a>
+                                     <div style="float:right;">       
+                                        <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_article')}}')">Need to crop images? Click here</a>
+                                        <br>
+                                        <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/resize/crop')}}?dimension={{config('constants.dimension_article')}}')">Need to resize images? Click here</a>
+                                    </div>
                                     <!-- The global file processing state -->
                                     <span class="fileupload-process"></span>
                                 </div>

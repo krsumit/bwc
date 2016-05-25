@@ -15,6 +15,7 @@ class VerifyCsrfToken extends BaseVerifier
         'api/*',
 		'video/*',
 		'video*',
+		'newsletter/sort/*'
     ];
    
     public function handle($request,Closure $next)
