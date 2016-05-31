@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 use Redirect;
+use App\Category;
 use Illuminate\Http\Request;
 use DB;
 use App\Right;
@@ -12,7 +13,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 
-class TopicsController extends Controller
+class TopicCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -27,34 +28,32 @@ class TopicsController extends Controller
     public function index()
     {   
         /* Right mgmt start */
-        $rightId = 69;
+        $rightId = 85;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
         /* Right mgmt end */ 
-       $query = DB::table('topics');
-       $query->Leftjoin('topic_category','topics.category_id','=','topic_category.id');
-       $query->select('topics.topic','topics.id','topics.created_at','topics.updated_at','topic_category.name');
+       $query = DB::table('topic_category');
+ 
        if(isset($_GET['keyword'])){
             $queryed = $_GET['keyword'];
-                $query->where('topics.topic', 'LIKE', '%'.$queryed.'%');
+                $query->where('topic_category.name', 'LIKE', '%'.$queryed.'%');
 	
         }
-        
-        $query->where('valid','=','1');
-        $query->orderby('topics.updated_at','desc');
-        $topics=$query->paginate(config('constants.recordperpage'));
-        return view('topic.topic',compact('topics'));
+        $query->where('is_deleted','=','0');
+        $query->orderby('updated_at','desc');
+        $categories=$query->paginate(config('constants.recordperpage'));
+        return view('topic.category',compact('categories'));
     }
  
 
     
     public function create()
     {
-        $rightId = 69;
+        $rightId = 85;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
-        $categories=TopicCategory::where('is_deleted','=','0')->get();
-        return view('topic.create',compact('categories'));
+        
+        return view('topic.category_create');
        
     }
 
@@ -67,16 +66,14 @@ class TopicsController extends Controller
     public function store(Request $request)
     {
         
-        $rightId = 69;
+        $rightId = 85;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
-        
-        $topic = new Topic();
-        $topic->topic=$request->title;
-        $topic->category_id=$request->category;
-        $topic->save();
-        Session::flash('message', 'Topic created sucessfully.');
-        return Redirect::to('topics');
+        $topicCategory = new TopicCategory();
+        $topicCategory->name=$request->title;
+        $topicCategory->save();
+        Session::flash('message', 'Topic category created sucessfully.');
+        return Redirect::to('topic/category/list');
        
        
     }
@@ -89,12 +86,13 @@ class TopicsController extends Controller
      */
     public function show($id)
     {
-        $rightId = 69;
+        $rightId = 85;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
-        $categories=TopicCategory::where('is_deleted','=','0')->get();
-        $topic=Topic::find($id);
-        return view('topic.edit',compact('categories','topic'));
+        $category=TopicCategory::find($id);
+        return view('topic.category_edit',compact('category'));
+
+        
     }
 
    
@@ -107,17 +105,14 @@ class TopicsController extends Controller
      */
     public function update(Request $request)
     {
-         $rightId = 69;
+         $rightId = 85;
          if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
-         
-        $topic =Topic::find($request->id);
-        $topic->topic=$request->title;
-        $topic->category_id=$request->category;
-        $topic->save();
-        
-         Session::flash('message', 'Topic updated sucessfully.');
-         return Redirect::to('topics');
+         $category=TopicCategory::find($request->category_id);
+         $category->name=$request->title;
+         $category->update();
+         Session::flash('message', 'Topic category updated sucessfully.');
+         return Redirect::to('topic/category/list');
 
     }
 
@@ -129,7 +124,7 @@ class TopicsController extends Controller
      */
     public function destroy()
     {
-         $rightId = 69;
+         $rightId = 85;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
         if (isset($_GET['option'])) {
@@ -141,9 +136,9 @@ class TopicsController extends Controller
         $delArr = explode(',', $id);
         //fwrite($asd, " Del Arr Count: ".count($delArr)." \n\n");
         foreach ($delArr as $d) {
-             $topic=Topic::find($d);
-             $topic->valid=0;
-             $topic->save();
+             $category=TopicCategory::find($d);
+             $category->is_deleted=1;
+             $category->save();
         }
       return 'success';
     }

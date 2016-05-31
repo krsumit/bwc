@@ -178,6 +178,21 @@ class MasternewsletterController extends Controller {
             $newsLetterArticle->updated_at = date('Y-m-d H:i:s');
             $newsLetterArticle->save();
         }
+        
+        
+        $newsletter=Newsletter::find($newLetterId);
+        $newsletter->updated_at=date('Y-m-d H:i:s');
+        $newsletter->update();
+        
+        if($newsletter->channel_id=='1')
+            exec("/usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=newsletter'");
+        elseif($newsletter->channel_id=='2')
+             exec("/usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=newsletter'");
+        elseif($newsletter->channel_id=='5')
+             exec("/usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=newsletter'");
+	elseif($newsletter->channel_id=='3')
+             exec("/usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=newsletter'"); 
+        
     }   
     //End end of sorting newsletter
     public function assign(Request $request) {

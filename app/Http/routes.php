@@ -90,6 +90,25 @@ Route::get('profile', ['middleware' => 'auth',   'uses' => 'ArticlesController@c
 /*
  *  Delete Image from Create Article Form - Ajax Request
  */
+
+/*
+Topic  urls
+ */
+Route::get('topics/create', ['middleware' => 'auth',   'uses' => 'TopicsController@create']);
+Route::post('topics', ['middleware' => 'auth',   'uses' => 'TopicsController@store' ]);
+Route::get('topics/edit/{id}','TopicsController@show');
+Route::post('topics/update', ['middleware' => 'auth',   'uses' => 'TopicsController@update' ]);
+Route::get('topics', ['middleware' => 'auth',   'uses' => 'TopicsController@index']);
+Route::match(['get', 'post'], 'topics/delete', ['middleware' => 'auth', 'uses' => 'TopicsController@destroy']);
+
+Route::get('topic/category/create', ['middleware' => 'auth',   'uses' => 'TopicCategoryController@create']);
+Route::post('topic/category', ['middleware' => 'auth',   'uses' => 'TopicCategoryController@store' ]);
+Route::get('topic/category/edit/{id}','TopicCategoryController@show');
+Route::post('article/category/update', ['middleware' => 'auth',   'uses' => 'TopicCategoryController@update' ]);
+Route::get('topic/category/list', ['middleware' => 'auth',   'uses' => 'TopicCategoryController@index']);
+Route::match(['get', 'post'], 'topic/category/delete', ['middleware' => 'auth', 'uses' => 'TopicCategoryController@destroy']);
+
+/*
 Route::match(['get', 'post'], 'article/delPhotos', ['as' => 'article/delPhotos', 'uses' => 'PhotosController@destroy']);
 /*
  *  Delete article using ajax

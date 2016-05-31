@@ -353,7 +353,7 @@
                 </div>
             </li>
             @endif
-            @if(count(array_diff(array('68','69','70','75'), Session::get('user_rights'))) != count(array('68','69','70','75')))	 	
+            @if(count(array_diff(array('68','69','70','75','85'), Session::get('user_rights'))) != count(array('68','69','70','75','85')))	 	
             <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon cog"></i>
@@ -373,7 +373,12 @@
                         @endif
                         @if(in_array('69',Session::get('user_rights')))
                         <li>
-                            <a href="#">Topic Master</a>
+                            <a href="/topics">Topic Master</a>
+                        </li>
+                        @endif
+                        @if(in_array('85',Session::get('user_rights')))
+                        <li>
+                            <a href="/topic/category/list">Topic Category</a>
                         </li>
                         @endif
                         @if(in_array('70',Session::get('user_rights')))
