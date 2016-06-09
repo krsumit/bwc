@@ -19,6 +19,8 @@ class AlbumController extends Controller
 {
     private $rightObj;
     public function __construct() {
+        $this->middleware('auth');
+
          $this->rightObj= new Right();
     
     }
@@ -265,10 +267,12 @@ class AlbumController extends Controller
         $photos=DB::table('photos')
                 ->where('owned_by','album')
                 ->where('valid','1')
-                ->where('owner_id',$id)->get();
+                ->where('owner_id',$id)
+                ->orderBy('sequence')->get();
        $tags=  json_encode(DB::table('tags')
                 ->select('tags_id as id','tag as name')
                 ->whereIn('tags_id',explode(',',$album->tags))->get());
+       
         $uid = Session::get('users')->id;
         
          /* Right mgmt start */
@@ -419,4 +423,23 @@ class AlbumController extends Controller
         }
         return;
     }
+    
+       
+    public function sortImage($id,Request $request){
+        
+        foreach($request->row as $k => $itm){
+            $articlePhoto=Photo::find($itm);
+            $articlePhoto->sequence=$k+1;
+            $articlePhoto->updated_at = date('Y-m-d H:i:s');
+            $articlePhoto->save();
+        }
+        
+         DB::table('album')
+            ->where('id', $id)
+            ->update(['updated_at' => date('Y:m:d h:i:s')]);
+         
+    }
+    
+    
+    
 }

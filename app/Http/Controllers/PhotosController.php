@@ -13,6 +13,14 @@ use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 class PhotosController extends Controller
 {
+    
+    
+    
+    
+    public function __construct() {
+        $this->middleware('auth');
+    
+    }
     /**
      * Display a listing of the resource.
      *

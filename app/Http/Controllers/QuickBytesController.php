@@ -22,7 +22,8 @@ class QuickBytesController extends Controller
     
     private $rightObj;
     public function __construct() {
-         $this->rightObj= new Right();
+        $this->middleware('auth');
+        $this->rightObj= new Right();
     } 
     /**
      * Display a listing of the resource.
@@ -659,5 +660,22 @@ class QuickBytesController extends Controller
         }
         return;
     }
+    
+    public function sortImage($id,Request $request){
+        
+        foreach($request->row as $k => $itm){
+            $articlePhoto=Photo::find($itm);
+            $articlePhoto->sequence=$k+1;
+            $articlePhoto->updated_at = date('Y-m-d H:i:s');
+            $articlePhoto->save();
+        }
+        
+         DB::table('quickbyte')
+            ->where('id', $id)
+            ->update(['updated_at' => date('Y:m:d h:i:s')]);
+         
+    }
+    
+    
     
 }

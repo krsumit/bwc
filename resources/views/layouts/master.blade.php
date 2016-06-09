@@ -36,6 +36,7 @@
 <!-- <script type="text/javascript" src="{{ elixir('output/login-one.js') }}"></script> -->
 
 <script type="text/javascript" src="{{ asset('js/bootstrap/bootstrap.min.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/bootstrap/bootstrap-dialog.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/modernizr.custom.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/jquery.pnotify.min.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/plugins/less-1.3.1.min.js') }}"></script>

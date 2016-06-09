@@ -1446,7 +1446,8 @@
 
     <div class="container-fluid">
 
-        <div class="form-legend" id="photos-videos">Photos & Videos</div>
+        <div class="form-legend" id="photos-videos">Photos & Videos  
+                </div>
 
         <!--Tabs begin-->
 
@@ -2016,7 +2017,43 @@
     </div>
     <!--	end container-->
     {!! Form::close() !!}
+<a href="javascript:;" onclick="showpopup()">Test popu</a>
+            <script>
+               function editImageDetail(){
+//                   alert(1);
+//                          BootstrapDialog.alert('I want banana!');
+                    
+                   /* BootstrapDialog.show({
+                    title: 'Manipulating Buttons',
+                    message: function(dialog) {
+                        var $content = $('<div><input typ="text" name="imagetitle" id="imagetitle" /><button class="btn btn-success">Revert button status right now.</button></div>');
+                        var $footerButton = dialog.getButton('btn-1');
+                        $content.find('button').click({$footerButton: $footerButton}, function(event) {
+                            event.data.$footerButton.enable();
+                            event.data.$footerButton.stopSpin();
+                            dialog.setClosable(true);
+                        });
 
+                        return $content;
+                    },
+                    buttons: [{
+                        id: 'btn-1',
+                        label: 'Click to disable and spin.',
+                        action: function(dialog) {
+                            var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                            $button.disable();
+                            $button.spin();
+                            dialog.setClosable(false);
+                        }
+                    }]
+                }); */    
+        
+                BootstrapDialog.show({
+                    message: $('<div class="shekhartest"></div>').load('http://localhost:8080/login.html')
+                });
+            }
+            //98768 april-4  98769 feb -29
+            </script>
 </div>
 
 <!--</body>
@@ -2101,6 +2138,12 @@
     <td colspan="1">Photograph By</td>
     <td colspan="3"><input type="text" name="photographby[{%=file.name%}]"/></textarea></td>    
     </tr>
+
+    <tr>
+    <td colspan="1">Title</td>
+    <td colspan="3"><input type="text" name="imagetitle[{%=file.name%}]"/></td>    
+    </tr>
+    
     </table>   
     </td>    
     </tr>
@@ -2160,4 +2203,5 @@
 
 
 </script>
+
 @stop

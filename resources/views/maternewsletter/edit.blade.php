@@ -334,8 +334,7 @@
                 
             </script>
             
-            <script>
-
+<script>
 //alert(1);
   $("#tableSortable tbody").sortable({
       appendTo: "parent",
@@ -354,7 +353,6 @@
     }
   }).disableSelection();
 
-  //alert(2);
 </script>
 
 

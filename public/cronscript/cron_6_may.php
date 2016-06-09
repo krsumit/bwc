@@ -52,9 +52,6 @@ class Cron {
                 $this->migratequotesCategory();
                 break;
 
-	   case 'Sponsored':
-                $this->migrateSponsored();
-                break;
             case 'tipstagcombinations':
                 $this->migratetipstagComb();
                 break;
@@ -108,7 +105,8 @@ class Cron {
                 $this->migrateCampaing();
                 break;
         endswitch;
-		
+		$key= md5(date('dmY').'businessworld');
+		//echo file_get_contents('http://businessworld.in/create-json/'.$key);
         $_SESSION['message'] = $this->message;
     }
 
@@ -289,8 +287,8 @@ class Cron {
             while ($photo = $photos->fetch_object()) {
                 //print_r($photo);exit;
                 $photoInsStmt = $this->conn2->prepare("insert into photo_shoot_photos set photo_shoot_id=?,photo_shoot_photo_name=?,photo_shoot_photo_url=?"
-                        . ",photo_shoot_photo_title=?,photo_by=?,photo_shoot_photo_description=?,sequence=?");
-                $photoInsStmt->bind_param('isssssi', $id, $photo->photopath, $photo->imagefullPath, $photo->title, $photo->photo_by, $photo->description,$photo->sequence);
+                        . ",photo_shoot_photo_title=?,photo_by=?,photo_shoot_photo_description=?");
+                $photoInsStmt->bind_param('isssss', $id, $photo->photopath, $photo->imagefullPath, $photo->title, $photo->photo_by, $photo->description);
                 $photoInsStmt->execute();
             }
         } else {
@@ -308,9 +306,9 @@ class Cron {
                 while ($photo = $photos->fetch_object()) {
                     //print_r($photo);exit;
                     $photoInsStmt = $this->conn2->prepare("insert into photo_shoot_photos set photo_shoot_id=?,photo_shoot_photo_name=?,photo_shoot_photo_url=?"
-                            . ",photo_shoot_photo_title=?,photo_by=?,photo_shoot_photo_description=?,sequence=?") or die($this->conn2->error);
+                            . ",photo_shoot_photo_title=?,photo_by=?,photo_shoot_photo_description=?") or die($this->conn2->error);
                     ;
-                    $photoInsStmt->bind_param('isssssi', $id, $photo->photopath, $photo->imagefullPath, $photo->title, $photo->photo_by, $photo->description,$photo->sequence) or die($this->conn2->error);
+                    $photoInsStmt->bind_param('isssss', $id, $photo->photopath, $photo->imagefullPath, $photo->title, $photo->photo_by, $photo->description) or die($this->conn2->error);
                     $photoInsStmt->execute() or die($this->conn2->error);
                 }
             }
@@ -673,27 +671,18 @@ class Cron {
                 $checkQuotesExistResultSet = $this->conn2->query("select quote_id,quote from channel_quote where quote_id=$quotesId");
                 if ($checkQuotesExistResultSet->num_rows > 0) { //echo 'test';exit;
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
-		if($quotesRow['valid']==1){
-
-                    $quotesUpdateStmt = $this->conn2->prepare("update channel_quote set quote=?,quote_description=?,q_author_id=?,q_tags=?,quotes_image=?,valid=?,quote_update_at=?,quote_created_at=? where quote_id=?") or die($this->conn->error);
-                    $quotesUpdateStmt->bind_param('ssississi', $quotesRow['quote'], $quotesRow['description'], $quotesRow['q_category_id'], $quotesRow['q_tags'],$quotesRow['quotes_image'], $quotesRow['valid'], $quotesRow['updated_at'], $quotesRow['created_at'], $quotesId) or die($this->conn->error);
+                    $quotesUpdateStmt = $this->conn2->prepare("update channel_quote set quote=?,quote_description=?,q_author_id=?,q_tags=?,valid=?,quote_update_at=?,quote_created_at=? where quote_id=?") or die($this->conn->error);
+                    $quotesUpdateStmt->bind_param('ssisissi', $quotesRow['quote'], $quotesRow['description'], $quotesRow['q_category_id'], $quotesRow['q_tags'], $quotesRow['valid'], $quotesRow['updated_at'], $quotesRow['created_at'], $quotesId) or die($this->conn->error);
                     //echo $this->conn2->error;exit;
                     $quotesUpdateStmt->execute()or die($this->conn->error);
                     //print_r($tagUpdateStmt);exit;
                     //echo $eventUpdateStmt->affected_rows;exit;
                     if ($quotesUpdateStmt->affected_rows)
                         $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
-		   }else{
-
-			$delStmt = $this->conn2->prepare("delete from channel_quote where quote_id=?");
-                        $delStmt->bind_param('i', $quotesId);
-                        $delStmt->execute();
-			}
                 }else {//echo 'goint to insert';exit;
-			
-                    $quotesInsertStmt = $this->conn2->prepare("insert into channel_quote set quote_id=?,quote=?,quote_description=?,q_author_id=?,q_tags=?,quotes_image=?,valid=?,quote_update_at=?,quote_created_at=?");
+                    $quotesInsertStmt = $this->conn2->prepare("insert into channel_quote set quote_id=?,quote=?,quote_description=?,q_author_id=?,q_tags=?,valid=?,quote_update_at=?,quote_created_at=?");
                     //echo $this->conn2->error; exit;
-                    $quotesInsertStmt->bind_param('issississ', $quotesRow['quote_id'], $quotesRow['quote'], $quotesRow['description'], $quotesRow['q_category_id'], $quotesRow['q_tags'],$quotesRow['quotes_image'],$quotesRow['valid'], $quotesRow['updated_at'], $quotesRow['created_at']);
+                    $quotesInsertStmt->bind_param('issisiss', $quotesRow['quote_id'], $quotesRow['quote'], $quotesRow['description'], $quotesRow['q_category_id'], $quotesRow['q_tags'], $quotesRow['valid'], $quotesRow['updated_at'], $quotesRow['created_at']);
                     //print_r($tipstagcombInsertStmt);exit;
                     //echo $tipstagcombInsertStmt->affected_rows;exit;
                     $quotesInsertStmt->execute();
@@ -1396,8 +1385,8 @@ class Cron {
             while ($photo = $photos->fetch_object()) {
                 //print_r($photo);exit;
                 $photoInsStmt = $this->conn2->prepare("insert into quick_bytes_photos set quick_byte_id=?,quick_byte_photo_name=?"
-                        . ",quick_byte_photo_title=?,quick_byte_photo_description=?,photo_by=?,sequence=?");
-                $photoInsStmt->bind_param('issssi', $id, $photo->photopath, $photo->title, $photo->description, $photo->photo_by,$photo->sequence);
+                        . ",quick_byte_photo_title=?,quick_byte_photo_description=?,photo_by=?");
+                $photoInsStmt->bind_param('issss', $id, $photo->photopath, $photo->title, $photo->description, $photo->photo_by);
                 $photoInsStmt->execute();
             }
         } else {
@@ -1406,8 +1395,8 @@ class Cron {
             while ($photo = $photos->fetch_object()) {
                 //print_r($photo);exit;
                 $photoInsStmt = $this->conn2->prepare("insert into quick_bytes_photos set quick_byte_id=?,quick_byte_photo_name=?"
-                        . ",quick_byte_photo_title=?,quick_byte_photo_description=?,photo_by=?,sequence=?");
-                $photoInsStmt->bind_param('issssi', $id, $photo->photopath, $photo->title, $photo->description, $photo->photo_by,$photo->sequence);
+                        . ",quick_byte_photo_title=?,quick_byte_photo_description=?,photo_by=?");
+                $photoInsStmt->bind_param('issss', $id, $photo->photopath, $photo->title, $photo->description, $photo->photo_by);
                 $photoInsStmt->execute();
             }
         }
@@ -1520,8 +1509,7 @@ class Cron {
         $updatecorstmt->execute();
         $updatecorstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' article(s) inserted, ' . $_SESSION['noofupd'] . ' article(s) updated and ' . $_SESSION['noofdel'] . ' article(s) deleted.</h5>';
-        $key= md5(date('dmY').'businessworld');
-	echo file_get_contents('http://businessworld.in/create-json/'.$key);
+        exit;
     }
 
     function migrateFeature() {
@@ -1772,9 +1760,9 @@ class Cron {
             $articleImageResultset = $this->conn->query("select * from photos where owned_by='article' and owner_id=$articleId and valid='1'");
             while ($imageRow = $articleImageResultset->fetch_assoc()) {
                 $imInsertStmt = $this->conn2->prepare("insert into article_images set article_id=?,photopath=?,image_url=?,image_title=?"
-                        . ",image_source_name=?,image_source_url=?,photo_by=?,image_status=?,sequence=?");
+                        . ",image_source_name=?,image_source_url=?,photo_by=?,image_status=?");
                 $status = ($imageRow['active'] == '1') ? 'enabled' : 'disabled';
-                $imInsertStmt->bind_param('isssssssi', $imageRow['owner_id'], $imageRow['photopath'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $imageRow['photo_by'], $status,$imageRow['sequence']);
+                $imInsertStmt->bind_param('isssssss', $imageRow['owner_id'], $imageRow['photopath'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $imageRow['photo_by'], $status);
                 $imInsertStmt->execute();
                 $imInsertStmt->close();
             }
@@ -1790,9 +1778,9 @@ class Cron {
             $articleImageResultset = $this->conn->query("select * from photos where owned_by='article' and owner_id=$articleId and valid='1'");
             while ($imageRow = $articleImageResultset->fetch_assoc()) {
                 $imInsertStmt = $this->conn2->prepare("insert into article_images set article_id=?,photopath=?,image_url=?,image_title=?"
-                        . ",image_source_name=?,image_source_url=?,photo_by=?,image_status=?,sequence=?");
+                        . ",image_source_name=?,image_source_url=?,photo_by=?,image_status=?");
                 $status = ($imageRow['active'] == '1') ? 'enabled' : 'disabled';
-                $imInsertStmt->bind_param('isssssssi', $imageRow['owner_id'], $imageRow['photopath'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $imageRow['photo_by'], $status,$imageRow['sequence']);
+                $imInsertStmt->bind_param('isssssss', $imageRow['owner_id'], $imageRow['photopath'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $imageRow['photo_by'], $status);
                 $imInsertStmt->execute();
                 $imInsertStmt->close();
             }
@@ -1832,7 +1820,6 @@ class Cron {
     // Sponsored Post
 
     function migrateSponsored() {
-        //echo 'sumit';exit; 
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
@@ -1844,8 +1831,8 @@ class Cron {
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $sponsoredResults = $this->conn->query("SELECT *  FROM sponsoredposts  where channel_id = 1");
-        //echo $sponsoredResults->num_rows ;exit; 
+        $sponsoredResults = $this->conn->query("SELECT *  FROM sponsoredposts where channel_id ='1' $condition");
+        //echo $articleResults->num_rows ;exit; 
         if ($sponsoredResults->num_rows > 0) {
             // exit;
 
@@ -1861,7 +1848,7 @@ class Cron {
             while ($sponsoredRow = $sponsoredResults->fetch_assoc()) {
                 $id = $sponsoredRow['article_id'];
                 $checkSponsoredResult = $this->conn2->query("select title from sponsoredposts where id=$id");
-                //echo $checkSponsoredResult->num_rows.'-' ;exit;
+                //echo $checkArticleResult->num_rows.'-' ;exit;
                 if ($checkSponsoredResult->num_rows > 0) {
                     $checkSponsoredResult->close();
                     if ($sponsoredRow['status'] == 'P') {
@@ -1890,18 +1877,19 @@ class Cron {
                     }
                 } else {
                     if ($sponsoredRow['status'] == 'P') {
-                        
-                         $pubDate = $sponsoredRow['publish_date'] . ' ' . $sponsoredRow['publish_time'];
-                         $status = 'published';
-                        //echo 'sumit insert'; exit;
-                        $sponsoredpostsInsertStmt = $this->conn2->prepare("insert sponsoredposts set sponsoredposts_id=?,sponsoredposts_title=?,sponsoredposts_description=?,sponsoredposts_summary=?,sponsoredposts_type=?,sponsoredposts_published_date=?,sponsoredposts_status=?,important_sponsoredposts=?");
-                        $sponsoredpostsInsertStmt->bind_param('issssssi', $sponsoredRow['id'], $sponsoredRow['title'], $sponsoredRow['description'], $sponsoredRow['summary'], $sponsoredRow['event_id'],$pubDate, $status, $sponsoredRow['feature_this']);
+                        $pubDate = $sponsoredRow['publish_date'] . ' ' . $sponsoredRow['publish_time'];
+                        $status = 'published';
+                        $sponsoredpostsInsertStmt = $this->conn2->prepare("insert sponsoredposts set sponsoredposts_id=?,sponsoredposts_title=?,sponsoredposts_description=?,sponsoredposts_summary=?,"
+                                . "sponsoredposts_type=?,sponsoredposts_published_date=?,sponsoredposts_status=?"
+                                . ",important_sponsoredposts=?");
+                        $sponsoredpostsInsertStmt->bind_param('issssssi', $sponsoredRow['id'], $sponsoredRow['title'], $articleRow['description'], $sponsoredRow['summary'], $sponsoredRow['event_id']
+                                , $pubDate, $status, $sponsoredRow['feature_this']);
                         $sponsoredpostsInsertStmt->execute();
-                        //print_r($sponsoredpostsInsertStmt);exit;
-                        // echo $sponsoredpostsInsertStmt->insert_id;exit;    
+                        //print_r($articleInsertStmt);exit;
+                        // echo $articleInsertStmt->insert_id;exit;    
                         if ($sponsoredpostsInsertStmt->insert_id) {
                             $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
-                            $this->callSponsoredRelatedContent($sponsoredpostsInsertStmt->insert_id, 1);
+                            $this->callSponsoredRelatedContent($sponsoredpostsInsertStmt->insert_id, 1, $condition);
                         }
                     }
                 }
@@ -1918,29 +1906,26 @@ class Cron {
         exit;
     }
 
-    function callSponsoredRelatedContent($SponsoredId, $isNew = 0) {
-        $this->migrateSponsoredImage($SponsoredId, $isNew);
-        $this->migrateSponsoredVideo($SponsoredId, $isNew);
-        $this->migrateSponsoredCategory($SponsoredId);
+    function callSponsoredRelatedContent($SponsoredId, $isNew = 0, $condition) {
+        $this->migrateSponsoredImage($SponsoredId, $isNew, $condition);
+        $this->migrateSponsoredVideo($SponsoredId, $isNew, $condition);
+        $this->migrateSponsoredCategory($SponsoredId, $condition);
     }
 
-    function migrateSponsoredImage($SponsoredId, $isNew = 0) {
+    function migrateSponsoredImage($SponsoredId, $isNew = 0, $condition) {
         if ($isNew == '1') {
-            //echo 'sumit'.$SponsoredId ; exit;
             $sponsoredpostImageResultset = $this->conn->query("select * from photos where owned_by='sponsoredpost' and owner_id=$SponsoredId and valid='1'");
-            //echo $sponsoredpostImageResultset->num_rows ;exit;
             while ($imageRow = $sponsoredpostImageResultset->fetch_assoc()) {
-                //print_r($imageRow);
-                $imInsertStmt = $this->conn2->prepare("insert into sponsoredposts_images set sponsoredposts_id=?,image_url=?,image_title=?,image_source_name=?,image_source_url=?");
+                $imInsertStmt = $this->conn2->prepare("insert into sponsoredposts_images set sponsoredposts_id=?,image_url=?,image_title=?"
+                        . ",image_source_name=?,image_source_url=?,image_status=?");
                 $status = ($imageRow['active'] == '1') ? 'enabled' : 'disabled';
-                $imInsertStmt->bind_param('issss', $imageRow['owner_id'], $imageRow['photopath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url']);
+                $imInsertStmt->bind_param('isssss', $imageRow['owner_id'], $imageRow['photopath'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $status);
                 $imInsertStmt->execute();
-                //print_r($imInsertStmt);exit;
                 $imInsertStmt->close();
             }
         } else {
 
-            $checkImResult = $this->conn->query("select * from photos where owned_by='sponsoredpost' and owner_id=$SponsoredId ");
+            $checkImResult = $this->conn->query("select * from photos where owned_by='sponsoredpost' and owner_id=$SponsoredId $condition");
 
             if ($checkImResult->num_rows > 0) {
                 $checkImResult->close();
@@ -1949,9 +1934,10 @@ class Cron {
 
                 $sponsoredImageResultset = $this->conn->query("select * from photos where owned_by='sponsoredpost' and owner_id=$SponsoredId and valid='1'");
                 while ($imageRow = $sponsoredImageResultset->fetch_assoc()) {
-                    $imInsertStmt = $this->conn2->prepare("insert into article_images set article_id=?,image_url=?,image_title=?,image_source_name=?,image_source_url=?,image_status=?");
+                    $imInsertStmt = $this->conn2->prepare("insert into article_images set article_id=?,image_url=?,image_title=?"
+                            . ",image_source_name=?,image_source_url=?,image_status=?");
                     $status = ($imageRow['active'] == '1') ? 'enabled' : 'disabled';
-                    $imInsertStmt->bind_param('isssss', $imageRow['owner_id'], $imageRow['photopath'], $imageRow['title'], $imageRow['source_url'], $status);
+                    $imInsertStmt->bind_param('isssss', $imageRow['owner_id'], $imageRow['photopath'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $status);
                     $imInsertStmt->execute();
                     $imInsertStmt->close();
                 }
@@ -1959,7 +1945,7 @@ class Cron {
         }
     }
 
-    function migrateSponsoredCategory($sponsId ) {
+    function migrateSponsoredCategory($sponsId, $condition) {
         $catResultSet = '';
         $this->conn2->query("delete from sponsoredposts_category where sponsoredposts_id=$sponsId");
 
@@ -1986,7 +1972,7 @@ class Cron {
         }
     }
 
-    function migrateSponsoredVideo($SponsoredId, $isNew = 0 ) {
+    function migrateSponsoredVideo($SponsoredId, $isNew = 0, $condition) {
         //$articleId= 71; 
         //$isNew = 1;
         if ($isNew == '1') {
@@ -2309,8 +2295,7 @@ class Cron {
         //echo date('d:m:y H:i:s'); exit;
         //$template=file_get_contents('editorial.html');
         //$path=$_SERVER['DOCUMENT_ROOT'].'/'.'cronscript/'; 
-       // $template = file_get_contents('/var/www/html/bwcms2aw/public/cronscript/editorial.html');
-       $template = file_get_contents('/var/www/html/public/cronscript/editorial.html');
+        $template = file_get_contents('/var/www/html/bwcms2aw/public/cronscript/editorial.html');
         //echo 'test'; exit;
         $start_published_date = date('Y-m-d H:i:s', strtotime("last Sunday") - 604800); //echo '<br>';
         $end_published_date = date('Y-m-d H:i:s', strtotime("last Saturday") + 86399);  //echo '<br>';
@@ -2385,10 +2370,10 @@ where authors.author_type_id='2' order by ar.cs desc;
         $from_email = "reports@bwbusinessworld.com";
         $sub = '=?UTF-8?B?' . base64_encode("Weekly Report – Article Contribution to Digital") . '?=';
         $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
-        //anurag.batra@businessworld.in,sudipta@businessworld.in,
-
-        mail("anurag.batra@businessworld.in,sudipta@businessworld.in", $sub, $mailbody, $headers);
+        //anurag.batra@businessworld.in,yamini@businessworld.in,sudipta@businessworld.in,anurag.batra@businessworld.in,yamini@businessworld.in,
+        mail("anurag.batra@businessworld.in,yamini@businessworld.in,sudipta@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
     }
+
     // Debate Video
     //video module
 

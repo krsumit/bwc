@@ -31,7 +31,7 @@ function searchRelated() {
                     selectedck='disabled="diabled" checked="checked"';
                 }
                 $('.relaed_image_box').append('<div class="related_image_element">\n\
-<img  src="'+imgdata.image_url+'"/ style="width:90px; height:63px; float:left;">\n\
+<img  src="'+imgdata.image_url+'"/ style="width:90px; height:63px; float:left;" alt="'+imgdata.title+'">\n\
 <input type="checkbox" '+selectedck+' class="inline_image" id="'+imgdata.image_name+'" title="'+imgdata.photo_by+'" name="relatedImages[]" value="'+imgdata.image_id+'"/ ><div class="related-img-tag-name">'+imgdata.tag_name+'</div></div>');
                
             });
@@ -68,7 +68,7 @@ function relatedImageSelected(){
      //if($('#row'+$(this).val()).length==0){ 
      if($("tr[title='"+$(this).attr('id')+"']").length==0){
         $(this).attr('disabled', true);
-        list+='<tr id="row'+$(this).val()+'" title="'+$(this).attr('id')+'"><td><img src="'+$(this).siblings('img').attr('src')+'" alt="" /></td><td><input type="text" name="rimage['+$(this).val()+']" value="'+$(this).attr('title')+'"/></td><td class="center"><button type="button" onclick="removeRelated(\''+$(this).val()+'\')" class="btn btn-mini btn-danger">Dump</button></td></tr>';
+        list+='<tr id="row'+$(this).val()+'" title="'+$(this).attr('id')+'"><td><img src="'+$(this).siblings('img').attr('src')+'" alt="" /></td><td><div><small>Photo by</small><input type="text" name="rimage['+$(this).val()+']" value="'+$(this).attr('title')+'"/></div><div><small>Title</small><input type="text" name="rtitle['+$(this).val()+']" value="'+$(this).siblings('img').attr('alt')+'"/></idv></td><td class="center"><button type="button" onclick="removeRelated(\''+$(this).val()+'\')" class="btn btn-mini btn-danger">Dump</button></td></tr>';
     } 
    });
   // alert(list);
@@ -101,6 +101,18 @@ function removeRelated(id){
 
 function cropImage(url){
     window.open(url, "popupWindow", "width=1200,height=800,scrollbars=yes");
+}
+
+function editImageDetail(id,type){
+    if(type=== undefined){
+        type="aritcle";
+    }
+    
+    BootstrapDialog.show({
+                    title: 'Edit image detail',
+                    message: $('<div class="devest"></div>').load('/article/image/edit?id='+id+"&type="+type)
+                });
+                
 }
 
 

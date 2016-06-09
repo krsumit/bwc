@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -80,9 +79,12 @@ Route::get('article/list/{option}', ['middleware' => 'auth',   'uses' => 'Articl
 
 
 Route::post('article/update', ['middleware' => 'auth',   'uses' => 'ArticlesController@update' ]);
-Route::post('article/image/upload', ['middleware' => 'auth',   'uses' => 'ArticlesController@imageUpload' ]);
-Route::get('article/image/upload','ArticlesController@imageUpload');
+Route::post('article/image/upload', ['middleware' => 'auth','uses' => 'ArticlesController@imageUpload']);
+Route::get('article/image/upload',['middleware' => 'auth','uses' => 'ArticlesController@imageUpload']);
+Route::get('article/image/edit',['middleware' => 'auth','uses' => 'ArticlesController@imageEdit']);
+Route::post('article/image/update',['middleware' => 'auth','uses' => 'ArticlesController@storeImageDetail']);
 //Route::delete('article/image/upload', 'ArticlesController@imageUpload');
+Route::post('article/sort/{id}','ArticlesController@sortImage');
 Route::post('article', ['middleware' => 'auth',   'uses' => 'ArticlesController@store' ]);
 Route::get('article/publishscheduled','ArticlesController@publishScheduledArticle');
 Route::post('article/relatedimage', ['middleware' => 'auth',   'uses' => 'ArticlesController@relatedImage' ]);
@@ -400,6 +402,8 @@ Route::match(['get', 'post'], '/quickbyte/publish', ['as' => '/quickbyte/publish
 Route::get('quickbyte/{id}','QuickBytesController@show');
 Route::post('quickbyte/image/upload', ['middleware' => 'auth',   'uses' => 'ArticlesController@imageUpload' ]);
 Route::get('quickbyte/image/upload','ArticlesController@imageUpload');
+Route::post('quickbyte/sort/{id}','QuickBytesController@sortImage');
+
 
 /* Debate start here */
 Route::get('debate/create', ['middleware' => 'auth',   'uses' => 'DebateController@create']);
@@ -423,6 +427,7 @@ Route::match(['get', 'post'], '/album/publish', ['as' => '/album/publish', 'uses
 Route::get('album/{id}','AlbumController@show');
 Route::post('album/image/upload', ['middleware' => 'auth',   'uses' => 'AlbumController@imageUpload' ]);
 Route::get('album/image/upload','AlbumController@imageUpload');
+Route::post('album/sort/{id}','AlbumController@sortImage');
 /*Album routs end here */
 /*
  * Sponsored Post - Create, Published List, Deleted List

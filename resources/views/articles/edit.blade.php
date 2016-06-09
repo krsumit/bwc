@@ -1010,7 +1010,7 @@
                 <div class="controls ltopicsparentdiv">
                     <select multiple name="Ltopics[]" id="Ltopics">
                         @foreach($arrTopics as $topic)
-                        <option selected value="{{$topic->topic_id}}">{{$topic->topic}}</option>
+                        <option selected="selected" value="{{$topic->topic_id}}">{{$topic->topic}}</option>
                         @endforeach
                     </select>
                 </div>
@@ -1024,6 +1024,7 @@
                 //$("#Ltopics").pickList.empty();
                 //$('#genTopics').click(GTopics);
                 $("#genTopic").click(function() {
+                   // alert(1);
                 //function GTopics() {}
                 var token = $('input[name=_token]');
                         //alert($('#maxi').elrte('val'));
@@ -1047,22 +1048,26 @@
                                 var resplen = (data).length;
                                         var selectedarray = new Array();
                                         $('.ltopicsparentdiv').find("#Ltopics option:selected").each(function(){
-                                selectedarray.push($(this).val());
+                                selectedarray.push(parseInt($(this).val()));
                                 });
                                         var dataoption = '<select multiple name="Ltopics[]" id="Ltopics">';
                                         var selectedop = '';
+                                        
                                         $.each(data, function (index, element) {
                                         selectedop = '';
-                                                if (selectedarray.indexOf(element.id) >= 0)
-                                                selectedop = 'selected';
+                                                if (selectedarray.indexOf(parseInt(element.id)) >= 0){
+                                                    //alert(1);
+                                                selectedop = 'selected="selected"';
+                                            }
                                                 dataoption += "<option " + selectedop + " value='" + element.id + "'>" + element.topic + "</option>";
                                         });
                                         dataoption += '</select>';
+                                        
                                         // $( "#myselect option:selected" )
 
-
+                                        //alert(dataoption);
                                         $(".ltopicsparentdiv").html(dataoption);
-                                        $("#Ltopics").pickList();
+                                       $("#Ltopics").pickList();
                                 },
                                 headers: {
                                 'X-CSRF-TOKEN': token.val()
@@ -1656,7 +1661,7 @@
                                     <thead class="cf sorthead">
                                         <tr>
                                             <th>Image</th>
-                                            <th>Photo By</th>
+                                            <th>Title / Photo By </th>
   <!--                                          <th>Source</th>
                                             <th>Source URL</th>-->
                                             <th>Action</th>
@@ -1664,16 +1669,18 @@
                                     </thead>
                                     <tbody>
                                         @foreach($photos as $photo)
-                                        <tr id="row{{$photo->photo_id}}" title="{{$photo->photopath}}">
+                                        <tr id="row_{{$photo->photo_id}}" title="{{$photo->photopath}}">
                                             <td>
                                                 <img src="{{ config('constants.awsbaseurl').config('constants.awarticleimagethumbtdir').$photo->photopath}}" alt="article" />
                                             </td>
-                                            <td>{{$photo->photo_by}}</td>
+                                            <td>{{$photo->title}}  /  {{$photo->photo_by}} </td>
 <!--                                            <td>{{ $photo->title }}</td>-->
                                     <input type="hidden" name="deleteImagel" id="{{ $photo->photo_id }}">
 <!--                                    <td class="center">{{ $photo->source }}</td>
                                     <td class="center">{{ $photo->source_url }}</td>-->
-                                    <td class="center"><button type="button" onclick="$(this).MessageBox({{ $photo->photo_id }})" name="{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-danger">Dump</button><img  src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:20%; display:block; margin-left:15px;display:none;"/></td>
+                                    <td class="center"><button type="button" onclick="$(this).MessageBox({{ $photo->photo_id }})" name="{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-danger">Dump</button>
+                                        <button type="button" onclick="editImageDetail({{ $photo->photo_id }},'article')" name="image{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-edit">Edit</button>
+                                        <img  src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:20%; display:block; margin-left:15px;display:none;"/></td>
                                     </tr>
                                     @endforeach
 
@@ -2368,10 +2375,15 @@ $(':radio[id=embedcodevideo]').change(function() {
             {% } %}
         </td>
 </tr>
-<tr>
+        <tr>
             <td colspan="1">Photograph By</td>
-             <td colspan="3"><input type="text" name="photographby[{%=file.name%}]"/></textarea></td>    
-   </tr>
+            <td colspan="3"><input type="text" name="photographby[{%=file.name%}]"/></textarea></td>    
+        </tr>
+
+        <tr>
+        <td colspan="1">Title</td>
+        <td colspan="3"><input type="text" name="imagetitle[{%=file.name%}]"/></td>    
+        </tr>
     
     </table>   
     </td>   
@@ -2445,6 +2457,30 @@ function getArg(url,name){
     }
 }
 
+
+</script>
+<script>
+//alert(1);
+  var token = $('input[name=_token]');
+  $("#tableSortableResMed tbody").sortable({
+      appendTo: "parent",
+      helper: "clone",
+      update: function (event, ui) {
+      
+        var data = $(this).sortable('serialize');
+        //alert(data);    
+        // POST to server using $.post or $.ajax
+                $.ajax({
+                    data: data,
+                    type: 'POST',
+                    url: '{{ url("/article/sort/".$article->article_id)}}',
+                    headers: {
+                                'X-CSRF-TOKEN': token.val()
+                             }
+                });
+        
+    }
+  }).disableSelection();
 
 </script>
 @stop

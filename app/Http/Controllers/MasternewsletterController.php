@@ -29,6 +29,7 @@ class MasternewsletterController extends Controller {
     private $rightObj;
 
     public function __construct() {
+        $this->middleware('auth');
         $this->rightObj = new Right();
     }
 
@@ -183,6 +184,7 @@ class MasternewsletterController extends Controller {
         $newsletter=Newsletter::find($newLetterId);
         $newsletter->updated_at=date('Y-m-d H:i:s');
         $newsletter->update();
+        
         
         if($newsletter->channel_id=='1')
             exec("/usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=newsletter'");

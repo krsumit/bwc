@@ -204,7 +204,7 @@
                                     </thead>
                                     <tbody>
                                         @foreach($photos as $photo)
-                                        <tr id="row{{$photo->photo_id}}">
+                                        <tr id="row_{{$photo->photo_id}}">
                                             <td width="20%">
                                                 <img src="{{ config('constants.awsbaseurl').config('constants.awalbumimagedir').$photo->photopath}}" alt="user" style="width:40%;" />
                                             </td>
@@ -214,7 +214,10 @@
                                     <input type="hidden" name="deleteImagel" id="{{ $photo->photo_id }}">
 <!--                                    <td class="center">{{ $photo->source }}</td>
                                     <td class="center">{{ $photo->source_url }}</td>-->
-                                    <td class="center" with="15%"><button type="button" onclick="$(this).MessageBox({{ $photo->photo_id }})" name="{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-danger">Dump</button><img  src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:20%; display:block; margin-left:15px;display:none;"/></td>
+                                    <td class="center" with="15%">
+                                        <button type="button" onclick="$(this).MessageBox({{ $photo->photo_id }})" name="{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-danger">Dump</button>
+                                        <button type="button" onclick="editImageDetail({{ $photo->photo_id }},'album')" name="image{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-edit">Edit</button>
+                                        <img  src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:20%; display:block; margin-left:15px;display:none;"/></td>
                                     </tr>
                                     @endforeach
 
@@ -712,6 +715,30 @@ function getArg(url,name){
           }) ;  
           
        // Validation ends here    
+
+
+</script>
+<script>
+//alert(1);
+  var token = $('input[name=_token]');
+  $("#tableSortableResMed tbody").sortable({
+      appendTo: "parent",
+      helper: "clone",
+      update: function (event, ui) {
+       
+        var data = $(this).sortable('serialize');
+        // POST to server using $.post or $.ajax
+                $.ajax({
+                    data: data,
+                    type: 'POST',
+                    url: '{{ url("/album/sort/".$album->id)}}',
+                    headers: {
+                                'X-CSRF-TOKEN': token.val()
+                             }
+                });
+        
+    }
+  }).disableSelection();
 
 </script>
 @stop

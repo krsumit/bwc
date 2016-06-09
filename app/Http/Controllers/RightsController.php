@@ -17,7 +17,8 @@ class RightsController extends Controller
     
     private $rightObj;
     public function __construct() {
-         $this->rightObj= new Right();
+        $this->middleware('auth');
+        $this->rightObj= new Right();
     
     }
     

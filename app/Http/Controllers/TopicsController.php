@@ -20,7 +20,7 @@ class TopicsController extends Controller
      * @return Response
      */
     public function __construct() {
-        
+        $this->middleware('auth');
         $this->rightObj = new Right();
     }
     
@@ -146,6 +146,35 @@ class TopicsController extends Controller
              $topic->save();
         }
       return 'success';
+    }
+    
+    public function generate(Request $request){
+
+        $content = $request->detail;
+        $arrTopics = Topic::where('valid','=',1)->get();
+        //$asd = fopen("/home/sudipta/log.log", 'a+');
+
+
+        $mcount = 0;
+        $matches = array();
+        $subject = "abdef";
+        $pattern = '/def/';
+        //fwrite($asd, " Content ::" . $content ."\n");
+        $matched = array();
+        $mc = 0;
+        foreach($arrTopics as $topic=>$v){
+            $pattern = '/\b('.$v->topic.')\b/';
+            $ret = preg_match($pattern.'i', $content, $matches[$mcount], PREG_OFFSET_CAPTURE);
+            
+            if($ret == 1){
+                $matched[$mc]['id'] = $v->id;
+                $matched[$mc]['topic'] = $v->topic;
+                $mc++;
+            }
+            $mcount++;
+        }
+
+        return $matched;
     }
     
    

@@ -21,7 +21,7 @@ class TopicCategoryController extends Controller
      * @return Response
      */
     public function __construct() {
-        
+        $this->middleware('auth');
         $this->rightObj = new Right();
     }
     

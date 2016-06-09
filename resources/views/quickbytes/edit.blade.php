@@ -357,7 +357,7 @@
                     </thead>
                     <tbody>
                         @foreach($photos as $photo)
-                        <tr id="row{{$photo->photo_id}}">
+                        <tr id="row_{{$photo->photo_id}}">
                             <td width="20%">
                                 <img src="{{ config('constants.awsbaseurl').config('constants.awquickbytesimagethumbtdir').$photo->photopath}}" alt="quick byte" />
                             </td>
@@ -368,7 +368,11 @@
                     <input type="hidden" name="deleteImagel" id="{{ $photo->photo_id }}">
 <!--                                    <td class="center">{{ $photo->source }}</td>
                     <td class="center">{{ $photo->source_url }}</td>-->
-                    <td class="center" width="15%"><button type="button" onclick="$(this).MessageBox({{ $photo->photo_id }})" name="{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-danger">Dump</button><img  src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:20%; display:block; margin-left:15px;display:none;"/></td>
+                    <td class="center" width="15%">
+                        <button type="button" onclick="$(this).MessageBox({{ $photo->photo_id }})" name="{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-danger">Dump</button>
+                        <button type="button" onclick="editImageDetail({{ $photo->photo_id }},'quickbyte')" name="image{{ $photo->photo_id }}" id="deleteImage" class="btn btn-mini btn-edit">Edit</button>
+
+                        <img  src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:20%; display:block; margin-left:15px;display:none;"/></td>
                     
                     </tr>
                     @endforeach
@@ -1164,6 +1168,30 @@
                                     // here we will handle errors and validation messages
                                 });
                     };
+
+</script>
+<script>
+//alert(1);
+  var token = $('input[name=_token]');
+  $("#tableSortableResMed tbody").sortable({
+      appendTo: "parent",
+      helper: "clone",
+      update: function (event, ui) {
+      
+        var data = $(this).sortable('serialize');
+        //alert(data);    
+        // POST to server using $.post or $.ajax
+                $.ajax({
+                    data: data,
+                    type: 'POST',
+                    url: '{{ url("/quickbyte/sort/".$quickbyte->id)}}',
+                    headers: {
+                                'X-CSRF-TOKEN': token.val()
+                             }
+                });
+        
+    }
+  }).disableSelection();
 
 </script>
 @stop

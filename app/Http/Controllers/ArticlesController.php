@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 //use DB;
 use Session;
 use App\Article;
+use App\QuickByte;
+use App\Album;
 use App\Channel;
 use App\AuthorType;
 use App\Country;
@@ -36,7 +38,8 @@ class ArticlesController extends Controller {
 
     private $rightObj;
     public function __construct() {
-         $this->rightObj= new Right();
+        $this->middleware('auth');
+        $this->rightObj= new Right();
     
     }
 
@@ -165,6 +168,84 @@ class ArticlesController extends Controller {
         $arg['script_url'] = url('article/image/upload');
         $upload_handler = new UploadHandler($arg);
     }
+    
+    function imageEdit(Request $request){
+        $photo=Photo::find($request->id);
+        return view('layouts.imageEdit',compact('photo'));
+        
+    }
+    
+    function storeImageDetail(Request $request){
+        parse_str($request->detail);
+        $photo=Photo::find($photo_id);
+        if($photo->owned_by=='article'){
+             $photo->title=$imagetitlep;
+             $photo->photo_by=$imagebyp;
+             $return=' <td>
+                            <img alt="article" src="'.config('constants.awsbaseurl').config('constants.awarticleimagethumbtdir').$photo->photopath.'">
+                        </td>
+                        <td>'.$photo->title.' / '.$photo->photo_by.'</td>
+                <input type="hidden" id="'.$photo->photo_id.'" name="deleteImagel">
+                <td class="center"><button class="btn btn-mini btn-danger" id="deleteImage" name="'.$photo->photo_id.'" onclick="$(this).MessageBox('.$photo->photo_id.')" type="button">Dump</button>
+                    <button class="btn btn-mini btn-edit" id="deleteImage" name="image'.$photo->photo_id.'" onclick="editImageDetail('.$photo->photo_id.',\'article\')" type="button">Edit</button>
+                    <img style="width:20%; display:block; margin-left:15px;display:none;" alt="loader" src="'.asset('images/photon/preloader/76.gif').'"></td>
+               ';
+              DB::table('articles')
+            ->where('article_id', $photo->owner_id)
+            ->update(['updated_at' => date('Y:m:d h:i:s')]);
+
+        }elseif($photo->owned_by=='quickbyte'){
+            $photo->title=$imagetitlep;
+            $photo->photo_by=$imagebyp;
+            $photo->description=$descriptionp;
+            $return='
+                                            <td width="20%">
+                                                <img style="width:40%;" alt="user" src="'.config('constants.awsbaseurl').config('constants.awquickbytesimagethumbtdir').$photo->photopath.'">
+                                            </td>
+                                            <td width="20%">'.$photo->title.'</td>
+                                             <td width="30%" class="tdimagedesc">'.$photo->description.'</td>
+                                            <td width="15%">'.$photo->photo_by.'</td>
+                                    <input type="hidden" id="'.$photo->photo_id.'" name="deleteImagel">
+                                    <td with="15%" class="center">
+                                        <button class="btn btn-mini btn-danger" id="deleteImage" name="'.$photo->photo_id.'" onclick="$(this).MessageBox('.$photo->photo_id.')" type="button">Dump</button>
+                                        <button class="btn btn-mini btn-edit" id="deleteImage" name="image'.$photo->photo_id.'" onclick="editImageDetail('.$photo->photo_id.',\'quickbyte\')" type="button">Edit</button>
+                                        <img style="width:20%; display:block; margin-left:15px;display:none;" alt="loader" src="'.asset('images/photon/preloader/76.gif').'"></td>
+                                   ';
+            
+            DB::table('quickbyte')
+            ->where('id', $photo->owner_id)
+            ->update(['updated_at' => date('Y:m:d h:i:s')]);
+     
+            
+            
+        }elseif($photo->owned_by=='album'){
+            $photo->title=$imagetitlep;
+            $photo->photo_by=$imagebyp;
+            $photo->description=$descriptionp;
+            $photo->source=$photosourcep;
+            $photo->source_url=$sourceurlp;
+             $return='
+                                            <td width="20%">
+                                                <img style="width:40%;" alt="album image" src="'.config('constants.awsbaseurl').config('constants.awalbumimagedir').$photo->photopath.'">
+                                            </td>
+                                           <td width="20%">'.$photo->title.'</td>
+                                             <td width="30%" class="tdimagedesc">'.$photo->description.'</td>
+                                            <td width="15%">'.$photo->photo_by.'</td>
+                                    <input type="hidden" id="'.$photo->photo_id.'" name="deleteImagel">
+                                    <td with="15%" class="center">
+                                        <button class="btn btn-mini btn-danger" id="deleteImage" name="'.$photo->photo_id.'" onclick="$(this).MessageBox('.$photo->photo_id.')" type="button">Dump</button>
+                                        <button class="btn btn-mini btn-edit" id="deleteImage" name="image'.$photo->photo_id.'" onclick="editImageDetail('.$photo->photo_id.',\'album\')" type="button">Edit</button>
+                                        <img style="width:20%; display:block; margin-left:15px;display:none;" alt="loader" src="'.asset('images/photon/preloader/76.gif').'"></td>
+                                    ';
+              DB::table('album')
+            ->where('id', $photo->owner_id)
+            ->update(['updated_at' => date('Y:m:d h:i:s')]);
+
+        }
+        $photo->save();
+        return  $return;
+        //print_r($request->all());
+    }
 
     /*
      * Check if The User ID passed has Rights to Edit the Article
@@ -172,6 +253,21 @@ class ArticlesController extends Controller {
      * passes User ID, Article ID, User Rights
      * @returns boolean 1:0
      */
+    
+    public function sortImage($id,Request $request){
+        
+        foreach($request->row as $k => $itm){
+            $articlePhoto=Photo::find($itm);
+            $articlePhoto->sequence=$k+1;
+            $articlePhoto->updated_at = date('Y-m-d H:i:s');
+            $articlePhoto->save();
+        }
+        
+         DB::table('articles')
+            ->where('id', $id)
+            ->update(['updated_at' => date('Y:m:d h:i:s')]);
+         
+    }
 
     public function hasRightOnArticle($uid, $article_userid, $rights) {
         //$asd = fopen("/home/sudipta/log.log", 'a+');
@@ -383,6 +479,7 @@ class ArticlesController extends Controller {
         $photos = DB::table('photos')->where('valid', '1')
                 ->where('owned_by', 'article')
                 ->where('owner_id', $article->article_id)
+                ->orderBy('sequence')
                 ->get(); 
     
         return view('articles.edit', compact('article', 'rights', 'channels', 'p1', 'postAs', 'country', 'states', 'newstype', 'category', 'magazine', 'event', 'campaign', 'columns', 'tags', 'photos', 'acateg', 'arrAuth', 'arrTags', 'arrVideo', 'userTup', 'arrTopics'));
@@ -762,6 +859,7 @@ class ArticlesController extends Controller {
                         $articleImage = new Photo();
                         $articleImage->photopath = $oldPhoto->photopath;
                         $articleImage->photo_by = $value;
+                        $articleImage->title = isset($request->rtitle[$key])?$request->rtitle[$key]:'';
                         $articleImage->channel_id = $request->channel_sel;
                         $articleImage->owned_by ='article';
                         $articleImage->owner_id =$id;
@@ -884,6 +982,8 @@ class ArticlesController extends Controller {
                     $articleImage->photopath = $image;
                     $articleImage->imagefullPath = '';
                     $articleImage->photo_by = isset($request->photographby[$image])?$request->photographby[$image]:'';
+                    $articleImage->title = isset($request->imagetitle[$image])?$request->imagetitle[$image]:'';
+                    $articleImage->channel_id = $request->channel_sel;
                     $articleImage->channel_id = $request->channel_sel;
                     $articleImage->owned_by = 'article';
                     $articleImage->owner_id = $id;
@@ -1095,6 +1195,7 @@ class ArticlesController extends Controller {
                         $articleImage = new Photo();
                         $articleImage->photopath = $oldPhoto->photopath;
                         $articleImage->photo_by = $value;
+                        $articleImage->title = isset($request->rtitle[$key])?$request->rtitle[$key]:'';
                         $articleImage->channel_id = $request->channel_sel;
                         $articleImage->owned_by ='article';
                         $articleImage->owner_id =$id;
@@ -1201,6 +1302,7 @@ class ArticlesController extends Controller {
                     $articleImage->photopath = $image;
                     $articleImage->imagefullPath = '';
                     $articleImage->photo_by =  isset($request->photographby[$image])?$request->photographby[$image]:'';
+                    $articleImage->title = isset($request->imagetitle[$image])?$request->imagetitle[$image]:'';
                     $articleImage->channel_id = $request->channel_sel;
                     $articleImage->owned_by = 'article';
                     $articleImage->owner_id = $id;
@@ -1404,7 +1506,7 @@ class ArticlesController extends Controller {
                $cond=' and photo_id not in ('.implode(',',$imgids).')';
            }
            //echo $maxlimit;
-          $imagequery="select photo_id,photopath,photo_by from photos where valid='1' and photopath!='' and owned_by='article' $cond and owner_id in(SELECT articles.article_id FROM `articles` inner join article_tags on articles.article_id=article_tags.article_id WHERE  article_tags.tags_id=".$tag->tags_id." order by article_tags.updated_at desc) order by updated_at desc limit ".$maxlimit;
+          $imagequery="select photo_id,photopath,photo_by,title from photos where valid='1' and photopath!='' and owned_by='article' $cond and owner_id in(SELECT articles.article_id FROM `articles` inner join article_tags on articles.article_id=article_tags.article_id WHERE  article_tags.tags_id=".$tag->tags_id." order by article_tags.updated_at desc) order by updated_at desc limit ".$maxlimit;
           $images=DB::select($imagequery);
           if(count($images)<$maxlimit){
               $maxlimit=$maxlimit+($minlimit-count($images));
@@ -1414,7 +1516,7 @@ class ArticlesController extends Controller {
           //echo count($images).' ######'.$maxlimit.'##### <br>';
             foreach($images as $image){
                 $imgids[]=$image->photo_id;
-             $related_images[]=array('image_url'=>config('constants.awsbaseurl').config('constants.awarticleimagethumbtdir').$image->photopath,'image_id'=>$image->photo_id,'tag_name'=>$tag->tag,'tag_id'=>$tag->tags_id,'photo_by'=>$image->photo_by,'image_name'=>$image->photopath);
+             $related_images[]=array('image_url'=>config('constants.awsbaseurl').config('constants.awarticleimagethumbtdir').$image->photopath,'image_id'=>$image->photo_id,'tag_name'=>$tag->tag,'tag_id'=>$tag->tags_id,'photo_by'=>$image->photo_by,'image_name'=>$image->photopath,'title'=>$image->title);
           }
           
         }

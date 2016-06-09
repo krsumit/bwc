@@ -27,6 +27,7 @@ class eventController extends Controller {
     private $rightObj;
 
     public function __construct() {
+        $this->middleware('auth');
         $this->rightObj = new Right();
     }
 
