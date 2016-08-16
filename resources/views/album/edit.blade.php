@@ -172,7 +172,7 @@
 						</div>
 						<div id="Photo-feature"  class="control-group row-fluid">
                             <div class="span3">
-                                <label class="control-label">Feature Title </label>
+                                <label class="control-label">Title </label>
                             </div>
                             <div class="span9">
                                 <div class="controls">
@@ -182,7 +182,7 @@
                         </div>
 						<div id="Text_Area_Resizable" class="control-group row-fluid">
                             <div class="span3">
-                                <label class="control-label">Feature Discription</label>
+                                <label class="control-label">Discription</label>
                             </div>
                             <div class="span9">
                                 <div class="controls">
@@ -362,7 +362,7 @@
                 var formData = new FormData();
                         formData.append('photoId', msg);
                         var token = $('input[name=_token]');
-                        var rowID = 'row' + msg;
+                        var rowID = 'row_' + msg;
                         var div = document.getElementById(rowID);
                         div.style.visibility = "hidden";
                         div.style.display = "none";

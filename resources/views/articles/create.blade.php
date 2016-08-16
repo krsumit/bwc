@@ -145,7 +145,7 @@
                                     $(this).siblings('.formattedelement').removeClass('error');
                                     $(this).siblings('span.error').remove();
                             });
-                    });        </script>
+                            });</script>
 
         <script type="text/javascript">
                             $(function () {
@@ -168,6 +168,12 @@
                             "data" : {
                             "title" : "Article-Details",
                                     "attr" : { "href" : "#Article-Details" }
+                            }
+                            },
+                            {
+                            "data" : {
+                            "title" : "Social Details",
+                                    "attr" : { "href" : "#social-media-detail" }
                             }
                             },
                             {
@@ -934,7 +940,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <textarea  name="title" rows="4" class="no-resize  title_range valid"></textarea>
+                    <textarea  name="title" rows="2" class="no-resize  title_range valid"></textarea>
                     <span for="title" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
                 </div>
             </div>
@@ -985,7 +991,7 @@
                                         $(':radio[id=ifyes]').change(function() {
                                 $("#canonical").removeClass("none");
                                 });
-                                });                    </script>
+                                });</script>
                 </div>
             </div>
         </div>
@@ -993,6 +999,39 @@
         <!--WYSIWYG Editor - Full Options end-->
 
     </div><!-- end container1 -->
+    
+    <div class="container-fluid">
+      <div class="form-legend" id="social-media-detail">Social Media Detail</div>
+      <!--Text Area - No Resize begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="title">Social Title (200 Characters)</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <textarea  name="socialtitle" rows="2" class="no-resize  title_range valid"></textarea>
+                    <span for="title" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
+                </div>
+            </div>
+        </div>
+        <!--Text Area - No Resize end-->
+
+        <!--Text Area Resizable begin-->
+        <div id="Text_Area_Resizable" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label">Social Description (800 Characters)</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <textarea  name="socialsummary" rows="2" class=""></textarea>
+                </div>
+            </div>
+        </div>
+        <!--Text Area Resizable end-->
+
+        
+    </div>
+
     <div class="container-fluid">
 
         <div class="form-legend" id="topics-location">Topics And Location</div>
@@ -1188,6 +1227,12 @@
                                         $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
                                         $('#selectBoxFilter5').select2();
                                 });
+                                
+                                if($(this).attr("value")=='{{config('constants.ee_rating_cateogy_id')}}'){
+                                    $('#start_rating_div').show();
+                                }else{
+                                    $('#start_rating_div').hide();
+                                }
                         });
                         });</script>
         </div>
@@ -1272,6 +1317,18 @@
 
     </div>
 
+    <div class="container-fluid" id="start_rating_div" style="display: none;">
+
+        <div class="form-legend" id="start_rating">Rating</div>
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter">Rating Point</label>
+            </div>
+            <div class="span9">
+                <div class="controls"><input type="text" id="rating_point" value="0.00" name="rating_point"></div>
+            </div>
+        </div>     
+    </div>    
     <div class="container-fluid">
 
         <div class="form-legend" id="assign-article-to-a-Issue">Assign This Article To A Magazine Issue</div>
@@ -1346,7 +1403,7 @@
                         @endforeach
                     </select>
                     <span for="campaign" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
-                   
+
                 </div>
             </div>
             <script>
@@ -1447,7 +1504,7 @@
     <div class="container-fluid">
 
         <div class="form-legend" id="photos-videos">Photos & Videos  
-                </div>
+        </div>
 
         <!--Tabs begin-->
 
@@ -1562,7 +1619,7 @@
                         <div>
                             Browse recent related images : <input type="text" name="related_image_search" id="related_image_search" />
                             <button class="btn btn-success" onclick="searchRelated()" id="related_image_button"  name="status" type="button" style="margin-bottom:0px !important;">Search</button>
-                            
+
                         </div>
                         <div class="relaed_image_box_outer hide" >
                             <img src="{{ asset('images/photon/preloader/76.gif')}}" class="loader-img-related-content hide" alt="loader" />
@@ -1572,7 +1629,7 @@
                             <div class="related-img-selection-done"  >
                                 <button class="btn btn-success hide related_action_button" onclick="relatedImageSelected()" id="related_selected_button" name="related_selected" type="button" >Upload</button>
                                 <button class="btn btn-danger delete related_action_button" onclick="closeRelated()" type="button"><i class="glyphicon glyphicon-trash"></i><span>Close</span>
-                                    </button>
+                                </button>
                                 <img src="{{ asset('images/photon/preloader/76.gif')}}" class="loader-img-selected hide" alt="loader" />
                             </div>
                         </div>
@@ -1676,7 +1733,7 @@
                                         <span>Delete</span>
                                     </button>
                                     <input type="checkbox" class="toggle">
-                                     <div style="float:right;">       
+                                    <div style="float:right;">       
                                         <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_article')}}')">Need to crop images? Click here</a>
                                         <br>
                                         <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/resize/crop')}}?dimension={{config('constants.dimension_article')}}')">Need to resize images? Click here</a>
@@ -1763,156 +1820,156 @@
 
     </div><!--end container-->
     <script>
-                        // magic.js
-                        $.fn.MessageBox = function (msg)
-                        {
-                        var formData = new FormData();
-                                formData.append('photoId', msg);
+                                        // magic.js
+                                        $.fn.MessageBox = function (msg)
+                                        {
+                                        var formData = new FormData();
+                                                formData.append('photoId', msg);
+                                                var token = $('input[name=_token]');
+                                                var rowID = 'row' + msg;
+                                                var div = document.getElementById(rowID);
+                                                div.style.visibility = "hidden";
+                                                div.style.display = "none";
+                                                // process the form
+                                                $.ajax({
+                                                type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                                                        url         : '/article/delPhotos', // the url where we want to POST
+                                                        data        :  formData,
+                                                        dataType    : 'json', // what type of data do we expect back from the server
+                                                        contentType :  false,
+                                                        processData :  false,
+                                                        headers: {
+                                                        'X-CSRF-TOKEN': token.val()
+                                                        }
+                                                })
+                                                // using the done promise callback
+                                                .done(function(data) {
+
+                                                // log data to the console so we can see
+                                                console.log(data);
+                                                        //alert('Author Saved');
+                                                        // here we will handle errors and validation messages
+                                                });
+                                        };
+                                        $(document).ready(function() {
+                                //var csrf_token = $('meta[name="csrf-token"]').attr('content');
                                 var token = $('input[name=_token]');
-                                var rowID = 'row' + msg;
-                                var div = document.getElementById(rowID);
-                                div.style.visibility = "hidden";
-                                div.style.display = "none";
-                                // process the form
-                                $.ajax({
-                                type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                                        url         : '/article/delPhotos', // the url where we want to POST
-                                        data        :  formData,
-                                        dataType    : 'json', // what type of data do we expect back from the server
-                                        contentType :  false,
-                                        processData :  false,
-                                        headers: {
-                                        'X-CSRF-TOKEN': token.val()
-                                        }
-                                })
-                                // using the done promise callback
-                                .done(function(data) {
+                                        // process the form - For Add Image in Album
+                                        /*        $("#addvideobutton").click(function(){
+                                         // get the form data
+                                         var formData = new FormData();
+                                         formData.append('title', $('input[name=videoTitle]').val());
+                                         formData.append('code', $('textarea[name=videoCode]').val());
+                                         formData.append('source', $('input[name=videoSource]').val());
+                                         formData.append('url', $('input[name=videoURL]').val());
+                                         formData.append('channel_id', $('select[name=channel_sel]').val());
+                                         formData.append('owner', 'article');
+                                         // process the form
+                                         $.ajax({
+                                         type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                                         //method      : 'POST',
+                                         url         : '/article/addVideos', // the url where we want to POST
+                                         //files       :  true,
+                                         data        :  formData,
+                                         dataType    : 'json', // what type of data do we expect back from the server
+                                         contentType :  false,
+                                         processData :  false,
+                                         success     :  function(respText){
+                                         theResponse = respText;
+                                         alert(theResponse);
+                                         //Assign returned ID to hidden array element
+                                         $('#uploadedVideos').val(theResponse);
+                                         //alert($('#uploadedVideos').val());
+                                         },
+                                         headers: {
+                                         'X-CSRF-TOKEN': token.val()
+                                         }
+                                         })
+                                         // using the done promise callback
+                                         .done(function(data) {
+                                         
+                                         // log data to the console so we can see
+                                         console.log(data);
+                                         // here we will handle errors and validation messages
+                                         });
+                                         // stop the form from submitting the normal way and refreshing the page
+                                         //event.preventDefault();
+                                         });   */
+                                        // process the form - For Add Image in Album
+                                        $("#addphotobutton").click(function(){
+                                //$("#addAuthorForm").on('click',function(event){}
+                                //  alert('Yay!');
 
-                                // log data to the console so we can see
-                                console.log(data);
-                                        //alert('Author Saved');
-                                        // here we will handle errors and validation messages
+                                // get the form data
+                                // there are many ways to get this data using jQuery (you can use the class or id also)
+                                var formData = new FormData();
+                                        formData.append('albumphoto', albumPhoto.files[0]);
+                                        formData.append('title', $('input[name=photoTitle]').val());
+                                        formData.append('description', $('textarea[name=photoDesc]').val());
+                                        formData.append('source', $('input[name=photoSource]').val());
+                                        formData.append('sourceurl', $('input[name=photoSourceURL]').val());
+                                        formData.append('active', $('input[name=photoEnabled]:checked').val());
+                                        formData.append('channel_id', $('select[name=channel_sel]').val());
+                                        formData.append('owner', 'article');
+                                        // process the form
+                                        $.ajax({
+                                        type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                                                //method      : 'POST',
+                                                url         : '/article/addPhotos', // the url where we want to POST
+                                                //files       :  true,
+                                                data        :  formData,
+                                                enctype     : 'multipart/form-data',
+                                                dataType    : 'json', // what type of data do we expect back from the server
+                                                contentType :  false,
+                                                processData :  false,
+                                                success     :  function(respText){
+                                                theResponse = respText;
+                                                        alert(theResponse);
+                                                        //Assign returned ID to hidden array element
+                                                        alert($('#uploadedImages').val());
+                                                        var isthere = $('#uploadedImages').val();
+                                                        var arrP = isthere.split(',');
+                                                        arrP.push(theResponse);
+                                                        var newval = arrP.join(',');
+                                                        $('#uploadedImages').val(newval);
+                                                        /*
+                                                         $("#Taglist").append($('<option>', {
+                                                         value: element.tags_id,
+                                                         text: element.tag
+                                                         }));
+                                                         */
+                                                        //alert($('#uploadedImages').val());
+                                                },
+                                                //encode      : true,
+                                                headers: {
+                                                'X-CSRF-TOKEN': token.val()
+                                                }
+                                        })
+                                        // using the done promise callback
+                                        .done(function(data) {
+
+                                        // log data to the console so we can see
+                                        console.log(data);
+                                                //alert('Author Saved');
+                                                // here we will handle errors and validation messages
+                                        });
+                                        // stop the form from submitting the normal way and refreshing the page
+                                        //event.preventDefault();
                                 });
-                        };
-                        $(document).ready(function() {
-                //var csrf_token = $('meta[name="csrf-token"]').attr('content');
-                var token = $('input[name=_token]');
-                        // process the form - For Add Image in Album
-                        /*        $("#addvideobutton").click(function(){
-                         // get the form data
-                         var formData = new FormData();
-                         formData.append('title', $('input[name=videoTitle]').val());
-                         formData.append('code', $('textarea[name=videoCode]').val());
-                         formData.append('source', $('input[name=videoSource]').val());
-                         formData.append('url', $('input[name=videoURL]').val());
-                         formData.append('channel_id', $('select[name=channel_sel]').val());
-                         formData.append('owner', 'article');
-                         // process the form
-                         $.ajax({
-                         type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                         //method      : 'POST',
-                         url         : '/article/addVideos', // the url where we want to POST
-                         //files       :  true,
-                         data        :  formData,
-                         dataType    : 'json', // what type of data do we expect back from the server
-                         contentType :  false,
-                         processData :  false,
-                         success     :  function(respText){
-                         theResponse = respText;
-                         alert(theResponse);
-                         //Assign returned ID to hidden array element
-                         $('#uploadedVideos').val(theResponse);
-                         //alert($('#uploadedVideos').val());
-                         },
-                         headers: {
-                         'X-CSRF-TOKEN': token.val()
-                         }
-                         })
-                         // using the done promise callback
-                         .done(function(data) {
-                         
-                         // log data to the console so we can see
-                         console.log(data);
-                         // here we will handle errors and validation messages
-                         });
-                         // stop the form from submitting the normal way and refreshing the page
-                         //event.preventDefault();
-                         });   */
-                        // process the form - For Add Image in Album
-                        $("#addphotobutton").click(function(){
-                //$("#addAuthorForm").on('click',function(event){}
-                //  alert('Yay!');
+                                });
+                                        $(document).ready(function() {
+                                $("#videocode").addClass("none");
+                                        $(':radio[id=videoid]').change(function() {
 
-                // get the form data
-                // there are many ways to get this data using jQuery (you can use the class or id also)
-                var formData = new FormData();
-                        formData.append('albumphoto', albumPhoto.files[0]);
-                        formData.append('title', $('input[name=photoTitle]').val());
-                        formData.append('description', $('textarea[name=photoDesc]').val());
-                        formData.append('source', $('input[name=photoSource]').val());
-                        formData.append('sourceurl', $('input[name=photoSourceURL]').val());
-                        formData.append('active', $('input[name=photoEnabled]:checked').val());
-                        formData.append('channel_id', $('select[name=channel_sel]').val());
-                        formData.append('owner', 'article');
-                        // process the form
-                        $.ajax({
-                        type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                                //method      : 'POST',
-                                url         : '/article/addPhotos', // the url where we want to POST
-                                //files       :  true,
-                                data        :  formData,
-                                enctype     : 'multipart/form-data',
-                                dataType    : 'json', // what type of data do we expect back from the server
-                                contentType :  false,
-                                processData :  false,
-                                success     :  function(respText){
-                                theResponse = respText;
-                                        alert(theResponse);
-                                        //Assign returned ID to hidden array element
-                                        alert($('#uploadedImages').val());
-                                        var isthere = $('#uploadedImages').val();
-                                        var arrP = isthere.split(',');
-                                        arrP.push(theResponse);
-                                        var newval = arrP.join(',');
-                                        $('#uploadedImages').val(newval);
-                                        /*
-                                         $("#Taglist").append($('<option>', {
-                                         value: element.tags_id,
-                                         text: element.tag
-                                         }));
-                                         */
-                                        //alert($('#uploadedImages').val());
-                                },
-                                //encode      : true,
-                                headers: {
-                                'X-CSRF-TOKEN': token.val()
-                                }
-                        })
-                        // using the done promise callback
-                        .done(function(data) {
+                                $("#videocode").removeClass("none");
+                                        $("#embedcodevideodetails").addClass("none");
+                                });
+                                        $(':radio[id=embedcodevideo]').change(function() {
 
-                        // log data to the console so we can see
-                        console.log(data);
-                                //alert('Author Saved');
-                                // here we will handle errors and validation messages
-                        });
-                        // stop the form from submitting the normal way and refreshing the page
-                        //event.preventDefault();
-                });
-                });
-                        $(document).ready(function() {
-                $("#videocode").addClass("none");
-                        $(':radio[id=videoid]').change(function() {
-
-                $("#videocode").removeClass("none");
-                        $("#embedcodevideodetails").addClass("none");
-                        });
-                        $(':radio[id=embedcodevideo]').change(function() {
-
-                $("#embedcodevideodetails").removeClass("none");
-                        $("#videocode").addClass("none");
-                        });
-                });    </script>
+                                $("#embedcodevideodetails").removeClass("none");
+                                        $("#videocode").addClass("none");
+                                });
+                                });</script>
 
     @if(in_array('12',Session::get('user_rights')))
 
@@ -1952,14 +2009,14 @@
             </div>
         </div>
         <script>
-                            $(function(){
-                            $("#datepicker").datepicker({
-                            minDate: 0,
-                                    dateFormat: "yy-mm-dd"
-                            });
-                                    $.timeEntry.setDefaults({show24Hours: true, showSeconds: true});
-                                    $('#timeEntry').timeEntry().change();
-                            });</script> 
+                                            $(function(){
+                                            $("#datepicker").datepicker({
+                                            minDate: 0,
+                                                    dateFormat: "yy-mm-dd"
+                                            });
+                                                    $.timeEntry.setDefaults({show24Hours: true, showSeconds: true});
+                                                    $('#timeEntry').timeEntry().change();
+                                            });</script> 
     </div>
 
     @endif
@@ -1975,27 +2032,27 @@
                     <a href="#" target="_blank">Publish this to Home Page.</a>
                 </label>
                 <script>
-                                    $().ready(function(){
-                            $(".uniformCheckbox").uniform();
-                            });</script>
+                                                    $().ready(function(){
+                                            $(".uniformCheckbox").uniform();
+                                            });</script>
 
                 <label class="checkbox" >
                     <input type="checkbox" name="important" class="uniformCheckbox2" value="checkbox1">
                     <a href="#" target="_blank">This article is important.</a>
                 </label>
                 <script>
-                                    $().ready(function(){
-                            $(".uniformCheckbox2").uniform();
-                            });</script>
+                                                    $().ready(function(){
+                                            $(".uniformCheckbox2").uniform();
+                                            });</script>
 
                 <label class="checkbox" >
                     <input type="checkbox" name="web_exclusive" class="uniformCheckbox3" value="checkbox1">
                     <a href="#" target="_blank">Web Exclusive.</a>
                 </label>
                 <script>
-                                    $().ready(function(){
-                            $(".uniformCheckbox3").uniform();
-                            });                        </script>
+                                                    $().ready(function(){
+                                            $(".uniformCheckbox3").uniform();
+                                            });</script>
 
 
             </div>
@@ -2017,43 +2074,42 @@
     </div>
     <!--	end container-->
     {!! Form::close() !!}
-<a href="javascript:;" onclick="showpopup()">Test popu</a>
-            <script>
-               function editImageDetail(){
+    <script>
+                                        function editImageDetail(){
 //                   alert(1);
 //                          BootstrapDialog.alert('I want banana!');
-                    
-                   /* BootstrapDialog.show({
-                    title: 'Manipulating Buttons',
-                    message: function(dialog) {
-                        var $content = $('<div><input typ="text" name="imagetitle" id="imagetitle" /><button class="btn btn-success">Revert button status right now.</button></div>');
-                        var $footerButton = dialog.getButton('btn-1');
-                        $content.find('button').click({$footerButton: $footerButton}, function(event) {
-                            event.data.$footerButton.enable();
-                            event.data.$footerButton.stopSpin();
-                            dialog.setClosable(true);
-                        });
 
-                        return $content;
-                    },
-                    buttons: [{
-                        id: 'btn-1',
-                        label: 'Click to disable and spin.',
-                        action: function(dialog) {
-                            var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
-                            $button.disable();
-                            $button.spin();
-                            dialog.setClosable(false);
-                        }
-                    }]
-                }); */    
-        
-                BootstrapDialog.show({
-                    message: $('<div class="shekhartest"></div>').load('http://localhost:8080/login.html')
-                });
-            }
-            //98768 april-4  98769 feb -29
-            </script>
+                                        /* BootstrapDialog.show({
+                                         title: 'Manipulating Buttons',
+                                         message: function(dialog) {
+                                         var $content = $('<div><input typ="text" name="imagetitle" id="imagetitle" /><button class="btn btn-success">Revert button status right now.</button></div>');
+                                         var $footerButton = dialog.getButton('btn-1');
+                                         $content.find('button').click({$footerButton: $footerButton}, function(event) {
+                                         event.data.$footerButton.enable();
+                                         event.data.$footerButton.stopSpin();
+                                         dialog.setClosable(true);
+                                         });
+                                                 
+                                         return $content;
+                                         },
+                                         buttons: [{
+                                         id: 'btn-1',
+                                         label: 'Click to disable and spin.',
+                                         action: function(dialog) {
+                                         var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
+                                         $button.disable();
+                                         $button.spin();
+                                         dialog.setClosable(false);
+                                         }
+                                         }]
+                                         }); */
+
+                                        BootstrapDialog.show({
+                                        message: $('<div class="shekhartest"></div>').load('http://localhost:8080/login.html')
+                                        });
+                                        }
+                                //98768 april-4  98769 feb -29
+    </script>
 </div>
 
 <!--</body>
@@ -2143,7 +2199,7 @@
     <td colspan="1">Title</td>
     <td colspan="3"><input type="text" name="imagetitle[{%=file.name%}]"/></td>    
     </tr>
-    
+
     </table>   
     </td>    
     </tr>
@@ -2160,46 +2216,46 @@
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-validate.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-ui.js') }}"></script>
 <script>
-                                            $(document).ready(function(){
-                                    $('#fileupload').fileupload({
-                                    // Uncomment the following to send cross-domain cookies:
-                                    //xhrFields: {withCredentials: true},
-                                    url: '<?php echo url('article/image/upload') ?>',
-                                            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-                                            maxFileSize: 10000000
-                                    });
-                                            $('.authorimagespn').append('<input type="file" name="photo" id="photo">');
-                                    });
-                                            $('#fileupload').bind('fileuploaddone', function (e, data) {
-                                    //console.log(e);
-                                    var dataa = JSON.parse(data.jqXHR.responseText);
-                                            //console.log(dataa['files']['0']['name']);
-                                            $.each(dataa['files'], function(index, element) {
-                                            //console.log(element.name);
-                                            if ($('#uploadedImages').val().trim())
-                                                    $('#uploadedImages').val($('#uploadedImages').val() + ',' + element.name);
-                                                    else
-                                                    $('#uploadedImages').val(element.name);
-                                            });
-                                    });
-                                            $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
-                                    // console.log(data);
-                                    var file = getArg(data.url, 'file');
-                                            var images = $('#uploadedImages').val().split(',');
-                                            images.splice(images.indexOf(file), 1);
-                                            $('#uploadedImages').val(images.join());
-                                            //$('#imagesname').val($('#imagesname').val().replace(','+));
+                                                $(document).ready(function(){
+                                        $('#fileupload').fileupload({
+                                        // Uncomment the following to send cross-domain cookies:
+                                        //xhrFields: {withCredentials: true},
+                                        url: '<?php echo url('article/image/upload') ?>',
+                                                acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+                                                maxFileSize: 10000000
+                                        });
+                                                $('.authorimagespn').append('<input type="file" name="photo" id="photo">');
+                                        });
+                                                $('#fileupload').bind('fileuploaddone', function (e, data) {
+                                        //console.log(e);
+                                        var dataa = JSON.parse(data.jqXHR.responseText);
+                                                //console.log(dataa['files']['0']['name']);
+                                                $.each(dataa['files'], function(index, element) {
+                                                //console.log(element.name);
+                                                if ($('#uploadedImages').val().trim())
+                                                        $('#uploadedImages').val($('#uploadedImages').val() + ',' + element.name);
+                                                        else
+                                                        $('#uploadedImages').val(element.name);
+                                                });
+                                        });
+                                                $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
+                                        // console.log(data);
+                                        var file = getArg(data.url, 'file');
+                                                var images = $('#uploadedImages').val().split(',');
+                                                images.splice(images.indexOf(file), 1);
+                                                $('#uploadedImages').val(images.join());
+                                                //$('#imagesname').val($('#imagesname').val().replace(','+));
 
-                                    });
-                                            function getArg(url, name){
-                                            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
-                                                    if (results == null){
-                                            return null;
-                                            }
-                                            else{
-                                            return results[1] || 0;
-                                            }
-                                            }
+                                        });
+                                                function getArg(url, name){
+                                                var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
+                                                        if (results == null){
+                                                return null;
+                                                }
+                                                else{
+                                                return results[1] || 0;
+                                                }
+                                                }
 
 
 </script>

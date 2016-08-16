@@ -3,10 +3,10 @@ APP_DEBUG=true
 APP_KEY=XauL1eKJGbFapOV3R4XR6uD5XVKeNTIn
 
 
-DB_HOST=cmsdb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com
-DB_DATABASE=bwcms  
-DB_USERNAME=bwcms
-DB_PASSWORD=bwpassword2015
+DB_HOST=localhost
+DB_DATABASE=10feb2016cmswithhot  
+DB_USERNAME=root
+DB_PASSWORD=admin
 
 
 CACHE_DRIVER=file

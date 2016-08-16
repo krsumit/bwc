@@ -70,6 +70,7 @@ class Right extends Model {
                     ->where('user_rights.user_id', $uid)
                     ->where('user_rights.right_for', '1')
                     ->where('user_rights.rights_id', $rightId)
+                    ->where('channels.valid', '1')
                     ->groupBy('user_rights.channel_id')
                     ->orderBy('channels.channel')
                     ->get();
@@ -77,6 +78,7 @@ class Right extends Model {
             $userChannels = UserChannelRight::join('channels', 'user_channels_right.channel_id', '=', 'channels.channel_id')
                     ->select('channels.channel_id', 'channels.channel')
                     ->where('user_channels_right.user_id', $uid)
+                    ->where('channels.valid', '1')
                     ->orderBy('channels.channel')
                     ->get();
         }

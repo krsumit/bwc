@@ -56,6 +56,7 @@ return [
 'dimension_debate'=>'870X400', 
 'dimension_debate_expert'=>'126X95', 
 'dimension_magz'=>'328X450',
-'dimension_video'=>'680X370',    
+'dimension_video'=>'680X370',
+'ee_rating_cateogy_id'=>'47025'
 ];
 ?>

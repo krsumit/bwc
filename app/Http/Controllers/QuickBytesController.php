@@ -396,7 +396,7 @@ class QuickBytesController extends Controller
         $photos=DB::table('photos')
                 ->where('owned_by','quickbyte')
                 ->where('valid','1')
-                ->where('owner_id',$id)->get();
+                ->where('owner_id',$id)->orderBy('sequence') ->get();
         //print_r($photos);exit;
        $tags=  json_encode(DB::table('tags')
                 ->select('tags_id as id','tag as name')
@@ -672,7 +672,7 @@ class QuickBytesController extends Controller
         
          DB::table('quickbyte')
             ->where('id', $id)
-            ->update(['updated_at' => date('Y:m:d h:i:s')]);
+            ->update(['updated_at' => date('Y:m:d H:i:s')]);
          
     }
     

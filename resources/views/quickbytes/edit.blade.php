@@ -1143,7 +1143,7 @@
                         var formData = new FormData();
                         formData.append('photoId', msg);
                         var token = $('input[name=_token]');
-                        var rowID = 'row' + msg;
+                        var rowID = 'row_' + msg;
                         var div = document.getElementById(rowID);
                         div.style.visibility = "hidden";
                         div.style.display = "none";

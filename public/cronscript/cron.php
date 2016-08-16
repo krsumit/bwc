@@ -782,15 +782,16 @@ class Cron {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
-        //echo "SELECT * FROM event  WHERE 1 $condition";exit;
+        //echo "SELECT * FROM quotetags  WHERE 1 $condition"; 
         $tagrResults = $this->conn->query("SELECT * FROM quotetags  WHERE 1 $condition");
         //echo $eventrResults->num_rows;exit;
+        //echo '--'.$tagrResults->num_rows; exit;
         if ($tagrResults->num_rows > 0) {
 
             while ($tagRow = $tagrResults->fetch_assoc()) {
-                //print_r($tagRow);exit;
-                $tagtId = $tagRow['tags_id'];
-                // exit;
+                //print_r($tagRow);
+                $tagtId = $tagRow['tag_id']; 
+               // echo "select tag_id,tag from quotetags where tag_id=$tagtId"; exit;
                 $checkTagExistResultSet = $this->conn2->query("select tag_id,tag from quotetags where tag_id=$tagtId");
                 if ($checkTagExistResultSet->num_rows > 0) { //echo 'test';exit;
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
@@ -813,7 +814,9 @@ class Cron {
                 }
             }
         }
+        //        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' quotetags(s) inserted and ' . $_SESSION['noofupd'] . ' quotetags(s) updated.</h5>';
 
+        //echo 'here'; exit;
         $cronEndTime = date('Y-m-d H:i:s');
         $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='quotetags',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
@@ -1420,8 +1423,7 @@ class Cron {
     function migrateArticle() {
         //echo 'test'; exit;
         // updating scheduled articles
-        $this->conn->query("update articles set status='P' where status='SD' and concat(publish_date,' ',publish_time) <= '" . date('Y-m-d h:i:s') . "'") or die($this->conn->error);
-        ;
+        $this->conn->query("update articles set status='P' where status='SD' and concat(publish_date,' ',publish_time) <= '" . date('Y-m-d H:i:s') . "'") or die($this->conn->error);
         //echo date('Y-m-d h:i:s'); exit;
         //exit;
         $this->migrateCampaing();
@@ -2309,24 +2311,71 @@ class Cron {
         //echo date('d:m:y H:i:s'); exit;
         //$template=file_get_contents('editorial.html');
         //$path=$_SERVER['DOCUMENT_ROOT'].'/'.'cronscript/'; 
-       // $template = file_get_contents('/var/www/html/bwcms2aw/public/cronscript/editorial.html');
-       $template = file_get_contents('/var/www/html/public/cronscript/editorial.html');
+        $template = file_get_contents('/var/www/html/bwcms2aw/public/cronscript/editorial.html');
+       //$template = file_get_contents('/var/www/html/public/cronscript/editorial.html');
         //echo 'test'; exit;
         $start_published_date = date('Y-m-d H:i:s', strtotime("last Sunday") - 604800); //echo '<br>';
         $end_published_date = date('Y-m-d H:i:s', strtotime("last Saturday") + 86399);  //echo '<br>';
         $start_date=date('Y-m-d', strtotime("last Sunday") - 604800);
         $end_date=date('Y-m-d', strtotime("last Saturday") + 86399);
-        $countQuery = "select author_type.author_type_id,author_type.label,count(*) as cs,sum(view_count) as noofview  from articles inner join author_type on articles.author_type=author_type.author_type_id  where  concat(publish_date,' ',publish_time) between '$start_published_date' and '$end_published_date' and channel_id=1 group by author_type.author_type_id";
-
+        
+        //$countQuery = "select author_type.author_type_id,author_type.label,count(*) as cs,sum(view_count) as noofview  from articles inner join author_type on articles.author_type=author_type.author_type_id  where  concat(publish_date,' ',publish_time) between '$start_published_date' and '$end_published_date' group by author_type.author_type_id";
+        
+        $channelsRst=$this->conn->query("select channel_id,channel from channels where valid='1'");
+        $channelids=array();
+        $channelsTotal=array();
+        $userTypeRst=$this->conn->query("select author_type_id as id,label from author_type where valid='1'");
+        $userTypes=array();
+        
+        $countQuery = "select articles.channel_id,author_type.author_type_id,author_type.label,count(*) as cs,sum(view_count) as noofview  from articles inner join author_type on articles.author_type=author_type.author_type_id  where  concat(publish_date,' ',publish_time) between '$start_published_date' and '$end_published_date' group by author_type.author_type_id,articles.channel_id";
+        $counts=array();
         $countRsult = $this->conn->query($countQuery);
         $total_stories = 0;
         $repor_type_tdata = '<tr>
-                	<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Reporter Type</b></th>
-                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>No Of Stories</b></th>
-                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Total Views</b></th>
-                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Average views per article</b></th>
-                    </tr>';
-        while ($rowCount = $countRsult->fetch_assoc()) {
+                	<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Reporter Type</b></th>';
+         while($channelRow=$channelsRst->fetch_assoc()){           
+            $repor_type_tdata.='<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>'.$channelRow['channel'].'</b></th>';
+            $channelids[]=$channelRow['channel_id'];
+            $channelsTotal[$channelRow['channel_id']]=0;
+         }
+         
+        while($userTypeRow=$userTypeRst->fetch_assoc()){
+            $userTypes[$userTypeRow['id']]=$userTypeRow['label'];
+            
+        }
+         while ($rowCount = $countRsult->fetch_assoc()) {
+            $counts[$rowCount['channel_id']][$rowCount['author_type_id']]=$rowCount['cs'];
+         }
+         $total_stories=0;
+         foreach ($userTypes as $key => $value){
+             //echo $key.'-'.$value; exit;
+             //print_r($channelids); exit;
+             $repor_type_tdata.='<tr>';
+             $repor_type_tdata.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $value . '</td>';
+             foreach ($channelids as $id){
+                 $c=0;
+                 if( isset($counts[$id]) ){
+                     if(isset($counts[$id][$key])){
+                         $c=$counts[$id][$key];
+                     }
+                 }
+                 $total_stories+=$c;
+                 $repor_type_tdata.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' .$c. '</td>';
+                 $channelsTotal[$id]=$channelsTotal[$id]+$c;
+             }
+             $repor_type_tdata.='</tr>';
+         }
+         
+        $repor_type_tdata.='<tr>';
+        $repor_type_tdata.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Total</b></td>';  
+        foreach($channelsTotal as $total){
+           $repor_type_tdata.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>' .$total. '</b></td>';  
+         }
+        $repor_type_tdata.='</tr>'; 
+         
+            
+        /*while ($rowCount = $countRsult->fetch_assoc()) {
+            
             $total_stories+=$rowCount['cs'];
             $repor_type_tdata.='<tr>
                 	<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $rowCount['label'] . '</td>
@@ -2335,11 +2384,12 @@ class Cron {
                        <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . ceil($rowCount['noofview'] / $rowCount['cs']) . '</td>
 
                     </tr>';
-        }
-
+        }*/
+         
+         
         //echo $repor_type_tdata; exit;
        // $query = "select authors.name,ar.cs,ar.views_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '" . $start_published_date . "' and '" . $end_published_date . "' and articles.channel_id=1  group by article_author.author_id) ar on authors.author_id=ar.author_id where authors.author_type_id='2' order by ar.cs desc;";
-        $query="select authors.name,ar.cs,ar.views_count,tbqb.qb_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '" . $start_published_date . "' and '" . $end_published_date . "' and articles.channel_id=1 group by article_author.author_id) ar on authors.author_id=ar.author_id  left join (select id,author_id,count(*) as qb_count  from quickbyte where publish_date between '".$start_date."' and '".$end_date."' and quickbyte.channel_id=1 and valid=1 group by author_id) as tbqb on authors.author_id=tbqb.author_id where authors.author_type_id='2' and (views_count is not null or qb_count is not null)  order by ar.cs desc;
+        $query="select authors.name,ar.cs,ar.views_count,tbqb.qb_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '" . $start_published_date . "' and '" . $end_published_date . "' group by article_author.author_id) ar on authors.author_id=ar.author_id  left join (select id,author_id,count(*) as qb_count  from quickbyte where publish_date between '".$start_date."' and '".$end_date."' and valid=1 group by author_id) as tbqb on authors.author_id=tbqb.author_id where authors.author_type_id='2' and (views_count is not null or qb_count is not null)  order by ar.cs desc;
 ";
 /*
  select authors.name,ar.cs,ar.views_count,tbqb.qb_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '2016-05-22 00:00:00' and '2016-05-28 23:59:59' and articles.channel_id=1 group by article_author.author_id) ar on authors.author_id=ar.author_id 
@@ -2380,7 +2430,7 @@ where authors.author_type_id='2' order by ar.cs desc;
 
         $mailbody = str_replace(array('[from_date]', '[to_date]', '[total_stories]', '[reporters_data]', '[reporters_type_data]'), array($start_published_date, $end_published_date, $total_stories, $reportdata, $repor_type_tdata), $template);
         $headers = 'MIME-Version: 1.0' . "\r\n";
-        // echo  $mailbody; exit;
+         echo  $mailbody; exit;
         $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
         $from_email = "reports@bwbusinessworld.com";
         $sub = '=?UTF-8?B?' . base64_encode("Weekly Report – Article Contribution to Digital") . '?=';

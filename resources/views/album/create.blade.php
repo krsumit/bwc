@@ -170,7 +170,7 @@
         </div>
         <div id="Photo-feature"  class="control-group row-fluid">
             <div class="span3">
-                <label class="control-label">Feature Title </label>
+                <label class="control-label">Title </label>
             </div>
             <div class="span9">
                 <div class="controls">
@@ -180,7 +180,7 @@
         </div>
         <div id="Text_Area_Resizable" class="control-group row-fluid">
             <div class="span3">
-                <label class="control-label">Feature Description</label>
+                <label class="control-label">Description</label>
             </div>
             <div class="span9">
                 <div class="controls">

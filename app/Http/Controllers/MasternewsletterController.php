@@ -192,8 +192,10 @@ class MasternewsletterController extends Controller {
              exec("/usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=newsletter'");
         elseif($newsletter->channel_id=='5')
              exec("/usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=newsletter'");
-	elseif($newsletter->channel_id=='3')
+		elseif($newsletter->channel_id=='3')
              exec("/usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=newsletter'"); 
+        elseif($newsletter->channel_id=='7')
+             exec("/usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=newsletter'");      
         
     }   
     //End end of sorting newsletter
@@ -217,8 +219,10 @@ class MasternewsletterController extends Controller {
              exec("/usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=newsletter'");
         elseif($newsletter->channel_id=='5')
              exec("/usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=newsletter'");
-	elseif($newsletter->channel_id=='3')
+		elseif($newsletter->channel_id=='3')
              exec("/usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=newsletter'"); 
+        elseif($newsletter->channel_id=='7')
+             exec("/usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=newsletter'");      
 
 
         //exec("/usr/bin/php /var/www/html/public/hotcron/cronjob.php 'section=newsletter'");
@@ -314,8 +318,10 @@ class MasternewsletterController extends Controller {
              exec("/usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=newsletter'");
         elseif($newsletter->channel_id=='5')
              exec("/usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=newsletter'");
-	elseif($newsletter->channel_id=='3')
-             exec("/usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=newsletter'"); 
+		elseif($newsletter->channel_id=='3')
+             exec("/usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=newsletter'");
+        elseif($newsletter->channel_id=='7')
+             exec("/usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=newsletter'");       
         
         
         return 'success';

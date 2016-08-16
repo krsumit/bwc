@@ -192,7 +192,7 @@ class ArticlesController extends Controller {
                ';
               DB::table('articles')
             ->where('article_id', $photo->owner_id)
-            ->update(['updated_at' => date('Y:m:d h:i:s')]);
+            ->update(['updated_at' => date('Y:m:d H:i:s')]);
 
         }elseif($photo->owned_by=='quickbyte'){
             $photo->title=$imagetitlep;
@@ -214,7 +214,7 @@ class ArticlesController extends Controller {
             
             DB::table('quickbyte')
             ->where('id', $photo->owner_id)
-            ->update(['updated_at' => date('Y:m:d h:i:s')]);
+            ->update(['updated_at' => date('Y:m:d H:i:s')]);
      
             
             
@@ -239,7 +239,7 @@ class ArticlesController extends Controller {
                                     ';
               DB::table('album')
             ->where('id', $photo->owner_id)
-            ->update(['updated_at' => date('Y:m:d h:i:s')]);
+            ->update(['updated_at' => date('Y:m:d H:i:s')]);
 
         }
         $photo->save();
@@ -265,7 +265,7 @@ class ArticlesController extends Controller {
         
          DB::table('articles')
             ->where('id', $id)
-            ->update(['updated_at' => date('Y:m:d h:i:s')]);
+            ->update(['updated_at' => date('Y:m:d H:i:s')]);
          
     }
 
@@ -594,6 +594,8 @@ class ArticlesController extends Controller {
         $article->news_type = $request->newstype;
         $article->magazine_id = $request->magazine;
         $article->event_id = $request->event;
+        $article->rating_point=$request->rating_point;
+
         if($request->hide_image)
         $article->hide_image= $request->hide_image;   
         if($request->video_Id !='' &&  $request->video_Id !='0'){
@@ -601,6 +603,8 @@ class ArticlesController extends Controller {
         }elseif ($request->videoCode !=''){
             $article->video_type = 'embededvideocode' ;
         }
+       
+        
         $article->video_Id = $request->video_Id;
         $article->canonical_options = $request->canonical_options;
         $article->canonical_url = $request->canonical_url;
@@ -1051,6 +1055,7 @@ class ArticlesController extends Controller {
         $article->canonical_options = $request->canonical_options;
         $article->canonical_url = $request->canonical_url;
         $article->video_Id = $request->video_Id;
+        $article->rating_point=$request->rating_point;
         if($request->hide_image)
         $article->hide_image= $request->hide_image;
         //print_r($request->all());
@@ -1449,7 +1454,7 @@ class ArticlesController extends Controller {
         $articles = DB::table('articles')
                 ->where('status', 'SD')
                 ->where('publish_date', '<=', date('Y-m-d'))
-                ->where('publish_time', '<=', date('h:i:s'))
+                ->where('publish_time', '<=', date('H:i:s'))
                 ->get();
         //echo count($articles);exit;
         foreach ($articles as $article) {

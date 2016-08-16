@@ -1,0 +1,265 @@
+<?php
+
+@ob_start();
+@session_start();
+
+require_once('includes/function/autoload.php');
+require_once('setlanguage.php');
+
+$globalTemplateObj = new GlobalTemplate();
+
+$loginObj = new Login();
+$loginObj->checkSession();
+$genObj = new GeneralFunctions();
+$genObj->checkSeller();
+$saleObj=new SaleReport();
+$seoObj=new SeoUrl();
+$separator='&';
+$type=$_REQUEST['type'];
+$display=$_REQUEST['display'];
+$qry="select name,surName from ".TBL_USER." where id='".$_SESSION[USER_ID]."'";
+$rst=$saleObj->executeQry($qry);
+$sellerRow=$saleObj->getResultObject($rst);
+$sellerName=$sellerRow->name." ".$sellerRow->surName;
+$itemId=base64_decode($_REQUEST['item']);
+$metaObj=new Seo();
+//print_r($_GET);exit;
+//echo "Hi01"; exit;
+?>
+        <!DOCTYPE html>
+        <html>
+        <head>
+
+        <!--AfterStartHead START HERE-->
+        <?php echo $globalTemplateObj->getAfterStartHeadResponsive(0); ?>
+        <!--AfterStartHead END HERE-->
+
+        <base href="<?php echo SITE_URL ?>" />
+          
+        <?php echo $metaObj->getMetaDetail('itemByItemNameReport', 'itemByItemNameReport.php'); ?>
+        
+        
+        
+        
+        <script type="text/javascript" src="js/jquery.js"></script>
+        <script type="text/javascript" src="js/popup.js"></script>
+        <script type="text/javascript" src="js/ajax.js"></script>
+        <script type="text/javascript" src="js/jquery.min.js"></script>
+        <script type="text/javascript" src="js/hover.js"></script>
+        <script type="text/javascript">
+            function pagelimit(totalPage)
+            {
+                
+                var pageNo = document.getElementById("pageNo").value;
+                if((parseInt(pageNo) <= parseInt(totalPage)) && (parseInt(pageNo)>0) && (!isNaN(pageNo)))
+                {
+                    var pageSeparatorTest='<?php echo $genObj->getQueryStringCustom(array(), array('type', 'page'), $separator); ?>';
+                    // alert(pageSeparatorTest);
+                    var listType='<?= $_GET['type'] ?>';
+                    var pageSeparator='&';
+                   
+                    //alert(pageSeparator);
+                    var url='<?php echo $seoObj->getSaleReportUrl('itemByItemNameReport',$_REQUEST['type']) . $genObj->getQueryStringCustom(array(), array('type', 'page'), $separator); ?>'+pageSeparator+'page='+pageNo;
+                    //alert(url);
+                    window.location=url;
+                }
+                else
+                {
+                    document.getElementById("pageInfo").innerHTML="<?= LANG_PLEASE_ENTER_VALID_PAGE_NUMBER ?>";
+                }
+            }
+        </script>
+        
+
+        
+        
+            
+        <!--Fix IE START HERE-->
+        <?php echo $globalTemplateObj->getCSSFixIE(); ?>
+        <!--Fix IE END HERE-->
+
+    </head>
+
+        <body>
+<a href="#" name="top"></a> 
+<!--CONTAINER START HERE-->
+<div id="container"> 
+          <!--HEADER START HERE-->
+          <?php include("includes/header.php"); ?>
+          <!--HEADER END HERE--> 
+          
+          <!--MAIN START HERE-->
+          <div class="<?php echo $globalTemplateObj->getMainContainer(); ?> shop_setting_main"> 
+    <!--CONTENT START HERE-->
+    <div id="content">
+              <?php include 'includes/topMenu.php'; ?>
+              
+              <!--release sale section inside-->
+              
+              <div class="global_full top_bottom_ten">
+        <div class="sale_release_funds global_full">
+                  <div class="left_r_funds">
+            <div class="glob_funds">
+                      <ul>
+                <li>
+                	<div class="global_full">
+                    <div class="glob_l_funds"><?php echo LANG_ITEM_NAME ?></div>
+                    <div class="glob_r_funds"><strong><?php echo LANG_BY_ITEM ?></strong> </div>
+                  	</div>
+               </li>
+               <li>
+                   <div class="global_full">
+                   <div class="glob_l_funds"><?php echo LANG_MEMBER ?> <?php echo LANG_NAME ?></div>
+                   <div class="glob_r_funds"><?php echo $sellerName  ?></div>
+                  </div>
+              </li>
+              <li>
+                   <div class="global_full">
+                   <div class="glob_l_funds"><?php echo LANG_MEMBER_ID ?></div>
+                   <div class="glob_r_funds"><?php echo $_SESSION[USER_ID] ?></div>
+                  </div>
+             </li>
+             <li>
+                  <div class="global_full">
+                  <div class="glob_l_funds"><?php echo LANG_DURATION ?></div>
+                  <div class="glob_r_funds"><strong><?php echo $_REQUEST['date'] ?></strong></div>
+                  </div>
+             </li>
+             <li>
+                 <div class="global_full">
+                 <div class="glob_l_funds"><?php echo LANG_PRINTED ?></div>
+                 <div class="glob_r_funds"><strong><?php echo date("d M Y") ?></strong></div>
+                  </div>
+            </li>
+                          
+            <li>
+                 <div class="global_full">
+                    <div class=" glob_l_funds" style=" background: none;">
+                    
+                        <div><?php echo $genObj->getProductImagesDefault($itemId,75,75) ?></div>
+                        <div></div>
+                    
+                    </div>
+                    <div class="glob_r_funds">
+                        <div><?php echo $genObj->getItemNameById($itemId) ?></div>
+                    
+                        <div><?php echo LANG_NO." ".$itemId ?></div>
+                        <div><?php echo $genObj->getCatNameById($itemId) ?></div>
+                    </div>
+                  </div>
+            </li>
+              </ul>
+           </div>
+          </div>
+                  <div class="mid_r_funds">
+            <div class="global_full">
+                      <div class="mid_glob_sumary"><?php echo LANG_REPORT_SUMMARY ?></div>
+                    </div>
+            <div class="glob_funds ">
+                      <ul>
+                      <?php echo $saleObj->getReportSummaryForItemByItemName() ?>
+                       
+              </ul>
+                    </div>
+          </div>
+                  <div class="right_r_funds">
+                  <div class="global_full"><div class="float_r"><div class="new_logo_section">
+                  <div><a href="#"><img alt="Doodern" src="hover_images/logo_inner.png" title="Doodern" width="" height=""/></a></div>
+                  <div><a href="www.doodern.com"><span>www.doodern.com</span></a></div>
+                  
+                  
+                  </div></div></div>
+                  
+                  <div class="excel_pdf_position">
+                  <div class="global_full"><div class="exel_pdf_print">
+                           <ul>
+                            <li><a target="_blank" href="<?php echo $seoObj->getUrls("export2excel") ?>?date=<?php echo $_REQUEST['date']?>&type=<?php echo $type ?>&excelType=6&itemId=<?php echo $itemId; ?>&orders=<? echo $_REQUEST['orders'];?>&soldUnit=<? echo $_REQUEST['soldUnit'];?>&limit=<?php echo $_REQUEST['limit']?>&page=<?php echo $_REQUEST['page']?>"><img src="hover_images/xl.png" alt="" width="" height=""/><?php echo LANG_EXPORT_TO_EXCEL ?></a></li>
+                            <li><a  href="<?php echo $seoObj->getUrls("pdfHandler") ?>?date=<?php echo $_REQUEST['date']?>&type=<?php echo $type ?>&pdfType=6&itemId=<?php echo $itemId; ?>&orders=<? echo $_REQUEST['orders'];?>&soldUnit=<? echo $_REQUEST['soldUnit'];?>&limit=<?php echo $_REQUEST['limit']?>&page=<?php echo $_REQUEST['page']?>"><img src="hover_images/exl_img.png" alt="" width="" height=""/><?php echo LANG_SAVE_TO_PDF ?></a></li>
+                            <li><a href="javascript:void(0);" onclick="window.print();"><img src="hover_images/dwn_img.png" alt="" width="" height=""/><?php echo LANG_PRINT ?></a></li>
+                            </ul>
+
+                            </div></div>
+                  </div>
+                  </div>
+                </div>
+                
+        
+        <div class="dmw_report t_b"><div class="global_full"><div class="dmw_report_left"><h4><?php echo LANG_BY_ITEM ?>
+                                       <span><?php echo LANG_PAGE ?> : <?php echo ($_REQUEST['page']?$_REQUEST[page]:1) ?></span></h4></div><div class="dmw_report_rite"><ul><li class="none"><?php echo LANG_SHOW ?> :</li>
+                    <li><a class="none" href="<?php echo $seoObj->getSaleReportUrl('itemByItemNameReport',$_REQUEST['type']).$genObj->getQueryStringCustom(array(limit=>15),array('type','page'),$separator) ?>">15</a></li>
+                    <li><a href="<?php echo $seoObj->getSaleReportUrl('itemByItemNameReport',$_REQUEST['type']).$genObj->getQueryStringCustom(array(limit=>30),array('type','page'),$separator) ?>">30</a></li>
+                    <li class="none"><a href="<?php echo $seoObj->getSaleReportUrl('itemByItemNameReport',$_REQUEST['type']).$genObj->getQueryStringCustom(array(limit=>50),array('type','page'),$separator) ?>">50</a></li></ul></div></div></div>        
+                
+                
+         <div class="global_full border_bottom">
+         
+         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="main_fund_r">
+  <tr class="release_head_fund">
+    <td align="center" valign="middle" class="left_scace border_bottom border_top"><a href="javascript:void(0)"><?php echo LANG_NO ?></a></td>
+    <td align="center" class=" border_bottom border_top">&nbsp;</td>
+     <td align="center" class=" border_bottom border_top"><a href="javascript:void(0)"><?php echo LANG_DATE ?></a></td>
+     <td align="center" class=" border_bottom border_top">&nbsp;</td>
+   <td align="center" class=" border_bottom border_top"><?php echo orderByRewriteBlack($seoObj->getSaleReportUrl('itemByItemNameReport',$type).$genObj->getQueryStringCustom(array(), array('type', 'page','type'), $separator), "orderId", LANG_ORDER_NO) ?></td>
+    
+    <td align="center" class=" border_bottom border_top">&nbsp;</td>
+    <td align="center" class=" border_bottom border_top"><?php echo orderByRewriteBlack($seoObj->getSaleReportUrl('itemByItemNameReport',$type).$genObj->getQueryStringCustom(array(), array('type', 'page','type'), $separator), "totalQuantity", LANG_SOLD_UNIT) ?></td>
+    <td align="center" class=" border_bottom border_top">&nbsp;</td>
+    
+    <td align="center" class=" border_bottom border_top">&nbsp;</td>
+    
+    
+    
+  </tr>
+  
+             <?php echo $saleObj->viewItemByItemNameReport($itemId) ?>
+         
+         </div>       
+                
+          <div class="global_full"><div class="release_remark">
+          <div><span><?php echo LANG_REMARK ?></span></div>
+          <ul>
+          <li><?php echo LANG_PAYSBUY_CHARGES ?> 3.5% + 11 THB </li>
+          <li><?php echo LANG_PAYSBUY_CHARGES ?> 3.5% + 11 THB </li>
+          <li><img src="hover_images/pf.jpg" alt="" width="" height=""/><?php echo LANG_DISPUTED_ORDERS ?></li>
+          </ul>
+          
+          </div>
+               </div> 
+                
+             
+                
+      </div>
+              
+              <!--release sale section closed--> 
+              
+            </div>
+    <!--CONTENT END HERE--> 
+    
+    
+  </div>
+          <!--MAIN END HERE--> 
+          
+
+            <!--FOOTER START HERE-->
+
+            <?php echo $globalTemplateObj->getFooterFull(); ?>
+
+            <!--FOOTER END HERE-->
+
+        </div>
+<!--CONTAINER END HERE-->
+<div id="lightDemo" class="lightDemo" style="z-index:1202;"></div>
+<div style="display: none; z-index:1201;" id="lightbox"></div>
+<script src="js/googleJquery1.6.2min.js" type="text/javascript"></script> 
+
+<script src="js/chosen.jquery.js" type="text/javascript"></script> 
+<script type="text/javascript"> $(".select").chosen(); </script> 
+<script src="js/jquery.custom_radio_checkbox.js" type="text/javascript"></script> 
+<script language="javascript" type="text/javascript">
+            $(document).ready(function(){
+                $(".checkbox").dgStyle();
+            });
+        </script> 
+
+</body>
+</html>

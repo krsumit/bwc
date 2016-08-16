@@ -555,6 +555,7 @@ function migrateBwCategory() {
             }
             $categoryCheckStmt->free_result();
         }
+        $this->migrateSubCategoryDirect($cronLastExecutionTime);
         $cronEndTime = date('Y-m-d H:i:s');
         $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhccategory',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
@@ -608,6 +609,98 @@ function migrateSubCategory($frontparentId, $cmsParentId, $cmsLevel, $cronLastEx
         }
     }
 
+
+ function migrateSubCategoryDirect($cronLastExecutionTime) {
+        $condition = '';
+        if ($cronLastExecutionTime) {
+            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
+        $query2 = "select category_two_id as id,name,category_id as parent,valid from category_two where 1 $condition group by category_id";
+
+        $catresults2 = $this->conn->query($query2);
+        //echo $catresults2->num_rows.'--'; exit;
+        if ($catresults2->num_rows > 0) {
+            while ($catrow = $catresults2->fetch_assoc()) {
+
+                $categoryCheckStmt = $this->conn2->prepare("select category_id,category_name from channel_category where cms_cat_id=? and cms_cat_level=1") or die($this->conn2->error);
+
+                $categoryCheckStmt->bind_param('i', $catrow['parent']);
+                $categoryCheckStmt->execute();
+                $categoryCheckStmt->store_result();
+                if ($categoryCheckStmt->num_rows > 0) {
+                    $categoryCheckStmt->bind_result($catId, $catName);
+                    $categoryCheckStmt->fetch();
+                    $categoryCheckStmt->free_result();
+                }
+                //    echo $catId.'##'.$catPid;exit;  
+                if ($this->getCategoryChannel($catrow['parent'], 1) == $this->channelId)
+                    $this->migrateSubCategory($catId, $catrow['parent'], 2, $cronLastExecutionTime);
+            }
+        }
+        $query3 = "select category_three_id as id,name,category_two_id as parent,valid from category_three where 1 $condition group by category_two_id";
+        $catresults3 = $this->conn->query($query3);
+
+        if ($catresults3->num_rows > 0) {
+            while ($catrow = $catresults3->fetch_assoc()) {
+                //print_r($catrow); // exit;
+                $categoryCheckStmt = $this->conn2->prepare("select category_id,category_name from channel_category where cms_cat_id=? and cms_cat_level=2");
+                $categoryCheckStmt->bind_param('i', $catrow['parent']);
+                $categoryCheckStmt->execute();
+                $categoryCheckStmt->store_result();
+                if ($categoryCheckStmt->num_rows > 0) {
+                    $categoryCheckStmt->bind_result($catId, $catName);
+                    $categoryCheckStmt->fetch();
+                    $categoryCheckStmt->free_result();
+                }
+                //echo $catId.'--'.$catrow['parent']; exit;
+                if ($this->getCategoryChannel($catrow['parent'], 2) == $this->channelId)
+                    $this->migrateSubCategory($catId, $catrow['parent'], 3, $cronLastExecutionTime);
+            }
+        }
+        $query4 = "select category_four_id as id,name,category_three_id as parent,valid from category_four where 1 $condition group by category_three_id";
+        $catresults4 = $this->conn->query($query4);
+        //echo $catresults4->num_rows; exit;
+        if ($catresults4->num_rows > 0) {
+            while ($catrow = $catresults4->fetch_assoc()) {
+                $categoryCheckStmt = $this->conn2->prepare("select category_id,category_name from channel_category where cms_cat_id=? and cms_cat_level=3");
+                $categoryCheckStmt->bind_param('i', $catrow['parent']);
+                $categoryCheckStmt->execute();
+                $categoryCheckStmt->store_result();
+                if ($categoryCheckStmt->num_rows > 0) {
+                    $categoryCheckStmt->bind_result($catId, $catName);
+                    $categoryCheckStmt->fetch();
+                    $categoryCheckStmt->free_result();
+                }
+                if ($this->getCategoryChannel($catrow['parent'], 3) == $this->channelId)
+                    $this->migrateSubCategory($catId, $catrow['parent'], 4, $cronLastExecutionTime);
+            }
+        }
+    }
+    
+    
+    function getCategoryChannel($catId, $level) {
+        if ($level == 1) {
+            $query = "SELECT category_id,channel_id FROM `category` WHERE category_id=$catId";
+            $catresults = $this->conn->query($query);
+            $catrow = $catresults->fetch_assoc();
+            return $catrow['channel_id'];
+        } else if ($level == 2) {
+            $query2 = "select category_two_id as id,name,category_id as parent,valid from category_two where category_two_id=$catId";
+            $catresults2 = $this->conn->query($query2);
+            $catrow = $catresults2->fetch_assoc();
+            return $this->getCategoryChannel($catrow['parent'], 1);
+        } else if ($level == 3) {
+            $query3 = "select category_three_id as id,name,category_two_id as parent,valid from category_three where category_three_id=$catId";
+            $catresults3 = $this->conn->query($query3);
+            $catrow = $catresults3->fetch_assoc();
+            return $this->getCategoryChannel($catrow['parent'], 2);
+        } else if ($level == 4) {
+            $query4 = "select category_four_id as id,name,category_three_id as parent,valid from category_four where category_four_id=$catId";
+            $catresults4 = $this->conn->query($query4);
+            $catrow = $catresults4->fetch_assoc();
+            return $this->getCategoryChannel($catrow['parent'], 3);
+        }
+    }
     function migrateBwTag() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
@@ -1414,7 +1507,7 @@ function migrateBwArticle() {
             // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $masterVideoResults = $this->conn->query("SELECT * FROM video_master where channel_id=$this->channelId  $condition");
+        $masterVideoResults = $this->conn->query("SELECT * FROM video_master where channel_id=$this->channelId  $condition ");
         //echo $masterVideoResults->num_rows; exit;
         if ($masterVideoResults->num_rows > 0) {
 
@@ -1425,12 +1518,15 @@ function migrateBwArticle() {
                 $catMapArray[$key] = $videoCatDataRow['category_id'];
             }
             $this->categoryMapping = $catMapArray;
+            
 
             while ($masterVideoRow = $masterVideoResults->fetch_assoc()) {
+				
                 //print_r($masterVideoRow); exit;
                 $masterVideoId = $masterVideoRow['id'];
                 $checkmasterVideoExistResultSet = $this->conn2->query("select video_id, video_title,video_summary, video_name,video_thumb_name,tags,created_at,updated_at from video_master where video_id=$masterVideoId");
-                if ($checkmasterVideoExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
+                if ($checkmasterVideoExistResultSet->num_rows > 0) {
+					//echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
                     if($masterVideoRow['video_status']=='1'){//echo 'sumit'; exit();
                     $masterVideoUpdateStmt = $this->conn2->prepare("update video_master set video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=? where video_id=?") or die($this->conn2->error);
@@ -1438,9 +1534,11 @@ function migrateBwArticle() {
                     $masterVideoUpdateStmt->bind_param('sssssssisi', $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'], $masterVideoRow['updated_at'], $masterVideoRow['campaign_id'], $masterVideoRow['video_by'], $masterVideoId);
                     $masterVideoUpdateStmt->execute() or die($this->conn2->error);
                     //print_r($masterVideoUpdateStmt);exit;
-
                     $iid = $masterVideoRow['id'];
-                    //echo $iid ; exit;
+                    echo $iid ;
+                    echo '<br>';
+                    
+                     
                     $this->callVideoRelatedContent($iid);
                     $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                     } else {
@@ -1450,13 +1548,14 @@ function migrateBwArticle() {
                         
                     }
                     // echo  $_SESSION['noofupd'];
-                } else {//echo 'going to insert';exit;
+                } else { //echo 'going to insert';exit;
                     $masterVideoInsertStmt = $this->conn2->prepare("insert into video_master set video_id=?,video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=?")  or die($this->conn2->error);
                     //echo $this->conn2->error; exit;
                     $masterVideoInsertStmt->bind_param('isssssssis', $masterVideoRow['id'], $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'], $masterVideoRow['updated_at'], $masterVideoRow['campaign_id'], $masterVideoRow['video_by']);
                     $masterVideoInsertStmt->execute() or die($this->conn2->error);
                     //print_r($masterVideoInsertStmt);exit;
-                    // echo $articleInsertStmt->insert_id;exit;    
+                    // echo $articleInsertStmt->insert_id;exit;  
+                      
                     if ($masterVideoInsertStmt->insert_id) {
                         $iid = $masterVideoInsertStmt->insert_id;
                         $masterVideoInsertStmt->close();
@@ -1484,13 +1583,13 @@ function migrateBwArticle() {
         //echo 'test'; exit;
         $videoCatRst = $this->conn->query("select * from video_category where video_id=$id");
         while (($videoCatRow = $videoCatRst->fetch_assoc())) {
-
+			///print_r($videoCatRow);
             $catInsertStmt = $this->conn2->prepare("insert into video_category  set v_category_id=?,video_id=?,category_id=?,level=?") or die($this->conn2->error);
             $catInsertStmt->bind_param('iiii', $videoCatRow['v_category_id'], $id, $this->categoryMapping[$videoCatRow['category_id'] . '_' . $videoCatRow['level']], $videoCatRow['level']) or die($this->conn2->error);
             $catInsertStmt->execute() or die($this->conn2->error);
             $catInsertStmt->close();
         }
-
+		//echo 'test123'; exit;
         // Deleting tag if already exist
         $delStmt = $this->conn2->prepare("delete from video_tags where video_id=?") or die($this->conn2->error);
         $delStmt->bind_param('i', $id) or die($this->conn2->error);
@@ -1504,6 +1603,7 @@ function migrateBwArticle() {
             $tagInsertStmt->execute() or die($this->conn2->error);
             $tagInsertStmt->close();
         }
+        //echo 'at end'; exit;
     }
 function migrateMasterNewsLetter() {
     

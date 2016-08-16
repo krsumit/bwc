@@ -26,6 +26,7 @@
 
             <script type="text/javascript">
                 $(function () {
+                    //alert(1);
                     $("#jstree").jstree({
                         "json_data" : {
                             "data" : [
@@ -95,6 +96,8 @@
                                              //var p="";
                                              $.each(element, function(index, element2) {
                                                  //alert(element2.toSource());
+                                                 $("#Taglist").tokenInput("clear");
+
                                                  $("#Taglist").tokenInput("add", element2);
                                                //if(p==''){p=element2.name;}else{
                                                 // p = p+','+element2.name;

@@ -79,7 +79,7 @@ class AlbumController extends Controller
                 }
             }
 
-        $albums=$q->groupby('album.id')->paginate(config('constants.recordperpage'));
+        $albums=$q->groupby('album.id')->orderBy('album.id','desc')->paginate(config('constants.recordperpage'));
     
                 return view('album.'.$option, compact('albums','channels','currentChannelId'));
             
@@ -436,7 +436,7 @@ class AlbumController extends Controller
         
          DB::table('album')
             ->where('id', $id)
-            ->update(['updated_at' => date('Y:m:d h:i:s')]);
+            ->update(['updated_at' => date('Y:m:d H:i:s')]);
          
     }
     

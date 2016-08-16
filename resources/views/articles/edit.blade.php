@@ -255,6 +255,12 @@
                     }
                     },
                     {
+                            "data" : {
+                            "title" : "Social Details",
+                                    "attr" : { "href" : "#social-media-detail" }
+                            }
+                    },
+                    {
                     "data" : {
                     "title" : "Topics And Location",
                             "attr" : { "href" : "#topics-location" }
@@ -960,7 +966,7 @@
             </div>
             <div class="span9">
                 <div class="controls elrte-wrapper">
-                    <textarea name="description" id="maxi" rows="2" class="auto-resize required valid">{{$article->description}}</textarea>
+                    <textarea name="description" id="maxi" rows="2" class="auto-resize required valid">{{nl2br(trim($article->description))}}</textarea>
                     <span for="description" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
                     <script>
                      elRTE.prototype.options.panels.web2pyPanel = [
@@ -996,6 +1002,42 @@
         <!--WYSIWYG Editor - Full Options end-->
 
     </div><!-- end container1 -->
+    
+    
+    <div class="container-fluid">
+      <div class="form-legend" id="social-media-detail">Social Media Detail</div>
+      <!--Text Area - No Resize begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="title">Social Title (200 Characters)</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <textarea  name="social_title" rows="2" class="no-resize  title_range valid">{{$article->social_title}}</textarea>
+                    <span for="title" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
+                </div>
+            </div>
+        </div>
+        <!--Text Area - No Resize end-->
+
+        <!--Text Area Resizable begin-->
+        <div id="Text_Area_Resizable" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label">Social Description (800 Characters)</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <textarea  name="social_summary" rows="2" class="">{{$article->social_summary}}</textarea>
+                </div>
+            </div>
+        </div>
+        <!--Text Area Resizable end-->
+
+        
+    </div>
+    
+    
+    
     <div class="container-fluid">
 
         <div class="form-legend" id="topics-location">Topics And Location</div>
@@ -1226,6 +1268,11 @@
                                 $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
                                 $('#selectBoxFilter5').select2();
                         });
+                        if($(this).attr("value")=='{{config('constants.ee_rating_cateogy_id')}}'){
+                            $('#start_rating_div').show();
+                        }else{
+                            $('#start_rating_div').hide();
+                        }
                 });
                 });</script>
         </div>
@@ -1318,6 +1365,20 @@
         <!--Select Box with Filter Search end-->
 
     </div>
+    
+    <div class="container-fluid" id="start_rating_div" @if($acateg[0]['category_id']!=config('constants.ee_rating_cateogy_id')) style="display: none;" @endif>
+
+        <div class="form-legend" id="start_rating">Rating</div>
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter">Rating Point</label>
+            </div>
+            <div class="span9">
+                <div class="controls"><input type="text" id="rating_point" value="{{$article->rating_point}}" name="rating_point"></div>
+            </div>
+        </div>     
+    </div>
+    
 
     <div class="container-fluid">
 
@@ -1997,7 +2058,7 @@
                 var formData = new FormData();
                         formData.append('photoId', msg);
                         var token = $('input[name=_token]');
-                        var rowID = 'row' + msg;
+                        var rowID = 'row_' + msg;
                         var div = document.getElementById(rowID);
                         div.style.visibility = "hidden";
                         div.style.display = "none";
