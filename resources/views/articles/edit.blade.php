@@ -551,8 +551,7 @@
 
                         $(this).find("option:selected").each(function(){
                             //return false
-
-                        if ($(this).attr("value") == "2"){
+                        if ($(this).attr("value") == "2" || $(this).attr("value") == "3"){
                         //If chose BWReporters - get New&Existing DDs
                         //Populate DDs
                         $("#tabarea").show();
@@ -1033,6 +1032,20 @@
         </div>
         <!--Text Area Resizable end-->
 
+<!--        <div id="File_Upload" class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label">Social Image ( Prefered size 600 x 315  )</label>
+                </div>
+                <div class="span9">
+                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                        <div class="input-append">
+                            <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input name="photo" type="file"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                           
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+        
         
     </div>
     
@@ -1365,7 +1378,7 @@
         <!--Select Box with Filter Search end-->
 
     </div>
-    
+    @if(isset($acateg[0]))
     <div class="container-fluid" id="start_rating_div" @if($acateg[0]['category_id']!=config('constants.ee_rating_cateogy_id')) style="display: none;" @endif>
 
         <div class="form-legend" id="start_rating">Rating</div>
@@ -1378,7 +1391,7 @@
             </div>
         </div>     
     </div>
-    
+    @endif
 
     <div class="container-fluid">
 
@@ -2445,6 +2458,12 @@ $(':radio[id=embedcodevideo]').change(function() {
         <td colspan="1">Title</td>
         <td colspan="3"><input type="text" name="imagetitle[{%=file.name%}]"/></td>    
         </tr>
+
+          <tr>
+            <td colspan="1">Use this image on social</td>
+            <td colspan="3"><input type="radio" value="{%=file.name%}" name="social_image"/></td>    
+         </tr>
+
     
     </table>   
     </td>   

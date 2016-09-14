@@ -450,7 +450,7 @@
 
                                 $(this).find("option:selected").each(function(){
 
-                                if ($(this).attr("value") == "2"){
+                                if ($(this).attr("value") == "2" || $(this).attr("value") == "3"){
                                 //If chose BWReporters - get New&Existing DDs
                                 //Populate DDs
                                 $("#tabarea").show();
@@ -1009,7 +1009,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <textarea  name="socialtitle" rows="2" class="no-resize  title_range valid"></textarea>
+                    <textarea  name="social_title" rows="2" class="no-resize  title_range valid"></textarea>
                     <span for="title" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
                 </div>
             </div>
@@ -1023,12 +1023,24 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <textarea  name="socialsummary" rows="2" class=""></textarea>
+                    <textarea  name="social_summary" rows="2" class=""></textarea>
                 </div>
             </div>
         </div>
         <!--Text Area Resizable end-->
 
+<!--        <div id="file_upload_social" class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label">Social Image ( Prefered size 600 x 315  )</label>
+                </div>
+                <div class="span9">
+                    <div class="fileupload fileupload-new" data-provides="fileupload">
+                        <div class="input-append">
+                            <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input name="photo" type="file"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
         
     </div>
 
@@ -2200,6 +2212,11 @@
     <td colspan="3"><input type="text" name="imagetitle[{%=file.name%}]"/></td>    
     </tr>
 
+    <tr>
+    <td colspan="1">Use this image on social</td>
+    <td colspan="3"><input type="radio" value="{%=file.name%}" name="social_image"/></td>    
+    </tr>
+
     </table>   
     </td>    
     </tr>
@@ -2216,7 +2233,7 @@
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-validate.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-ui.js') }}"></script>
 <script>
-                                                $(document).ready(function(){
+                                       $(document).ready(function(){
                                         $('#fileupload').fileupload({
                                         // Uncomment the following to send cross-domain cookies:
                                         //xhrFields: {withCredentials: true},

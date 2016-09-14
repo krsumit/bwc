@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>BW CMS | Login</title>
+        <title>BW CMS | Forgot password</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
         <link rel="apple-touch-icon" href="iosicon.png" />
@@ -46,8 +46,6 @@
 
                     <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
-                         <div class="form-legend" id="Notifications">Notifications</div>
-
                         <!--Notifications begin-->
                         <div class="control-group row-fluid" >
                             <div class="span12 span-inset">
@@ -79,7 +77,6 @@
                         <div class="login-logo">
                             <img src="{{ asset('images/photon/BW-logo.png') }}" alt="Photon UI" style="height:auto !important"/>
                         </div>
-                        <h2 class="login-title">Welcome to BW CMS</h2>
 
                         <div class="panel-body">
                             @if (count($errors) > 0)
@@ -94,16 +91,15 @@
                             @endif
 
                             <div class="login-input-area">
-                                <form method="POST" action="{{url('auth/login')}}">
+                                <form method="POST" action="{{url('forgot/password')}}">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     {!! csrf_field() !!}
-                                    <span class="help-block">Login With Your Administrater Account</span>
+                                    <span class="help-block">Enter email to send reset link</span>
                                     <input type="text" name="email" class="col-md-4 control-label" placeholder="Email">
-                                    <input type="password" name="password" class="col-md-4 control-label" placeholder="Password">
-                                    <button type="submit" class="btn btn-large btn-success btn-login">Login</button>
+                                    <button type="submit" class="btn btn-large btn-success btn-login">Send Link</button>
 
                                 </form>
-                                <a href="/forgot/password" class="forgot-pass">Forgot Your Password?</a>
+                                    <a href="/auth/login" class="forgot-pass">Login</a>
                             </div>
                         </div>
                     </div>

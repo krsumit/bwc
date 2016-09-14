@@ -140,6 +140,8 @@ class MagazineissueController extends Controller {
         $magazineissue->story4_url = $request->story4_url;
         $magazineissue->story5_title = $request->story5_title;
         $magazineissue->story5_url = $request->story5_url;
+        $magazineissue->flipbook_url = $request->flipbook_url;
+        $magazineissue->buy_digital = $request->buy_digital;
         $magazineissue->valid = '1';
         $magazineissue->save();
         Session::flash('message', 'Your data has been successfully modify.');
@@ -263,13 +265,15 @@ class MagazineissueController extends Controller {
         $story4_url = $request->story4_url;
         $story5_title = $request->story5_title;
         $story5_url = $request->story5_url;
+        $flipbook_url = $request->flipbook_url;
+        $buy_digital = $request->buy_digital;
         $valid = '1';
         $created_at = date('Y-m-d H:i:s');
         $updated_at = date('Y-m-d H:i:s');
         $postdata = ['title' => $title,
             'channel_id' => $channel_id,
             'imagepath' => $imagepath,
-            'publish_date_m' => $publish_date_m, 'story1_title' => $story1_title, 'story1_url' => $story1_url, 'story2_title' => $story2_title, 'story2_url' => $story2_url, 'story3_title' => $story3_title, 'story3_url' => $story3_url, 'story4_title' => $story4_title, 'story4_url' => $story4_url, 'story5_title' => $story5_title, 'story5_url' => $story5_url, 'valid' => $valid, 'created_at' => $created_at, 'updated_at' => $updated_at];
+            'publish_date_m' => $publish_date_m, 'story1_title' => $story1_title, 'story1_url' => $story1_url, 'story2_title' => $story2_title, 'story2_url' => $story2_url, 'story3_title' => $story3_title, 'story3_url' => $story3_url, 'story4_title' => $story4_title, 'story4_url' => $story4_url, 'story5_title' => $story5_title, 'story5_url' => $story5_url,'flipbook_url'=>$flipbook_url,'buy_digital'=>$buy_digital, 'valid' => $valid, 'created_at' => $created_at, 'updated_at' => $updated_at];
         DB::table('magazine')
                 ->where('magazine_id', $request->magazine_id)
                 ->update($postdata);

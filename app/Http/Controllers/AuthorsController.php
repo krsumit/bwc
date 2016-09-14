@@ -503,5 +503,29 @@ class AuthorsController extends Controller {
         }
         return;
     }
+    public function changeStatus(){
+         $rightId=45;
+         if(!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return response()->json(array('status'=>'0','msg'=>'Permission Denied'));
+        $author_id= $_GET['author_id'];
+        $status=($_GET['status']==0)?1:0;
+        $updateVar = [
+
+                'author_status' => $status
+            ];
+         if(DB::table('authors')->where('author_id', $author_id)->update($updateVar)){
+         if($status==0){
+             $msg='<a href="javascript:void(0)" onclick="changeStatus(\''.$status.'\',\''.$author_id.'\')">Inactive</a>';
+             return response()->json(array('status'=>'1','msg'=>$msg));
+
+         }else{
+             $msg='<a href="javascript:void(0)" onclick="changeStatus(\''.$status.'\',\''.$author_id.'\')">Active</a>';
+             return response()->json(array('status'=>'1','msg'=>$msg));
+
+         }
+         }else{
+            return response()->json(array('status'=>'0','msg'=>'Can\'t update try again'));
+         }
+    }
 
 }

@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\ArticleAuthor;
 use App\ArticleCategory;
 use App\ArticleTag;
@@ -37,10 +39,10 @@ use Aws\Laravel\AwsServiceProvider;
 class ArticlesController extends Controller {
 
     private $rightObj;
+
     public function __construct() {
         $this->middleware('auth');
-        $this->rightObj= new Right();
-    
+        $this->rightObj = new Right();
     }
 
     public function index($option) {
@@ -49,8 +51,8 @@ class ArticlesController extends Controller {
         }
         $uid = Session::get('users')->id;
         $rightLabel = "";
-        
-        $rightId='';
+
+        $rightId = '';
         //exit;
         switch ($option) {
             case "drafts":
@@ -61,29 +63,29 @@ class ArticlesController extends Controller {
             case "new":
                 $status = 'N';
                 $rightLabel = "newArticles";
-                $rightId=11;
+                $rightId = 11;
                 break;
             case "scheduled":
                 $status = 'SD';
                 $rightLabel = "scheduledArticles";
-                $rightId=15; 
+                $rightId = 15;
                 break;
             case "published":
                 $status = 'P';
                 $rightLabel = "publishedArticles";
-                $rightId=16;
+                $rightId = 16;
                 break;
             case "deleted":
                 $status = 'D';
                 $rightLabel = "deletedArticles";
-                $rightId=17;
+                $rightId = 17;
                 break;
         }
-        
+
         /* Right mgmt start */
-        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
-        $channels=$this->rightObj->getAllowedChannels($rightId);
-        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
 
@@ -109,7 +111,7 @@ class ArticlesController extends Controller {
                 }
             }
             $q->groupBy('articles.article_id');
-            $q->orderBy('articles.article_id', 'DESC'); 
+            $q->orderBy('articles.article_id', 'DESC');
             $articles = $q->paginate(config('constants.recordperpage'));
         } else {
             $i = 0;
@@ -126,15 +128,14 @@ class ArticlesController extends Controller {
                 $q->orderBy('articles.created_at', 'desc');
             } else {
                 $q->select(DB::raw('articles.article_id,articles.title,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.channel_id,articles.locked_by'));
-                if($option=='scheduled'){
-                   $q->orderBy('articles.updated_at', 'desc'); 
-                }else{
-                  $q->orderBy('articles.publish_date', 'desc');
-                  $q->orderBy('articles.publish_time', 'desc');  
+                if ($option == 'scheduled') {
+                    $q->orderBy('articles.updated_at', 'desc');
+                } else {
+                    $q->orderBy('articles.publish_date', 'desc');
+                    $q->orderBy('articles.publish_time', 'desc');
                 }
-                
             }
-            $q->where('articles.channel_id',$currentChannelId)
+            $q->where('articles.channel_id', $currentChannelId)
                     ->where('status', $status);
             if (isset($_GET['searchin'])) {
                 if ($_GET['searchin'] == 'title') {
@@ -149,7 +150,7 @@ class ArticlesController extends Controller {
             }
 
             $articles = $q->groupBy('articles.article_id')->paginate(config('constants.recordperpage'));
-            
+
             $editor = DB::table('users')
                     ->join('articles', 'users.id', '=', 'articles.locked_by')
                     ->select('users.name', 'articles.article_id')
@@ -158,8 +159,7 @@ class ArticlesController extends Controller {
         }
         //echo $currentChannelId; exit;
         //print_r($channels); exit;
-        return view('articles.' . $option, compact('articles', 'editor','channels','currentChannelId'));
-        
+        return view('articles.' . $option, compact('articles', 'editor', 'channels', 'currentChannelId'));
     }
 
     function imageUpload() {
@@ -168,82 +168,89 @@ class ArticlesController extends Controller {
         $arg['script_url'] = url('article/image/upload');
         $upload_handler = new UploadHandler($arg);
     }
-    
-    function imageEdit(Request $request){
-        $photo=Photo::find($request->id);
-        return view('layouts.imageEdit',compact('photo'));
-        
+
+    function imageEdit(Request $request) {
+        $photo = Photo::find($request->id);
+        $article = '';
+        if ($photo->owned_by == 'article') {
+            $article = Article::find($photo->owner_id);
+        }
+        return view('layouts.imageEdit', compact('photo', 'article'));
     }
-    
-    function storeImageDetail(Request $request){
+
+    function storeImageDetail(Request $request) {
         parse_str($request->detail);
-        $photo=Photo::find($photo_id);
-        if($photo->owned_by=='article'){
-             $photo->title=$imagetitlep;
-             $photo->photo_by=$imagebyp;
-             $return=' <td>
-                            <img alt="article" src="'.config('constants.awsbaseurl').config('constants.awarticleimagethumbtdir').$photo->photopath.'">
+        $photo = Photo::find($photo_id);
+        if ($photo->owned_by == 'article') {
+            $article = Article::find($photo->owner_id);
+            $photo->title = $imagetitlep;
+            $photo->photo_by = $imagebyp;
+            //social_image_popup
+            $return = ' <td>
+                            <img alt="article" src="' . config('constants.awsbaseurl') . config('constants.awarticleimagethumbtdir') . $photo->photopath . '">
                         </td>
-                        <td>'.$photo->title.' / '.$photo->photo_by.'</td>
-                <input type="hidden" id="'.$photo->photo_id.'" name="deleteImagel">
-                <td class="center"><button class="btn btn-mini btn-danger" id="deleteImage" name="'.$photo->photo_id.'" onclick="$(this).MessageBox('.$photo->photo_id.')" type="button">Dump</button>
-                    <button class="btn btn-mini btn-edit" id="deleteImage" name="image'.$photo->photo_id.'" onclick="editImageDetail('.$photo->photo_id.',\'article\')" type="button">Edit</button>
-                    <img style="width:20%; display:block; margin-left:15px;display:none;" alt="loader" src="'.asset('images/photon/preloader/76.gif').'"></td>
+                        <td>' . $photo->title . ' / ' . $photo->photo_by . '</td>
+                <input type="hidden" id="' . $photo->photo_id . '" name="deleteImagel">
+                <td class="center"><button class="btn btn-mini btn-danger" id="deleteImage" name="' . $photo->photo_id . '" onclick="$(this).MessageBox(' . $photo->photo_id . ')" type="button">Dump</button>
+                    <button class="btn btn-mini btn-edit" id="deleteImage" name="image' . $photo->photo_id . '" onclick="editImageDetail(' . $photo->photo_id . ',\'article\')" type="button">Edit</button>
+                    <img style="width:20%; display:block; margin-left:15px;display:none;" alt="loader" src="' . asset('images/photon/preloader/76.gif') . '"></td>
                ';
-              DB::table('articles')
-            ->where('article_id', $photo->owner_id)
-            ->update(['updated_at' => date('Y:m:d H:i:s')]);
-
-        }elseif($photo->owned_by=='quickbyte'){
-            $photo->title=$imagetitlep;
-            $photo->photo_by=$imagebyp;
-            $photo->description=$descriptionp;
-            $return='
+            $updatearray = array('updated_at' => date('Y:m:d H:i:s'));
+            if (isset($social_image_popup)) {
+                $updatearray['social_image'] = $social_image_popup;
+            }elseif($article->social_image==$photo->photopath){
+                 $updatearray['social_image']='';
+            }
+            // print_r($updatearray); exit;
+            DB::table('articles')
+                    ->where('article_id', $photo->owner_id)
+                    ->update($updatearray);
+        } elseif ($photo->owned_by == 'quickbyte') {
+            $photo->title = $imagetitlep;
+            $photo->photo_by = $imagebyp;
+            $photo->description = $descriptionp;
+            $return = '
                                             <td width="20%">
-                                                <img style="width:40%;" alt="user" src="'.config('constants.awsbaseurl').config('constants.awquickbytesimagethumbtdir').$photo->photopath.'">
+                                                <img style="width:40%;" alt="user" src="' . config('constants.awsbaseurl') . config('constants.awquickbytesimagethumbtdir') . $photo->photopath . '">
                                             </td>
-                                            <td width="20%">'.$photo->title.'</td>
-                                             <td width="30%" class="tdimagedesc">'.$photo->description.'</td>
-                                            <td width="15%">'.$photo->photo_by.'</td>
-                                    <input type="hidden" id="'.$photo->photo_id.'" name="deleteImagel">
+                                            <td width="20%">' . $photo->title . '</td>
+                                             <td width="30%" class="tdimagedesc">' . $photo->description . '</td>
+                                            <td width="15%">' . $photo->photo_by . '</td>
+                                    <input type="hidden" id="' . $photo->photo_id . '" name="deleteImagel">
                                     <td with="15%" class="center">
-                                        <button class="btn btn-mini btn-danger" id="deleteImage" name="'.$photo->photo_id.'" onclick="$(this).MessageBox('.$photo->photo_id.')" type="button">Dump</button>
-                                        <button class="btn btn-mini btn-edit" id="deleteImage" name="image'.$photo->photo_id.'" onclick="editImageDetail('.$photo->photo_id.',\'quickbyte\')" type="button">Edit</button>
-                                        <img style="width:20%; display:block; margin-left:15px;display:none;" alt="loader" src="'.asset('images/photon/preloader/76.gif').'"></td>
+                                        <button class="btn btn-mini btn-danger" id="deleteImage" name="' . $photo->photo_id . '" onclick="$(this).MessageBox(' . $photo->photo_id . ')" type="button">Dump</button>
+                                        <button class="btn btn-mini btn-edit" id="deleteImage" name="image' . $photo->photo_id . '" onclick="editImageDetail(' . $photo->photo_id . ',\'quickbyte\')" type="button">Edit</button>
+                                        <img style="width:20%; display:block; margin-left:15px;display:none;" alt="loader" src="' . asset('images/photon/preloader/76.gif') . '"></td>
                                    ';
-            
-            DB::table('quickbyte')
-            ->where('id', $photo->owner_id)
-            ->update(['updated_at' => date('Y:m:d H:i:s')]);
-     
-            
-            
-        }elseif($photo->owned_by=='album'){
-            $photo->title=$imagetitlep;
-            $photo->photo_by=$imagebyp;
-            $photo->description=$descriptionp;
-            $photo->source=$photosourcep;
-            $photo->source_url=$sourceurlp;
-             $return='
-                                            <td width="20%">
-                                                <img style="width:40%;" alt="album image" src="'.config('constants.awsbaseurl').config('constants.awalbumimagedir').$photo->photopath.'">
-                                            </td>
-                                           <td width="20%">'.$photo->title.'</td>
-                                             <td width="30%" class="tdimagedesc">'.$photo->description.'</td>
-                                            <td width="15%">'.$photo->photo_by.'</td>
-                                    <input type="hidden" id="'.$photo->photo_id.'" name="deleteImagel">
-                                    <td with="15%" class="center">
-                                        <button class="btn btn-mini btn-danger" id="deleteImage" name="'.$photo->photo_id.'" onclick="$(this).MessageBox('.$photo->photo_id.')" type="button">Dump</button>
-                                        <button class="btn btn-mini btn-edit" id="deleteImage" name="image'.$photo->photo_id.'" onclick="editImageDetail('.$photo->photo_id.',\'album\')" type="button">Edit</button>
-                                        <img style="width:20%; display:block; margin-left:15px;display:none;" alt="loader" src="'.asset('images/photon/preloader/76.gif').'"></td>
-                                    ';
-              DB::table('album')
-            ->where('id', $photo->owner_id)
-            ->update(['updated_at' => date('Y:m:d H:i:s')]);
 
+            DB::table('quickbyte')
+                    ->where('id', $photo->owner_id)
+                    ->update(['updated_at' => date('Y:m:d H:i:s')]);
+        } elseif ($photo->owned_by == 'album') {
+            $photo->title = $imagetitlep;
+            $photo->photo_by = $imagebyp;
+            $photo->description = $descriptionp;
+            $photo->source = $photosourcep;
+            $photo->source_url = $sourceurlp;
+            $return = '
+                                            <td width="20%">
+                                                <img style="width:40%;" alt="album image" src="' . config('constants.awsbaseurl') . config('constants.awalbumimagedir') . $photo->photopath . '">
+                                            </td>
+                                           <td width="20%">' . $photo->title . '</td>
+                                             <td width="30%" class="tdimagedesc">' . $photo->description . '</td>
+                                            <td width="15%">' . $photo->photo_by . '</td>
+                                    <input type="hidden" id="' . $photo->photo_id . '" name="deleteImagel">
+                                    <td with="15%" class="center">
+                                        <button class="btn btn-mini btn-danger" id="deleteImage" name="' . $photo->photo_id . '" onclick="$(this).MessageBox(' . $photo->photo_id . ')" type="button">Dump</button>
+                                        <button class="btn btn-mini btn-edit" id="deleteImage" name="image' . $photo->photo_id . '" onclick="editImageDetail(' . $photo->photo_id . ',\'album\')" type="button">Edit</button>
+                                        <img style="width:20%; display:block; margin-left:15px;display:none;" alt="loader" src="' . asset('images/photon/preloader/76.gif') . '"></td>
+                                    ';
+            DB::table('album')
+                    ->where('id', $photo->owner_id)
+                    ->update(['updated_at' => date('Y:m:d H:i:s')]);
         }
         $photo->save();
-        return  $return;
+        return $return;
         //print_r($request->all());
     }
 
@@ -253,20 +260,19 @@ class ArticlesController extends Controller {
      * passes User ID, Article ID, User Rights
      * @returns boolean 1:0
      */
-    
-    public function sortImage($id,Request $request){
-        
-        foreach($request->row as $k => $itm){
-            $articlePhoto=Photo::find($itm);
-            $articlePhoto->sequence=$k+1;
+
+    public function sortImage($id, Request $request) {
+
+        foreach ($request->row as $k => $itm) {
+            $articlePhoto = Photo::find($itm);
+            $articlePhoto->sequence = $k + 1;
             $articlePhoto->updated_at = date('Y-m-d H:i:s');
             $articlePhoto->save();
         }
-        
-         DB::table('articles')
-            ->where('id', $id)
-            ->update(['updated_at' => date('Y:m:d H:i:s')]);
-         
+
+        DB::table('articles')
+                ->where('id', $id)
+                ->update(['updated_at' => date('Y:m:d H:i:s')]);
     }
 
     public function hasRightOnArticle($uid, $article_userid, $rights) {
@@ -318,8 +324,8 @@ class ArticlesController extends Controller {
             return redirect('/auth/login');
         }
         $userTup = User::find($uid);
-        
-        
+
+
 
         //Get Article Tuple
         //$arti2 = Article::find($id);
@@ -330,15 +336,15 @@ class ArticlesController extends Controller {
 
         //Lock Article for Editor
         $addArticle = Article::find($id);
-        
-         /* Right mgmt start */
-        $rightId=8;
-        $currentChannelId=$addArticle->channel_id;
-        $channels=$this->rightObj->getAllowedChannels($rightId);
-        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+
+        /* Right mgmt start */
+        $rightId = 8;
+        $currentChannelId = $addArticle->channel_id;
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
-        
+
         //Remove comment for Live
         //$addArticle->locked_by = $uid;
         $addArticle->locked_at = date('Y-m-d H:i:s');
@@ -359,10 +365,10 @@ class ArticlesController extends Controller {
                         //->join('category','article_category.category_id','=','category.category_id')
                         //->select('article_category.*','category.name')
                         ->where('article_id', '=', $id)->get();
-        
+
         $cateStr = array();
         $acateg = array();
-       
+
         foreach ($acateg2 as $ac) {
             $lable = 'c' . $ac->level;
             $cateStr[$lable] = $ac->category_id;
@@ -403,7 +409,6 @@ class ArticlesController extends Controller {
                     }
                     break;
             }
-       
         }
 
         if (!isset($acateg[0])) {
@@ -416,7 +421,7 @@ class ArticlesController extends Controller {
         } elseif (!isset($acateg[2])) {
             unset($acateg[3]);
         }
-       
+
         $arrTags = ArticleTag::where('article_id', '=', $id)->get();
 
         $arrTopics = DB::table('article_topics')
@@ -445,7 +450,6 @@ class ArticlesController extends Controller {
         }
 
         //fwrite($asd, "EDIT ARTICLE ID::".$article->article_id." \n");
-
 //        $channels = DB::table('channels')
 //                ->join('rights', 'rights.pagepath', '=', 'channels.channel_id')
 //                ->join('user_rights', 'user_rights.rights_id', '=', 'rights.rights_id')
@@ -460,12 +464,12 @@ class ArticlesController extends Controller {
         $country = Country::where('valid', '=', '1')->get();
         $states = State::where('valid', '=', '1')->orderBy('name')->get();
         $newstype = DB::table('news_type')->where('valid', '1')->get();
-        $category = DB::table('category')->where('channel_id',$currentChannelId)->where('valid', '1')->orderBy('name')->get();
+        $category = DB::table('category')->where('channel_id', $currentChannelId)->where('valid', '1')->orderBy('name')->get();
 
-        $magazine = DB::table('magazine')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
-        $event = DB::table('event')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
-        $campaign = DB::table('campaign')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
-        $columns = DB::table('columns')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
+        $magazine = DB::table('magazine')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
+        $event = DB::table('event')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
+        $campaign = DB::table('campaign')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
+        $columns = DB::table('columns')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
         $tags = json_encode(DB::table('tags')
                         ->select('tags.tags_id as id', 'tags.tag as name')
                         ->join('article_tags', 'tags.tags_id', '=', 'article_tags.tags_id')
@@ -480,8 +484,8 @@ class ArticlesController extends Controller {
                 ->where('owned_by', 'article')
                 ->where('owner_id', $article->article_id)
                 ->orderBy('sequence')
-                ->get(); 
-    
+                ->get();
+        //echo 'test'; exit;
         return view('articles.edit', compact('article', 'rights', 'channels', 'p1', 'postAs', 'country', 'states', 'newstype', 'category', 'magazine', 'event', 'campaign', 'columns', 'tags', 'photos', 'acateg', 'arrAuth', 'arrTags', 'arrVideo', 'userTup', 'arrTopics'));
     }
 
@@ -507,22 +511,21 @@ class ArticlesController extends Controller {
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
-       //echo date('Y-m-d'); 
-       //echo date('H:i:s'); 
-       //exit;
-       
-      // exit;
+        //echo date('Y-m-d'); 
+        //echo date('H:i:s'); 
+        //exit;
+        // exit;
         $uid = Session::get('users')->id;
-        
-         /* Right mgmt start */
-        $rightId=2;
-        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
-        $channels=$this->rightObj->getAllowedChannels($rightId);
-        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+
+        /* Right mgmt start */
+        $rightId = 2;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
-        
- 
+
+
 //        $channels = DB::table('channels')
 //                ->join('rights', 'rights.pagepath', '=', 'channels.channel_id')
 //                ->join('user_rights', 'user_rights.rights_id', '=', 'rights.rights_id')
@@ -537,17 +540,17 @@ class ArticlesController extends Controller {
         $country = Country::where('valid', '=', '1')->get();
         $states = State::where('valid', '=', '1')->orderBy('name')->get();
         $newstype = DB::table('news_type')->where('valid', '1')->get();
-        $category = DB::table('category')->where('channel_id',$currentChannelId)->where('valid', '1')->orderBy('name')->get();
+        $category = DB::table('category')->where('channel_id', $currentChannelId)->where('valid', '1')->orderBy('name')->get();
 
         //fwrite($asd, "\n Channels SELECTED FOR USER ".$channels[1]->channel_id."\n");
 
-        $magazine = DB::table('magazine')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
-        $event = DB::table('event')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
-        $campaign = DB::table('campaign')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
-        $columns = DB::table('columns')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
+        $magazine = DB::table('magazine')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
+        $event = DB::table('event')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
+        $campaign = DB::table('campaign')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
+        $columns = DB::table('columns')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
         //$tags = DB::table('tags')->where('valid', '1')->get();
-      
-        return view('articles.create', compact('channels', 'p1', 'postAs', 'country', 'states', 'newstype', 'category', 'magazine', 'event', 'campaign', 'columns', 'tags','currentChannelId'));
+
+        return view('articles.create', compact('channels', 'p1', 'postAs', 'country', 'states', 'newstype', 'category', 'magazine', 'event', 'campaign', 'columns', 'tags', 'currentChannelId'));
     }
 
     /*
@@ -559,26 +562,26 @@ class ArticlesController extends Controller {
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
-        
-         /* Right mgmt start */
-        $rightId=8;
-        $currentChannelId=$request->channel_sel;
-        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+
+        /* Right mgmt start */
+        $rightId = 8;
+        $currentChannelId = $request->channel_sel;
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
         // Checking publish permission
-        if($request->status=='D' || $request->status == 'SD'){
-            if(!$this->rightObj->checkRights($currentChannelId,13))
-            return redirect('/dashboard');
+        if ($request->status == 'D' || $request->status == 'SD') {
+            if (!$this->rightObj->checkRights($currentChannelId, 13))
+                return redirect('/dashboard');
         }
-        if($request->status=='P'){
-            if(!$this->rightObj->checkRights($currentChannelId,12))
-            return redirect('/dashboard');
+        if ($request->status == 'P') {
+            if (!$this->rightObj->checkRights($currentChannelId, 12))
+                return redirect('/dashboard');
         }
-        
+
         /* Right mgmt end */
-       
-       
-        
+
+
+
         $uid = $request->user()->id;
         //fwrite($asd, "Step 3.2 In Article POST Function ".$uid." \n");
         $article = Article::find($request->id);
@@ -594,20 +597,23 @@ class ArticlesController extends Controller {
         $article->news_type = $request->newstype;
         $article->magazine_id = $request->magazine;
         $article->event_id = $request->event;
-        $article->rating_point=$request->rating_point;
-
-        if($request->hide_image)
-        $article->hide_image= $request->hide_image;   
-        if($request->video_Id !='' &&  $request->video_Id !='0'){
-           $article->video_type = 'uploadedvideo' ;
-        }elseif ($request->videoCode !=''){
-            $article->video_type = 'embededvideocode' ;
+        $article->rating_point = $request->rating_point;
+        if ($request->social_image)
+            $article->social_image = $request->social_image;
+        if ($request->hide_image)
+            $article->hide_image = $request->hide_image;
+        if ($request->video_Id != '' && $request->video_Id != '0') {
+            $article->video_type = 'uploadedvideo';
+        } elseif ($request->videoCode != '') {
+            $article->video_type = 'embededvideocode';
         }
-       
-        
+
+
         $article->video_Id = $request->video_Id;
         $article->canonical_options = $request->canonical_options;
         $article->canonical_url = $request->canonical_url;
+        $article->social_title = $request->social_title;
+        $article->social_summary = $request->social_summary;
         $article->campaign_id = $request->campaign;
         $article->locked_by = 0;
         $article->locked_at = date('Y-m-d H:i:s');
@@ -628,10 +634,10 @@ class ArticlesController extends Controller {
         //Only for Schedule Article Action
         if ($request->status == 'SD') {
             //echo $request->datepicked; 
-            $article->publish_date = trim($request->datepicked)? $request->datepicked:date('Y-m-d');
-            $article->publish_time = trim($request->timepicked)?$request->timepicked:date('H:i:s');
+            $article->publish_date = trim($request->datepicked) ? $request->datepicked : date('Y-m-d');
+            $article->publish_time = trim($request->timepicked) ? $request->timepicked : date('H:i:s');
             //echo date('Y-m-d'); 
-       //echo date('H:i:s');
+            //echo date('H:i:s');
         } elseif ($request->status == 'P') {
             $article->publish_date = date('Y-m-d');
             $article->publish_time = date('H:i:s');
@@ -704,7 +710,7 @@ class ArticlesController extends Controller {
                     }
                 }
             }
-          
+
             foreach ($rankUpdateArr as $r => $v) {
                 //fwrite($asd, " Article Author ID Being Updated : " . $v[1] . " WIth Author ID:" . $v[0] . " \n");
                 $article_authorU = ArticleAuthor::find($v[1]);
@@ -857,164 +863,160 @@ class ArticlesController extends Controller {
 //            DB::table('videos')->where('video_id', $request->uploadedVideos)
 //                ->update(['owner_id' => $id]);
         //Photos table (article_id)- Save
-        if($request->get('rimage')){
-            foreach($request->get('rimage') as $key => $value){
-                        $oldPhoto=Photo::find($key);
-                        $articleImage = new Photo();
-                        $articleImage->photopath = $oldPhoto->photopath;
-                        $articleImage->photo_by = $value;
-                        $articleImage->title = isset($request->rtitle[$key])?$request->rtitle[$key]:'';
-                        $articleImage->channel_id = $request->channel_sel;
-                        $articleImage->owned_by ='article';
-                        $articleImage->owner_id =$id;
-                        $articleImage->active ='1';
-                        $articleImage->created_at = date('Y-m-d H:i:s');
-                        $articleImage->updated_at = date('Y-m-d H:i:s');
-                        $articleImage->save();
-               // echo $key; exit;
+        if ($request->get('rimage')) {
+            foreach ($request->get('rimage') as $key => $value) {
+                $oldPhoto = Photo::find($key);
+                $articleImage = new Photo();
+                $articleImage->photopath = $oldPhoto->photopath;
+                $articleImage->photo_by = $value;
+                $articleImage->title = isset($request->rtitle[$key]) ? $request->rtitle[$key] : '';
+                $articleImage->channel_id = $request->channel_sel;
+                $articleImage->owned_by = 'article';
+                $articleImage->owner_id = $id;
+                $articleImage->active = '1';
+                $articleImage->created_at = date('Y-m-d H:i:s');
+                $articleImage->updated_at = date('Y-m-d H:i:s');
+                $articleImage->save();
+                // echo $key; exit;
             }
         }
         $images = explode(',', $request->uploadedImages);
-        $images=  array_filter($images);
-          
-        if(count($images)==0){
-                  
-        $photosCount = DB::table('photos')->where('valid', '1')
-                ->where('owned_by', 'article')
-                ->where('owner_id', $article->article_id)
-                ->count(); 
-                if( ($photosCount==0) && (trim($request->video_Id)!='') && (trim($request->video_Id) !='0')) {
-                            $selectedvideo=MasterVideo::find($request->video_Id);
-                            if($selectedvideo->video_by=='inhouse'){
-                                 $source=config('constants.awsbaseurl').config('constants.awvideothumb').urlencode($selectedvideo->video_thumb_name);
-                                $dest = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $selectedvideo->video_thumb_name;
-                                if(copy($source, $dest)){
-                                    $images[]=$selectedvideo->video_thumb_name;
-                                   //$request->photographby[$selectedvideo->video_thumb_name]='';
-                                }
-                            }
+        $images = array_filter($images);
 
+        if (count($images) == 0) {
+
+            $photosCount = DB::table('photos')->where('valid', '1')
+                    ->where('owned_by', 'article')
+                    ->where('owner_id', $article->article_id)
+                    ->count();
+            if (($photosCount == 0) && (trim($request->video_Id) != '') && (trim($request->video_Id) != '0')) {
+                $selectedvideo = MasterVideo::find($request->video_Id);
+                if ($selectedvideo->video_by == 'inhouse') {
+                    $source = config('constants.awsbaseurl') . config('constants.awvideothumb') . urlencode($selectedvideo->video_thumb_name);
+                    $dest = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $selectedvideo->video_thumb_name;
+                    if (copy($source, $dest)) {
+                        $images[] = $selectedvideo->video_thumb_name;
+                        //$request->photographby[$selectedvideo->video_thumb_name]='';
+                    }
                 }
+            }
         }
-        
-        
+
+
         //print_r($images); exit;
         //exit;
         $s3 = AWS::createClient('s3');
         //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
         foreach ($images as $image) { //echo $request->uploadedImages; exit;
             //if (isset($request->photographby[$image])) {
-                
 //                
 //                echo '<pre>';
 //         print_r($request->all());
 //         exit;
-         
-         
-                $source = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $image;
-                $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
-                $dest = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagedir') . $image;
-                if (@copy($source, $dest)) {
+            $source = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $image;
+            $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
+            $dest = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagedir') . $image;
+            if (@copy($source, $dest)) {
 
 
-                    $imaged = new Zebra_Image();
+                $imaged = new Zebra_Image();
 
-                    // indicate a source image
-                    $imaged->source_path = $dest;
-                    $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagethambtdir') . $image;
-                    $imaged->preserve_aspect_ratio = false;
-                    if ($imaged->resize(90, 63, ZEBRA_IMAGE_BOXED, -1)) {
-                        $result = $s3->putObject(array(
-                            'ACL' => 'public-read',
-                            'Bucket' => config('constants.awbucket'),
-                            'Key' => config('constants.awarticleimagethumbtdir') . $image,
-                            'SourceFile' => $imaged->target_path,
-                        ));
-                        if ($result['@metadata']['statusCode'] == 200) {
-                            unlink($imaged->target_path);
-                        }
-                    }
-
-                    //$imaged->source_path = $dest;
-                    $imaged->preserve_aspect_ratio = true;
-                    $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagemediumdir') . $image;
-                    if ($imaged->resize(349, 219, ZEBRA_IMAGE_BOXED, -1)) {
-                        $result = $s3->putObject(array(
-                            'ACL' => 'public-read',
-                            'Bucket' => config('constants.awbucket'),
-                            'Key' => config('constants.awarticleimagemediumdir') . $image,
-                            'SourceFile' => $imaged->target_path,
-                        ));
-                        if ($result['@metadata']['statusCode'] == 200) {
-                            unlink($imaged->target_path);
-                        }
-                    }
-                    //$imaged->source_path = $dest;
-                    $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagelargedir') . $image;
-                    if ($imaged->resize(476, 257, ZEBRA_IMAGE_BOXED, -1)) {
-                        $result = $s3->putObject(array(
-                            'ACL' => 'public-read',
-                            'Bucket' => config('constants.awbucket'),
-                            'Key' => config('constants.awarticleimagelargedir') . $image,
-                            'SourceFile' => $imaged->target_path,
-                        ));
-                        if ($result['@metadata']['statusCode'] == 200) {
-                            unlink($imaged->target_path);
-                        }
-                    }
-                    //$imaged->source_path = $dest;
-                    //$imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimageextralargedir') . $image;
+                // indicate a source image
+                $imaged->source_path = $dest;
+                $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagethambtdir') . $image;
+                $imaged->preserve_aspect_ratio = false;
+                if ($imaged->resize(90, 63, ZEBRA_IMAGE_BOXED, -1)) {
                     $result = $s3->putObject(array(
                         'ACL' => 'public-read',
                         'Bucket' => config('constants.awbucket'),
-                        'Key' => config('constants.awarticleimageextralargedir') . $image,
-                        'SourceFile' => $imaged->source_path,
+                        'Key' => config('constants.awarticleimagethumbtdir') . $image,
+                        'SourceFile' => $imaged->target_path,
                     ));
                     if ($result['@metadata']['statusCode'] == 200) {
-                        unlink($imaged->source_path);
+                        unlink($imaged->target_path);
                     }
+                }
+
+                //$imaged->source_path = $dest;
+                $imaged->preserve_aspect_ratio = true;
+                $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagemediumdir') . $image;
+                if ($imaged->resize(349, 219, ZEBRA_IMAGE_BOXED, -1)) {
+                    $result = $s3->putObject(array(
+                        'ACL' => 'public-read',
+                        'Bucket' => config('constants.awbucket'),
+                        'Key' => config('constants.awarticleimagemediumdir') . $image,
+                        'SourceFile' => $imaged->target_path,
+                    ));
+                    if ($result['@metadata']['statusCode'] == 200) {
+                        unlink($imaged->target_path);
+                    }
+                }
+                //$imaged->source_path = $dest;
+                $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagelargedir') . $image;
+                if ($imaged->resize(476, 257, ZEBRA_IMAGE_BOXED, -1)) {
+                    $result = $s3->putObject(array(
+                        'ACL' => 'public-read',
+                        'Bucket' => config('constants.awbucket'),
+                        'Key' => config('constants.awarticleimagelargedir') . $image,
+                        'SourceFile' => $imaged->target_path,
+                    ));
+                    if ($result['@metadata']['statusCode'] == 200) {
+                        unlink($imaged->target_path);
+                    }
+                }
+                //$imaged->source_path = $dest;
+                //$imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimageextralargedir') . $image;
+                $result = $s3->putObject(array(
+                    'ACL' => 'public-read',
+                    'Bucket' => config('constants.awbucket'),
+                    'Key' => config('constants.awarticleimageextralargedir') . $image,
+                    'SourceFile' => $imaged->source_path,
+                ));
+                if ($result['@metadata']['statusCode'] == 200) {
+                    unlink($imaged->source_path);
+                }
 
 //                if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)) {
 //                   
 //                }
 
-                    unlink($source);
-                    if(is_file($source_thumb))
-                        unlink($source_thumb);
-                    //unlink($dest);
-                    $articleImage = new Photo();
-                    $articleImage->photopath = $image;
-                    $articleImage->imagefullPath = '';
-                    $articleImage->photo_by = isset($request->photographby[$image])?$request->photographby[$image]:'';
-                    $articleImage->title = isset($request->imagetitle[$image])?$request->imagetitle[$image]:'';
-                    $articleImage->channel_id = $request->channel_sel;
-                    $articleImage->channel_id = $request->channel_sel;
-                    $articleImage->owned_by = 'article';
-                    $articleImage->owner_id = $id;
-                    $articleImage->active = '1';
-                    $articleImage->created_at = date('Y-m-d H:i:s');
-                    $articleImage->updated_at = date('Y-m-d H:i:s');
-                    $articleImage->save();
-                }
+                unlink($source);
+                if (is_file($source_thumb))
+                    unlink($source_thumb);
+                //unlink($dest);
+                $articleImage = new Photo();
+                $articleImage->photopath = $image;
+                $articleImage->imagefullPath = '';
+                $articleImage->photo_by = isset($request->photographby[$image]) ? $request->photographby[$image] : '';
+                $articleImage->title = isset($request->imagetitle[$image]) ? $request->imagetitle[$image] : '';
+                $articleImage->channel_id = $request->channel_sel;
+                $articleImage->channel_id = $request->channel_sel;
+                $articleImage->owned_by = 'article';
+                $articleImage->owner_id = $id;
+                $articleImage->active = '1';
+                $articleImage->created_at = date('Y-m-d H:i:s');
+                $articleImage->updated_at = date('Y-m-d H:i:s');
+                $articleImage->save();
+            }
             //}
         }
 
 
         if ($article->status == 'P') {
             Session::flash('message', 'Your Article has been Published successfully. It will appear on website shortly.');
-            return redirect('/article/list/published?channel='.$currentChannelId);
+            return redirect('/article/list/published?channel=' . $currentChannelId);
         } elseif ($article->status == 'N') {
             Session::flash('message', 'Your Article has been Saved successfully.');
-            return redirect('/article/list/new?channel='.$currentChannelId);
+            return redirect('/article/list/new?channel=' . $currentChannelId);
         } elseif ($article->status == 'D') {
             Session::flash('message', 'Your Article has been Deleted successfully.');
-            return redirect('/article/list/deleted?channel='.$currentChannelId);
+            return redirect('/article/list/deleted?channel=' . $currentChannelId);
         } elseif ($article->status == 'SD') {
             Session::flash('message', 'Your Article has been Scheduled successfully.');
-            return redirect('/article/list/scheduled?channel='.$currentChannelId);
+            return redirect('/article/list/scheduled?channel=' . $currentChannelId);
         } else {
             Session::flash('message', 'Your Article has been saved in your draftsuccessfully.');
-            return redirect('/article/list/drafts?channel='.$currentChannelId);
+            return redirect('/article/list/drafts?channel=' . $currentChannelId);
         }
 
         //return Redirect::to('/dashboard');
@@ -1025,14 +1027,15 @@ class ArticlesController extends Controller {
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
-         /* Right mgmt start */
-        $rightId=2;
-        $currentChannelId=$request->channel_sel;
-        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+        /* Right mgmt start */
+        $rightId = 2;
+        $currentChannelId = $request->channel_sel;
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
-        
-       
+
+        //print_r($request->all()); exit;
+
         $uid = $request->user()->id;
 
         //fwrite($asd, "Step 3.2 In Article POST Function ".$uid." \n");            
@@ -1054,15 +1057,20 @@ class ArticlesController extends Controller {
         $article->event_id = $request->event;
         $article->canonical_options = $request->canonical_options;
         $article->canonical_url = $request->canonical_url;
+        $article->social_title = $request->social_title;
+        $article->social_summary = $request->social_summary;
         $article->video_Id = $request->video_Id;
-        $article->rating_point=$request->rating_point;
-        if($request->hide_image)
-        $article->hide_image= $request->hide_image;
+        $article->rating_point = $request->rating_point;
+        //social_image
+        if ($request->social_image)
+            $article->social_image = $request->social_image;
+        if ($request->hide_image)
+            $article->hide_image = $request->hide_image;
         //print_r($request->all());
-       if($request->video_Id !=''){
-           $article->video_type = 'uploadedvideo' ;
-        }elseif ($request->videoCode !=''){
-            $article->video_type = 'embededvideocode' ;
+        if ($request->video_Id != '') {
+            $article->video_type = 'uploadedvideo';
+        } elseif ($request->videoCode != '') {
+            $article->video_type = 'embededvideocode';
         }
         //exit;
         $article->campaign_id = $request->campaign;
@@ -1078,8 +1086,8 @@ class ArticlesController extends Controller {
             //echo $request->datepicked; 
             //$article->publish_date = $request->datepicked;
             //$article->publish_time = $request->timepicked;
-            $article->publish_date = trim($request->datepicked)?$request->datepicked:date('Y-m-d');
-            $article->publish_time = trim($request->timepicked)?$request->timepicked:date('H:i:s');
+            $article->publish_date = trim($request->datepicked) ? $request->datepicked : date('Y-m-d');
+            $article->publish_time = trim($request->timepicked) ? $request->timepicked : date('H:i:s');
         } elseif ($request->status == 'P') {
             $article->publish_date = date('Y-m-d');
             $article->publish_time = date('H:i:s');
@@ -1087,7 +1095,7 @@ class ArticlesController extends Controller {
 
         $article->important = $request->important ? 1 : 0;
         $article->web_exclusive = $request->web_exclusive ? 1 : 0;
-        
+
         $article->slug = 'slug';
         $article->status = $request->status;
 //        echo '<pre>';
@@ -1102,7 +1110,7 @@ class ArticlesController extends Controller {
         if ($request->authortype != '1') {
             $author_count = 0;
             //For BW Reporters - Multiple
-            if ($request->authortype == '2' and ( $request->author_id2 or $request->author_id3)) {
+            if (($request->authortype == '2' || $request->authortype == '3' ) and ( $request->author_id2 or $request->author_id3)) {
                 if ($request->author_id2 && $request->author_id3) {
                     $author_count = 3;
                     $authorid = array($request->author_id1, $request->author_id2, $request->author_id3);
@@ -1194,129 +1202,127 @@ class ArticlesController extends Controller {
 //            DB::table('videos')->where('video_id', $request->uploadedVideos)
 //                ->update(['owner_id' => $id]);
         //Photos table (article_id + channel_id)- Save
-        if($request->get('rimage')){ 
-            foreach($request->get('rimage') as $key => $value){
-                        $oldPhoto=Photo::find($key);
-                        $articleImage = new Photo();
-                        $articleImage->photopath = $oldPhoto->photopath;
-                        $articleImage->photo_by = $value;
-                        $articleImage->title = isset($request->rtitle[$key])?$request->rtitle[$key]:'';
-                        $articleImage->channel_id = $request->channel_sel;
-                        $articleImage->owned_by ='article';
-                        $articleImage->owner_id =$id;
-                        $articleImage->active ='1';
-                        $articleImage->created_at = date('Y-m-d H:i:s');
-                        $articleImage->updated_at = date('Y-m-d H:i:s');
-                        $articleImage->save();
-               // echo $key; exit;
+        if ($request->get('rimage')) {
+            foreach ($request->get('rimage') as $key => $value) {
+                $oldPhoto = Photo::find($key);
+                $articleImage = new Photo();
+                $articleImage->photopath = $oldPhoto->photopath;
+                $articleImage->photo_by = $value;
+                $articleImage->title = isset($request->rtitle[$key]) ? $request->rtitle[$key] : '';
+                $articleImage->channel_id = $request->channel_sel;
+                $articleImage->owned_by = 'article';
+                $articleImage->owner_id = $id;
+                $articleImage->active = '1';
+                $articleImage->created_at = date('Y-m-d H:i:s');
+                $articleImage->updated_at = date('Y-m-d H:i:s');
+                $articleImage->save();
+                // echo $key; exit;
             }
         }
         $images = explode(',', $request->uploadedImages);
-        $images=  array_filter($images);
+        $images = array_filter($images);
         //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
-        
-        if(count($images)==0){
-                if((trim($request->video_Id)!='') && (trim($request->video_Id) !='0')) {
-                            $selectedvideo=MasterVideo::find($request->video_Id);
-                            if($selectedvideo->video_by=='inhouse'){
-                                $source=config('constants.awsbaseurl').config('constants.awvideothumb').urlencode($selectedvideo->video_thumb_name);
-                                $dest = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $selectedvideo->video_thumb_name;
-                                if(copy($source, $dest)){
-                                    $images[]=$selectedvideo->video_thumb_name;
-                                }
-                            }
 
+        if (count($images) == 0) {
+            if ((trim($request->video_Id) != '') && (trim($request->video_Id) != '0')) {
+                $selectedvideo = MasterVideo::find($request->video_Id);
+                if ($selectedvideo->video_by == 'inhouse') {
+                    $source = config('constants.awsbaseurl') . config('constants.awvideothumb') . urlencode($selectedvideo->video_thumb_name);
+                    $dest = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $selectedvideo->video_thumb_name;
+                    if (copy($source, $dest)) {
+                        $images[] = $selectedvideo->video_thumb_name;
+                    }
                 }
+            }
         }
-        
-        
+
+
 
         $s3 = AWS::createClient('s3');
         foreach ($images as $image) { //echo 'foreach--';
             //if (isset($request->photographby[$image])) {
+            $source = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $image;
+            $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
+            $dest = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagedir') . $image;
+            //echo $source; echo '<br>'; echo $dest;
 
-                $source = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $image;
-                $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
-                $dest = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagedir') . $image;
-                //echo $source; echo '<br>'; echo $dest;
+            if (@copy($source, $dest)) { //echo 'copied--';
+                $imaged = new Zebra_Image();
 
-                if (@copy($source, $dest)) { //echo 'copied--';
-                    $imaged = new Zebra_Image();
-
-                    // indicate a source image
-                    $imaged->source_path = $dest;
-                    $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagethambtdir') . $image;
-                    $imaged->preserve_aspect_ratio = false;
-                    if ($imaged->resize(90, 63, ZEBRA_IMAGE_BOXED, -1)) { //echo 'resized--';
-                        $result = $s3->putObject(array(
-                            'ACL' => 'public-read',
-                            'Bucket' => config('constants.awbucket'),
-                            'Key' => config('constants.awarticleimagethumbtdir') . $image,
-                            'SourceFile' => $imaged->target_path,
-                        ));
-                        if ($result['@metadata']['statusCode'] == 200) {
-                            unlink($imaged->target_path);
-                        }
-                    }
-                    //$imaged->source_path = $dest;
-                    $imaged->preserve_aspect_ratio = true;
-                    $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagemediumdir') . $image;
-                    if ($imaged->resize(349, 219, ZEBRA_IMAGE_BOXED, -1)) {
-                        $result = $s3->putObject(array(
-                            'ACL' => 'public-read',
-                            'Bucket' => config('constants.awbucket'),
-                            'Key' => config('constants.awarticleimagemediumdir') . $image,
-                            'SourceFile' => $imaged->target_path,
-                        ));
-                        if ($result['@metadata']['statusCode'] == 200) {
-                            unlink($imaged->target_path);
-                        }
-                    }
-                    //$imaged->source_path = $dest;
-                    $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagelargedir') . $image;
-                    if ($imaged->resize(476, 257, ZEBRA_IMAGE_BOXED, -1)) {
-                        $result = $s3->putObject(array(
-                            'ACL' => 'public-read',
-                            'Bucket' => config('constants.awbucket'),
-                            'Key' => config('constants.awarticleimagelargedir') . $image,
-                            'SourceFile' => $imaged->target_path,
-                        ));
-                        if ($result['@metadata']['statusCode'] == 200) {
-                            unlink($imaged->target_path);
-                        }
-                    }
-                    //$imaged->source_path = $dest;
-                    //$imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimageextralargedir') . $image;
-                    //if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)) {
+                // indicate a source image
+                $imaged->source_path = $dest;
+                $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagethambtdir') . $image;
+                $imaged->preserve_aspect_ratio = false;
+                if ($imaged->resize(90, 63, ZEBRA_IMAGE_BOXED, -1)) { //echo 'resized--';
                     $result = $s3->putObject(array(
                         'ACL' => 'public-read',
                         'Bucket' => config('constants.awbucket'),
-                        'Key' => config('constants.awarticleimageextralargedir') . $image,
-                        'SourceFile' => $imaged->source_path,
+                        'Key' => config('constants.awarticleimagethumbtdir') . $image,
+                        'SourceFile' => $imaged->target_path,
                     ));
                     if ($result['@metadata']['statusCode'] == 200) {
-                        unlink($imaged->source_path);
+                        unlink($imaged->target_path);
                     }
-                    //}
-                    // echo 'before unlink'; exit;
-                    unlink($source);
-                    if(is_file($source_thumb))
-                        unlink($source_thumb);
-                    //unlink($dest);
-                    $articleImage = new Photo();
-                    $articleImage->photopath = $image;
-                    $articleImage->imagefullPath = '';
-                    $articleImage->photo_by =  isset($request->photographby[$image])?$request->photographby[$image]:'';
-                    $articleImage->title = isset($request->imagetitle[$image])?$request->imagetitle[$image]:'';
-                    $articleImage->channel_id = $request->channel_sel;
-                    $articleImage->owned_by = 'article';
-                    $articleImage->owner_id = $id;
-                    $articleImage->active = '1';
-                    $articleImage->created_at = date('Y-m-d H:i:s');
-                    $articleImage->updated_at = date('Y-m-d H:i:s');
-                    $articleImage->save();
                 }
-         //   }
+                //$imaged->source_path = $dest;
+                $imaged->preserve_aspect_ratio = true;
+                $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagemediumdir') . $image;
+                if ($imaged->resize(349, 219, ZEBRA_IMAGE_BOXED, -1)) {
+                    $result = $s3->putObject(array(
+                        'ACL' => 'public-read',
+                        'Bucket' => config('constants.awbucket'),
+                        'Key' => config('constants.awarticleimagemediumdir') . $image,
+                        'SourceFile' => $imaged->target_path,
+                    ));
+                    if ($result['@metadata']['statusCode'] == 200) {
+                        unlink($imaged->target_path);
+                    }
+                }
+                //$imaged->source_path = $dest;
+                $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimagelargedir') . $image;
+                if ($imaged->resize(476, 257, ZEBRA_IMAGE_BOXED, -1)) {
+                    $result = $s3->putObject(array(
+                        'ACL' => 'public-read',
+                        'Bucket' => config('constants.awbucket'),
+                        'Key' => config('constants.awarticleimagelargedir') . $image,
+                        'SourceFile' => $imaged->target_path,
+                    ));
+                    if ($result['@metadata']['statusCode'] == 200) {
+                        unlink($imaged->target_path);
+                    }
+                }
+                //$imaged->source_path = $dest;
+                //$imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.articleimageextralargedir') . $image;
+                //if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)) {
+                $result = $s3->putObject(array(
+                    'ACL' => 'public-read',
+                    'Bucket' => config('constants.awbucket'),
+                    'Key' => config('constants.awarticleimageextralargedir') . $image,
+                    'SourceFile' => $imaged->source_path,
+                ));
+                if ($result['@metadata']['statusCode'] == 200) {
+                    unlink($imaged->source_path);
+                }
+                //}
+                // echo 'before unlink'; exit;
+                unlink($source);
+                if (is_file($source_thumb))
+                    unlink($source_thumb);
+                //unlink($dest);
+                $articleImage = new Photo();
+                $articleImage->photopath = $image;
+                $articleImage->imagefullPath = '';
+                $articleImage->photo_by = isset($request->photographby[$image]) ? $request->photographby[$image] : '';
+                $articleImage->title = isset($request->imagetitle[$image]) ? $request->imagetitle[$image] : '';
+                $articleImage->channel_id = $request->channel_sel;
+                $articleImage->owned_by = 'article';
+                $articleImage->owner_id = $id;
+                $articleImage->active = '1';
+                $articleImage->created_at = date('Y-m-d H:i:s');
+                $articleImage->updated_at = date('Y-m-d H:i:s');
+                $articleImage->save();
+            }
+            //   }
         }
 
         //}
@@ -1326,26 +1332,26 @@ class ArticlesController extends Controller {
         //If has been Saved by Editor
         if ($request->status == 'P') {
             Session::flash('message', 'Your Article has been Published successfully. It will appear on website shortly.');
-            return redirect('/article/list/published?channel='.$currentChannelId);
+            return redirect('/article/list/published?channel=' . $currentChannelId);
         }
         if ($request->status == 'N') {
             Session::flash('message', 'Your Article has been Saved successfully.');
-            return redirect('/article/list/new?channel='.$currentChannelId);
+            return redirect('/article/list/new?channel=' . $currentChannelId);
         }
         if ($request->status == 'D') {
             Session::flash('message', 'Your Article has been Deleted successfully.');
-            return redirect('/article/list/deleted?channel='.$currentChannelId);
+            return redirect('/article/list/deleted?channel=' . $currentChannelId);
         }
         if ($request->status == 'S') {
             Session::flash('message', 'Your Article has been saved successfully in - My Drafts.');
-            return redirect('/article/list/drafts?channel='.$currentChannelId);
+            return redirect('/article/list/drafts?channel=' . $currentChannelId);
         }
-       if ($article->status == 'SD') {
+        if ($article->status == 'SD') {
             Session::flash('message', 'Your Article has been Scheduled successfully.');
-            return redirect('/article/list/scheduled?channel='.$currentChannelId);
+            return redirect('/article/list/scheduled?channel=' . $currentChannelId);
         }
 
-        return redirect('/article/list/new?channel='.$currentChannelId);
+        return redirect('/article/list/new?channel=' . $currentChannelId);
 
         //return redirect('/dashboard');
         //return Redirect::to('/dashboard');
@@ -1373,20 +1379,20 @@ class ArticlesController extends Controller {
     }
 
     public function destroy() {
-        
+
         if (!Session::has('users')) {
             return 'Please login first.';
         }
-        
-         /* Right mgmt start */
-        $rightId=13;
-        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
-        $channels=$this->rightObj->getAllowedChannels($rightId);
-        if(!$this->rightObj->checkRights($currentChannelId,$rightId)){
+
+        /* Right mgmt start */
+        $rightId = 13;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId)) {
             return 'You are not authorized to access';
-        }   
+        }
         /* Right mgmt end */
-        
+
 
         if (isset($_GET['option'])) {
             $id = $_GET['option'];
@@ -1409,19 +1415,19 @@ class ArticlesController extends Controller {
     }
 
     public function publishBulk() {
-        
+
         if (!Session::has('users')) {
             return 'Please login first.';
         }
         /* Right mgmt start */
-        $rightId=12;
-        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
-        $channels=$this->rightObj->getAllowedChannels($rightId);
-        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+        $rightId = 12;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return 'You are not authorized to access';
         /* Right mgmt end */
-        
-        
+
+
         if (isset($_GET['option'])) {
             $id = $_GET['option'];
         }
@@ -1442,15 +1448,15 @@ class ArticlesController extends Controller {
         if (!Session::has('users')) {
             return 'Please login first.';
         }
-        
+
         /* Right mgmt start */
-        $rightId=12;
-        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
-        $channels=$this->rightObj->getAllowedChannels($rightId);
-        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+        $rightId = 12;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return 'You are not authorized to access';
         /* Right mgmt end */
-        
+
         $articles = DB::table('articles')
                 ->where('status', 'SD')
                 ->where('publish_date', '<=', date('Y-m-d'))
@@ -1464,7 +1470,7 @@ class ArticlesController extends Controller {
         }
         return 'success';
     }
-    
+
 //   function relatedImage(Request $request){ //13803,13546
 //       //echo $query="select *,count(*) as cs,MATCH(tag) AGAINST ('".$request->search_key."') as score from tags join article_tags on tags.tags_id=article_tags.tags_id where MATCH(tag) AGAINST ('".$request->search_key."') group by tags.tags_id order by article_tags.updated_at desc,score desc limit 5"; exit;
 //       $query="select *,MATCH(tag) AGAINST ('".$request->search_key."') as score from tags where MATCH(tag) AGAINST ('".$request->search_key."') order by updated_at desc,score desc limit 20";
@@ -1488,51 +1494,50 @@ class ArticlesController extends Controller {
 //       
 //       return json_encode($related_images);
 //   }
-    
-    function relatedImage(Request $request){//13803,13546
-     //$query="select *,MATCH(tag) AGAINST ('".$request->search_key."') as score from tags where MATCH(tag) AGAINST ('".$request->search_key."') order by updated_at desc,score desc limit 5";
-       $total=25;
-       $query="select *,count(*) as cs from tags join (select * from article_tags order by updated_at desc ) as article_tags on tags.tags_id=article_tags.tags_id where (tag like '%".$request->search_key." %' or tag like '% ".$request->search_key."%'  or tag like '".$request->search_key."' ) group by tags.tags_id order by article_tags.updated_at desc,cs desc limit 5"; 
-       $tags=DB::select($query);
-       $related_images=array();
-       $imgids=array();
-       $cond='';
-      // print_r($tags);
-       usort($tags,array($this,'compareByCount'));
-       //print_r($tags);exit;
-       //  print_r($tags);
-       if(count($tags)>0){
-        $minlimit=ceil($total/count($tags));
-        $maxlimit=ceil($total/count($tags));
-      //echo $limit;exit;
-      // $rtags=array();
-       foreach($tags as $tag){
-           if(count($imgids)>0){
-               $cond=' and photo_id not in ('.implode(',',$imgids).')';
-           }
-           //echo $maxlimit;
-          $imagequery="select photo_id,photopath,photo_by,title from photos where valid='1' and photopath!='' and owned_by='article' $cond and owner_id in(SELECT articles.article_id FROM `articles` inner join article_tags on articles.article_id=article_tags.article_id WHERE  article_tags.tags_id=".$tag->tags_id." order by article_tags.updated_at desc) order by updated_at desc limit ".$maxlimit;
-          $images=DB::select($imagequery);
-          if(count($images)<$maxlimit){
-              $maxlimit=$maxlimit+($minlimit-count($images));
-          }else{
-              $maxlimit=$minlimit;
-          }
-          //echo count($images).' ######'.$maxlimit.'##### <br>';
-            foreach($images as $image){
-                $imgids[]=$image->photo_id;
-             $related_images[]=array('image_url'=>config('constants.awsbaseurl').config('constants.awarticleimagethumbtdir').$image->photopath,'image_id'=>$image->photo_id,'tag_name'=>$tag->tag,'tag_id'=>$tag->tags_id,'photo_by'=>$image->photo_by,'image_name'=>$image->photopath,'title'=>$image->title);
-          }
-          
+
+    function relatedImage(Request $request) {//13803,13546
+        //$query="select *,MATCH(tag) AGAINST ('".$request->search_key."') as score from tags where MATCH(tag) AGAINST ('".$request->search_key."') order by updated_at desc,score desc limit 5";
+        $total = 25;
+        $query = "select *,count(*) as cs from tags join (select * from article_tags order by updated_at desc ) as article_tags on tags.tags_id=article_tags.tags_id where (tag like '%" . $request->search_key . " %' or tag like '% " . $request->search_key . "%'  or tag like '" . $request->search_key . "' ) group by tags.tags_id order by article_tags.updated_at desc,cs desc limit 5";
+        $tags = DB::select($query);
+        $related_images = array();
+        $imgids = array();
+        $cond = '';
+        // print_r($tags);
+        usort($tags, array($this, 'compareByCount'));
+        //print_r($tags);exit;
+        //  print_r($tags);
+        if (count($tags) > 0) {
+            $minlimit = ceil($total / count($tags));
+            $maxlimit = ceil($total / count($tags));
+            //echo $limit;exit;
+            // $rtags=array();
+            foreach ($tags as $tag) {
+                if (count($imgids) > 0) {
+                    $cond = ' and photo_id not in (' . implode(',', $imgids) . ')';
+                }
+                //echo $maxlimit;
+                $imagequery = "select photo_id,photopath,photo_by,title from photos where valid='1' and photopath!='' and owned_by='article' $cond and owner_id in(SELECT articles.article_id FROM `articles` inner join article_tags on articles.article_id=article_tags.article_id WHERE  article_tags.tags_id=" . $tag->tags_id . " order by article_tags.updated_at desc) order by updated_at desc limit " . $maxlimit;
+                $images = DB::select($imagequery);
+                if (count($images) < $maxlimit) {
+                    $maxlimit = $maxlimit + ($minlimit - count($images));
+                } else {
+                    $maxlimit = $minlimit;
+                }
+                //echo count($images).' ######'.$maxlimit.'##### <br>';
+                foreach ($images as $image) {
+                    $imgids[] = $image->photo_id;
+                    $related_images[] = array('image_url' => config('constants.awsbaseurl') . config('constants.awarticleimagethumbtdir') . $image->photopath, 'image_id' => $image->photo_id, 'tag_name' => $tag->tag, 'tag_id' => $tag->tags_id, 'photo_by' => $image->photo_by, 'image_name' => $image->photopath, 'title' => $image->title);
+                }
+            }
+        } else {
+            json_encode(array('error' => 'No result found'));
         }
-       }else{
-           json_encode(array('error'=>'No result found'));
-       }
-       return json_encode($related_images);
-   }
-   
-  public static function compareByCount($a, $b) {
-    return strcmp($a->cs, $b->cs);
-  }
+        return json_encode($related_images);
+    }
+
+    public static function compareByCount($a, $b) {
+        return strcmp($a->cs, $b->cs);
+    }
 
 }

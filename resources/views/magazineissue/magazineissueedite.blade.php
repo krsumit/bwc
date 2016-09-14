@@ -379,6 +379,46 @@
         </div>
 
         <div class="container-fluid">
+
+            <div class="form-legend">FlIP URL</div>
+
+            <!--Select Box with Filter Search begin-->
+            <div class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="selectBoxFilter">Url</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <input id="flip_url" name="flipbook_url" value="{{$a->flipbook_url}}" type="text"/>
+                    </div>   
+                </div>
+            </div>
+
+           
+
+            <!--Select Box with Filter Search end-->					
+        </div>
+                <div class="container-fluid">
+
+            <div class="form-legend">BUY DIGITAL</div>
+
+            <!--Select Box with Filter Search begin-->
+            <div class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="selectBoxFilter">Url</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <input id="buy_digital" name="buy_digital" value="{{$a->buy_digital}}" type="text"/>
+                    </div>   
+                </div>
+            </div>
+
+           
+
+            <!--Select Box with Filter Search end-->					
+        </div>
+
             <div class="control-group row-fluid">
                 <div class="span12 span-inset">
                     <button type="submit" class="btn btn-success">Publish</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>

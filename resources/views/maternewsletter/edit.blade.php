@@ -102,7 +102,9 @@
                         $("#channel_sel").select2();
                         
                         $("#channel_sel").change(function () {
+							if(confirm("Are you sure, you want to change channel ?")){
                             $('#publishSubmit').trigger('click')
+						}
 
                         });
                 

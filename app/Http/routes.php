@@ -132,6 +132,10 @@ Route::controllers([
 // Authentication routes...
 Route::get('auth/login', ['middleware' => 'guest',   'uses' =>'Auth\AuthController@getLogin']);
 Route::post('auth/login', 'Auth\AuthController@postLogin');
+Route::get('forgot/password', 'Auth\AuthController@forgotPassword');
+Route::post('forgot/password', 'Auth\AuthController@sendResetLink');
+Route::get('reset/password/{id}', 'Auth\AuthController@resetPassword');
+Route::post('reset/password', 'Auth\AuthController@saveNewPassword');
 Route::get('auth/logout', 'Auth\AuthController@getLogout');
 
 // Registration routes...
@@ -208,7 +212,7 @@ Route::get('/article/magazine/', function(){
 Route::get('/article/authordd/', function(){
     $option = Input::get('option');
     $input = $option;
-    $authorList = DB::table('authors')->where('author_type_id',$input)->orderBy('name')->lists('author_id','name');
+    $authorList = DB::table('authors')->where('author_type_id',$input)->where('valid','1')->orderBy('name')->lists('author_id','name');
 
     return $authorList;
 });
@@ -273,6 +277,8 @@ Route::match(['get', 'post'], 'columnist/edit', ['as' => 'columnist/edit', 'uses
 Route::match(['get', 'post'], 'guestauthor/add-edit-gustauthor', ['as' => 'guestauthor/add-edit-gustauthor', 'uses' => 'AuthorsController@gustauthor']);
 Route::match(['get', 'post'], 'bwreporters/add-edit-bw-reporters', ['as' => 'bwreporters/add-edit-bw-reporters', 'uses' => 'AuthorsController@bwreporters']);
 Route::match(['get', 'post'], 'author/delete', ['as' => 'author/delete', 'uses' => 'AuthorsController@destroy']);
+
+Route::match(['get'], 'author/changestatus', ['as' => 'author/changestatus', 'uses' => 'AuthorsController@changeStatus']);
 /*
  *  Adds category from Createcategory to category Table 
  */
@@ -329,7 +335,7 @@ Route::match(['get', 'post'], 'article/addPhotos', ['as' => 'article/addPhotos',
  *  Delete Image from Create Article Form - Ajax Request
  */
 Route::get('photo/crop', ['middleware' => 'auth',   'uses' => 'PhotosController@cropImage']);
-Route::get('photo/resize/crop', ['middleware' => 'auth',   'uses' => 'PhotosController@resizeCropImage']);
+Route::get('photo/resize/crop', ['middleware' => 'auth','uses' => 'PhotosController@resizeCropImage']);
 
 Route::match(['get', 'post'], 'article/delPhotos', ['as' => 'article/delPhotos', 'uses' => 'PhotosController@destroy']);
 

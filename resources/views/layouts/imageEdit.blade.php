@@ -116,6 +116,21 @@
                 </div>
             </div>  
             
+           @if($photo->owned_by=='article')
+            <div id="Multiple_Select_Box_with_Filter_Search" class="control-group row-fluid">
+                <div class="control-group row-fluid">    
+                    <div class="span3">
+                        <label class="control-label" for="multiFilter">&nbsp;&nbsp;Use this image on social</label>
+                    </div>
+                    <div class="span9">
+                        <div class="controls">
+                            <input type="checkbox" name="social_image_popup" id="social_image_popup" value="{{$photo->photopath}}" @if($article->social_image==$photo->photopath) checked="checked" @endif />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+            
             
             <div class="control-group row-fluid" id="submitsection">
                 <div class="span12 span-inset">

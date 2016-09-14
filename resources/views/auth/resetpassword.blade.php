@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>BW CMS | Login</title>
+        <title>BW CMS | Reset password</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
         <link rel="apple-touch-icon" href="iosicon.png" />
@@ -34,6 +34,11 @@
 
         <link type="text/javascript" href="{{ elixir('output/login-one.js') }}" />
         <script type="text/javascript" src="{{ asset('js/common.js') }}"></script>
+        <style>
+           /* .forget-password label{float: left}
+            .forget-password input{float: right}*/
+            .forget-password{clear: both;}
+        </style>
         <!---->
     </head>
 
@@ -45,10 +50,7 @@
 
 
                     <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
-
-                         <div class="form-legend" id="Notifications">Notifications</div>
-
-                        <!--Notifications begin-->
+                         <!--Notifications begin-->
                         <div class="control-group row-fluid" >
                             <div class="span12 span-inset">
                                 @if (Session::has('message'))
@@ -79,7 +81,6 @@
                         <div class="login-logo">
                             <img src="{{ asset('images/photon/BW-logo.png') }}" alt="Photon UI" style="height:auto !important"/>
                         </div>
-                        <h2 class="login-title">Welcome to BW CMS</h2>
 
                         <div class="panel-body">
                             @if (count($errors) > 0)
@@ -94,16 +95,23 @@
                             @endif
 
                             <div class="login-input-area">
-                                <form method="POST" action="{{url('auth/login')}}">
+                                <form method="POST" action="{{url('reset/password')}}">
                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     {!! csrf_field() !!}
-                                    <span class="help-block">Login With Your Administrater Account</span>
-                                    <input type="text" name="email" class="col-md-4 control-label" placeholder="Email">
-                                    <input type="password" name="password" class="col-md-4 control-label" placeholder="Password">
-                                    <button type="submit" class="btn btn-large btn-success btn-login">Login</button>
-
+                                    <input type="hidden" name="key" id="key" value="{{$key}}"/>
+                                    <span class="help-block">Reset Password</span>
+                                    <div class="forget-password">  
+<!--                                       <label>New Password</label>-->
+                                       <input type="password" name="password" class="col-md-4 control-label" placeholder="Password" required="required" min="6">
+                                   </div>
+                                    <div class="forget-password">  
+<!--                                       <label>Conf Password</label>-->
+                                       <input type="password" name="conf_password" class="col-md-4 control-label" placeholder="Confirm password" required="required" min="6">
+                                   </div>
+                                    <button type="submit" class="btn btn-large btn-success btn-login">Reset Password</button>
+                                        
                                 </form>
-                                <a href="/forgot/password" class="forgot-pass">Forgot Your Password?</a>
+                                    <a href="/auth/login" class="forgot-pass">Login</a>
                             </div>
                         </div>
                     </div>

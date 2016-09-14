@@ -159,6 +159,15 @@ class PhotosController extends Controller
         switch ($photo->owned_by):
         case 'article':
            // echo config('constants.awbucket').config('constants.awarticleimagethumbtdir').$photo->photopath;exit;
+            $updatearray = array('updated_at' => date('Y:m:d H:i:s'));
+            $updatearray['social_image']='';
+           
+            // print_r($updatearray); exit;
+            DB::table('articles')
+                    ->where('social_image', $photo->photopath)
+                    ->update($updatearray);
+            
+            
             if(count(Photo::where('photopath','=',$photo->photopath)->get())==1){
             $s3->deleteObjects(array(
 			'Bucket'     => config('constants.awbucket'),

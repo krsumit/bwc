@@ -439,18 +439,10 @@ function migrateFeature() {
                     $articleviewcountUpdateStmt->bind_param('ii', $viewsRow['articleidcount'],$viewId) or die($this->conn->error);
                     //echo $this->conn2->error;exit;
                     $articleviewcountUpdateStmt->execute()or die($this->conn->error);
-                    //print_r($eventUpdateStmt);exit;
+                    //print_r($articleviewcountUpdateStmt);exit;
                     //echo $eventUpdateStmt->affected_rows;exit;
                     if ($articleviewcountUpdateStmt->affected_rows)    
                         $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
-                }else {//echo 'goint to insert';exit;
-                    $articleviewcountInsertStmt = $this->conn->prepare("insert into articles set article_id=?,view_count=?");
-                    //echo $this->conn2->error; exit;
-                    $articleviewcountInsertStmt->bind_param('ii', $viewsRow['article_id'],$viewsRow['articleidcount']);
-                    $articleviewcountInsertStmt->execute();
-                    if ($articleviewcountInsertStmt->affected_rows) {
-                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
-                    }
                 }
             }
         }
@@ -460,7 +452,7 @@ function migrateFeature() {
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' bwdharticleviewcount(s) inserted and ' . $_SESSION['noofupd'] . ' bwdarticleviewcount(s) updated.</h5>';
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . 'bwdarticleviewcount(s)inserted and ' . $_SESSION['noofupd'] . 'bwdarticleviewcount(s) updated.</h5>';
     } 
     
  
@@ -887,6 +879,16 @@ function migrateBwArticle() {
                         //print_r($articleInsertStmt);exit;
 						//echo '----------'.$articleInsertStmt->insert_id;exit;    
                         if ($articleInsertStmt->insert_id) {
+                            $title =  preg_replace("/([^a-zA-Z0-9_.])+/", "-",$articleRow['title']);
+                            $date = date( 'd-m-Y', strtotime($pubDate));
+                            $ch = curl_init();
+                            curl_setopt($ch, CURLOPT_URL,"http://www.awesummly.com/api/summary/");
+                            curl_setopt($ch, CURLOPT_POST, 1);
+                            curl_setopt($ch, CURLOPT_POSTFIELDS,"api_key=bwdisrupt&url=".urldecode('http://bwdisrupt.businessworld.in/article/'.$title.'/'.$date.'-'.$articleRow['article_id'].'/'));
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                            $server_output = curl_exec ($ch);
+                            curl_close ($ch);
+                            //echo $server_output;
                             $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
                             $this->callArticleRelatedContent($articleInsertStmt->insert_id, 1, $condition);
                         }
@@ -1585,6 +1587,10 @@ function migrateBwArticle() {
         while (($videoCatRow = $videoCatRst->fetch_assoc())) {
 
             $catInsertStmt = $this->conn2->prepare("insert into video_category  set v_category_id=?,video_id=?,category_id=?,level=?") or die($this->conn2->error);
+//echo $videoCatRow['category_id'] . '_' . $videoCatRow['level'].'<br>';
+
+//print_r($this->categoryMapping);
+
             $catInsertStmt->bind_param('iiii', $videoCatRow['v_category_id'], $id, $this->categoryMapping[$videoCatRow['category_id'] . '_' . $videoCatRow['level']], $videoCatRow['level']) or die($this->conn2->error);
             $catInsertStmt->execute() or die($this->conn2->error);
             $catInsertStmt->close();

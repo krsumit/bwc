@@ -117,6 +117,7 @@ class RightsController extends Controller
         
         $this->validate($request,[
             //'caption'     => 'required|regex:/^[A-Za-z ]+$/',
+            'name' => 'required',
             'email' => 'required|email',
             'password' => 'required|min:6',
             'password_confirmation' => 'required|same:password',
@@ -227,16 +228,20 @@ class RightsController extends Controller
           
           
         $this->validate($request,[
+            'name' =>'required',
             'email' => 'required|email',      
             'role' => 'required',
             'mobile' => 'numeric',
-            //'password_confirmation' => 'same:password',
+            'password' => 'min:6',
+            'password_confirmation' => 'same:password',
         ]);
         
         $user = User::find($request->id);
         $user->name = $request->name;
         $user->email = $request->email;
-        //$user->password = bcrypt($request->password);
+        if(trim($request->password))
+        $user->password = bcrypt($request->password);
+        
         $user->mobile = $request->mobile;
         $user->user_type_id = $request->role;
         $user->update();
