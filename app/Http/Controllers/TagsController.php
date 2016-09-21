@@ -69,7 +69,7 @@ class TagsController extends Controller
                     else{
                          if(trim($arrTags[$i])){
                         $tag->save();
-                        $returnArr[]=array('id'=>$tag->id,'name'=>$tag->tag);
+                        $returnArr[]=array('id'=>$tag->tags_id,'name'=>$tag->tag);
                          }
                     }
                    
@@ -83,7 +83,7 @@ class TagsController extends Controller
                         $returnArr[]=$tagrow;
                     }else{
                           $tag->save();
-                          $returnArr[]=array('id'=>$tag->id,'name'=>$tag->tag);
+                          $returnArr[]=array('id'=>$tag->tags_id,'name'=>$tag->tag);
                        
                     }
                // if($returnTag->where('tag',trim($tagString))->count() == 0)

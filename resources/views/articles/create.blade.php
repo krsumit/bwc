@@ -350,12 +350,7 @@
 
                     {!! Form::select('authortype',['' => 'Please Select'] + $p1,null,
                     ['class' => 'form-control formattedelement','id' =>'authortype' ]) !!}
-<!--<select style="display: none;" name="simpleSelectBox" id="simpleSelectBox1">
-                        <option selected="" value="All">--Please Select--</option>
-                         @foreach($postAs as $postas1)
-                             <option value="{{ $postas1->author_type_id }}">{{ $postas1->label }}</option>
-         @endforeach
-                     </select>-->
+
                 </div>
             </div>
             <script>
@@ -366,6 +361,29 @@
                         });
                         });</script>
         </div>
+
+
+        <div  class="control-group row-fluid" id="event_top_div" style="display:none;">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter">Event Name</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="event_id_author" id="event_id_author">
+                        @foreach($event as $events)
+                        <option value="{{ $events->event_id }}">{{ $events->title }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <script>
+                                $().ready(function(){
+                        $("#event_id_author").select2();
+                        });</script>
+        </div>
+
+
+
 
 
         <div class="bs-docs-example" id="tabarea">
@@ -481,9 +499,8 @@
                                 else if ($(this).attr("value") == "1"){
 
                                 $("#tabarea").hide();
-                                }
-//if($(this).attr("value")=="none")					
-                                else {
+                                } else {
+
                                 if ($(this).attr("value") != "") {
                                 $("#tabarea").show();
                                         $("#n2, #n3").hide();
@@ -500,8 +517,46 @@
                                                 });
                                 }
                                 }
+                                if ($(this).attr("value") == "6"){
+                                $("#tabarea").show();
+                                        $("#n2, #n3").hide();
+                                        var simpleSelectBox1 = $('#simpleSelectBox1');
+                                        $('#event_top_div').show();
+                                        $('#event_bottom_div').hide();
+                                        $.get("{{ url('/article/speaker/')}}",
+                                        {option: $('#event_id_author').attr("value")},
+                                                function (data) {
+                                                var simpleSelectBox1 = $('#simpleSelectBox1');
+                                                        simpleSelectBox1.empty();
+                                                        simpleSelectBox1.append("<option selected='' value=''>Please Select</option>");
+                                                        $.each(data, function (index, element) {
+                                                        simpleSelectBox1.append("<option value='" + element + "'>" + index + "</option>");
+                                                        });
+                                                        $("#simpleSelectBox1").select2();
+                                                });
+                                }
+                                else{
+                                $('#event_top_div').hide();
+                                        $('#event_bottom_div').show();
+                                }
                                 });
                                 }).change();
+                               
+                                $("#event_id_author").change(function(){
+                                if ($("#authortype").val() == "6"){
+                                        $.get("{{ url('/article/speaker/')}}",
+                                        {option: $('#event_id_author').attr("value")},
+                                                function (data) {
+                                                var simpleSelectBox1 = $('#simpleSelectBox1');
+                                                        simpleSelectBox1.empty();
+                                                        simpleSelectBox1.append("<option selected='' value=''>Please Select</option>");
+                                                        $.each(data, function (index, element) {
+                                                        simpleSelectBox1.append("<option value='" + element + "'>" + index + "</option>");
+                                                        });
+                                                        $("#simpleSelectBox1").select2();
+                                                });
+                                }
+                                });
                                         $('#simpleSelectBox1').change(function(){
                                 var val1 = $(this).val();
                                         if (val1.trim()){
@@ -826,12 +881,21 @@
                         { option: $(this).attr("value") },
                                 function(data) {
                                 var eventBox = $('#event_id');
+                                var eventBoxTop = $('#event_id_author');
+                                
                                         eventBox.empty();
+                                        eventBoxTop.empty();
                                         eventBox.append("<option value=''>Please Select</option>");
                                         $.each(data, function(index, element) {
                                         eventBox.append("<option value='" + element + "'>" + index + "</option>");
+                                        eventBoxTop.append("<option value='" + element + "'>" + index + "</option>");
                                         });
                                         $("#event_id").select2();
+                                        $('#event_id_author').select2();
+                                        if($('#authortype').val()=="6"){
+                                            $( "#event_id_author" ).trigger("change");
+                                        }
+                                        
                                 });
                                 $.get("{{ url('article/campaign')}}",
                                 { option: $(this).attr("value") },
@@ -999,10 +1063,10 @@
         <!--WYSIWYG Editor - Full Options end-->
 
     </div><!-- end container1 -->
-    
+
     <div class="container-fluid">
-      <div class="form-legend" id="social-media-detail">Social Media Detail</div>
-      <!--Text Area - No Resize begin-->
+        <div class="form-legend" id="social-media-detail">Social Media Detail</div>
+        <!--Text Area - No Resize begin-->
         <div  class="control-group row-fluid">
             <div class="span3">
                 <label class="control-label" for="title">Social Title (200 Characters)</label>
@@ -1029,19 +1093,19 @@
         </div>
         <!--Text Area Resizable end-->
 
-<!--        <div id="file_upload_social" class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label">Social Image ( Prefered size 600 x 315  )</label>
-                </div>
-                <div class="span9">
-                    <div class="fileupload fileupload-new" data-provides="fileupload">
-                        <div class="input-append">
-                            <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input name="photo" type="file"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+        <!--        <div id="file_upload_social" class="control-group row-fluid">
+                        <div class="span3">
+                            <label class="control-label">Social Image ( Prefered size 600 x 315  )</label>
                         </div>
-                    </div>
-                </div>
-            </div>-->
-        
+                        <div class="span9">
+                            <div class="fileupload fileupload-new" data-provides="fileupload">
+                                <div class="input-append">
+                                    <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input name="photo" type="file"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
+
     </div>
 
     <div class="container-fluid">
@@ -1239,12 +1303,11 @@
                                         $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
                                         $('#selectBoxFilter5').select2();
                                 });
-                                
-                                if($(this).attr("value")=='{{config('constants.ee_rating_cateogy_id')}}'){
-                                    $('#start_rating_div').show();
-                                }else{
-                                    $('#start_rating_div').hide();
-                                }
+                                if ($(this).attr("value") == '{{config('constants.ee_rating_cateogy_id')}}'){
+                        $('#start_rating_div').show();
+                        } else{
+                        $('#start_rating_div').hide();
+                        }
                         });
                         });</script>
         </div>
@@ -1370,7 +1433,7 @@
         <!--Select Box with Filter Search end-->					
     </div>
 
-    <div class="container-fluid">
+    <div class="container-fluid" id="event_bottom_div">
         <div class="form-legend" id="assign-article-to-a-event">Assign This Article To An Event</div>
 
         <!--Select Box with Filter Search begin-->
@@ -2101,7 +2164,7 @@
                                          event.data.$footerButton.stopSpin();
                                          dialog.setClosable(true);
                                          });
-                                                 
+                                         
                                          return $content;
                                          },
                                          buttons: [{
@@ -2233,46 +2296,46 @@
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-validate.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-ui.js') }}"></script>
 <script>
-                                       $(document).ready(function(){
-                                        $('#fileupload').fileupload({
-                                        // Uncomment the following to send cross-domain cookies:
-                                        //xhrFields: {withCredentials: true},
-                                        url: '<?php echo url('article/image/upload') ?>',
-                                                acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-                                                maxFileSize: 10000000
+                                        $(document).ready(function(){
+                                $('#fileupload').fileupload({
+                                // Uncomment the following to send cross-domain cookies:
+                                //xhrFields: {withCredentials: true},
+                                url: '<?php echo url('article/image/upload') ?>',
+                                        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+                                        maxFileSize: 10000000
+                                });
+                                        $('.authorimagespn').append('<input type="file" name="photo" id="photo">');
+                                });
+                                        $('#fileupload').bind('fileuploaddone', function (e, data) {
+                                //console.log(e);
+                                var dataa = JSON.parse(data.jqXHR.responseText);
+                                        //console.log(dataa['files']['0']['name']);
+                                        $.each(dataa['files'], function(index, element) {
+                                        //console.log(element.name);
+                                        if ($('#uploadedImages').val().trim())
+                                                $('#uploadedImages').val($('#uploadedImages').val() + ',' + element.name);
+                                                else
+                                                $('#uploadedImages').val(element.name);
                                         });
-                                                $('.authorimagespn').append('<input type="file" name="photo" id="photo">');
-                                        });
-                                                $('#fileupload').bind('fileuploaddone', function (e, data) {
-                                        //console.log(e);
-                                        var dataa = JSON.parse(data.jqXHR.responseText);
-                                                //console.log(dataa['files']['0']['name']);
-                                                $.each(dataa['files'], function(index, element) {
-                                                //console.log(element.name);
-                                                if ($('#uploadedImages').val().trim())
-                                                        $('#uploadedImages').val($('#uploadedImages').val() + ',' + element.name);
-                                                        else
-                                                        $('#uploadedImages').val(element.name);
-                                                });
-                                        });
-                                                $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
-                                        // console.log(data);
-                                        var file = getArg(data.url, 'file');
-                                                var images = $('#uploadedImages').val().split(',');
-                                                images.splice(images.indexOf(file), 1);
-                                                $('#uploadedImages').val(images.join());
-                                                //$('#imagesname').val($('#imagesname').val().replace(','+));
+                                });
+                                        $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
+                                // console.log(data);
+                                var file = getArg(data.url, 'file');
+                                        var images = $('#uploadedImages').val().split(',');
+                                        images.splice(images.indexOf(file), 1);
+                                        $('#uploadedImages').val(images.join());
+                                        //$('#imagesname').val($('#imagesname').val().replace(','+));
 
-                                        });
-                                                function getArg(url, name){
-                                                var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
-                                                        if (results == null){
-                                                return null;
-                                                }
-                                                else{
-                                                return results[1] || 0;
-                                                }
-                                                }
+                                });
+                                        function getArg(url, name){
+                                        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
+                                                if (results == null){
+                                        return null;
+                                        }
+                                        else{
+                                        return results[1] || 0;
+                                        }
+                                        }
 
 
 </script>

@@ -187,7 +187,8 @@ Route::get('/article/event/', function(){
     $option = Input::get('option');
     $eventList = DB::table('event')
         ->where('channel_id',$option)
-        ->where('valid','=','1')    
+        ->where('valid','=','1')
+        ->orderBy('start_date','desc')    
         ->lists('event_id','title');
     return $eventList;
 });
@@ -214,6 +215,12 @@ Route::get('/article/authordd/', function(){
     $input = $option;
     $authorList = DB::table('authors')->where('author_type_id',$input)->where('valid','1')->orderBy('name')->lists('author_id','name');
 
+    return $authorList;
+});
+Route::get('/article/speaker/', function(){
+    $option = Input::get('option');
+    $input = $option;
+    $authorList = DB::table('event_speaker')->where('event_id',$input)->where('status','1')->orderBy('name')->lists('id','name');
     return $authorList;
 });
 
@@ -307,13 +314,19 @@ Route::match(['get', 'post'], 'campaing/delete', ['as' => 'campaing/delete', 'us
  *  Adds events from add-new-events to events Table 
  */
 
-Route::match(['get', 'post'], 'event/add-event-management', ['as' => 'event/add-event-management', 'uses' => 'eventController@index']);
-Route::match(['get', 'post'], 'event/add', ['as' => 'event/add', 'uses' => 'eventController@store']);
-Route::match(['get', 'post'], 'event/published', ['as' => 'event/published', 'uses' => 'eventController@published']);
-Route::match(['get', 'post'], 'event/edit', ['as' => 'event/edit', 'uses' => 'eventController@edit']);
-Route::match(['get', 'post'], 'event/delete', ['as' => 'event/delete', 'uses' => 'eventController@destroy']);
-Route::match(['get', 'post'], 'event/update', ['as' => 'event/update', 'uses' => 'eventController@update']);
-
+Route::match(['get', 'post'], 'event/add-event-management', ['middleware' => 'auth', 'uses' => 'EventController@index']);
+Route::match(['get', 'post'], 'event/add', ['middleware' => 'auth', 'uses' => 'EventController@store']);
+Route::match(['get', 'post'], 'event/published', ['middleware' => 'auth', 'uses' => 'EventController@published']);
+Route::match(['get', 'post'], 'event/edit', ['middleware' => 'auth', 'uses' => 'EventController@edit']);
+Route::match(['get', 'post'], 'event/delete', ['middleware' => 'auth', 'uses' => 'EventController@destroy']);
+Route::match(['get', 'post'], 'event/update', ['middleware' => 'auth', 'uses' => 'EventController@update']);
+Route::get('event/manage-speaker/{id}', ['middleware' => 'auth',   'uses' => 'EventController@manageEventSpeaker']);
+Route::post('event/speaker/add', ['middleware' => 'auth',   'uses' => 'EventController@storeEventSpeaker']);
+Route::get('event/speaker/{id}', ['middleware' => 'auth',   'uses' => 'EventController@editEventSpeaker']);
+Route::post('event/speaker/update', ['middleware' => 'auth',   'uses' => 'EventController@updateEventSpeaker']);
+Route::get('api/event/speaker/{id}', ['uses' => 'EventController@apiEventSpeaker']);
+Route::match(['get', 'post'], 'event-speaker/addTag', ['middleware' => 'auth', 'uses' => 'EventController@storeTag']);
+Route::get('event-speaker/getJson',['middleware' => 'auth', 'uses' => 'EventController@returnJson']);
 
 
 
@@ -322,9 +335,8 @@ Route::match(['get', 'post'], 'event/update', ['as' => 'event/update', 'uses' =>
  *  Adds Tag from CreateArticle to Tags Table - Ajax Request
  */
 //Route::post('article/addTag','TagsController@store');
-Route::match(['get', 'post'], 'article/addTag', ['as' => 'article/addTag', 'uses' => 'TagsController@store']);
-
-Route::get('tags/getJson','TagsController@returnJson');
+Route::match(['get', 'post'], 'article/addTag', ['middleware' => 'auth', 'uses' => 'TagsController@store']);
+Route::get('tags/getJson',['middleware' => 'auth', 'uses' => 'TagsController@returnJson']);
 
 
 /*

@@ -289,6 +289,7 @@
                                 <th>Title</th>
                                 <th>Event Type</th>
                                 <th>Location</th>
+                                <th>Action</th>
                                 <th><input type="checkbox" class="uniformCheckbox" value="checkbox1"  id="selectall"></th>
                             </tr>
                         </thead>
@@ -300,6 +301,18 @@
                                 </td>
                                 <td><a href="/event/edit/?id={{$a->event_id}}">{{$a->category}}</a></td>
                                 <td class="center"><a href="/event/edit/?id={{$a->event_id}}">{{$a->name}}</a></td>
+                                <td class="center">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Modify Detail<span class="caret"></span></button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="/event/edit/?id={{$a->event_id}}">Event</a></li>
+
+                                            <li class="divider"></li>
+                                            <li><a href="/event/manage-speaker/{{$a->event_id}}">Speaker</a></li>
+
+                                        </ul>
+                                    </div>
+                                </td>
                                 <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$a->event_id}}" name="checkItem[]"></td>
                             </tr>
                             @endforeach

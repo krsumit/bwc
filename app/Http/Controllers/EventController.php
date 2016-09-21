@@ -10,6 +10,9 @@ use App\Right;
 use Auth;
 use App\Country;
 use App\State;
+use App\Event;
+use App\SpeakerTag;
+use App\Speaker;
 use Session;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -17,7 +20,7 @@ use Illuminate\Support\Facades\Validator;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 
-class eventController extends Controller {
+class EventController extends Controller {
 
     /**
      * Display a listing of the resource.
@@ -27,7 +30,7 @@ class eventController extends Controller {
     private $rightObj;
 
     public function __construct() {
-        $this->middleware('auth');
+        //$this->middleware('auth');
         $this->rightObj = new Right();
     }
 
@@ -167,7 +170,7 @@ class eventController extends Controller {
                     ->where('event.valid', '=', '1')
                     ->where('channel_id', $currentChannelId)
                     ->where('event.title', 'LIKE', '%' . $queryed . '%')
-                    ->orderBy('event.updated_at', 'DESC')
+                    ->orderBy('event.start_date', 'DESC')
                     ->paginate(10);
             //print_r($posts);die;
         } elseif (isset($_GET['country']) || isset($_GET['state']) || isset($_GET['startdate']) || isset($_GET['enddate'])) {
@@ -178,7 +181,7 @@ class eventController extends Controller {
                     ->select('event.*', 'country_states.name')
                     ->where('channel_id', $currentChannelId)
                     ->where('event.valid', '=', '1')
-                    ->orderBy('event.updated_at', 'DESC');
+                    ->orderBy('event.start_date', 'DESC');
 
             if ($_GET['country']) {
 
@@ -208,7 +211,7 @@ class eventController extends Controller {
                     ->select('event.*', 'country_states.name')
                     ->where('event.valid', '=', '1')
                     ->where('channel_id', $currentChannelId)
-                    ->orderBy('event.updated_at', 'DESC')
+                    ->orderBy('event.start_date', 'DESC')
                     ->paginate(10);
 
             //print_r($posts);die;
@@ -392,6 +395,197 @@ class eventController extends Controller {
                     ->update($deleteAl);
         }
         return;
+    }
+
+    public function manageEventSpeaker($id) {
+        $event = Event::find($id);
+        $speakers = Speaker::where('event_id', '=', $id)
+                ->orderBy('updated_at', 'desc');
+        
+        if (isset($_GET['searchin'])) {
+            if ($_GET['searchin'] == 'name') {
+                $speakers->where('name', 'like', '%' . $_GET['keyword'] . '%');
+            }
+            if (@$_GET['searchin'] == 'email') {
+              $speakers->where('email', 'like', '%' . $_GET['keyword'] . '%');
+            }
+        }
+
+        $speakers=$speakers->get();
+
+        return view('events.event-speaker', compact('event', 'speakers'));
+    }
+
+    public function storeEventSpeaker(Request $request) {
+
+        if ($request->file('speaker_image')) {
+            $file = $request->file('speaker_image');
+            $filename = str_random(6) . '_' . $request->file('speaker_image')->getClientOriginalName();
+            $name = $request->name;
+            $destination_path = 'uploads/';
+            $file->move($destination_path, $filename);
+            $s3 = AWS::createClient('s3');
+            $result = $s3->putObject(array(
+                'ACL' => 'public-read',
+                'Bucket' => config('constants.awbucket'),
+                'Key' => config('constants.awspeakerdir') . $filename,
+                'SourceFile' => $destination_path . $filename,
+            ));
+            if ($result['@metadata']['statusCode'] == 200) {
+                unlink($destination_path . $filename);
+            }
+        }
+
+        $speaker = new Speaker();
+        $speaker->event_id = $request->event_id;
+        $speaker->name = $request->speaker_name;
+        $speaker->email = $request->speaker_email;
+        $speaker->photo = $filename;
+        $speaker->twitter = $request->speaker_twitter;
+        $speaker->description = $request->speaker_desc;
+        $speaker->tag = $request->Taglist;
+        $speaker->save();
+        Session::flash('message', 'Speaker added successfully');
+        return Redirect::to('event/manage-speaker/' . $request->event_id);
+    }
+
+    public function editEventSpeaker($id) {
+        $speaker = Speaker::find($id);
+        $event = Event::find($speaker->event_id);
+        $tagsId = explode(',', $speaker->tag);
+        $tags = json_encode(DB::table('speaker_tags')
+                        ->select('speaker_tags.tags_id as id', 'speaker_tags.tag as name')
+                        ->where('speaker_tags.valid', '1')
+                        ->whereIn('tags_id', $tagsId)
+                        ->get());
+
+        return view('events.edit-event-speaker', compact('event', 'speaker', 'tags'));
+    }
+
+    public function updateEventSpeaker(Request $request) {
+        $speaker = Speaker::find($request->speaker_id);
+        $speaker->event_id = $request->event_id;
+        $speaker->name = $request->speaker_name;
+        $speaker->email = $request->speaker_email;
+        $speaker->twitter = $request->speaker_twitter;
+        $speaker->description = $request->speaker_desc;
+        $speaker->tag = $request->Taglist;
+        
+        if ($request->file('speaker_image')) {
+            $file = $request->file('speaker_image');
+            $filename = str_random(6) . '_' . $request->file('speaker_image')->getClientOriginalName();
+            $name = $request->name;
+            $destination_path = 'uploads/';
+            $file->move($destination_path, $filename);
+            $s3 = AWS::createClient('s3');
+            $result = $s3->putObject(array(
+                'ACL' => 'public-read',
+                'Bucket' => config('constants.awbucket'),
+                'Key' => config('constants.awspeakerdir') . $filename,
+                'SourceFile' => $destination_path . $filename,
+            ));
+            if ($result['@metadata']['statusCode'] == 200) {
+                $s3->deleteObjects(array(
+                    'Bucket' => config('constants.awbucket'),
+                    'Delete' => array(
+                        'Objects' => array(
+                            array(
+                                'Key' => config('constants.awspeakerdir') . $speaker->photo
+                            )
+                        )
+                    )
+                ));
+                $speaker->photo = $filename;
+                unlink($destination_path . $filename);
+            }
+        }
+
+        $speaker->save();
+        Session::flash('message', 'Speaker updated successfully');
+        return Redirect::to('event/manage-speaker/' . $request->event_id);
+    }
+
+    public function apiEventSpeaker($id) {
+        $id=  base64_decode($id);
+        $event=Event::leftJoin('country','event.country','=','country.country_id')
+                ->leftJoin('country_states','event.state','=','country_states.state_id')
+                ->where('event.event_id','=',$id)
+                ->select('event_id','title','description','imagepath','start_date','end_date','country.name as country','country_states.name as state')
+                ->first();
+        $event->imagepath=config('constants.awsbaseurl').config('constants.awaevent').$event->imagepath;
+      
+        $speakers=  Speaker::where('event_id','=',$id)->where('status','=','1')->get();
+        $speakersArray=array();
+        foreach($speakers as $speaker){
+            $tagsId=  explode(',', $speaker->tag);
+            $tags=  SpeakerTag::whereIn('tags_id',$tagsId)->get();
+            $tgs='';
+            foreach($tags as $tag){
+                $tgs=trim($tgs)?','.$tag->tag:$tag->tag;
+            }
+            $speakersArray[]=array('id'=>$speaker->id,'name'=>$speaker->name,'email'=>$speaker->email,'photo'=>config('constants.awsbaseurl').config('constants.awspeakerdir').$speaker->photo,'twitter'=>$speaker->twitter,'description'=>$speaker->description,'tag'=>$tgs);
+        }
+        
+        $data['event']=$event;
+        $data['speakers']=$speakersArray;
+       //cho '<pre>';
+        //print_r($data);
+        return json_encode($data);
+    }
+
+    public function storeTag(Request $request) {
+
+        //Save Request Tuple in Table - Validate First
+
+        $count = 0;
+        $tagString = $request->tag;
+        $arrTags = explode(',', $tagString);
+        $count = sizeof($arrTags);
+
+        //For Response
+        $returnTag1 = new SpeakerTag();
+        $returnArr = array(); //new Tag();
+        $returnTag = new SpeakerTag();
+        //For more than 1 Tag Added (Comma separated list)
+        if ($count >= 1) {
+            if ($count > 1) {
+                for ($i = 0; $i < $count; $i++) {
+                    $tag = new SpeakerTag;
+                    $tag->tag = trim($arrTags[$i]);
+                    if ($tagrow = $returnTag->where('tag', trim($arrTags[$i]))->select('tags_id as id', 'tag as name')->first()) {
+                        $returnArr[] = $tagrow;
+                    } else {
+                        if (trim($arrTags[$i])) {
+                            $tag->save();
+                            $returnArr[] = array('id' => $tag->tags_id, 'name' => $tag->tag);
+                        }
+                    }
+                }
+                $returnTag1 = $returnArr;
+            } else if ($count == 1) {
+                // $l = fopen('/home/sudipta/check.log', 'a+');
+                $tag = new SpeakerTag;
+                $tag->tag = trim($tagString);
+                if ($tagrow = $returnTag->where('tag', trim($tagString))->select('tags_id as id', 'tag as name')->first()) {
+                    $returnArr[] = $tagrow;
+                } else {
+                    $tag->save();
+                    $returnArr[] = array('id' => $tag->tags_id, 'name' => $tag->tag);
+                }
+                // if($returnTag->where('tag',trim($tagString))->count() == 0)
+                // $returnTag1 = $returnTag->all()->where('tags_id',"$cond");
+            }
+        }
+        return $returnArr;
+    }
+
+    public function returnJson() {
+        //DB::enableQueryLog();
+        $matchText = $_GET['q'];
+        $tag = new SpeakerTag;
+        //->all()
+        $rst = $tag->where('tag', "like", $matchText . '%')->select('tags_id as id', 'tag as name')->get();
+        return response()->json($rst);
     }
 
 }

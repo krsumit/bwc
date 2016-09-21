@@ -451,6 +451,28 @@
                 });</script>
         </div>
 
+        <div  class="control-group row-fluid" id="event_top_div" style="display:none;">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter">Event Name</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="event_id_author" id="event_id_author">
+                        @foreach($event as $events)
+                            @if($article->event_id == $events->event_id)
+                            <option selected value="{{ $events->event_id }}">{{ $events->title }}</option>
+                            @else
+                            <option value="{{ $events->event_id }}">{{ $events->title }}</option>
+                            @endif
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <script>
+                                $().ready(function(){
+                        $("#event_id_author").select2();
+                        });</script>
+        </div>
 
         <div class="bs-docs-example" id="tabarea">
             <ul class="nav nav-tabs" id="iconsTab">
@@ -593,7 +615,7 @@
                         $("#tabarea").hide();
                         }
 //if($(this).attr("value")=="none")
-                        else {
+                        else if($(this).attr("value") != "6"){
                         if ($(this).attr("value") != "") {
                         $("#tabarea").show();
                                 $("#n2, #n3").hide();
@@ -601,19 +623,79 @@
                                 {option: $(this).attr("value")},
                                         function (data) {
                                                 var simpleSelectBox1 = $('#simpleSelectBox1');
-                                                $select1val=simpleSelectBox1.val();                                                var selected1='';
+                                                var simpleSelectBox2 = $('#simpleSelectBox2');
+                                                var simpleSelectBox3 = $('#simpleSelectBox3');
+                                                $select1val=simpleSelectBox1.val(); 
+                                                var selected1='';
                                                 simpleSelectBox1.empty();
+                                                simpleSelectBox2.empty();
+                                                simpleSelectBox3.empty();
                                                 simpleSelectBox1.append("<option selected='' value=''>Please Select</option>");
                                                 $.each(data, function (index, element) {
                                                     (element==$select1val)?selected1='selected':selected1='';
                                                 simpleSelectBox1.append("<option "+selected1+" value='" + element + "'>" + index + "</option>");
                                                 });
+                                                
                                                 $("#simpleSelectBox1").select2();
+                                                 $("#simpleSelectBox2").select2();
+                                                $("#simpleSelectBox3").select2();
                                         });
                         }
                         }
+                        
+                         if ($(this).attr("value") == "6"){
+                            // alert(2);
+                                        $("#tabarea").show();
+                                        $("#n2, #n3").hide();
+                                        var simpleSelectBox1 = $('#simpleSelectBox1');
+                                        $('#event_top_div').show();
+                                        $('#event_bottom_div').hide();
+                                        $.get("{{ url('/article/speaker/')}}",
+                                        {option: $('#event_id_author').attr("value")},
+                                                function (data) {
+                                                var simpleSelectBox1 = $('#simpleSelectBox1');
+                                                $select1val=simpleSelectBox1.val(); 
+                                                //alert($select1val);
+                                                var selected1='';
+                                                
+                                                        simpleSelectBox1.empty();
+                                                        simpleSelectBox1.append("<option value=''>Please Select</option>");
+                                                        $.each(data, function (index, element) {
+                                                        (element==$select1val)?selected1='selected':selected1='';
+                                                        simpleSelectBox1.append("<option "+selected1+" value='" + element + "'>" + index + "</option>");
+                                                        });
+                                                        $("#simpleSelectBox1").select2();
+                                                });
+                                }
+                                else{
+                                $('#event_top_div').hide();
+                                        $('#event_bottom_div').show();
+                                }
+                                
                         });
                         }).change();
+                        
+                         $("#event_id_author").change(function(){
+                             //alert(1);
+                                if ($("#simpleSelectAuthor").val() == "6"){
+                                        $.get("{{ url('/article/speaker/')}}",
+                                        {option: $('#event_id_author').attr("value")},
+                                                function (data) {
+                                                var simpleSelectBox1 = $('#simpleSelectBox1');
+                                                $select1val=simpleSelectBox1.val(); 
+                                                var selected1='';
+                                                        simpleSelectBox1.empty();
+                                                        simpleSelectBox1.append("<option  value=''>Please Select</option>");
+                                                        $.each(data, function (index, element) {
+                                                        (element==$select1val)?selected1='selected':selected1='';
+                                                        simpleSelectBox1.append("<option "+selected1+" value='" + element + "'>" + index + "</option>");
+                                                        });
+                                                        $("#simpleSelectBox1").select2();
+                                                });
+                                }
+                                }).change();
+                                
+                                
                         });</script>
 
                 </div>
@@ -824,12 +906,20 @@
                 { option: $(this).attr("value") },
                         function(data) {
                         var eventBox = $('#event_id');
+                        var eventBoxTop = $('#event_id_author');
+                        
                                 eventBox.empty();
+                                eventBoxTop.empty();
                                 eventBox.append("<option selected='' value=''>Please Select</option>");
                                 $.each(data, function(index, element) {
                                 eventBox.append("<option value='" + element + "'>" + index + "</option>");
+                                eventBoxTop.append("<option value='" + element + "'>" + index + "</option>");
                                 });
                                 $("#event_id").select2();
+                                $('#event_id_author').select2();
+                                if($('#simpleSelectAuthor').val()=="6"){
+                                    $( "#event_id_author" ).trigger("change");
+                                }
                         });
                         $.get("{{ url('article/campaign')}}",
                         { option: $(this).attr("value") },
@@ -1427,7 +1517,7 @@
         <!--Select Box with Filter Search end-->
     </div>
 
-    <div class="container-fluid">
+    <div class="container-fluid" id="event_bottom_div">
         <div class="form-legend" id="assign-article-to-a-event">Assign This Article To An Event</div>
 
         <!--Select Box with Filter Search begin-->

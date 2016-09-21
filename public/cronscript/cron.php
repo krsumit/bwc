@@ -461,7 +461,8 @@ class Cron {
                 }
             }
         }
-
+        $this->migrateSpeakerTag();
+        $this->migrateSpeaker();
         $cronEndTime = date('Y-m-d H:i:s');
         $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='event',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
@@ -1137,6 +1138,106 @@ class Cron {
 
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' tag(s) inserted and ' . $_SESSION['noofupd'] . ' tag(s) updated.</h5>';
     }
+    
+    function migrateSpeakerTag() {
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='speakertag' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
+        
+        $tagResults = $this->conn->query("SELECT tags_id as id,tag,valid  FROM speaker_tags where 1 $condition");
+        //echo $tagResults->num_rows;exit;
+        if ($tagResults->num_rows > 0) {
+            while ($tagrow = $tagResults->fetch_assoc()) {
+                $tid = $tagrow['id'];
+                $checkTagExistResultSet = $this->conn2->query("select tags_id,tag from speaker_tags where tags_id=$tid");
+                if ($checkTagExistResultSet->num_rows > 0) {
+                    $checkTagExistResultSet->close();
+                    $tagUpdateStmt = $this->conn2->prepare("update speaker_tags set tag=?,valid=? where tags_id=?");
+                    $tagUpdateStmt->bind_param('sii', $tagrow['tag'], $tagrow['valid'], $tid);
+                    $tagUpdateStmt->execute();
+                    if ($tagUpdateStmt->affected_rows)
+                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                }else {
+                    if ($tagrow['valid']) {
+                        $tagInsertStmt = $this->conn2->prepare("insert into speaker_tags set tags_id=?,tag=?,valid=?");
+                        $tagInsertStmt->bind_param('isi', $tagrow['id'], $tagrow['tag'],$tagrow['valid']);
+                        $tagInsertStmt->execute();
+                        if ($tagInsertStmt->insert_id) {
+                            $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                        }
+                    }
+                }
+            }
+        }
+        
+        
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='speakertag',start_time=?,end_time=?");
+        $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecorstmt->execute();
+        $updatecorstmt->close();
+
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' speaker tag(s) inserted and ' . $_SESSION['noofupd'] . ' speaker tag(s) updated.</h5>';
+    }
+    
+    function migrateSpeaker() {
+        
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $_SESSION['noofdel'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='speaker' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
+        $authorResults = $this->conn->query("SELECT * FROM event_speaker where  1 $condition");
+        //echo $authorResults->num_rows; exit;
+        if ($authorResults->num_rows > 0) {
+            while ($authorRow = $authorResults->fetch_assoc()) {
+                // print_r($authorRow); exit;
+                $authorId = $authorRow['id'];
+                $checkAthorExistResultSet = $this->conn2->query("select id from event_speaker where id=$authorId");
+                if ($checkAthorExistResultSet->num_rows > 0) { 
+                    if ($authorRow['status']) {
+                        $authorUpdateStmt = $this->conn2->prepare("update event_speaker set event_id=?,name=?,email=?,photo=?,twitter=?,description=?,tag=?,sequence=? where id=?");
+                        $authorUpdateStmt->bind_param('issssssii', $authorRow['event_id'], $authorRow['name'], $authorRow['email'],$authorRow['photo'], $authorRow['twitter'], $authorRow['description'], $authorRow['tag'], $authorRow['sequence'],$authorRow['id']);
+                        $authorUpdateStmt->execute();
+                        if ($authorUpdateStmt->affected_rows)
+                            $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                    }else {
+                        $authorDelStmt = $this->conn2->prepare("delete from event_speaker where id=?");
+                        $authorDelStmt->bind_param('i', $authorRow['id']);
+                        $authorDelStmt->execute();
+                        $_SESSION['noofdel']=$_SESSION['noofdel']+1;
+                    }
+
+                } else {
+                    $authorInsertStmt = $this->conn2->prepare("insert into event_speaker set id=?,event_id=?,name=?,email=?,photo=?,twitter=?,description=?,tag=?,sequence=?");
+                    $authorInsertStmt->bind_param('iissssssi', $authorRow['id'], $authorRow['event_id'], $authorRow['name'], $authorRow['email'],$authorRow['photo'], $authorRow['twitter'], $authorRow['description'], $authorRow['tag'], $authorRow['sequence']);
+                    $authorInsertStmt->execute();
+                    if ($authorInsertStmt->affected_rows) {
+                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                    }
+                }
+            }
+        }
+
+
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='speaker',start_time=?,end_time=?");
+        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecronstmt->execute();
+        $updatecronstmt->close();
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' speaker(s) inserted, ' . $_SESSION['noofupd'] . ' speaker(s) updated and '.$_SESSION['noofdel'].' speaker(s) deleted.</h5>';
+    }
 
     function migrateNewsType() {
 
@@ -1526,7 +1627,7 @@ class Cron {
         $updatecorstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' article(s) inserted, ' . $_SESSION['noofupd'] . ' article(s) updated and ' . $_SESSION['noofdel'] . ' article(s) deleted.</h5>';
         $key= md5(date('dmY').'businessworld');
-	echo file_get_contents('http://businessworld.in/create-json/'.$key);
+	    file_get_contents('http://businessworld.in/create-json/'.$key);
     }
 
     function migrateFeature() {

@@ -1539,7 +1539,7 @@ function migrateBwArticle() {
                     $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                     } else {
                         $delStmt = $this->conn2->prepare("delete from video_master where video_id=?");
-                        $delStmt->bind_param('i', $iid);
+                        $delStmt->bind_param('i', $masterVideoId);
                         $delStmt->execute();
                         
                     }

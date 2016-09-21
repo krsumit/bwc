@@ -451,7 +451,7 @@
 
             <!--Select Box with Filter Search end-->					
         </div>
-       
+        <div class="container-fluid">
             <div class="control-group row-fluid">
                 <div class="span12 span-inset">
                     <button type="submit" class="btn btn-success">Publish</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>

@@ -33,6 +33,7 @@ return [
 'awfeaturebox2'=>'featurebox2/', 
 'awfeaturebox3'=>'featurebox3/',  
 'awmagazinedir'=> 'magazineissue/',
+'awspeakerdir'=> 'speaker/',
 'quotesimage'=>'quotesimage/',    
 'awvideo'=>'videomaster/', 
 'awvideothumb'=> 'mastervideothumb/',

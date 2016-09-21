@@ -351,10 +351,18 @@ class ArticlesController extends Controller {
         $addArticle->save();
 
         //Get Author Ids and Names - with label 1, 2, 3
-        $arrAuth = DB::table('article_author')
-                        ->join('authors', 'authors.author_id', '=', 'article_author.author_id')
-                        ->select('article_author.*', 'authors.name')
-                        ->where('article_id', '=', $id)->get();
+        if($article->author_type!=6){            
+            $arrAuth = DB::table('article_author')
+                            ->join('authors', 'authors.author_id', '=', 'article_author.author_id')
+                            ->select('article_author.*', 'authors.name')
+                            ->where('article_id', '=', $id)->get();
+        }else{            
+            $arrAuth = DB::table('article_author')
+                            ->join('event_speaker', 'event_speaker.id', '=', 'article_author.author_id')
+                            ->select('article_author.*', 'event_speaker.name')
+                            ->where('article_id', '=', $id)->get();
+            //print_r($arrAuth); exit;
+        }
 
         //Get Category 1,2,3,4
         $acateg1 = ArticleCategory::where('article_id', '=', $id)->get();
@@ -467,7 +475,7 @@ class ArticlesController extends Controller {
         $category = DB::table('category')->where('channel_id', $currentChannelId)->where('valid', '1')->orderBy('name')->get();
 
         $magazine = DB::table('magazine')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
-        $event = DB::table('event')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
+        $event = DB::table('event')->where('channel_id', $currentChannelId)->where('valid', '1')->orderBy("start_date","desc")->get();
         $campaign = DB::table('campaign')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
         $columns = DB::table('columns')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
         $tags = json_encode(DB::table('tags')
@@ -545,7 +553,7 @@ class ArticlesController extends Controller {
         //fwrite($asd, "\n Channels SELECTED FOR USER ".$channels[1]->channel_id."\n");
 
         $magazine = DB::table('magazine')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
-        $event = DB::table('event')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
+        $event = DB::table('event')->where('channel_id', $currentChannelId)->where('valid', '1')->orderBy('start_date','desc')->get();
         $campaign = DB::table('campaign')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
         $columns = DB::table('columns')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
         //$tags = DB::table('tags')->where('valid', '1')->get();
@@ -596,7 +604,10 @@ class ArticlesController extends Controller {
         $article->state = $request->state;
         $article->news_type = $request->newstype;
         $article->magazine_id = $request->magazine;
-        $article->event_id = $request->event;
+        if($request->authortype=="6")
+            $article->event_id = $request->event_id_author;
+        else
+            $article->event_id = $request->event;
         $article->rating_point = $request->rating_point;
         if ($request->social_image)
             $article->social_image = $request->social_image;
@@ -674,59 +685,39 @@ class ArticlesController extends Controller {
             $rankUpdateArr = array();
             $rankArr = array();
 
-            /////////// ERROR //////////////////
-            //Check what Ranks have been replaced, what discarded.
-            //$akeys = array_keys($arrCollect)
             for ($i = 1; $i <= 3; $i++) {
                 if (array_key_exists($i, $arrCollect)) {
                     $xkey = "author_id" . $i;
-                    //fwrite($asd, " Rank Exists: " . $i . " A_id: " . $arrCollect[$i][0] . "At AA ID:" . $arrCollect[$i][1] . " Added A_id: " . $request->$xkey . " \n");
-                    //If not same Author selected, add Old to Del Array, else New to New Array
                     if ($arrCollect[$i] != $request->$xkey) {
-                        //Update it .. for its been changed, Or delete
                         if ($request->$xkey == '') {
-                            //Been removed from Edit Page
-                            //fwrite($asd, " Rank has been removed from Edit Page : " . $i . " AA_id: " . $arrCollect[$i][1] . " \n");
-                            $delArr[] = $arrCollect[$i][1];
+                           $delArr[] = $arrCollect[$i][1];
                         }
-                        //$delArr[] = $arrCollect[$i];
                         $rankUpdateArr[$xkey][0] = $request->$xkey;
                         $rankUpdateArr[$xkey][1] = $arrCollect[$i][1];
-                        //fwrite($asd, " Rank assigned to Update : " . $i . " A_id: " . $arrCollect[$i][0] . " New A_id to be Added: " . $request->$xkey . "\n");
                     } else {
-                        //Leave it .. for its unchanged
-                        //fwrite($asd, " Rank has Same Author as before.No change : " . $i . " A_id: " . $request->$xkey . " \n");
-                        //$rankArr[$xkey] = $request->$xkey;
+                       
                     }
                 } else {
-                    //If Ranks not existing in Old, Add
                     $vkey = "author_id" . $i;
-                    //fwrite($asd, " Rank NOT Exists in Old: " . $i . " A_id: " . $request->$vkey . " \n");
                     if ($request->$vkey != '') {
-                        //If newly Added Author, Insert it
-                        //fwrite($asd, " Rank Add : " . $i . " A_id: " . $request->$vkey . " \n");
-                        $rankArr[$i] = $request->$vkey;
-                        //$rankArr[$xkey]['id'] = $arrCollect[$i]['id'];
+                         $rankArr[$i] = $request->$vkey;
                     }
                 }
             }
 
             foreach ($rankUpdateArr as $r => $v) {
-                //fwrite($asd, " Article Author ID Being Updated : " . $v[1] . " WIth Author ID:" . $v[0] . " \n");
                 $article_authorU = ArticleAuthor::find($v[1]);
                 $article_authorU->author_id = $v[0];
                 $article_authorU->save();
             }
 
             foreach ($rankArr as $r => $v) {
-                //fwrite($asd, " Author ID Being Added : " . $v . "  \n");
                 $article_author = new ArticleAuthor();
                 $article_author->article_id = $id;
                 $article_author->channel_id = $request->channel_sel;
                 $article_author->article_author_rank = $r;
                 $article_author->author_id = $v;
                 $article_author->valid = '1';
-
                 $article_author->save();
             }
         } else {
@@ -1054,7 +1045,10 @@ class ArticlesController extends Controller {
         $article->state = $request->state;
         $article->news_type = $request->newstype;
         $article->magazine_id = $request->magazine;
-        $article->event_id = $request->event;
+         if($request->authortype=="6")
+            $article->event_id = $request->event_id_author;
+        else
+            $article->event_id = $request->event;
         $article->canonical_options = $request->canonical_options;
         $article->canonical_url = $request->canonical_url;
         $article->social_title = $request->social_title;
