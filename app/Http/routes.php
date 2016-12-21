@@ -83,6 +83,7 @@ Route::post('article/image/upload', ['middleware' => 'auth','uses' => 'ArticlesC
 Route::get('article/image/upload',['middleware' => 'auth','uses' => 'ArticlesController@imageUpload']);
 Route::get('article/image/edit',['middleware' => 'auth','uses' => 'ArticlesController@imageEdit']);
 Route::post('article/image/update',['middleware' => 'auth','uses' => 'ArticlesController@storeImageDetail']);
+
 //Route::delete('article/image/upload', 'ArticlesController@imageUpload');
 Route::post('article/sort/{id}','ArticlesController@sortImage');
 Route::post('article', ['middleware' => 'auth',   'uses' => 'ArticlesController@store' ]);
@@ -109,6 +110,49 @@ Route::get('topic/category/edit/{id}','TopicCategoryController@show');
 Route::post('article/category/update', ['middleware' => 'auth',   'uses' => 'TopicCategoryController@update' ]);
 Route::get('topic/category/list', ['middleware' => 'auth',   'uses' => 'TopicCategoryController@index']);
 Route::match(['get', 'post'], 'topic/category/delete', ['middleware' => 'auth', 'uses' => 'TopicCategoryController@destroy']);
+
+
+/* Subscription start */
+
+Route::get('subscription/packages/create', ['middleware' => 'auth',   'uses' => 'SubscriptionPackageController@create']);
+Route::post('subscription/packages', ['middleware' => 'auth',   'uses' => 'SubscriptionPackageController@store' ]);
+Route::get('subscription/packages/edit/{id}','SubscriptionPackageController@show');
+Route::post('subscription/packages/update', ['middleware' => 'auth',   'uses' => 'SubscriptionPackageController@update' ]);
+Route::get('subscription/packages', ['middleware' => 'auth',   'uses' => 'SubscriptionPackageController@index']);
+Route::match(['get', 'post'], 'subscription/packages/delete', ['middleware' => 'auth', 'uses' => 'SubscriptionPackageController@destroy']);
+
+Route::get('subscription/discounts/create', ['middleware' => 'auth',   'uses' => 'SubscriptionDiscountController@create']);
+Route::post('subscription/discounts', ['middleware' => 'auth',   'uses' => 'SubscriptionDiscountController@store' ]);
+Route::get('subscription/discounts/edit/{id}','SubscriptionDiscountController@show');
+Route::post('subscription/discounts/update', ['middleware' => 'auth',   'uses' => 'SubscriptionDiscountController@update' ]);
+Route::get('subscription/discounts', ['middleware' => 'auth',   'uses' => 'SubscriptionDiscountController@index']);
+Route::match(['get', 'post'], 'subscription/discounts/delete', ['middleware' => 'auth', 'uses' => 'SubscriptionDiscountController@destroy']);
+
+Route::get('subscription/freebies/create', ['middleware' => 'auth',   'uses' => 'SubscriptionFreebiesController@create']);
+Route::post('subscription/freebies', ['middleware' => 'auth',   'uses' => 'SubscriptionFreebiesController@store' ]);
+Route::get('subscription/freebies/edit/{id}','SubscriptionFreebiesController@show');
+Route::post('subscription/freebies/update', ['middleware' => 'auth',   'uses' => 'SubscriptionFreebiesController@update' ]);
+Route::get('subscription/freebies', ['middleware' => 'auth',   'uses' => 'SubscriptionFreebiesController@index']);
+Route::match(['get', 'post'], 'subscription/freebies/delete', ['middleware' => 'auth', 'uses' => 'SubscriptionFreebiesController@destroy']);
+
+
+Route::get('subscribers/create', ['middleware' => 'auth',   'uses' => 'SubscriberController@create']);
+Route::post('subscribers', ['middleware' => 'auth',   'uses' => 'SubscriberController@store' ]);
+Route::get('subscribers/edit/{id}','SubscriberController@show');
+Route::post('subscribers/update', ['middleware' => 'auth',   'uses' => 'SubscriberController@update' ]);
+Route::get('subscribers', ['middleware' => 'auth',   'uses' => 'SubscriberController@index']);
+Route::get('subscribers/deleted', ['middleware' => 'auth',   'uses' => 'SubscriberController@deleted']);
+Route::match(['get', 'post'], 'subscribers/delete', ['middleware' => 'auth', 'uses' => 'SubscriberController@destroy']);
+Route::match(['get'], 'subscribers/activate', ['middleware' => 'auth', 'uses' => 'SubscriberController@activate']);
+
+
+Route::get('subscriptions/{option}', ['middleware' => 'auth',   'uses' => 'SubscriptionController@index']);
+Route::get('subscriptions/user/{id}', ['middleware' => 'auth',   'uses' => 'SubscriptionController@userOrder']);
+Route::get('subscriptions/order/{id}', ['middleware' => 'auth',   'uses' => 'SubscriptionController@orderDetail']);
+Route::post('subscriptions/order/update', ['middleware' => 'auth',   'uses' => 'SubscriptionController@updateOrder' ]);
+
+
+/* Subscription ends */
 
 /*
 Route::match(['get', 'post'], 'article/delPhotos', ['as' => 'article/delPhotos', 'uses' => 'PhotosController@destroy']);

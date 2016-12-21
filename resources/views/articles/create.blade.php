@@ -126,7 +126,7 @@
                                                     },
                                                     "summary":{
                                                     required: true,
-                                                            rangelength: [100, 800]
+                                                            rangelength: [50, 800]
                                                     },
                                             }
                                     });
@@ -1203,7 +1203,7 @@
                 </div>
             </div>
             <script>
-                                $(document).ready(function(){
+                       $(document).ready(function(){
                         $("#selectBoxFilter6").select2();
                                 $("#selectBoxFilter6").change(function(){
                         $(this).find("option:selected").each(function(){

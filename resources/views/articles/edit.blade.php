@@ -211,7 +211,7 @@
                                                     },
                                                     "summary":{
                                                     required: true,    
-                                                    rangelength: [100, 800]
+                                                    rangelength: [50, 800]
                                                     },
                                                    
                                                  

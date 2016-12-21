@@ -127,7 +127,7 @@ class MasternewsletterController extends Controller {
         if(isset($_GET['margin'])){
             $margin=$_GET['margin'];
         }
-        $margin=110;
+        //$margin=10;
         
         /* Right mgmt end */
         $latestArticles = DB::table('articles')

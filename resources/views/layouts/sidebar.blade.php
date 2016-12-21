@@ -353,6 +353,7 @@
                 </div>
             </li>
             @endif
+            
             @if(count(array_diff(array('68','69','70','75','85'), Session::get('user_rights'))) != count(array('68','69','70','75','85')))	 	
             <li>
                 <a href="javascript:;" class="sub-nav-container">
@@ -450,24 +451,65 @@
                 </div>
             </li>
             @endif
-            <!--
+            
+            @if(count(array_diff(array('87','88','89','90','91','92','93'), Session::get('user_rights'))) != count(array('87','88','89','90','91','92','93')))	 	
             <li>
                 <a href="javascript:;" class="sub-nav-container">
-                    <i class="icon-photon info"></i>
-                    <span class="nav-selection">Help</span>
+                    <i class="icon-photon book"></i>
+                    <span class="nav-selection">Subscription</span>
                     <i class="icon-menu-arrow"></i>                </a>
                 <div class="sub-nav">
                     <ul class="nav">
+                        @if(in_array('87',Session::get('user_rights')))
                         <li>
-                            <a href="#">FAQ</a>
+                            <a href="/subscription/packages">Manage Package</a>
                         </li>
-						<li>
-                            <a href="#">Sitemap</a>
+                        @endif
+                        @if(in_array('88',Session::get('user_rights')))
+                        <li>
+                            <a href="/subscription/discounts">Manage Discount</a>
                         </li>
+                        @endif
+                        @if(in_array('93',Session::get('user_rights')))                        
+                        <li>
+                            <a href="/subscription/freebies">Manage Freebies</a>
+                        </li>
+                        @endif
+                        @if(in_array('89',Session::get('user_rights')))
+                        <li>
+                            <a href="/subscribers">Subscriber</a>
+                        </li>
+                        <li>
+                            <a href="/subscribers/deleted">Deleted Subscriber</a>
+                        </li>
+                        @endif
+                        @if(in_array('90',Session::get('user_rights')))
+                        <li>
+                            <a href="/subscriptions/active">Active Orders</a>
+                        </li>
+                        @endif
+                        @if(in_array('91',Session::get('user_rights')))
+                        <li>
+                            <a href="/subscriptions/expiring">Expiring Soon</a>
+                        </li>
+                        @endif
+                         @if(in_array('92',Session::get('user_rights')))
+                        <li>
+                            <a href="/subscriptions/expired">Expired Orders</a>
+                        </li>
+                        @endif
+                        
+                         @if(in_array('94',Session::get('user_rights')))
+                        <li>
+                            <a href="/subscriptions/pending">Pending Orders</a>
+                        </li>
+                        @endif
+                        
+                        
                     </ul>
                 </div>
             </li>
-            -->
+            @endif
         <li class="nav-logout">
                 <a href="/auth/logout">
                     <i class="icon-photon key_stroke"></i><span class="nav-selection">Logout</span>

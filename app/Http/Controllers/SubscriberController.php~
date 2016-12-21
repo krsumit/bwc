@@ -1,0 +1,223 @@
+<?php
+namespace App\Http\Controllers;
+use Redirect;
+use Illuminate\Http\Request;
+use DB;
+use App\Right;
+use App\SbuscriptionPackage;
+use App\Subscriber;
+use App\Channel;
+use App\Country;
+use App\State;
+use Auth;
+use Session;
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+
+class SubscriberController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
+    public function __construct() {
+        $this->middleware('auth');
+        $this->rightObj = new Right();
+    }
+    
+    public function index()
+    {   
+        /* Right mgmt start */
+        $rightId = 89;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */ 
+       $query = DB::table('subscribers');
+       
+       if(isset($_GET['keyword'])){
+            $queryed = $_GET['keyword'];
+                $query->where('subscription_package.name', 'LIKE', '%'.$queryed.'%');
+	
+        }
+        
+        $query->where('is_deleted','=','0');
+        $query->orderby('updated_at','desc');
+        $subscribers=$query->paginate(config('constants.recordperpage'));
+        
+        return view('subscription.subscriber.subscriber',compact('subscribers'));
+    }
+ 
+
+    
+    public function create()
+    {
+
+        $rightId =89;
+
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
+        
+		 $country = Country::where('valid', '=', '1')->get();
+       $states = State::where('valid', '=', '1')->orderBy('name')->get();
+       $channels=Channel::where('valid', '=', '1')->orderBy('channel')->get();
+        return view('subscription.subscriber.create',compact('country','states','channels'));
+       
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function store(Request $request)
+    {
+			print_r($request->all());  
+			exit;    
+       
+        $rightId =89;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
+              
+             
+        $subscriber=new Subscriber();
+        
+        $subscriber->first_name=$request->title;
+        $subscriber->last_name=$request->duration_type;
+        $subscriber->email=$request->duration;
+        $subscriber->mobile=$request->status;
+        $subscriber->sex=$request->status;
+        $subscriber->address1=$request->status;
+        $subscriber->address2=$request->status;
+        $subscriber->mobile=$request->status;
+        $subscriber->mobile=$request->status;
+        $subscriber->mobile=$request->status;
+        $subscriber->save();
+        
+        $subscriber_id=$subscriber->id;
+        
+        $freebies=array_filter($request->freebies);
+          foreach($freebies as $key=>$value){
+         	$subf=new SbuscriptionPackageFreebies();
+         	$subf->package_id=$package_id;
+         	$subf->freebies_id=$value;
+         	$subf->save();
+         }
+         
+      
+        
+        Session::flash('message', 'Subscriber added created sucessfully.');
+        return Redirect::to('subscribers');
+         
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function show($id)
+    {
+        $rightId = 89;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
+         //  echo $id; exit; 
+       
+       $subscriber=Subscriber::find($id); 
+           
+       $country = Country::where('valid', '=', '1')->get();
+       $states = State::where('valid', '=', '1')->orderBy('name')->get();
+       $channels=Channel::where('valid', '=', '1')->orderBy('channel')->get();
+        return view('subscription.subscriber.edit',compact('subscriber','country','states','channels'));
+        
+    }
+
+   
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  Request  $request
+     * @param  int  $id
+     * @return Response
+     */
+    public function update(Request $request)
+    {
+         /*
+         $rightId = 89;
+         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
+       
+        
+        $package =SbuscriptionPackage::find($request->packageId);
+        $package->name=$request->title;
+        $package->duration_type=$request->duration_type;
+        $package->duration=$request->duration;
+        $package->status=$request->status;
+        $package->save();
+        
+        SbuscriptionPackageFreebies::where('package_id','=',$request->packageId)->delete();
+        $freebies=array_filter($request->freebies);
+          foreach($freebies as $key=>$value){
+         	$subf=new SbuscriptionPackageFreebies();
+         	$subf->package_id=$request->packageId;
+         	$subf->freebies_id=$value;
+         	$subf->save();
+         }
+         
+          
+        
+        foreach($request->price as $channel=>$value){
+        	
+        		$packageDetail=SubscriptionPackageDetail::where('package_id','=',$request->packageId)
+        		->where('channel_id','=',$channel)
+        		->first();
+        		
+        		if(!$packageDetail)
+        		$packageDetail=new SubscriptionPackageDetail();
+        		
+        		$packageDetail->package_id=$request->packageId;
+        		$packageDetail->channel_id=$channel;
+        		$packageDetail->price=$value;
+        		$packageDetail->save();
+
+        }
+        
+        
+         Session::flash('message', 'Package updated sucessfully.');
+         return Redirect::to('subscription/packages');*/
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function destroy()
+    {
+        /* $rightId = 89;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
+        if (isset($_GET['option'])) {
+            $id = $_GET['option'];
+            
+        }
+           
+        $delArr = explode(',', $id);
+
+        foreach ($delArr as $d) {
+             $topic=SbuscriptionPackage::find($d);
+             $topic->is_deleted=1;
+             $topic->save();
+        }*/
+      return 'success';
+    }
+    
+    
+    
+   
+}

@@ -103,7 +103,7 @@ class Cron {
                 //echo 'test'; exit;
                 $this->generateReport();
                 break;
-	     case 'dailyreport':
+	     		case 'dailyreport':
                 $this->sendDailyReport();
 		break;
             case 'campaing':
@@ -2541,7 +2541,7 @@ where authors.author_type_id='2' order by ar.cs desc;
         $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
         //anurag.batra@businessworld.in,sudipta@businessworld.in,
 
-        mail("anurag.batra@businessworld.in,sudipta@businessworld.in", $sub, $mailbody, $headers);
+        mail("sudipta@businessworld.in,akanksha@businessworld.in,ankitas@businessworld.in", $sub, $mailbody, $headers);
     }
 
 
@@ -2665,9 +2665,9 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' group by ch.channel_id");
         $from_email = "reports@bwbusinessworld.com";
         $sub = '=?UTF-8?B?' . base64_encode(" Do you know how many stories BW reporters did yesterday? ") . '?=';
         $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
-        //anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,
+        //anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in
 
-        mail("anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
+        mail("anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in", $sub, $mailbody, $headers);
    
     }
 

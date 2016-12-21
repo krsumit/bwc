@@ -1,0 +1,12 @@
+[?1049h[?1h=[1;24r[?12;25h[?12l[?25h[27m[m[H[2J[?25l[24;1H"/tmp/crontab.v8NjxF" 49L, 3901C[1;1H*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=mm[2;1Hastervideo'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=aa[4;1Hrticle'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=qq[6;1Huickbyte'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=tt[8;1Hips'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=qq[10;1Huotes'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=pp[12;1Hhotoshoot'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=ff[14;1Heature'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=ff[16;1Heatureviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=ss[18;1Hponsorviewcount'
+*/20 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=aa[20;1Hrticleviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=ee[22;1Hvent'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=m[23;1H[1m[34m@                                                                               [1;1H[?12l[?25h
