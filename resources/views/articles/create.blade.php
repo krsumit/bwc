@@ -72,10 +72,10 @@
 //                                            $('#simpleSelectAuthor').focus();
 //                                            return false;
 //                                    } else 
-                                    if (($('#authortype').val() != '') && ($('#authortype').val() != '1') && $('#simpleSelectBox1').val() == '') {
+                                    if (($('#authortype').val() != '') && ($('#authortype').val() != '1') && $('#author').val() == '') {
                                     //alert('Please Select Author Name');
-                                    $('#simpleSelectBox1').after('<span class="error author-error">Author name is required.</span>');
-                                            $('#simpleSelectBox1').siblings('div').addClass('error');
+                                    $('#author').after('<span class="error author-error">Author name is required.</span>');
+                                            $('#author').siblings('div').addClass('error');
                                             checkvalid = 0;
                                     }
 //                                    if ($('#selectBoxFilter2').val() == '')
@@ -402,312 +402,84 @@
                         <div class="span3">
                             <label class="control-label" for="simpleSelectBox">Author Name</label>
                         </div>
+
                         <div class="span9">
-                            <div class="controls">
-                                <select style="display: none;" name="author_id1" id="simpleSelectBox1">
-                                    <option selected="" value="">Please Select</option>
-                                </select>
-                            </div>
+
                         </div>
-                        <script>
-                                            $().ready(function(){
-                                    $("#simpleSelectBox1").select2({
-                                    //dropdownCssClass: 'noSearch'
-                                    });
-                                    });</script>
+
+                        <div class="span9">
+
+                            <div class="controls">
+                                <input type="text" class="valid" name="author" id="author"/>
+                            </div>
+                            <script>
+   
+                                   $().ready(function() {
+                                        $("#author").tokenInput(function(){
+                                            if($("#authortype").val()==6)
+                                                return "/article/speaker?option="+$("#event_id_author").val(); 
+                                            else   
+                                                return "/article/authordd?option="+$("#authortype").val(); 
+                                        
+                                            },
+                                            {
+                                                theme: "facebook",
+                                                searchDelay: 300,
+                                                minChars: 3,
+                                                preventDuplicates: true,
+                                                tokenLimit:3,
+                                        });
+                                   });                            
+                            </script>
+
+
+                        </div>
+
+                     
                     </div>
 
-                    <div id="n2" class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label" for="simpleSelectBox">Secondary Author Name 1</label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls">
-                                <select style="display: none;" name="author_id2" id="simpleSelectBox2">
-                                    <option selected="" value="">Please Select</option>
-                                </select>
-                            </div>
-                        </div>
-                        <script>
-                                            $().ready(function(){
-                                    $("#simpleSelectBox2").select2({
-                                    //dropdownCssClass: 'noSearch'
-                                    });
-                                    });</script>
-                    </div>
-
-                    <div id="n3" class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label" for="simpleSelectBox">Secondary Author Name 2</label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls">
-                                <select style="display: none;" name="author_id3" id="simpleSelectBox3">
-                                    <option selected="" value="">Please Select</option>
-                                </select>
-                            </div>
-                        </div>
-                        <script>
-                                            $().ready(function(){
-                                    $("#simpleSelectBox3").select2({
-                                    //dropdownCssClass: 'noSearch'
-                                    });
-                                    });</script>
-                    </div>
-
-                    <script>
-                                        $(document).ready(function(e) {
-                                $("#n2,#n3").hide();
-                                });</script>
+                   
 
                     <script type="text/javascript">
 
-                                        $(document).ready(function(){
+                                $(document).ready(function(){
 
                                 $("#authortype").change(function(){
-
+                                $("#author").tokenInput("clear");
                                 $(this).find("option:selected").each(function(){
 
-                                if ($(this).attr("value") == "2" || $(this).attr("value") == "3"){
-                                //If chose BWReporters - get New&Existing DDs
-                                //Populate DDs
-                                $("#tabarea").show();
-                                        $("#n2, #n3").show();
-                                        $.get("{{ url('/article/authordd/')}}",
-                                        { option: $(this).attr("value") },
-                                                function(data) {
-                                                var simpleSelectBox1 = $('#simpleSelectBox1');
-                                                        var simpleSelectBox2 = $('#simpleSelectBox2');
-                                                        var simpleSelectBox3 = $('#simpleSelectBox3');
-                                                        simpleSelectBox1.empty();
-                                                        simpleSelectBox2.empty();
-                                                        simpleSelectBox3.empty();
-                                                        simpleSelectBox1.append("<option selected='' value=''>Please Select</option>");
-                                                        simpleSelectBox2.append("<option selected='' value=''>Please Select</option>");
-                                                        simpleSelectBox3.append("<option selected='' value=''>Please Select</option>");
-                                                        $.each(data, function(index, element) {
-                                                        simpleSelectBox1.append("<option value='" + element + "'>" + index + "</option>");
-                                                                simpleSelectBox2.append("<option value='" + element + "'>" + index + "</option>");
-                                                                simpleSelectBox3.append("<option value='" + element + "'>" + index + "</option>");
-                                                        });
-                                                        $("#simpleSelectBox1").select2();
-                                                        $("#simpleSelectBox2").select2();
-                                                        $("#simpleSelectBox3").select2();
-                                                });
-                                }
+                               
 
-                                else if ($(this).attr("value") == "1"){
+                               if ($(this).attr("value") == "1"){
 
                                 $("#tabarea").hide();
                                 } else {
-
-                                if ($(this).attr("value") != "") {
                                 $("#tabarea").show();
-                                        $("#n2, #n3").hide();
-                                        $.get("{{ url('/article/authordd/')}}",
-                                        {option: $(this).attr("value")},
-                                                function (data) {
-                                                var simpleSelectBox1 = $('#simpleSelectBox1');
-                                                        simpleSelectBox1.empty();
-                                                        simpleSelectBox1.append("<option selected='' value=''>Please Select</option>");
-                                                        $.each(data, function (index, element) {
-                                                        simpleSelectBox1.append("<option value='" + element + "'>" + index + "</option>");
-                                                        });
-                                                        $("#simpleSelectBox1").select2();
-                                                });
-                                }
+                              
                                 }
                                 if ($(this).attr("value") == "6"){
                                 $("#tabarea").show();
-                                        $("#n2, #n3").hide();
-                                        var simpleSelectBox1 = $('#simpleSelectBox1');
                                         $('#event_top_div').show();
                                         $('#event_bottom_div').hide();
-                                        $.get("{{ url('/article/speaker/')}}",
-                                        {option: $('#event_id_author').attr("value")},
-                                                function (data) {
-                                                var simpleSelectBox1 = $('#simpleSelectBox1');
-                                                        simpleSelectBox1.empty();
-                                                        simpleSelectBox1.append("<option selected='' value=''>Please Select</option>");
-                                                        $.each(data, function (index, element) {
-                                                        simpleSelectBox1.append("<option value='" + element + "'>" + index + "</option>");
-                                                        });
-                                                        $("#simpleSelectBox1").select2();
-                                                });
                                 }
                                 else{
-                                $('#event_top_div').hide();
+                                        $('#event_top_div').hide();
                                         $('#event_bottom_div').show();
                                 }
                                 });
                                 }).change();
-                               
+                                
                                 $("#event_id_author").change(function(){
-                                if ($("#authortype").val() == "6"){
-                                        $.get("{{ url('/article/speaker/')}}",
-                                        {option: $('#event_id_author').attr("value")},
-                                                function (data) {
-                                                var simpleSelectBox1 = $('#simpleSelectBox1');
-                                                        simpleSelectBox1.empty();
-                                                        simpleSelectBox1.append("<option selected='' value=''>Please Select</option>");
-                                                        $.each(data, function (index, element) {
-                                                        simpleSelectBox1.append("<option value='" + element + "'>" + index + "</option>");
-                                                        });
-                                                        $("#simpleSelectBox1").select2();
-                                                });
-                                }
+                                     $("#author").tokenInput("clear");
                                 });
-                                        $('#simpleSelectBox1').change(function(){
-                                var val1 = $(this).val();
-                                        if (val1.trim()){
-                                $('#simpleSelectBox2').find('option').each(function() {
-                                if ($(this).val() == val1) {
-                                $(this).attr("disabled", "disabled");
-                                        //  $('#test').html($(this).text());
-                                } else{
-                                $(this).removeAttr('disabled');
-                                }
-                                $('#simpleSelectBox2').select2();
-                                        //alert('done');
+                                       
                                 });
-                                }
-                                })
-                                });</script>
+                        </script>
 
                 </div>
 
                 <div id="new" class="tab-pane fade entypo ">
-                    <!--<form name="addAuthorForm" method="post" enctype="multipart/form-data" id="addAuthorForm">-->
-                    <!--                    <div class="control-group row-fluid">
-                                            <div class="span3">
-                                                <label class="control-label" >&nbsp;</label>
-                                            </div>
-                                            <div class="span3">
-                                                <label class="radio">
-                                                    <input type="radio" id="author_type" name="author_type" class="uniformRadio" value="4">
-                                                    Columnist
-                                                </label>
-                                            </div>
-                                            <div class="span3">
-                                                <label class="radio">
-                                                    <input  type="radio"  id="author_type" name="author_type" class="uniformRadio" value="3">
-                                                    Guest Author
-                                                </label>
-                                            </div>
-                                            <div class="span3">
-                                                <label class="radio">
-                                                    <input  type="radio"  id="author_type" name="author_type" class="uniformRadio" value="2" checked>
-                                                    BW Reporter
-                                                </label>
-                                            </div>
-                    
-                                            <script>
-                                                                $().ready(function(){
-                                                        $(".uniformRadio").uniform({
-                                                        radioClass: 'uniformRadio'
-                                                        });
-                                                        });</script>
-                    
-                                        </div>
-                    
-                                        <div class="control-group row-fluid">
-                                            <div class="span3">
-                                                <label class="control-label" for="inputField">Name</label>
-                                            </div>
-                                            <div class="span9">
-                                                <div class="controls">
-                                                    <input id="inputField" id="name" name="Name" type="text">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="control-group row-fluid">
-                                            <div class="span3">
-                                                <label class="control-label" for="inputField">Bio</label>
-                                            </div>
-                                            <div class="span9">
-                                                <div class="controls">
-                                                    <textarea  rows="3" id="Bio" class="" name="Bio"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="control-group row-fluid">
-                                            <div class="span3">
-                                                <label class="control-label" for="inputField">Email</label>
-                                            </div>
-                                            <div class="span9">
-                                                <div class="controls">
-                                                    <input id="inputField" name="email" type="email">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="control-group row-fluid">
-                                            <div class="span3">
-                                                <label class="control-label" for="inputField">Mobile</label>
-                                            </div>
-                                            <div class="span9">
-                                                <div class="controls">
-                                                    <input id="inputField" name="mobile" type="text">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div id="File_Upload" class="control-group row-fluid">
-                                            <div class="span3">
-                                                <label class="control-label">Photo</label>
-                                            </div>
-                                            <div class="span9 ">
-                                                <div class="controls authorimagespn">
-                                                    
-                                                </div>
-                                                <div class="fileupload fileupload-new" data-provides="fileupload">
-                                                    <div class="input-append">
-                                                        <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div>
-                                                        <span class="btn btn-file  authorimagespn">
-                                                            <span class="fileupload-new">Select file</span>
-                                                            <span class="fileupload-exists">Change</span>
-                                                           <input type="file" name="photo" id="photo">
-                                                            </span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="control-group row-fluid">
-                                            <div class="span3">
-                                                <label class="control-label" for="inputField">Twitter</label>
-                                            </div>
-                                            <div class="span9">
-                                                <div class="controls">
-                                                    <input id="inputField" name="twitter" type="text">
-                                                </div>
-                                            </div>
-                                        </div>
-                    
-                                        <div  class="control-group row-fluid" id="ch-reporter" style="display:none;">
-                                            <div class="span3">
-                                                <label class="control-label" for="selectBoxFilter">Choose Column</label>
-                                            </div>
-                                            <div class="span9">
-                                                <div class="controls">
-                                                    <select name="column_id" id="selectBoxFilter221">
-                                                        <option value="" selected>Please Select</option>
-                                                        @foreach( $columns as $column)
-                                                        <option value="{{ $column->column_id }}">{{ $column->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <script>
-                                                                $().ready(function(){
-                                                        $("#selectBoxFilter221").select2();
-                                                        });</script>                            
-                                        </div>
-                    
-                                        <div class="control-group row-fluid">
-                                            <div class="span12 span-inset">
-                                                <button class="btn btn-warning pull-right" id="addabut" type="button" style="display:block;">Add</button>
-                                                <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:7%; display:none; margin-left:15px;float:right;"/>
-                                            </div>
-                                        </div>-->
-                    <!--</form>-->
+
                 </div>
                 <script>
                                     // magic.js
@@ -881,21 +653,20 @@
                         { option: $(this).attr("value") },
                                 function(data) {
                                 var eventBox = $('#event_id');
-                                var eventBoxTop = $('#event_id_author');
-                                
+                                        var eventBoxTop = $('#event_id_author');
                                         eventBox.empty();
                                         eventBoxTop.empty();
                                         eventBox.append("<option value=''>Please Select</option>");
                                         $.each(data, function(index, element) {
                                         eventBox.append("<option value='" + element + "'>" + index + "</option>");
-                                        eventBoxTop.append("<option value='" + element + "'>" + index + "</option>");
+                                                eventBoxTop.append("<option value='" + element + "'>" + index + "</option>");
                                         });
                                         $("#event_id").select2();
                                         $('#event_id_author').select2();
-                                        if($('#authortype').val()=="6"){
-                                            $( "#event_id_author" ).trigger("change");
-                                        }
-                                        
+                                        if ($('#authortype').val() == "6"){
+                                $("#event_id_author").trigger("change");
+                                }
+
                                 });
                                 $.get("{{ url('article/campaign')}}",
                                 { option: $(this).attr("value") },
@@ -958,10 +729,6 @@
 
                 </label>
 
-                <!-- <div class="controls">
-                     <input type="radio" value="1" name="canonical_options" id="ifyes" />Yes
-                     <input type="radio"  value="0"name="canonical_options" id="ifno" checked/>No
-                 </div>-->
             </div>
             <div class="span3">
                 <label class="radio">
@@ -972,10 +739,7 @@
 
                 </label>
 
-                <!-- <div class="controls">
-                     <input type="radio" value="1" name="canonical_options" id="ifyes" />Yes
-                     <input type="radio"  value="0"name="canonical_options" id="ifno" checked/>No
-                 </div>-->
+
             </div>
 
         </div>
@@ -1093,18 +857,6 @@
         </div>
         <!--Text Area Resizable end-->
 
-        <!--        <div id="file_upload_social" class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label">Social Image ( Prefered size 600 x 315  )</label>
-                        </div>
-                        <div class="span9">
-                            <div class="fileupload fileupload-new" data-provides="fileupload">
-                                <div class="input-append">
-                                    <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input name="photo" type="file"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>-->
 
     </div>
 
@@ -1203,7 +955,7 @@
                 </div>
             </div>
             <script>
-                       $(document).ready(function(){
+                                $(document).ready(function(){
                         $("#selectBoxFilter6").select2();
                                 $("#selectBoxFilter6").change(function(){
                         $(this).find("option:selected").each(function(){
@@ -1585,19 +1337,9 @@
 
         <div  class="control-group row-fluid span-inset">
             <ul class="nav nav-tabs" id="myTab">
-                <!--                <li class="dropdown active">
-                                    
-                                    <a data-toggle="dropdown" class="dropdown-toggle" href="javascript:;">Upload Image<b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a data-toggle="tab" href="#dropdown1">Image 1</a></li>
-                                          <li><a data-toggle="tab" href="#dropdown2">Image 2</a></li>
-                                          <li><a data-toggle="tab" href="#dropdown3">Image 3</a></li>
-                                          <li><a data-toggle="tab" href="#dropdown4">Image 4</a></li> 
-                                    </ul>
-                                </li>-->
+
                 <li class="dropdown active"><a data-toggle="tab" href="#dropdown1">Photo</a></li>
                 <li><a data-toggle="tab" href="#tab-example1">Video</a></li>
-                <!--	<li><a data-toggle="tab" href="#tab-example4">Current Photos</a></li>-->
             </ul>
             <div class="tab-content">
                 <div id="tab-example1" class="tab-pane fade">
@@ -1680,12 +1422,7 @@
                             </div>
                         </div>
                     </div>
-                    <!--                    <div class="control-group row-fluid">
-                                            <div class="span12 span-inset">
-                                                <div style="float:right; width:11%; margin-bottom:5px;"><button class="btn btn-warning" id="addvideobutton" name="addvideobutton" type="button" style="display:block;">Submit</button>
-                                                    <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:50%; display:block; margin-left:15px;"/></div>
-                                            </div>
-                                        </div> -->
+
                 </div>
 
 
@@ -1709,77 +1446,7 @@
                             </div>
                         </div>
                     </div>
-<!--                    <p>Browse recent related images : <button class="btn btn-success"  onclick = "document.getElementById('light').style.display = 'block';
-        document.getElementById('fade').style.display = 'block'" name="status" type="button">Browse</button>
-                        
 
-                    </p>-->
-
-
-                    <!--                    <div class="control-group row-fluid">
-                                            <div class="span3">
-                                                <label class="control-label">Upload Image 1</label>
-                                            </div>
-                                            <div class="span9">
-                                                <div class="fileupload fileupload-new" data-provides="fileupload">
-                                                    <div class="input-append">
-                                                        <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file" style="margin-bottom:0px;"><span class="fileupload-new">Browse</span><span class="fileupload-exists">Change</span><input type="file" name="albumPhoto" id="albumPhoto"/></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="control-group row-fluid">
-                                            <div class="span3">
-                                                <label class="control-label">Title 1</label>
-                                            </div>
-                                            <div class="span9">
-                                                <div class="controls">
-                                                    <input type="text" name="photoTitle" id="inputSpan9">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="control-group row-fluid">
-                                            <div class="span3">
-                                                <label class="control-label">Description 1</label>
-                                            </div>
-                                            <div class="span9">
-                                                <div class="controls">
-                                                    <textarea rows="4" name="photoDesc" class=""></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="control-group row-fluid">
-                                            <div class="span3">
-                                                <label class="control-label">Source Name</label>
-                                            </div>
-                                            <div class="span9">
-                                                <div class="controls">
-                                                    <input type="text" name="photoSource" id="inputSpan9">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="control-group row-fluid">
-                                            <div class="span3">
-                                                <label class="control-label">Source URL</label>
-                                            </div>
-                                            <div class="span9">
-                                                <div class="controls">
-                                                    <input type="text" name="photoSourceURL" id="inputSpan9">
-                                                </div>
-                                            </div>
-                                        </div>
-                    
-                                        <div class="control-group row-fluid">
-                                            <div class="span12 span-inset">
-                                                <div data-on-label="Enabled" data-off-label="Disabled" class="switch">
-                                                    <input type="checkbox" name="photoEnabled" checked="checked">
-                                                </div>
-                    
-                    
-                                                <button class="btn btn-warning" type="button" id="addphotobutton" name="addphotobutton" style="display:block;">Submit</button>
-                                                <img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
-                                            </div>
-                                        </div>-->
                     <div class="control-group row-fluid">
                         <div class="span3">
                             <label class="control-label" for="inputField">
@@ -1831,53 +1498,7 @@
                             <input type="hidden" id="uploadedImages" name="uploadedImages">
 
                         </div>
-<!--                        <script type="text/javascript">
-                            $().ready(function() {
 
-                                var errors="";
-                                
-                                $('#upload').mfupload({
-                                    
-                                    type        : '',   //all types
-                                    maxsize     : 2,
-                                    post_upload : "./file-uploader.html",
-                                    folder      : "./",
-                                    ini_text    : "Drag your file(s) here or click (max: 2MB each)",
-                                    over_text   : "Drop Here",
-                                    over_col    : '#666666',
-                                    over_bkcol  : '#f0f0f0',
-                                    
-                                    init        : function(){       
-                                        $("#uploaded").empty();
-                                    },
-                                    
-                                    start       : function(result){     
-                                        $("#uploaded").append("<div id='FILE"+result.fileno+"' class='files'>"+result.filename+"<div class='progress progress-info progress-thin'><div class='bar' id='PRO"+result.fileno+"'></div></div></div>"); 
-                                    },
-
-                                    loaded      : function(result){
-                                        $("#PRO"+result.fileno).remove();
-                                        $("#FILE"+result.fileno).html("Uploaded: "+result.filename+" ("+result.size+")");           
-                                    },
-
-                                    progress    : function(result){
-                                        $("#PRO"+result.fileno).css("width", result.perc+"%");
-                                    },
-
-                                    error       : function(error){
-                                        
-                                        errors += error.filename+": "+error.err_des+"\n";
-                                    },
-
-                                    completed   : function(){
-                                        if (errors != "") {
-                                            alert(errors);
-                                            errors = "";
-                                        }
-                                    }
-                                });     
-                            })
-                        </script>-->
                     </div>
 
                 </div>
@@ -1929,48 +1550,6 @@
                                         $(document).ready(function() {
                                 //var csrf_token = $('meta[name="csrf-token"]').attr('content');
                                 var token = $('input[name=_token]');
-                                        // process the form - For Add Image in Album
-                                        /*        $("#addvideobutton").click(function(){
-                                         // get the form data
-                                         var formData = new FormData();
-                                         formData.append('title', $('input[name=videoTitle]').val());
-                                         formData.append('code', $('textarea[name=videoCode]').val());
-                                         formData.append('source', $('input[name=videoSource]').val());
-                                         formData.append('url', $('input[name=videoURL]').val());
-                                         formData.append('channel_id', $('select[name=channel_sel]').val());
-                                         formData.append('owner', 'article');
-                                         // process the form
-                                         $.ajax({
-                                         type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                                         //method      : 'POST',
-                                         url         : '/article/addVideos', // the url where we want to POST
-                                         //files       :  true,
-                                         data        :  formData,
-                                         dataType    : 'json', // what type of data do we expect back from the server
-                                         contentType :  false,
-                                         processData :  false,
-                                         success     :  function(respText){
-                                         theResponse = respText;
-                                         alert(theResponse);
-                                         //Assign returned ID to hidden array element
-                                         $('#uploadedVideos').val(theResponse);
-                                         //alert($('#uploadedVideos').val());
-                                         },
-                                         headers: {
-                                         'X-CSRF-TOKEN': token.val()
-                                         }
-                                         })
-                                         // using the done promise callback
-                                         .done(function(data) {
-                                         
-                                         // log data to the console so we can see
-                                         console.log(data);
-                                         // here we will handle errors and validation messages
-                                         });
-                                         // stop the form from submitting the normal way and refreshing the page
-                                         //event.preventDefault();
-                                         });   */
-                                        // process the form - For Add Image in Album
                                         $("#addphotobutton").click(function(){
                                 //$("#addAuthorForm").on('click',function(event){}
                                 //  alert('Yay!');
@@ -2151,39 +1730,10 @@
     {!! Form::close() !!}
     <script>
                                         function editImageDetail(){
-//                   alert(1);
-//                          BootstrapDialog.alert('I want banana!');
-
-                                        /* BootstrapDialog.show({
-                                         title: 'Manipulating Buttons',
-                                         message: function(dialog) {
-                                         var $content = $('<div><input typ="text" name="imagetitle" id="imagetitle" /><button class="btn btn-success">Revert button status right now.</button></div>');
-                                         var $footerButton = dialog.getButton('btn-1');
-                                         $content.find('button').click({$footerButton: $footerButton}, function(event) {
-                                         event.data.$footerButton.enable();
-                                         event.data.$footerButton.stopSpin();
-                                         dialog.setClosable(true);
-                                         });
-                                         
-                                         return $content;
-                                         },
-                                         buttons: [{
-                                         id: 'btn-1',
-                                         label: 'Click to disable and spin.',
-                                         action: function(dialog) {
-                                         var $button = this; // 'this' here is a jQuery object that wrapping the <button> DOM element.
-                                         $button.disable();
-                                         $button.spin();
-                                         dialog.setClosable(false);
-                                         }
-                                         }]
-                                         }); */
-
                                         BootstrapDialog.show({
                                         message: $('<div class="shekhartest"></div>').load('http://localhost:8080/login.html')
                                         });
                                         }
-                                //98768 april-4  98769 feb -29
     </script>
 </div>
 

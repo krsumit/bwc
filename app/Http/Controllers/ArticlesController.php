@@ -354,15 +354,16 @@ class ArticlesController extends Controller {
         if($article->author_type!=6){            
             $arrAuth = DB::table('article_author')
                             ->join('authors', 'authors.author_id', '=', 'article_author.author_id')
-                            ->select('article_author.*', 'authors.name')
+                            ->select('article_author.author_id as id', 'authors.name')
                             ->where('article_id', '=', $id)->get();
         }else{            
             $arrAuth = DB::table('article_author')
                             ->join('event_speaker', 'event_speaker.id', '=', 'article_author.author_id')
-                            ->select('article_author.*', 'event_speaker.name')
+                            ->select('article_author.author_id as id', 'event_speaker.name')
                             ->where('article_id', '=', $id)->get();
             //print_r($arrAuth); exit;
         }
+        $authors=json_encode($arrAuth);
 
         //Get Category 1,2,3,4
         $acateg1 = ArticleCategory::where('article_id', '=', $id)->get();
@@ -494,7 +495,7 @@ class ArticlesController extends Controller {
                 ->orderBy('sequence')
                 ->get();
         //echo 'test'; exit;
-        return view('articles.edit', compact('article', 'rights', 'channels', 'p1', 'postAs', 'country', 'states', 'newstype', 'category', 'magazine', 'event', 'campaign', 'columns', 'tags', 'photos', 'acateg', 'arrAuth', 'arrTags', 'arrVideo', 'userTup', 'arrTopics'));
+        return view('articles.edit', compact('article', 'rights', 'channels', 'p1', 'postAs', 'country', 'states', 'newstype', 'category', 'magazine', 'event', 'campaign', 'columns', 'tags', 'photos', 'acateg', 'arrAuth','authors', 'arrTags', 'arrVideo', 'userTup', 'arrTopics'));
     }
 
     public function getRights($uid, $parentId = 0) {
@@ -519,6 +520,7 @@ class ArticlesController extends Controller {
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
+        echo  Session::getId(); exit;
         //echo date('Y-m-d'); 
         //echo date('H:i:s'); 
         //exit;
@@ -593,6 +595,7 @@ class ArticlesController extends Controller {
         $uid = $request->user()->id;
         //fwrite($asd, "Step 3.2 In Article POST Function ".$uid." \n");
         $article = Article::find($request->id);
+        $oldAuthorType=$article->author_type;
         // Add Arr Data to Article Table //
         $article->channel_id = $request->channel_sel;
         $article->author_type = $request->authortype;
@@ -669,57 +672,39 @@ class ArticlesController extends Controller {
         $delArr = array();
         //Check what all Author Ranks exist - if there exist any tuple in article author table
         if (count($eAuthors) > 0) {
-            //fwrite($asd, " Here IN IF CONDITION" . count($eAuthors) . " \n");
             foreach ($eAuthors as $each) {
-                //fwrite($asd, " FIRST LOOP -----" . $each->author_id . " id \n");
                 $arrCollect[$each->article_author_rank][0] = $each->author_id;
                 $arrCollect[$each->article_author_rank][1] = $each->article_author_id;
-                //fwrite($asd, " AA ID, existing : " . $each->article_author_id . " \n");
             }
-            //fwrite($asd, "Count Existing in AUTHOR" . count($arrCollect) . " \n");
         }
         //Save in Author Associative Table - for any other than Online Bureau
         if ($request->authortype != '1') {
             $author_count = 0;
             //For BW Reporters - Multiple
-            $rankUpdateArr = array();
-            $rankArr = array();
-
-            for ($i = 1; $i <= 3; $i++) {
-                if (array_key_exists($i, $arrCollect)) {
-                    $xkey = "author_id" . $i;
-                    if ($arrCollect[$i] != $request->$xkey) {
-                        if ($request->$xkey == '') {
-                           $delArr[] = $arrCollect[$i][1];
-                        }
-                        $rankUpdateArr[$xkey][0] = $request->$xkey;
-                        $rankUpdateArr[$xkey][1] = $arrCollect[$i][1];
-                    } else {
-                       
-                    }
-                } else {
-                    $vkey = "author_id" . $i;
-                    if ($request->$vkey != '') {
-                         $rankArr[$i] = $request->$vkey;
+            
+            
+            if ($request->author) {
+                $autorids = explode(',', $request->author);
+                $autorids = array_unique($autorids);
+                if($oldAuthorType==$request->authortype)
+                    $deleteOldAuthor=DB::table('article_author')->where('article_id', '=', $id)->whereNotIn('author_id',$autorids)->delete();
+                else
+                    $deleteOldAuthor=DB::table('article_author')->where('article_id', '=', $id)->delete();
+                
+                foreach ($autorids as $key => $value) {
+                    $author_count++;
+                    if (DB::table('article_author')->where('article_id', '=', $id)->where('author_id', $value)->count() == 0) {
+                        $article_author = new ArticleAuthor();
+                        $article_author->article_id = $id;
+                        $article_author->channel_id = $request->channel_sel;
+                        $article_author->article_author_rank = $author_count;
+                        $article_author->author_id = $value;
+                        $article_author->valid = '1';
+                        $article_author->save();
                     }
                 }
             }
-
-            foreach ($rankUpdateArr as $r => $v) {
-                $article_authorU = ArticleAuthor::find($v[1]);
-                $article_authorU->author_id = $v[0];
-                $article_authorU->save();
-            }
-
-            foreach ($rankArr as $r => $v) {
-                $article_author = new ArticleAuthor();
-                $article_author->article_id = $id;
-                $article_author->channel_id = $request->channel_sel;
-                $article_author->article_author_rank = $r;
-                $article_author->author_id = $v;
-                $article_author->valid = '1';
-                $article_author->save();
-            }
+            
         } else {
             $isalreadyOnlineBurue = 0;
             //Delete All existing
@@ -1103,37 +1088,22 @@ class ArticlesController extends Controller {
         //Save in Author Associative Table - for any other than Online Bureau
         if ($request->authortype != '1') {
             $author_count = 0;
-            //For BW Reporters - Multiple
-            if (($request->authortype == '2' || $request->authortype == '3' ) and ( $request->author_id2 or $request->author_id3)) {
-                if ($request->author_id2 && $request->author_id3) {
-                    $author_count = 3;
-                    $authorid = array($request->author_id1, $request->author_id2, $request->author_id3);
-                    $authorRank = array('1', '2', '3');
-                } elseif ($request->author_id2) {
-                    $author_count = 2;
-                    $authorid = array($request->author_id1, $request->author_id2);
-                    $authorRank = array('1', '2');
-                } elseif ($request->author_id3) {
-                    $author_count = 2;
-                    $authorid = array($request->author_id1, $request->author_id3);
-                    $authorRank = array('1', '3');
+            
+            if ($request->author) {
+                $autorids = explode(',', $request->author);
+                $autorids = array_unique($autorids);
+                foreach ($autorids as $key => $value) {
+                    $author_count++;
+                    $article_author = new ArticleAuthor();
+                    $article_author->article_id = $id;
+                    $article_author->channel_id = $request->channel_sel;
+                    $article_author->article_author_rank = $author_count;
+                    $article_author->author_id = $value;
+                    $article_author->valid = '1';
+                    $article_author->save();
                 }
-            } else {
-                $author_count = 1;
-                $authorid = array($request->author_id1);
-                $authorRank = array('1');
             }
-            //echo "aCount: ".$author_count;
-            for ($i = 0; $i < $author_count; $i++) {
-                $article_author = new ArticleAuthor();
-                $article_author->article_id = $id;
-                $article_author->channel_id = $request->channel_sel;
-                $article_author->article_author_rank = $authorRank[$i];
-                $article_author->author_id = $authorid[$i];
-                $article_author->valid = '1';
-
-                $article_author->save();
-            }
+          
         } else {// Assignig static author if author type is online bureau
             $article_author = new ArticleAuthor();
             $article_author->article_id = $id;

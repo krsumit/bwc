@@ -17,6 +17,7 @@
 
         <script>
             $(document).ready(function(){
+                
                      $('#draftSubmit').click(function(){
                         $("#validation_form").validate().cancelSubmit = true;
                       });
@@ -159,10 +160,10 @@
 //                                            $('#simpleSelectAuthor').focus();
 //                                            return false;
 //                                    } else 
-                                    if (($('#simpleSelectAuthor').val() != '') && ($('#simpleSelectAuthor').val() != '1') && $('#simpleSelectBox1').val() == '') {
+                                    if (($('#simpleSelectAuthor').val() != '') && ($('#simpleSelectAuthor').val() != '1') && $('#author').val() == '') {
                                             //alert('Please Select Author Name');
-                                            $('#simpleSelectBox1').after('<span class="error author-error">Author name is required.</span>');
-                                            $('#simpleSelectBox1').siblings('div').addClass('error');
+                                            $('#author').after('<span class="error author-error">Author name is required.</span>');
+                                            $('#author').siblings('ul').addClass('error');
                                            checkvalid=0;
                                     }
 //                                    if ($('#selectBoxFilter2').val() == '')
@@ -492,208 +493,75 @@
                             <label class="control-label" for="simpleSelectBox">Author Name</label>
                         </div>
                         <div class="span9">
+
                             <div class="controls">
-                                <select style="display: none;" name="author_id1" id="simpleSelectBox1" class="">
-                                    @foreach($arrAuth as $arAuth)
-                                    @if($arAuth->article_author_rank == 1)
-                                    <option selected="" value="{{ $arAuth->author_id }}">{{$arAuth->name}}</option>
-                                    @endif
-                                    @endforeach
-                                    <option value="">Please Select</option>
-                                </select>
+                                <input type="text" class="valid" name="author" id="author"/>
                             </div>
+                            <script>
+   
+                                   $().ready(function() {
+                                        $("#author").tokenInput(function(){
+                                            if($("#simpleSelectAuthor").val()==6)
+                                                return "/article/speaker?option="+$("#event_id_author").val(); 
+                                            else   
+                                                return "/article/authordd?option="+$("#simpleSelectAuthor").val(); 
+                                        },
+                                            {
+                                                theme: "facebook",
+                                                searchDelay: 300,
+                                                minChars: 3,
+                                                preventDuplicates: true,
+                                                tokenLimit:3,
+                                                prePopulate: <?php echo $authors ?>,
+                                        });
+                                   });                            
+                            </script>
+
+
                         </div>
-                        <script>
-                                    $().ready(function(){
-                            $("#simpleSelectBox1").select2({
-                            //dropdownCssClass: 'noSearch'
-                            });
-                            });</script>
+                        
+                    
                     </div>
 
-                    <div id="n2" class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label" for="simpleSelectBox">Secondary Author Name 1</label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls">
-                                <select name="author_id2" id="simpleSelectBox2">
-                                    <option value="">Please Select</option>
-                                    @foreach($arrAuth as $ar1Auth)
-                                    @if($ar1Auth->article_author_rank == 2)
-                                    <option selected value="{{ $ar1Auth->author_id }}">{{$ar1Auth->name}}</option>
-                                    @endif
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <script>
-                                    $().ready(function(){
-                            $("#simpleSelectBox2").select2({
-                            //dropdownCssClass: 'noSearch'
-                            });
-                            });</script>
-                    </div>
-
-                    <div id="n3" class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label" for="simpleSelectBox">Secondary Author Name 2</label>
-                        </div>
-                        <div class="span9">
-                            <div class="controls">
-                                <select name="author_id3" id="simpleSelectBox3">
-                                    <option value="">Please Select</option>
-                                    @foreach($arrAuth as $arAuth)
-                                    @if($arAuth->article_author_rank == 3)
-                                    <option selected="" value="{{ $arAuth->author_id }}">{{$arAuth->name}}</option>
-                                    @endif
-                                    @endforeach
-                                    
-                                </select>
-                            </div>
-                        </div>
-                        <script>
-                                    $().ready(function(){
-                            $("#simpleSelectBox3").select2({
-                            //dropdownCssClass: 'noSearch'
-                            });
-                            });</script>
-                    </div>
-
-                    <script>
-                                $(document).ready(function(e) {
-                        $("#n2,#n3").hide();
-                        });</script>
+    
 
                     <script type="text/javascript">
 
                                 $(document).ready(function(){
-
+                                    
                         $("#simpleSelectAuthor").change(function(){
-
                         $(this).find("option:selected").each(function(){
                             //return false
-                        if ($(this).attr("value") == "2" || $(this).attr("value") == "3"){
-                        //If chose BWReporters - get New&Existing DDs
-                        //Populate DDs
-                        $("#tabarea").show();
-                                $("#n2, #n3").show();
-                                $.get("{{ url('/article/authordd/')}}",
-                                { option: $(this).attr("value") },
-                                        function(data) {
-                                                var simpleSelectBox1 = $('#simpleSelectBox1');
-                                                var simpleSelectBox2 = $('#simpleSelectBox2');
-                                                var simpleSelectBox3 = $('#simpleSelectBox3');
-                                                $select1val=simpleSelectBox1.val();
-                                                $select2val=simpleSelectBox2.val();
-                                                $select3val=simpleSelectBox3.val();
-                                                simpleSelectBox1.empty();
-                                                simpleSelectBox2.empty();
-                                                simpleSelectBox3.empty();
-                                                simpleSelectBox1.append("<option  value=''>Please Select</option>");
-                                                simpleSelectBox2.append("<option  value=''>Please Select</option>");
-                                                simpleSelectBox3.append("<option  value=''>Please Select</option>");
-                                                var selected1='';
-                                                var selected2='';
-                                                var selected3='';
-                                                $.each(data, function(index, element) {
-                                                        (element==$select1val)?selected1='selected':selected1='';
-                                                        (element==$select2val)?selected2='selected':selected2='';
-                                                        (element==$select3val)?selected3='selected':selected3='';
-                                                        simpleSelectBox1.append("<option "+selected1+" value='" + element + "'>" + index + "</option>");
-                                                        simpleSelectBox2.append("<option "+selected2+" value='" + element + "'>" + index + "</option>");
-                                                        simpleSelectBox3.append("<option "+selected3+" value='" + element + "'>" + index + "</option>");
-                                                });
-                                                $("#simpleSelectBox1").select2();
-                                                $("#simpleSelectBox2").select2();
-                                                $("#simpleSelectBox3").select2();
-                                        });
-                        }
-
-                        else if ($(this).attr("value") == "1"){
-
+                        if ($(this).attr("value") == "1"){
+                            
                         $("#tabarea").hide();
-                        }
-//if($(this).attr("value")=="none")
-                        else if($(this).attr("value") != "6"){
-                        if ($(this).attr("value") != "") {
-                        $("#tabarea").show();
-                                $("#n2, #n3").hide();
-                                $.get("{{ url('/article/authordd/')}}",
-                                {option: $(this).attr("value")},
-                                        function (data) {
-                                                var simpleSelectBox1 = $('#simpleSelectBox1');
-                                                var simpleSelectBox2 = $('#simpleSelectBox2');
-                                                var simpleSelectBox3 = $('#simpleSelectBox3');
-                                                $select1val=simpleSelectBox1.val(); 
-                                                var selected1='';
-                                                simpleSelectBox1.empty();
-                                                simpleSelectBox2.empty();
-                                                simpleSelectBox3.empty();
-                                                simpleSelectBox1.append("<option selected='' value=''>Please Select</option>");
-                                                $.each(data, function (index, element) {
-                                                    (element==$select1val)?selected1='selected':selected1='';
-                                                simpleSelectBox1.append("<option "+selected1+" value='" + element + "'>" + index + "</option>");
-                                                });
-                                                
-                                                $("#simpleSelectBox1").select2();
-                                                 $("#simpleSelectBox2").select2();
-                                                $("#simpleSelectBox3").select2();
-                                        });
-                        }
+                        }else{
+                             $("#tabarea").show();
                         }
                         
                          if ($(this).attr("value") == "6"){
-                            // alert(2);
-                                        $("#tabarea").show();
-                                        $("#n2, #n3").hide();
-                                        var simpleSelectBox1 = $('#simpleSelectBox1');
-                                        $('#event_top_div').show();
-                                        $('#event_bottom_div').hide();
-                                        $.get("{{ url('/article/speaker/')}}",
-                                        {option: $('#event_id_author').attr("value")},
-                                                function (data) {
-                                                var simpleSelectBox1 = $('#simpleSelectBox1');
-                                                $select1val=simpleSelectBox1.val(); 
-                                                //alert($select1val);
-                                                var selected1='';
-                                                
-                                                        simpleSelectBox1.empty();
-                                                        simpleSelectBox1.append("<option value=''>Please Select</option>");
-                                                        $.each(data, function (index, element) {
-                                                        (element==$select1val)?selected1='selected':selected1='';
-                                                        simpleSelectBox1.append("<option "+selected1+" value='" + element + "'>" + index + "</option>");
-                                                        });
-                                                        $("#simpleSelectBox1").select2();
-                                                });
+                                       $('#event_top_div').show();
+                                       $('#event_bottom_div').hide();
+                                       
                                 }
                                 else{
-                                $('#event_top_div').hide();
-                                        $('#event_bottom_div').show();
+                                    $('#event_top_div').hide();
+                                    $('#event_bottom_div').show();
                                 }
                                 
                         });
                         }).change();
                         
+                        
+                         $("#simpleSelectAuthor").change(function(){
+                             if ($(this).attr("value") != "1"){
+                               $("#author").tokenInput("clear"); 
+                           }
+                          }); 
+                           
                          $("#event_id_author").change(function(){
-                             //alert(1);
-                                if ($("#simpleSelectAuthor").val() == "6"){
-                                        $.get("{{ url('/article/speaker/')}}",
-                                        {option: $('#event_id_author').attr("value")},
-                                                function (data) {
-                                                var simpleSelectBox1 = $('#simpleSelectBox1');
-                                                $select1val=simpleSelectBox1.val(); 
-                                                var selected1='';
-                                                        simpleSelectBox1.empty();
-                                                        simpleSelectBox1.append("<option  value=''>Please Select</option>");
-                                                        $.each(data, function (index, element) {
-                                                        (element==$select1val)?selected1='selected':selected1='';
-                                                        simpleSelectBox1.append("<option "+selected1+" value='" + element + "'>" + index + "</option>");
-                                                        });
-                                                        $("#simpleSelectBox1").select2();
-                                                });
-                                }
-                                }).change();
+                               $("#author").tokenInput("clear");   
+                          });
                                 
                                 
                         });</script>

@@ -474,7 +474,11 @@ function migrateSubCategoryDirect($cronLastExecutionTime) {
         //echo "SELECT tags_id as id,tag,valid  FROM tags where 1  $condition"; exit;	
 
         $tagResults = $this->conn->query("SELECT tags_id as id,tag,valid  FROM tags where 1  $condition");
+               
+        //$tagResults = $this->conn->query("SELECT tags_id as id,tag,valid  FROM tags where 1 and tags_id >= 66000 and tags_id <= 68000");
+        
         //echo $tagResults->num_rows;exit;
+        
         if ($tagResults->num_rows > 0) {
             while ($tagrow = $tagResults->fetch_assoc()) {
                 $tid = $tagrow['id'];

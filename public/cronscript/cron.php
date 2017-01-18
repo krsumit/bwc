@@ -103,7 +103,7 @@ class Cron {
                 //echo 'test'; exit;
                 $this->generateReport();
                 break;
-	     		case 'dailyreport':
+	    case 'dailyreport':
                 $this->sendDailyReport();
 		break;
             case 'campaing':
@@ -1391,8 +1391,7 @@ class Cron {
         $updatecorstmt->close();
 
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' topic(s) inserted,   ' . $_SESSION['noofupd'] . ' topic(s) updated and '.$_SESSION['noofdel'].' topic(s) deleted.</h5>';
-       
-        
+     
     }
 
     function migrateQuickByte() {
@@ -2412,16 +2411,28 @@ class Cron {
 
     function generateReport() {
 
-        //echo date('d:m:y H:i:s'); exit;
-        //$template=file_get_contents('editorial.html');
-        //$path=$_SERVER['DOCUMENT_ROOT'].'/'.'cronscript/'; 
-        //$template = file_get_contents('/var/www/html/bwcms2aw/public/cronscript/editorial.html');
+       //$template = file_get_contents('/var/www/html/bwcms/public/cronscript/editorial.html');
        $template = file_get_contents('/var/www/html/public/cronscript/editorial.html');
-        //echo 'test'; exit;
-        $start_published_date = date('Y-m-d H:i:s', strtotime("last Sunday") - 604800); //echo '<br>';
-        $end_published_date = date('Y-m-d H:i:s', strtotime("last Saturday") + 86399);  //echo '<br>';
-        $start_date=date('Y-m-d', strtotime("last Sunday") - 604800);
-        $end_date=date('Y-m-d', strtotime("last Saturday") + 86399);
+       
+        $end_date=date('Y-m-d', strtotime("-1 day"));  
+            if(date('d', strtotime("-1 day"))==15){
+                $daysback=15;
+                $start_date=date('Y-m-d', strtotime("-$daysback day"));
+            }else{
+                $daysback=16-(31-date('d', strtotime("-1 day")));
+                 $start_date=date('Y-m-d', strtotime("-$daysback day"));
+            }
+
+         $start_published_date = $start_date.' 00:00:00';
+         $end_published_date = $end_date.' 23:59:59';
+          
+          
+//        $start_published_date = date('Y-m-d H:i:s', strtotime("last Sunday") - 604800); //echo '<br>';
+//        $end_published_date = date('Y-m-d H:i:s', strtotime("last Saturday") + 86399);  //echo '<br>';
+//        $start_date=date('Y-m-d', strtotime("last Sunday") - 604800);
+//        $end_date=date('Y-m-d', strtotime("last Saturday") + 86399);
+        
+        
         
         //$countQuery = "select author_type.author_type_id,author_type.label,count(*) as cs,sum(view_count) as noofview  from articles inner join author_type on articles.author_type=author_type.author_type_id  where  concat(publish_date,' ',publish_time) between '$start_published_date' and '$end_published_date' group by author_type.author_type_id";
         
@@ -2477,29 +2488,9 @@ class Cron {
          }
         $repor_type_tdata.='</tr>'; 
          
-            
-        /*while ($rowCount = $countRsult->fetch_assoc()) {
-            
-            $total_stories+=$rowCount['cs'];
-            $repor_type_tdata.='<tr>
-                	<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $rowCount['label'] . '</td>
-                       <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $rowCount['cs'] . '</td>
-                       <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $rowCount['noofview'] . '</td>
-                       <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . ceil($rowCount['noofview'] / $rowCount['cs']) . '</td>
-
-                    </tr>';
-        }*/
-         
-         
-        //echo $repor_type_tdata; exit;
-       // $query = "select authors.name,ar.cs,ar.views_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '" . $start_published_date . "' and '" . $end_published_date . "' and articles.channel_id=1  group by article_author.author_id) ar on authors.author_id=ar.author_id where authors.author_type_id='2' order by ar.cs desc;";
-        $query="select authors.name,ar.cs,ar.views_count,tbqb.qb_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '" . $start_published_date . "' and '" . $end_published_date . "' group by article_author.author_id) ar on authors.author_id=ar.author_id  left join (select id,author_id,count(*) as qb_count  from quickbyte where publish_date between '".$start_date."' and '".$end_date."' and valid=1 group by author_id) as tbqb on authors.author_id=tbqb.author_id where authors.author_type_id='2' and (views_count is not null or qb_count is not null)  order by ar.cs desc;
-";
-/*
- select authors.name,ar.cs,ar.views_count,tbqb.qb_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '2016-05-22 00:00:00' and '2016-05-28 23:59:59' and articles.channel_id=1 group by article_author.author_id) ar on authors.author_id=ar.author_id 
-left join (select id,author_id,count(*) as qb_count  from quickbyte where publish_date between '2016-05-22' and '2016-05-28' and quickbyte.channel_id=1 and valid=1 group by author_id) as tbqb on authors.author_id=tbqb.author_id
-where authors.author_type_id='2' order by ar.cs desc;
- */
+        
+        //echo $query="select authors.name,ar.cs,ar.views_count,tbqb.qb_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '" . $start_published_date . "' and '" . $end_published_date . "' group by article_author.author_id) ar on authors.author_id=ar.author_id  left join (select id,author_id,count(*) as qb_count  from quickbyte where publish_date between '".$start_date."' and '".$end_date."' and valid=1 group by author_id) as tbqb on authors.author_id=tbqb.author_id where authors.author_type_id='2' and (views_count is not null or qb_count is not null)  order by ar.cs desc";
+        $query="select authors.name,ar.cs,ar.views_count,tbqb.qb_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '" . $start_published_date . "' and '" . $end_published_date . "' group by article_author.author_id) ar on authors.author_id=ar.author_id  left join (select id,author_id,count(*) as qb_count  from quickbyte where publish_date between '".$start_date."' and '".$end_date."' and valid=1 group by author_id) as tbqb on authors.author_id=tbqb.author_id where authors.author_type_id='2' and authors.author_status='1' order by ar.cs desc";
         $rst = $this->conn->query($query);
         //echo '<pre>';
 
@@ -2537,11 +2528,12 @@ where authors.author_type_id='2' order by ar.cs desc;
        //  echo  $mailbody; exit;
         $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
         $from_email = "reports@bwbusinessworld.com";
-        $sub = '=?UTF-8?B?' . base64_encode("Weekly Report – Article Contribution to Digital") . '?=';
+        $sub = '=?UTF-8?B?' . base64_encode("Last 15 Days Report – Article Contribution to Digital") . '?=';
         $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
         //anurag.batra@businessworld.in,sudipta@businessworld.in,
-
-        mail("sudipta@businessworld.in,akanksha@businessworld.in,ankitas@businessworld.in", $sub, $mailbody, $headers);
+       //echo $mailbody; exit;
+       mail("sudipta@businessworld.in,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
+        
     }
 
 

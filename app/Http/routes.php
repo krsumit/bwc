@@ -254,18 +254,34 @@ Route::get('/article/magazine/', function(){
 });
 
 //Drop Down Request for Author List Population in Create Form
-Route::get('/article/authordd/', function(){
+Route::get('/article/authorddd/', function(){
     $option = Input::get('option');
     $input = $option;
     $authorList = DB::table('authors')->where('author_type_id',$input)->where('valid','1')->orderBy('name')->lists('author_id','name');
 
     return $authorList;
 });
-Route::get('/article/speaker/', function(){
+
+Route::get('/article/authordd/', function(){
+    $option = Input::get('option');
+    $input = $option;
+    $matchText=Input::get('q');
+    $authorList = DB::table('authors')->select('author_id as id','name')->where('author_type_id',$input)->where('name', "like", '%'.$matchText . '%')->where('valid','1')->orderBy('name')->get();
+    return json_encode($authorList);
+});
+
+Route::get('/article/speakerd/', function(){
     $option = Input::get('option');
     $input = $option;
     $authorList = DB::table('event_speaker')->where('event_id',$input)->where('status','1')->orderBy('name')->lists('id','name');
     return $authorList;
+});
+Route::get('/article/speaker/', function(){
+    $option = Input::get('option');
+    $input = $option;
+    $matchText=Input::get('q');
+    $authorList = DB::table('event_speaker')->where('event_id',$input)->where('status','1')->where('name', "like", '%'.$matchText . '%')->orderBy('name')->select('id','name')->get();
+    return json_encode($authorList);
 });
 
 //Ajax Post of New Author Addition

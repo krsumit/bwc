@@ -267,7 +267,7 @@
 
                             if ($(this).attr("value") != "1" && $(this).attr("value") != "") {
                                 $("#ch-reporter").show();
-                                $.get("{{ url('/article/authordd/')}}",
+                                $.get("{{ url('/article/authorddd/')}}",
                                         {option: $(this).attr("value")},
                                 function (data) {
                                     var simpleSelectBox1 = $('#author_name');
