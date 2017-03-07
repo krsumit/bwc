@@ -930,7 +930,7 @@
                             'pastetext','bold', 'italic','underline','justifyleft', 'justifyright',
                            'justifycenter', 'justifyfull','forecolor','hilitecolor','fontsize','link',
                            'image', 'insertorderedlist', 'insertunorderedlist'];
- 
+                        elRTE.prototype.options.denyTags = ['div'];
                         elRTE.prototype.options.toolbars.web2pyToolbar = ['web2pyPanel','tables'];
                                 $('#maxi').elrte({
                         lang: "en",

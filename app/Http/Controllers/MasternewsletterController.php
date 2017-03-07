@@ -192,7 +192,7 @@ class MasternewsletterController extends Controller {
              exec("/usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=newsletter'");
         elseif($newsletter->channel_id=='5')
              exec("/usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=newsletter'");
-		elseif($newsletter->channel_id=='3')
+	elseif($newsletter->channel_id=='3')
              exec("/usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=newsletter'"); 
         elseif($newsletter->channel_id=='7')
              exec("/usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=newsletter'");      
@@ -200,7 +200,7 @@ class MasternewsletterController extends Controller {
     }   
     //End end of sorting newsletter
     public function assign(Request $request) {
-
+        
         foreach ($request->checkItem as $articleId) {
             $newArticle = new NewsletterArticles();
             $newArticle->master_newsletter_id = $request->newsletterId;
@@ -219,7 +219,7 @@ class MasternewsletterController extends Controller {
              exec("/usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=newsletter'");
         elseif($newsletter->channel_id=='5')
              exec("/usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=newsletter'");
-		elseif($newsletter->channel_id=='3')
+	elseif($newsletter->channel_id=='3')
              exec("/usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=newsletter'"); 
         elseif($newsletter->channel_id=='7')
              exec("/usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=newsletter'");      
@@ -229,6 +229,8 @@ class MasternewsletterController extends Controller {
 
         Session::flash('message', 'Your article(s) assigned in newsletter.');
         return redirect('/newsletter/manage/' . $request->newsletterId);
+        
+        
     }
 
     /**

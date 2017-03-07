@@ -30,11 +30,9 @@ class Cron {
     }
 
     function sendMailAuthor() {
-       // echo 'test'; exit;
             //send_mail_status='0' AND
-          $articlesResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date FROM articles where  status ='P' and send_mail_status='0' and channel_id ='1'");
-      // $articlesResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date FROM articles where  status ='P' and article_id ='112799'");
-       // echo $articlesResults->num_rows; exit;
+        $articlesResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date FROM articles where  status ='P' and send_mail_status='0' and channel_id ='1'");
+        //echo $articlesResults->num_rows; exit;
         if ($articlesResults->num_rows > 0) {
 
             while ($authorRow = $articlesResults->fetch_assoc()) {
@@ -57,11 +55,10 @@ class Cron {
      }
 
    function sendMail($id){
-       
        $authorResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date,article_author.*,authors.* FROM articles  JOIN article_author ON  article_author.article_id = articles.article_id JOIN  authors ON  authors.author_id = article_author.author_id where articles.article_id = $id ");
 
           while ($authorRow = $authorResults->fetch_assoc()) {
-              
+              if($authorRow['author_type_id']==1)continue;
               $email=$authorRow['email'];
               //echo $email;exit;
               $name=  $authorRow['name'];
@@ -74,22 +71,7 @@ class Cron {
              //$user_email= 'noreply@businessworld.com';
              $urlcontact =$this->url.'contact-us/';
              
-            $bitly_acesss_token='54faae0489a41d4c932f27cd7d5a060563bace93';
-            $urlenc=urlencode($url);
-            //echo "https://api-ssl.bitly.com//v3/shorten?access_token=$bitly_acesss_token&longUrl=$urlenc"; exit;
-            $data=file_get_contents("https://api-ssl.bitly.com//v3/shorten?access_token=$bitly_acesss_token&longUrl=$urlenc");
-            $arr=json_decode($data);
-            $updateDate = date('Y-m-d H:i:s');
-            
-            $updatearticlestmt = $this->conn->prepare("update articles set bitly_url=?,updated_at=? where article_id=?");
-            $updatearticlestmt->bind_param('ssi',  $arr->data->url,$updateDate, $article_id);
-            $updatearticlestmt->execute();
-            //echo  $arr->data->url; exit;
-            if($authorRow['author_type_id']==1)continue;
-
-             
-            $this->sendSms($url,$authorRow['mobile'],$authorRow['name'],$authorRow['title'],$arr->data->url);
-              
+				$this->sendSms($url,$authorRow['mobile'],$authorRow['name'],$authorRow['title'],$id);
              
          // exit;
           $headers  = 'MIME-Version: 1.0' . "\r\n";
@@ -255,22 +237,19 @@ class Cron {
     }
     return true;
 }
-
-
 // funtion to send sms to authors
-function sendSms($url,$mob,$authorName,$articleTitle,$bitlyUrl){
+function sendSms($url,$mob,$authorName,$articleTitle,$articleId){
     //$mob='9899415606';
-    //$bitly_acesss_token='54faae0489a41d4c932f27cd7d5a060563bace93';
+    $bitly_acesss_token='54faae0489a41d4c932f27cd7d5a060563bace93';
     $nimbus_username='businessworld';
     $nimbus_password='del12345';
-    //$url=  urlencode($url);
-    //$data=file_get_contents("https://api-ssl.bitly.com//v3/shorten?access_token=$bitly_acesss_token&longUrl=$url");
-    ///$arr=json_decode($data);
-    $message=urlencode("Hi $authorName, Your article : $articleTitle has been published. Url :".$bitlyUrl); 
+    $url=  urlencode($url);
+    $data=file_get_contents("https://api-ssl.bitly.com//v3/shorten?access_token=$bitly_acesss_token&longUrl=$url");
+    $arr=json_decode($data);
+    //echo $arr->data->url;exit;
+    $message=urlencode("Hi $authorName, Your article : $articleTitle has been published. Url :".$arr->data->url); // $url";
     file_get_contents("http://203.212.70.200/smpp/sendsms?username=$nimbus_username&password=$nimbus_password&to=$mob&from=Bworld&text=$message&udh=&dlr-mask=19&dlr-url=http://www.mywebsite.com/myurl?myid=123456%26status=%25d%26updated_on=%25t%26res=%252");
     }
-    
-    
 }
 
 ?>

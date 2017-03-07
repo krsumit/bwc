@@ -85,7 +85,7 @@ class SubscriptionController extends Controller
     }
     
     function userOrder($id){
-        
+       
       $rightId = 93;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');

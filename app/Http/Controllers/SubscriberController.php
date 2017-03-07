@@ -69,9 +69,7 @@ class SubscriberController extends Controller {
     }
 
     public function create() {
-
         $rightId = 89;
-
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
 

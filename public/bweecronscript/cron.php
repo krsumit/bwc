@@ -8,7 +8,7 @@ class Cron {
     var $categoryMapping;
     var $channelId;
 
-     function __construct() {
+    function __construct() {
         $this->conn = new mysqli(HOST, USER, PASS, DATABASE) or die($this->conn->connect_errno);
         mysqli_set_charset($this->conn,"utf8");
         $this->conn2 = new mysqli(LHOST, LUSER, LPASS, LDATABASE) or die($this->conn2->connect_errro);
@@ -565,7 +565,7 @@ function migrateBwTopics(){
     }
 function migrateBwArticle() {
 	//echo 'shekhar'; exit;
-        $this->conn->query("update articles set status='P' where status='SD' and concat(publish_date,' ',publish_time) <= '".date('Y-m-d h:i:s')."'") or die($this->conn->error);; 
+        $this->conn->query("update articles set status='P',updated_at='".date('Y-m-d h:i:s')."' where status='SD' and concat(publish_date,' ',publish_time) <= '".date('Y-m-d h:i:s')."'") or die($this->conn->error);; 
         $this->migrateBwAuthor();
         $this->migrateBwCategory();
         $this->migrateBwTag();
@@ -660,7 +660,8 @@ function migrateBwArticle() {
         $updatecorstmt->execute();
         $updatecorstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' bweearticle(s) inserted, ' . $_SESSION['noofupd'] . ' bweearticle(s) updated and ' . $_SESSION['noofdel'] . ' bweearticle(s) deleted.</h5>';
-        exit;
+        $key= md5(date('dmY').'businessworld');
+	file_get_contents('http://everythingexperiential.businessworld.in/create-json/'.$key);
 
         
     }

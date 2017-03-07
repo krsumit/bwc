@@ -157,7 +157,7 @@
         </div>
         <div  class="control-group row-fluid">
             <div class="span3">
-                <label class="" >Freebies </label>
+                <label class="" >Total Amount </label>
             </div>
             <div class="span9">
                 <div class="controls">

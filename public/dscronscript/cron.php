@@ -799,7 +799,7 @@ function migrateBwTopics(){
     }
 function migrateBwArticle() {
 	//echo 'shekhar'; exit;
-        $this->conn->query("update articles set status='P' where status='SD' and concat(publish_date,' ',publish_time) <= '".date('Y-m-d h:i:s')."'") or die($this->conn->error);; 
+        $this->conn->query("update articles set status='P',updated_at='".date('Y-m-d h:i:s')."' where status='SD' and concat(publish_date,' ',publish_time) <= '".date('Y-m-d h:i:s')."'") or die($this->conn->error);; 
         $this->migrateBwAuthor();
         $this->migrateBwCategory();
         $this->migrateBwTag();
@@ -904,8 +904,9 @@ function migrateBwArticle() {
         $updatecorstmt->execute();
         $updatecorstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' bwdarticle(s) inserted, ' . $_SESSION['noofupd'] . ' bwdarticle(s) updated and ' . $_SESSION['noofdel'] . ' bwdarticle(s) deleted.</h5>';
-        exit;
-
+        $key= md5(date('dmY').'businessworld');
+	    file_get_contents('http://bwdisrupt.businessworld.in/create-json/'.$key);
+        
         
     }
    
@@ -1396,9 +1397,9 @@ function migrateBwArticle() {
                     if ($checkResult->num_rows > 0) {  //echo 'test';exit;
                         if($photoshootRow['valid']=='1'){//echo 'sumit'; exit();
                             
-                            $photoshootUpdateStmt = $this->conn2->prepare("update photo_shoot set photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,photo_shoot_published_date=?,photo_shoot_updated_at=? where photo_shoot_id=?");
+                            $photoshootUpdateStmt = $this->conn2->prepare("update photo_shoot set photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,for_homepage=?,photo_shoot_published_date=?,photo_shoot_updated_at=? where photo_shoot_id=?");
                             //echo 'sumit';
-                            $photoshootUpdateStmt->bind_param('ssiissi',$photoshootRow['title'],$photoshootRow['description'],$photoshootRow['sponsored'],$photoshootRow['featured'],$photoshootRow['created_at'],$photoshootRow['updated_at'],$id) or die($this->conn2->error);
+                            $photoshootUpdateStmt->bind_param('ssiiissi',$photoshootRow['title'],$photoshootRow['description'],$photoshootRow['sponsored'],$photoshootRow['featured'],$photoshootRow['for_homepage'],$photoshootRow['created_at'],$photoshootRow['updated_at'],$id) or die($this->conn2->error);
                             //echo 'abcd'.$this->conn2->error;exit;
                             $photoshootUpdateStmt->execute();
                             //print_r($photoshootUpdateStmt);exit;
@@ -1423,9 +1424,9 @@ function migrateBwArticle() {
                     }else{//echo 'test4';exit;
                         
                              $insertStmt = $this->conn2->prepare("insert into photo_shoot set photo_shoot_id=?,"
-                                     . "photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,photo_shoot_published_date=?,photo_shoot_updated_at=?");
-                            $insertStmt->bind_param('issiiss',$photoshootRow['id']
-                                    ,$photoshootRow['title'],$photoshootRow['description'],$photoshootRow['sponsored'],$photoshootRow['featured'],$photoshootRow['created_at'],$photoshootRow['updated_at']);
+                                     . "photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,for_homepage=?,photo_shoot_published_date=?,photo_shoot_updated_at=?");
+                            $insertStmt->bind_param('issiiiss',$photoshootRow['id']
+                                    ,$photoshootRow['title'],$photoshootRow['description'],$photoshootRow['sponsored'],$photoshootRow['featured'],$photoshootRow['for_homepage'],$photoshootRow['created_at'],$photoshootRow['updated_at']);
                             $insertStmt->execute();
                             //print_r($insertStmt);exit;
                             // echo $articleInsertStmt->insert_id;exit;    

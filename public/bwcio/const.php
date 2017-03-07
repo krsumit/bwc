@@ -6,10 +6,10 @@ define('PASS','bwpassword2015');
 define('DATABASE','bwcms');
 
 
-define('LHOST','websitedb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com');
-define('LUSER','bwwebsite');
-define('LPASS','bwwebpass');
-define('LDATABASE','websitedb');
+define('LHOST','channelwebsite.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com');
+define('LUSER','bwchannelsuser');
+define('LPASS','bwchannelsuser2016');
+define('LDATABASE','bwcio');
 /*
 date_default_timezone_set('Asia/Calcutta');
 define('HOST','localhost');

@@ -152,7 +152,10 @@
                             @foreach($orders as $order)
                             <tr class="gradeX"  id="rowCur{{$order->id}}">
                                 <td><a href="/subscribers/edit/{{$order->id}}">{{ $order->id }}</a></td>
-                                <td>{{ $order->end_date }}</td>
+                                <td>{{ $order->end_date }}
+                                    </br>
+                                    <a href="/subscriptions/order/{{$order->id}}"><button class="btn btn-default" type="button">Detail</button></a>
+                                </td>
                                 <td>{{ $subscriber->first_name }} </td>
                                 <td>{{ $subscriber->last_name }}</td>
                                 <td> {{ $subscriber->email }}</td>	

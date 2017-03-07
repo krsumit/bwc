@@ -392,7 +392,7 @@
             </li>
             @endif
             
-            @if(count(array_diff(array('82','83','84'), Session::get('user_rights'))) != count(array('82','83','84')))	 	
+            @if(count(array_diff(array('82','83','84','95'), Session::get('user_rights'))) != count(array('82','83','84','95')))	 	
                 <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon mail"></i>
@@ -400,19 +400,22 @@
                     <i class="icon-menu-arrow"></i>                </a>
                 <div class="sub-nav">
                     <ul class="nav">
+                        @if(in_array('95',Session::get('user_rights')))
+                        <li>
+                            <a href="{{url('newsletter/subscriber')}}">Subscriber</a>
+                        </li>                       
+                        @endif
                         @if(in_array('83',Session::get('user_rights')))
                         <li>
                             <a href="{{url('newsletter')}}">Manage Newsletter</a>
                         </li>
-                        
                         @endif
                         @if(in_array('84',Session::get('user_rights')))
                         <li>
                             <a href="{{url('newsletter/create')}}">Create Newsletter</a>
                         </li>
-                       
                         @endif
-
+                        
                     </ul>
                 </div>
             </li>

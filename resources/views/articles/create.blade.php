@@ -413,49 +413,46 @@
                                 <input type="text" class="valid" name="author" id="author"/>
                             </div>
                             <script>
-   
-                                   $().ready(function() {
+
+                                                $().ready(function() {
                                         $("#author").tokenInput(function(){
-                                            if($("#authortype").val()==6)
-                                                return "/article/speaker?option="+$("#event_id_author").val(); 
-                                            else   
-                                                return "/article/authordd?option="+$("#authortype").val(); 
-                                        
-                                            },
-                                            {
-                                                theme: "facebook",
+                                        if ($("#authortype").val() == 6)
+                                                return "/article/speaker?option=" + $("#event_id_author").val();
+                                                else
+                                                return "/article/authordd?option=" + $("#authortype").val();
+                                        },
+                                        {
+                                        theme: "facebook",
                                                 searchDelay: 300,
                                                 minChars: 3,
                                                 preventDuplicates: true,
                                                 tokenLimit:3,
                                         });
-                                   });                            
-                            </script>
+                                        });                            </script>
 
 
                         </div>
 
-                     
+
                     </div>
 
-                   
+
 
                     <script type="text/javascript">
 
-                                $(document).ready(function(){
+                                        $(document).ready(function(){
 
                                 $("#authortype").change(function(){
                                 $("#author").tokenInput("clear");
-                                $(this).find("option:selected").each(function(){
+                                        $(this).find("option:selected").each(function(){
 
-                               
 
-                               if ($(this).attr("value") == "1"){
+
+                                if ($(this).attr("value") == "1"){
 
                                 $("#tabarea").hide();
                                 } else {
                                 $("#tabarea").show();
-                              
                                 }
                                 if ($(this).attr("value") == "6"){
                                 $("#tabarea").show();
@@ -463,18 +460,15 @@
                                         $('#event_bottom_div').hide();
                                 }
                                 else{
-                                        $('#event_top_div').hide();
+                                $('#event_top_div').hide();
                                         $('#event_bottom_div').show();
                                 }
                                 });
                                 }).change();
-                                
-                                $("#event_id_author").change(function(){
-                                     $("#author").tokenInput("clear");
+                                        $("#event_id_author").change(function(){
+                                $("#author").tokenInput("clear");
                                 });
-                                       
-                                });
-                        </script>
+                                });                        </script>
 
                 </div>
 
@@ -803,9 +797,10 @@
                                                 'pastetext', 'bold', 'italic', 'underline', 'justifyleft', 'justifyright',
                                                 'justifycenter', 'justifyfull', 'forecolor', 'hilitecolor', 'fontsize', 'link',
                                                 'image', 'insertorderedlist', 'insertunorderedlist'];
+                                        elRTE.prototype.options.denyTags = ['div'];    
                                         elRTE.prototype.options.toolbars.web2pyToolbar = ['web2pyPanel', 'tables'];
                                         $('#maxi').elrte({
-                                lang: "en",
+                                        lang: "en",
                                         styleWithCSS: false,
                                         height: 200,
                                         toolbar: 'web2pyToolbar'

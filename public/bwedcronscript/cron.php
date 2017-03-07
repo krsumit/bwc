@@ -1448,6 +1448,69 @@ function migrateMasterNewsLetter() {
  
     }
     
+    
+    function migrateNewsletterSubscriber() {    
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwedsubscriber' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            $condition = " and  (subscription_date >='$cronLastExecutionTime')";
+        }
+        $subscriberResults = $this->conn2->query("SELECT * FROM newsletter_Subscriber where  1 $condition");
+        
+        if ($subscriberResults->num_rows > 0) {
+
+            while ($subscriberRow = $subscriberResults->fetch_assoc()) {
+                //print_r($subscriberRow); exit;
+                $email = $subscriberRow['subscriber_email_id'];
+                $checkSubscriberExistResultSet = $this->conn->query("select id from subscribers where email='$email'");
+                
+                if ($checkSubscriberExistResultSet->num_rows > 0) {
+
+                    $checkSubscriberRow = $checkSubscriberExistResultSet->fetch_assoc();
+                    $id = $checkSubscriberRow['id'];
+
+                    $checkSubscriptionRst = $this->conn->query("select id from subscriber_newsletter where subscriber_id=$id and channel_id=$this->channelId");
+                   
+                    if ($checkSubscriptionRst->num_rows == 0) {
+                        //echo 'test';
+                        $updated_at = date('Y-m-d H:i:s');
+                        $subsciptionInsertStmt = $this->conn->prepare("insert into subscriber_newsletter set subscriber_id=?,channel_id=?,sub_date=?,updated_at=?");
+                        $subsciptionInsertStmt->bind_param('iiss', $id, $this->channelId, $subscriberRow['subscription_date'], $updated_at);
+                        $subsciptionInsertStmt->execute();
+                        if ($subsciptionInsertStmt->affected_rows)
+                            $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                    }
+                   
+                }else {
+                    $updated_at = date('Y-m-d H:i:s');
+                    $suscriberInsertStmt = $this->conn->prepare("insert into subscribers set email=?,created_at=?,updated_at=?");
+                    $suscriberInsertStmt->bind_param('sss', $email,$updated_at,$updated_at);
+                    $suscriberInsertStmt->execute();
+                    $id = $suscriberInsertStmt->insert_id;
+                    $subsciptionInsertStmt = $this->conn->prepare("insert into subscriber_newsletter set subscriber_id=?,channel_id=?,sub_date=?,updated_at=?");
+                    $subsciptionInsertStmt->bind_param('iiss', $id, $this->channelId, $subscriberRow['subscription_date'], $updated_at);
+                    $subsciptionInsertStmt->execute();
+                    if ($suscriberInsertStmt->affected_rows) {
+                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                    }
+                }
+            }
+          
+        }
+        
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwedsubscriber',start_time=?,end_time=?");
+        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecronstmt->execute();
+        $updatecronstmt->close();
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' subscriber(s) inserted and ' . $_SESSION['noofupd'] . ' subscriber(s) updated.</h5>';
+    }
+    
+    
 }
 
 

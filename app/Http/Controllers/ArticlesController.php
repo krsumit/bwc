@@ -81,7 +81,7 @@ class ArticlesController extends Controller {
                 $rightId = 17;
                 break;
         }
-
+        //echo 'test'; exit;
         /* Right mgmt start */
         $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
         $channels = $this->rightObj->getAllowedChannels($rightId);
@@ -520,7 +520,7 @@ class ArticlesController extends Controller {
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
-        echo  Session::getId(); exit;
+        //echo  Session::getId(); exit;
         //echo date('Y-m-d'); 
         //echo date('H:i:s'); 
         //exit;

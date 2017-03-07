@@ -564,6 +564,9 @@ Route::post('newsletter/sort/{id}', ['middleware' => 'auth',   'uses' => 'Master
 Route::match(['get', 'post'], 'newsletter/delete', ['middleware' => 'auth', 'uses' => 'MasternewsletterController@destroy']);
 Route::match(['get', 'post'], 'newsletter/deletens', ['middleware' => 'auth', 'uses' => 'MasternewsletterController@destroyNewsletter']);
 
+Route::match(['get'], 'newsletter/subscriber', ['middleware' => 'auth', 'uses' => 'NewsletterSubscriberController@index']);
+Route::match(['get'], 'newsletter/subscriber/exportCsv', ['middleware' => 'auth', 'uses' => 'NewsletterSubscriberController@exportCsv']);
+
 /* Newsletter end here*/
 
 /* Api route start here */
