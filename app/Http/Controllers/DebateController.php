@@ -21,6 +21,7 @@ use App\Video;
 use App\QuickbyteCategory;
 use App\Classes\Zebra_Image;
 use App\Classes\UploadHandler;
+use App\Classes\FileTransfer;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 
@@ -207,7 +208,7 @@ class DebateController extends Controller {
         }
         
         $s3 = AWS::createClient('s3');
-        
+        $fileTran = new FileTransfer();
         //Saving expert view1
         
        $destination_path = 'uploads/';

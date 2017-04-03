@@ -56,8 +56,6 @@ class FeatureBoxController extends Controller {
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
-
-
         $current = DB::table('featuredarticle')
                 ->join('users', 'featuredarticle.editor_id', '=', 'users.id')
                 ->select('featuredarticle.*', 'users.name')

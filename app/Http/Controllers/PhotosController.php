@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
+use App\Classes\FileTransfer;
 class PhotosController extends Controller
 {
     
@@ -155,7 +156,7 @@ class PhotosController extends Controller
     {
         //Delete passed Id's row from DB - Deprecated to Invalidate Row
         $photo=Photo::find($request->photoId);
-        $s3 = AWS::createClient('s3');
+        $fileTran=new FileTransfer();
         switch ($photo->owned_by):
         case 'article':
            // echo config('constants.awbucket').config('constants.awarticleimagethumbtdir').$photo->photopath;exit;
@@ -169,72 +170,26 @@ class PhotosController extends Controller
             
             
             if(count(Photo::where('photopath','=',$photo->photopath)->get())==1){
-            $s3->deleteObjects(array(
-			'Bucket'     => config('constants.awbucket'),
-                        'Delete'=>array(
-                            'Objects'    => array(
-                                array(
-                                    'Key' =>  config('constants.awarticleimagethumbtdir').$photo->photopath
-                                ),
-                                array(
-                                   'Key' =>  config('constants.awarticleimagemediumdir').$photo->photopath
-                               ),
-                                array(
-                                   'Key' =>  config('constants.awarticleimagelargedir').$photo->photopath
-                               ),
-                                array(
-                                   'Key' =>  config('constants.awarticleimageextralargedir').$photo->photopath
-                               )
-                            ) 
-                        )			
-            ));
-            }
+                $fileTran->deleteFile(config('constants.awarticleimagethumbtdir'), $photo->photopath);
+                $fileTran->deleteFile(config('constants.awarticleimagemediumdir'), $photo->photopath);
+                $fileTran->deleteFile(config('constants.awarticleimagelargedir'), $photo->photopath);
+                $fileTran->deleteFile(config('constants.awarticleimageextralargedir'), $photo->photopath);
+          }
            break;
         case 'quickbyte':
-            $s3->deleteObjects(array(
-			'Bucket'     => config('constants.awbucket'),
-                        'Delete'=>array(
-                            'Objects'    => array(
-                                array(
-                                    'Key' =>  config('constants.awquickbytesimagethumbtdir').$photo->photopath,
-                                ),
-                                 array(
-                                    'Key' =>  config('constants.awquickbytesimagemediumdir').$photo->photopath,
-                                ),
-                                 array(
-                                    'Key' =>  config('constants.awquickbytesimageextralargedir').$photo->photopath,
-                                )
-                            ) 
-                        )
-			
-                  ));
+             $fileTran->deleteFile(config('constants.awquickbytesimagethumbtdir'), $photo->photopath);
+             $fileTran->deleteFile(config('constants.awquickbytesimagemediumdir'), $photo->photopath);
+             $fileTran->deleteFile(config('constants.awquickbytesimageextralargedir'), $photo->photopath);
+
             break;
         case 'sponsoredpost':
-            $s3->deleteObjects(array(
-			'Bucket'     => config('constants.awbucket'),
-                        'Delete'=>array(
-                            'Objects'    => array(
-                                array(
-                                    'Key' =>  config('constants.aw_sponsored_image_thumb_dir').$photo->photopath,
-                                ),
-                                 array(
-                                    'Key' =>  config('constants.aw_sponsored_image_extralarge_dir').$photo->photopath,
-                                )
-                            ) 
-                        )
-                  ));
+            $fileTran->deleteFile(config('constants.aw_sponsored_image_thumb_dir'), $photo->photopath);
+            $fileTran->deleteFile(config('constants.aw_sponsored_image_extralarge_dir'), $photo->photopath);
+
             break;
         case 'album':
-            $s3->deleteObjects(array(
-			'Bucket'     => config('constants.awbucket'),
-                        'Delete'=>array(
-                            'Objects'    => array(
-                                array(
-                                    'Key' =>  config('constants.awalbumimagedir').$photo->photopath,
-                                )
-                            ) 
-                        )
-                  ));
+            $fileTran->deleteFile(config('constants.awalbumimagedir'), $photo->photopath);
+
             break;
         endswitch;
         $photo->delete();

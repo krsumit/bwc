@@ -1,5 +1,7 @@
 <?php
+/* If you change store_location, awsbaseurl should be changed accordingaly */
 return [
+'store_location' =>'local',    
 'articleimagedir' => 'uploads/article/',
 'articleimagethambtdir' => 'uploads/article/articlethamb/',
 'articleimagemediumdir' => 'uploads/article/articlemediumimage/',
@@ -43,7 +45,8 @@ return [
 'debatefeatured'=>'debate/featuredimage/',
 'debateexpert'=>'debate/expertimage/',     
 'awbucket'=>'bwmedia',
-'awsbaseurl'=>'http://d1s8mqgwixvb29.cloudfront.net/',    
+'awsbaseurl_backup'=>'http://d1s8mqgwixvb29.cloudfront.net/   http://bwcms.localhost/files/',
+'awsbaseurl'=>'  http://bwcms.localhost/files/',     
 'recordperpage' => '20',
 'maxfilesize'=>'10',
 'maxfilesizevideo'=>'200',
@@ -59,6 +62,7 @@ return [
 'dimension_debate_expert'=>'126X95', 
 'dimension_magz'=>'328X450',
 'dimension_video'=>'680X370',
-'ee_rating_cateogy_id'=>'47025'
+'ee_rating_cateogy_id'=>'47025',
+'sitename'=>'BWCMS'    
 ];
 ?>

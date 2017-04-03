@@ -1,4 +1,0 @@
-container_commands:
- copy_phpini:
-    command: "cp /tmp/php-5.6.ini /etc/"
-

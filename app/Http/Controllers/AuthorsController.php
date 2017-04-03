@@ -12,6 +12,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Aws\Laravel\AwsFacade as AWS;
+use App\Classes\FileTransfer;
 use Aws\Laravel\AwsServiceProvider;
 
 class AuthorsController extends Controller {
@@ -22,30 +23,29 @@ class AuthorsController extends Controller {
      * @return Response
      */
     private $rightObj;
+
     public function __construct() {
-         $this->middleware('auth');
-         $this->rightObj= new Right();
-    
+        $this->middleware('auth');
+        $this->rightObj = new Right();
     }
-    
-    
+
     public function index() {
-      //echo '$queryed' ;exit;
-        
+        //echo '$queryed' ;exit;
+
         /* Right mgmt start */
-        $rightId=9;
-        if(!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+        $rightId = 9;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
-        
-        
+
+
         if (isset($_GET['keyword'])) {
             $queryed = $_GET['keyword'];
             $posts = DB::table('authors')
                     ->select('authors.*', 'authors.name')
                     ->where('authors.author_type_id', '=', '4')
                     ->where('authors.name', 'LIKE', '%' . $queryed . '%')
-                    ->orderBy('updated_at','desc')
+                    ->orderBy('updated_at', 'desc')
                     ->paginate(10);
         } else if (isset($_GET['keywordemail'])) {
             $queryed = $_GET['keywordemail'];
@@ -54,14 +54,14 @@ class AuthorsController extends Controller {
                     ->where('authors.author_type_id', '=', '4')
                     ->where('authors.valid', '=', '1')
                     ->where('authors.email', 'LIKE', '%' . $queryed . '%')
-                    ->orderBy('updated_at','desc')
+                    ->orderBy('updated_at', 'desc')
                     ->paginate(10);
         } else {
             $posts = DB::table('authors')
                     ->select('authors.*', 'authors.author_type_id')
                     ->where('authors.author_type_id', '=', '4')
                     ->where('authors.valid', '=', '1')
-                    ->orderBy('updated_at','desc')
+                    ->orderBy('updated_at', 'desc')
                     ->paginate(10);
         }
         $columns = DB::table('columns')
@@ -77,14 +77,14 @@ class AuthorsController extends Controller {
      * @return show
      */
     public function gustauthor() {
-        
+
         /* Right mgmt start */
-        $rightId=44;
-        if(!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+        $rightId = 44;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
-        
-        
+
+
         //echo $queryed ;exit;
         if (isset($_GET['keyword'])) {
             $queryed = $_GET['keyword'];
@@ -93,7 +93,7 @@ class AuthorsController extends Controller {
                     ->where('authors.author_type_id', '=', '3')
                     ->where('authors.valid', '=', '1')
                     ->where('authors.name', 'LIKE', '%' . $queryed . '%')
-                    ->orderBy('updated_at','desc')
+                    ->orderBy('updated_at', 'desc')
                     ->paginate(10);
         } else if (isset($_GET['keywordemail'])) {
             $queryed = $_GET['keywordemail'];
@@ -102,14 +102,14 @@ class AuthorsController extends Controller {
                     ->where('authors.author_type_id', '=', '3')
                     ->where('authors.valid', '=', '1')
                     ->where('authors.email', 'LIKE', '%' . $queryed . '%')
-                    ->orderBy('updated_at','desc')
+                    ->orderBy('updated_at', 'desc')
                     ->paginate(10);
         } else {
             $posts = DB::table('authors')
                     ->select('authors.*', 'authors.author_type_id')
                     ->where('authors.author_type_id', '=', '3')
                     ->where('authors.valid', '=', '1')
-                    ->orderBy('updated_at','desc')
+                    ->orderBy('updated_at', 'desc')
                     ->paginate(10);
         }
 
@@ -120,11 +120,11 @@ class AuthorsController extends Controller {
     public function bwreporters() {
 
         /* Right mgmt start */
-        $rightId=45;
-        if(!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+        $rightId = 45;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
-        
+
         //echo $queryed ;exit;
         if (isset($_GET['keyword'])) {
             $queryed = $_GET['keyword'];
@@ -133,7 +133,7 @@ class AuthorsController extends Controller {
                     ->where('authors.author_type_id', '=', '2')
                     ->where('authors.valid', '=', '1')
                     ->where('authors.name', 'LIKE', '%' . $queryed . '%')
-                    ->orderBy('updated_at','desc')
+                    ->orderBy('updated_at', 'desc')
                     ->paginate(10);
         } else if (isset($_GET['keywordemail'])) {
             $queryed = $_GET['keywordemail'];
@@ -142,14 +142,14 @@ class AuthorsController extends Controller {
                     ->where('authors.author_type_id', '=', '2')
                     ->where('authors.valid', '=', '1')
                     ->where('authors.email', 'LIKE', '%' . $queryed . '%')
-                    ->orderBy('updated_at','desc')
+                    ->orderBy('updated_at', 'desc')
                     ->paginate(10);
         } else {
             $posts = DB::table('authors')
                     ->select('authors.*', 'authors.author_type_id')
                     ->where('authors.author_type_id', '=', '2')
                     ->where('authors.valid', '=', '1')
-                    ->orderBy('updated_at','desc')
+                    ->orderBy('updated_at', 'desc')
                     ->paginate(10);
         }
 
@@ -199,26 +199,26 @@ class AuthorsController extends Controller {
      * @return Response
      */
     public function store(Request $request) {
-        
+
         //Save Request Tuple in Table - Validate First
         // print_r($request->all());exit;
         // Validation //
-        
-         
-        if($request->author_type==2){// Bw reporters
-             $rightId=45;
-        }else if($request->author_type==3){ // Guest author
-             $rightId=44;
-        }else if($request->author_type==4){ //Columnist
-             $rightId=9;
+
+
+        if ($request->author_type == 2) {// Bw reporters
+            $rightId = 45;
+        } else if ($request->author_type == 3) { // Guest author
+            $rightId = 44;
+        } else if ($request->author_type == 4) { //Columnist
+            $rightId = 9;
         }
-        
-        if(!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
-        
-        
-        
-        
+
+
+
+
         $validation = Validator::make($request->all(), [
                     //'caption'     => 'required|regex:/^[A-Za-z ]+$/',
                     //'description' => 'required',
@@ -227,45 +227,25 @@ class AuthorsController extends Controller {
 
 
         $author = new Author;
+        $fileTran = new FileTransfer();
+
         if ($request->qid) {
-            $author=Author::find($request->qid);
+            $author = Author::find($request->qid);
             $imageurl = '';
-            $authordetail=Author::where('author_id',$request->qid)->first();
+            $authordetail = Author::where('author_id', $request->qid)->first();
             //print_r($authordetail->photo);exit;
             if ($request->file('photo')) { // echo 'test';exit;
                 $file = $request->file('photo');
-                //$is_it = '1';
-                //$is_it = is_file($file);
-                //$is_it = '1';
+             
                 $filename = str_random(6) . '_' . $request->file('photo')->getClientOriginalName();
                 $name = $request->name;
-                //var_dump($file);
-                //$l = fopen('/home/sudipta/check.log','a+');
-                //fwrite($l,"File :".$filename." Name: ".$name);
-
-                $destination_path = 'uploads/';
-
-                //$filename = str_random(6).'_'.$request->file('photo')->getClientOriginalName();
-                //$filename = "PHOTO";
-                $file->move($destination_path, $filename);
-                $s3 = AWS::createClient('s3');
+                $destination_path = config('constants.awauthordir');
+                $fileTran->uploadFile($file, $destination_path, $filename);
                 $imageurl = $filename;
-                if(trim($authordetail->photo)){
-                    $result=$s3->deleteObject(array(
-			'Bucket'     => config('constants.awbucket'),
-			'Key'    => config('constants.awauthordir').$authordetail->photo,
-			
-                        ));
+                if (trim($authordetail->photo)) {
+                    $fileTran->deleteFile($destination_path, $authordetail->photo);
                 }
-                $result=$s3->putObject(array(
-                                'ACL'=>'public-read',
-                                'Bucket'     => config('constants.awbucket'),
-                                'Key'    => config('constants.awauthordir').$filename,
-                                'SourceFile'   => $destination_path.$filename,
-                        ));
-                  if($result['@metadata']['statusCode']==200){
-                        unlink($destination_path . $filename);
-                  }
+               
             }
             //echo 'e'; exit;
             $name = $request->name;
@@ -296,33 +276,18 @@ class AuthorsController extends Controller {
             }
             $valid = '1';
 
-            $author->name=$name;
-            $author->author_type_id=$author_type_id;
-            $author->bio=$bio;
-            $author->email=$email;
-            $author->mobile=$mobile;
-            $author->photo=$photo;
-            $author->twitter=$twitter;
-            $author->is_columnist=$is_columnist;
-            $author->column_id=$column_id;
-            $author->valid=$valid;
-//            $postdata = [
-//                'name' => $name,
-//                'author_type_id' => $author_type_id,
-//                'bio' => $bio,
-//                'email' => $email,
-//                'mobile' => $mobile,
-//                'photo' => $photo,
-//                'mobile' => $mobile,
-//                'twitter' => $twitter,
-//                'is_columnist' => $is_columnist,
-//                'column_id' => $column_id,
-//                'valid' => $valid
-//            ];
-//            DB::table('authors')
-//                    ->where('author_id', $request->qid)
-//                    ->update($postdata);
-                    $author->update();
+            $author->name = $name;
+            $author->author_type_id = $author_type_id;
+            $author->bio = $bio;
+            $author->email = $email;
+            $author->mobile = $mobile;
+            $author->photo = $photo;
+            $author->twitter = $twitter;
+            $author->is_columnist = $is_columnist;
+            $author->column_id = $column_id;
+            $author->valid = $valid;
+
+            $author->update();
             if ($request->isertedbybwreportersdata == 'isertedbybwreportersdata') {
                 Session::flash('message', 'Your data has been successfully modify.');
                 return Redirect::to('bwreporters/add-edit-bw-reporters');
@@ -351,27 +316,29 @@ class AuthorsController extends Controller {
                     //$is_it = is_file($file);
                     //$is_it = '1';
                     $filename = str_random(6) . '_' . $request->file('photo')->getClientOriginalName();
-                    $name = $request->name;
-                    //var_dump($file);
-                    //$l = fopen('/home/sudipta/check.log','a+');
-                    //fwrite($l,"File :".$filename." Name: ".$name);
+                    //$name = $request->name;
+                    $destination_path = config('constants.awauthordir');
 
-                    $destination_path = 'uploads/';
-
-                    //$filename = str_random(6).'_'.$request->file('photo')->getClientOriginalName();
-                    //$filename = "PHOTO";
-                    $file->move($destination_path, $filename);
+                    $fileTran->uploadFile($file, $destination_path, $filename);
                     $imageurl = $filename;
-                    $s3 = AWS::createClient('s3');
-                    $result=$s3->putObject(array(
-                                'ACL'=>'public-read',
-                                'Bucket'     => config('constants.awbucket'),
-                                'Key'    => config('constants.awauthordir').$filename,
-                                'SourceFile'   => $destination_path.$filename,
-                        ));
-                    if($result['@metadata']['statusCode']==200){
-                        unlink($destination_path . $filename);
-                    }
+
+                    /*
+                      $destination_path = 'uploads/';
+
+                      //$filename = str_random(6).'_'.$request->file('photo')->getClientOriginalName();
+                      //$filename = "PHOTO";
+                      $file->move($destination_path, $filename);
+                      $imageurl = $filename;
+                      $s3 = AWS::createClient('s3');
+                      $result = $s3->putObject(array(
+                      'ACL' => 'public-read',
+                      'Bucket' => config('constants.awbucket'),
+                      'Key' => config('constants.awauthordir') . $filename,
+                      'SourceFile' => $destination_path . $filename,
+                      ));
+                      if ($result['@metadata']['statusCode'] == 200) {
+                      unlink($destination_path . $filename);
+                      } */
                 }
                 //echo 'e'; exit;
                 $author->name = $request->name;
@@ -503,29 +470,28 @@ class AuthorsController extends Controller {
         }
         return;
     }
-    public function changeStatus(){
-         $rightId=45;
-         if(!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
-            return response()->json(array('status'=>'0','msg'=>'Permission Denied'));
-        $author_id= $_GET['author_id'];
-        $status=($_GET['status']==0)?1:0;
+
+    public function changeStatus() {
+        $rightId = 45;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return response()->json(array('status' => '0', 'msg' => 'Permission Denied'));
+        $author_id = $_GET['author_id'];
+        $status = ($_GET['status'] == 0) ? 1 : 0;
         $updateVar = [
 
-                'author_status' => $status
-            ];
-         if(DB::table('authors')->where('author_id', $author_id)->update($updateVar)){
-         if($status==0){
-             $msg='<a href="javascript:void(0)" onclick="changeStatus(\''.$status.'\',\''.$author_id.'\')">Inactive</a>';
-             return response()->json(array('status'=>'1','msg'=>$msg));
-
-         }else{
-             $msg='<a href="javascript:void(0)" onclick="changeStatus(\''.$status.'\',\''.$author_id.'\')">Active</a>';
-             return response()->json(array('status'=>'1','msg'=>$msg));
-
-         }
-         }else{
-            return response()->json(array('status'=>'0','msg'=>'Can\'t update try again'));
-         }
+            'author_status' => $status
+        ];
+        if (DB::table('authors')->where('author_id', $author_id)->update($updateVar)) {
+            if ($status == 0) {
+                $msg = '<a href="javascript:void(0)" onclick="changeStatus(\'' . $status . '\',\'' . $author_id . '\')">Inactive</a>';
+                return response()->json(array('status' => '1', 'msg' => $msg));
+            } else {
+                $msg = '<a href="javascript:void(0)" onclick="changeStatus(\'' . $status . '\',\'' . $author_id . '\')">Active</a>';
+                return response()->json(array('status' => '1', 'msg' => $msg));
+            }
+        } else {
+            return response()->json(array('status' => '0', 'msg' => 'Can\'t update try again'));
+        }
     }
 
 }
