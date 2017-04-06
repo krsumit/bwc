@@ -17,6 +17,7 @@ use Session;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Classes\FileTransfer;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 
@@ -82,34 +83,10 @@ class EventController extends Controller {
         ]);
         $imageurl = '';
         if ($request->file('photo')) { // echo 'test';exit;
-            $file = $request->file('photo');
-            // echo $file; exit;
-            //$is_it = '1';
-            //$is_it = is_file($file);
-            //$is_it = '1';
             $filename = str_random(6) . '_' . $request->file('photo')->getClientOriginalName();
-            //$name = $request->title;
-            //var_dump($file);
-            //$l = fopen('/home/sudipta/check.log','a+');
-            //fwrite($l,"File :".$filename." Name: ".$name);
-
-            $destination_path = 'uploads/';
-
-            //$filename = str_random(6).'_'.$request->file('photo')->getClientOriginalName();
-            //$filename = "PHOTO";
-            $file->move($destination_path, $filename);
-            $s3 = AWS::createClient('s3');
+            $fileTran = new FileTransfer();
             $imageurl = $filename;
-
-            $result = $s3->putObject(array(
-                'ACL' => 'public-read',
-                'Bucket' => config('constants.awbucket'),
-                'Key' => config('constants.awaevent') . $filename,
-                'SourceFile' => $destination_path . $filename,
-            ));
-            if ($result['@metadata']['statusCode'] == 200) {
-                unlink($destination_path . $filename);
-            }
+            $fileTran->uploadFile($request->file('photo'), config('constants.awaevent'), $filename);
         }
         $channel_id = $request->channel;
         $title = $request->title;
@@ -293,38 +270,13 @@ class EventController extends Controller {
                 ->first();
         if ($request->file('photo')) { // echo 'test';exit;
             $file = $request->file('photo');
-            // echo $file; exit;
-            //$is_it = '1';
-            //$is_it = is_file($file);
-            //$is_it = '1';
             $filename = str_random(6) . '_' . $request->file('photo')->getClientOriginalName();
-            //$name = $request->title;
-            //var_dump($file);
-            //$l = fopen('/home/sudipta/check.log','a+');
-            //fwrite($l,"File :".$filename." Name: ".$name);
-
-
             $destination_path = 'uploads/';
-
-            //$filename = str_random(6).'_'.$request->file('photo')->getClientOriginalName();
-            //$filename = "PHOTO";
-            $file->move($destination_path, $filename);
-            $s3 = AWS::createClient('s3');
+            $fileTran = new FileTransfer();
             $imageurl = $filename;
+            $fileTran->uploadFile($request->file('photo'), config('constants.awaevent'), $filename);
             if (trim($eventdetais->imagepath)) {
-                $result = $s3->deleteObject(array(
-                    'Bucket' => config('constants.awbucket'),
-                    'Key' => config('constants.awaevent') . $eventdetais->imagepath,
-                ));
-            }
-            $result = $s3->putObject(array(
-                'ACL' => 'public-read',
-                'Bucket' => config('constants.awbucket'),
-                'Key' => config('constants.awaevent') . $filename,
-                'SourceFile' => $destination_path . $filename,
-            ));
-            if ($result['@metadata']['statusCode'] == 200) {
-                unlink($destination_path . $filename);
+                $fileTran->deleteFile(config('constants.awaevent'), $eventdetais->imagepath);
             }
         }
         $channel_id = $request->channel;
@@ -401,39 +353,29 @@ class EventController extends Controller {
         $event = Event::find($id);
         $speakers = Speaker::where('event_id', '=', $id)
                 ->orderBy('updated_at', 'desc');
-        
+
         if (isset($_GET['searchin'])) {
             if ($_GET['searchin'] == 'name') {
                 $speakers->where('name', 'like', '%' . $_GET['keyword'] . '%');
             }
             if (@$_GET['searchin'] == 'email') {
-              $speakers->where('email', 'like', '%' . $_GET['keyword'] . '%');
+                $speakers->where('email', 'like', '%' . $_GET['keyword'] . '%');
             }
         }
 
-        $speakers=$speakers->get();
+        $speakers = $speakers->get();
 
         return view('events.event-speaker', compact('event', 'speakers'));
     }
 
     public function storeEventSpeaker(Request $request) {
-
+        $filename = '';
         if ($request->file('speaker_image')) {
             $file = $request->file('speaker_image');
             $filename = str_random(6) . '_' . $request->file('speaker_image')->getClientOriginalName();
             $name = $request->name;
-            $destination_path = 'uploads/';
-            $file->move($destination_path, $filename);
-            $s3 = AWS::createClient('s3');
-            $result = $s3->putObject(array(
-                'ACL' => 'public-read',
-                'Bucket' => config('constants.awbucket'),
-                'Key' => config('constants.awspeakerdir') . $filename,
-                'SourceFile' => $destination_path . $filename,
-            ));
-            if ($result['@metadata']['statusCode'] == 200) {
-                unlink($destination_path . $filename);
-            }
+            $fileTran = new FileTransfer();
+            $fileTran->uploadFile($file, config('constants.awspeakerdir'), $filename);
         }
 
         $speaker = new Speaker();
@@ -470,65 +412,46 @@ class EventController extends Controller {
         $speaker->twitter = $request->speaker_twitter;
         $speaker->description = $request->speaker_desc;
         $speaker->tag = $request->Taglist;
-        
+
         if ($request->file('speaker_image')) {
             $file = $request->file('speaker_image');
             $filename = str_random(6) . '_' . $request->file('speaker_image')->getClientOriginalName();
-            $name = $request->name;
-            $destination_path = 'uploads/';
-            $file->move($destination_path, $filename);
-            $s3 = AWS::createClient('s3');
-            $result = $s3->putObject(array(
-                'ACL' => 'public-read',
-                'Bucket' => config('constants.awbucket'),
-                'Key' => config('constants.awspeakerdir') . $filename,
-                'SourceFile' => $destination_path . $filename,
-            ));
-            if ($result['@metadata']['statusCode'] == 200) {
-                $s3->deleteObjects(array(
-                    'Bucket' => config('constants.awbucket'),
-                    'Delete' => array(
-                        'Objects' => array(
-                            array(
-                                'Key' => config('constants.awspeakerdir') . $speaker->photo
-                            )
-                        )
-                    )
-                ));
-                $speaker->photo = $filename;
-                unlink($destination_path . $filename);
+            $fileTran = new FileTransfer();
+            $fileTran->uploadFile($file, config('constants.awspeakerdir'), $filename);
+            if (trim($speaker->photo)) {
+                $fileTran->deleteFile(config('constants.awspeakerdir'), $speaker->photo);
             }
+            $speaker->photo = $filename;
         }
-
         $speaker->save();
         Session::flash('message', 'Speaker updated successfully');
         return Redirect::to('event/manage-speaker/' . $request->event_id);
     }
 
     public function apiEventSpeaker($id) {
-        $id=  base64_decode($id);
-        $event=Event::leftJoin('country','event.country','=','country.country_id')
-                ->leftJoin('country_states','event.state','=','country_states.state_id')
-                ->where('event.event_id','=',$id)
-                ->select('event_id','title','description','imagepath','start_date','end_date','country.name as country','country_states.name as state')
+        $id = base64_decode($id);
+        $event = Event::leftJoin('country', 'event.country', '=', 'country.country_id')
+                ->leftJoin('country_states', 'event.state', '=', 'country_states.state_id')
+                ->where('event.event_id', '=', $id)
+                ->select('event_id', 'title', 'description', 'imagepath', 'start_date', 'end_date', 'country.name as country', 'country_states.name as state')
                 ->first();
-        $event->imagepath=config('constants.awsbaseurl').config('constants.awaevent').$event->imagepath;
-      
-        $speakers=  Speaker::where('event_id','=',$id)->where('status','=','1')->get();
-        $speakersArray=array();
-        foreach($speakers as $speaker){
-            $tagsId=  explode(',', $speaker->tag);
-            $tags=  SpeakerTag::whereIn('tags_id',$tagsId)->get();
-            $tgs='';
-            foreach($tags as $tag){
-                $tgs=trim($tgs)?','.$tag->tag:$tag->tag;
+        $event->imagepath = config('constants.awsbaseurl') . config('constants.awaevent') . $event->imagepath;
+
+        $speakers = Speaker::where('event_id', '=', $id)->where('status', '=', '1')->get();
+        $speakersArray = array();
+        foreach ($speakers as $speaker) {
+            $tagsId = explode(',', $speaker->tag);
+            $tags = SpeakerTag::whereIn('tags_id', $tagsId)->get();
+            $tgs = '';
+            foreach ($tags as $tag) {
+                $tgs = trim($tgs) ? ',' . $tag->tag : $tag->tag;
             }
-            $speakersArray[]=array('id'=>$speaker->id,'name'=>$speaker->name,'email'=>$speaker->email,'photo'=>config('constants.awsbaseurl').config('constants.awspeakerdir').$speaker->photo,'twitter'=>$speaker->twitter,'description'=>$speaker->description,'tag'=>$tgs);
+            $speakersArray[] = array('id' => $speaker->id, 'name' => $speaker->name, 'email' => $speaker->email, 'photo' => config('constants.awsbaseurl') . config('constants.awspeakerdir') . $speaker->photo, 'twitter' => $speaker->twitter, 'description' => $speaker->description, 'tag' => $tgs);
         }
-        
-        $data['event']=$event;
-        $data['speakers']=$speakersArray;
-       //cho '<pre>';
+
+        $data['event'] = $event;
+        $data['speakers'] = $speakersArray;
+        //cho '<pre>';
         //print_r($data);
         return json_encode($data);
     }

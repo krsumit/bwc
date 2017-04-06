@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use Aws\Laravel\AwsFacade as AWS;
+use App\Classes\FileTransfer;
 use Aws\Laravel\AwsServiceProvider;
 
 class MagazineissueController extends Controller {
@@ -95,34 +96,13 @@ class MagazineissueController extends Controller {
                     'photo' => 'image|mimes:jpeg,png|min:1|max:250'
         ]);
         $imageurl = '';
-
+        $fileTran = new FileTransfer();
+        
         if ($request->file('photo')) { // echo 'test';exit;
             $file = $request->file('photo');
-            //$is_it = '1';
-            //$is_it = is_file($file);
-            //$is_it = '1';
             $filename = str_random(6) . '_' . $request->file('photo')->getClientOriginalName();
-            $name = $request->name;
-            //var_dump($file);
-            //$l = fopen('/home/sudipta/check.log','a+');
-            //fwrite($l,"File :".$filename." Name: ".$name);
-
-            $destination_path = 'uploads/';
-
-            //$filename = str_random(6).'_'.$request->file('photo')->getClientOriginalName();
-            //$filename = "PHOTO";
-            $file->move($destination_path, $filename);
+            $fileTran->uploadFile($file,config('constants.awmagazinedir'), $filename); 
             $imageurl = $filename;
-            $s3 = AWS::createClient('s3');
-            $result = $s3->putObject(array(
-                'ACL' => 'public-read',
-                'Bucket' => config('constants.awbucket'),
-                'Key' => config('constants.awmagazinedir') . $filename,
-                'SourceFile' => $destination_path . $filename,
-            ));
-            if ($result['@metadata']['statusCode'] == 200) {
-                unlink($destination_path . $filename);
-            }
         }
 
         $magazineissue->title = $request->title;
@@ -145,7 +125,7 @@ class MagazineissueController extends Controller {
         $magazineissue->valid = '1';
         $magazineissue->save();
         Session::flash('message', 'Your data has been successfully modify.');
-        return redirect('/magazineissue?channel='.$request->channel);
+        return redirect('/magazineissue?channel=' . $request->channel);
     }
 
     /**
@@ -200,14 +180,14 @@ class MagazineissueController extends Controller {
      * @return Response
      */
     public function update(Request $request) {
-        
+
         /* Right mgmt start */
         $rightId = 77;
         $currentChannelId = $request->channel;
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect()->intended('/dashboard');
         /* Right mgmt end */
-        
+
 
         $validation = Validator::make($request->all(), [
                     //'caption'     => 'required|regex:/^[A-Za-z ]+$/',
@@ -215,33 +195,14 @@ class MagazineissueController extends Controller {
                     'photo' => 'image|mimes:jpeg,png|min:1|max:250'
         ]);
         $imageurl = '';
-
+        $fileTran = new FileTransfer();
         if ($request->file('photo')) { // echo 'test';exit;
             $file = $request->file('photo');
-            //$is_it = '1';
-            //$is_it = is_file($file);
-            //$is_it = '1';
             $filename = str_random(6) . '_' . $request->file('photo')->getClientOriginalName();
-            $name = $request->name;
-            //var_dump($file);
-            //$l = fopen('/home/sudipta/check.log','a+');
-            //fwrite($l,"File :".$filename." Name: ".$name);
-
-            $destination_path = 'uploads/';
-
-            //$filename = str_random(6).'_'.$request->file('photo')->getClientOriginalName();
-            //$filename = "PHOTO";
-            $file->move($destination_path, $filename);
+            $fileTran->uploadFile($file,config('constants.awmagazinedir'), $filename); 
             $imageurl = $filename;
-            $s3 = AWS::createClient('s3');
-            $result = $s3->putObject(array(
-                'ACL' => 'public-read',
-                'Bucket' => config('constants.awbucket'),
-                'Key' => config('constants.awmagazinedir') . $filename,
-                'SourceFile' => $destination_path . $filename,
-            ));
-            if ($result['@metadata']['statusCode'] == 200) {
-                unlink($destination_path . $filename);
+            if(trim($request->photoname)){
+                $fileTran->deleteFile(config('constants.awmagazinedir'),$request->photoname);
             }
         }
         //echo 'e'; exit;
@@ -249,9 +210,9 @@ class MagazineissueController extends Controller {
 
         $channel_id = $request->channel;
         if ($request->photo) {
-            echo $imagepath = $imageurl;
+             $imagepath = $imageurl;
         } else {
-            echo $imagepath = $request->photoname;
+             $imagepath = $request->photoname;
         }
 
         $publish_date_m = date('Y-m-d', strtotime($request->publish_date_m));
@@ -273,7 +234,7 @@ class MagazineissueController extends Controller {
         $postdata = ['title' => $title,
             'channel_id' => $channel_id,
             'imagepath' => $imagepath,
-            'publish_date_m' => $publish_date_m, 'story1_title' => $story1_title, 'story1_url' => $story1_url, 'story2_title' => $story2_title, 'story2_url' => $story2_url, 'story3_title' => $story3_title, 'story3_url' => $story3_url, 'story4_title' => $story4_title, 'story4_url' => $story4_url, 'story5_title' => $story5_title, 'story5_url' => $story5_url,'flipbook_url'=>$flipbook_url,'buy_digital'=>$buy_digital, 'valid' => $valid, 'created_at' => $created_at, 'updated_at' => $updated_at];
+            'publish_date_m' => $publish_date_m, 'story1_title' => $story1_title, 'story1_url' => $story1_url, 'story2_title' => $story2_title, 'story2_url' => $story2_url, 'story3_title' => $story3_title, 'story3_url' => $story3_url, 'story4_title' => $story4_title, 'story4_url' => $story4_url, 'story5_title' => $story5_title, 'story5_url' => $story5_url, 'flipbook_url' => $flipbook_url, 'buy_digital' => $buy_digital, 'valid' => $valid, 'created_at' => $created_at, 'updated_at' => $updated_at];
         DB::table('magazine')
                 ->where('magazine_id', $request->magazine_id)
                 ->update($postdata);
@@ -288,15 +249,15 @@ class MagazineissueController extends Controller {
      * @return None
      */
     public function destroy() {
-        
-         /* Right mgmt start */
+
+        /* Right mgmt start */
         $rightId = 77;
-        $currentChannelId =  $this->rightObj->getCurrnetChannelId($rightId);
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return 'You are not authorized to access.';
         /* Right mgmt end */
-        
-        
+
+
         if (isset($_GET['option'])) {
             $id = $_GET['option'];
         }

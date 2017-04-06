@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use App\Author;
 use App\Tag;
 use Illuminate\Http\Request;
@@ -207,26 +206,15 @@ class DebateController extends Controller {
             }
         }
         
-        $s3 = AWS::createClient('s3');
-        $fileTran = new FileTransfer();
-        //Saving expert view1
-        
+      
+       $fileTran = new FileTransfer();
+     
        $destination_path = 'uploads/';
        $expertfilename1='';
        $expertfilename2='';
        if($request->hasFile('expertimage1')){
            $expertfilename1 = time().str_random(6) . '_' . $request->file('expertimage1')->getClientOriginalName();
-           $request->file('expertimage1')->move($destination_path, $expertfilename1);
-            $result=$s3->putObject(array(
-                                'ACL'=>'public-read',
-                                'Bucket'     => config('constants.awbucket'),
-                                'Key'    => config('constants.debateexpert').$expertfilename1,
-                                'SourceFile'   => $destination_path.$expertfilename1,
-                        ));
-                  if($result['@metadata']['statusCode']==200){
-                        unlink($destination_path . $expertfilename1);
-                }
-           
+           $fileTran->uploadFile($request->file('expertimage1'),config('constants.debateexpert'), $expertfilename1);
        }
        
        if ($request->hasFile('expertimage1') || trim($request->expertname1) || trim($request->expertdesing1) || trim($request->experttwitter1) || trim($request->expertview1)) {
@@ -242,16 +230,9 @@ class DebateController extends Controller {
         // saving experrt view2
        if ($request->hasFile('expertimage2')) {
             $expertfilename2 = time() . str_random(6) . '_' . $request->file('expertimage2')->getClientOriginalName();
-            $request->file('expertimage2')->move($destination_path, $expertfilename2);
-            $result = $s3->putObject(array(
-                'ACL' => 'public-read',
-                'Bucket' => config('constants.awbucket'),
-                'Key' => config('constants.debateexpert') . $expertfilename2,
-                'SourceFile' => $destination_path . $expertfilename2,
-            ));
-            if ($result['@metadata']['statusCode'] == 200) {
-                unlink($destination_path . $expertfilename2);
-            }
+            $fileTran->uploadFile($request->file('expertimage2'),config('constants.debateexpert'), $expertfilename2);
+            
+           
         }
         
         if($request->hasFile('expertimage2') || trim($request->expertname2) || trim($request->expertdesing2) || trim($request->experttwitter2) || trim($request->expertview2)){
@@ -285,16 +266,7 @@ class DebateController extends Controller {
         // Uploading and saving debate featured image
         if ($request->hasFile('debateimage')) {
             $debatefilename = time() . str_random(6) . '_' . $request->file('debateimage')->getClientOriginalName();
-            $request->file('debateimage')->move($destination_path, $debatefilename);
-            $result = $s3->putObject(array(
-                'ACL' => 'public-read',
-                'Bucket' => config('constants.awbucket'),
-                'Key' => config('constants.debatefeatured') . $debatefilename,
-                'SourceFile' => $destination_path . $debatefilename,
-            ));
-            if ($result['@metadata']['statusCode'] == 200) {
-                unlink($destination_path . $debatefilename);
-            }
+            $fileTran->uploadFile($request->file('debateimage'),config('constants.debatefeatured'), $debatefilename);
             $photo = new Photo();
             $photo->channel_id = $request->channel;
             $photo->owned_by = 'debate';
@@ -319,7 +291,6 @@ class DebateController extends Controller {
         $uid = Session::get('users')->id;
         
         $debateDetail=  Debate::find($id);
-        
         
          /* Right mgmt start */
         $rightId=81;
@@ -469,9 +440,7 @@ class DebateController extends Controller {
             }
         }
         
-        $s3 = AWS::createClient('s3');
-        
-        //Saving expert view1
+       $fileTran = new FileTransfer();
         
        // Deleting old view of expert 
         DB::table('debate_expert_view')->where('debate_id','=',$id)->delete();
@@ -480,18 +449,14 @@ class DebateController extends Controller {
        $expertfilename1='';
        $expertfilename2='';
        if($request->hasFile('expertimage1')){
-           $expertfilename1 = time().str_random(6) . '_' . $request->file('expertimage1')->getClientOriginalName();
-           $request->file('expertimage1')->move($destination_path, $expertfilename1);
-            $result=$s3->putObject(array(
-                                'ACL'=>'public-read',
-                                'Bucket'     => config('constants.awbucket'),
-                                'Key'    => config('constants.debateexpert').$expertfilename1,
-                                'SourceFile'   => $destination_path.$expertfilename1,
-                        ));
-                  if($result['@metadata']['statusCode']==200){
-                        unlink($destination_path . $expertfilename1);
-                }
            
+           if(trim($request->expert_old_image1))
+                $fileTran->deleteFile(config('constants.debateexpert'), $request->expert_old_image1);
+           
+           $expertfilename1 = time().str_random(6) . '_' . $request->file('expertimage1')->getClientOriginalName();
+           
+           $fileTran->uploadFile($request->file('expertimage1'),config('constants.debateexpert'), $expertfilename1);
+      
        }else{
            $expertfilename1=$request->expert_old_image1;
        }
@@ -510,17 +475,10 @@ class DebateController extends Controller {
         
         // saving expert view2
        if ($request->hasFile('expertimage2')) {
+            if(trim($request->expert_old_image2))
+                $fileTran->deleteFile(config('constants.debateexpert'), $request->expert_old_image2);
             $expertfilename2 = time() . str_random(6) . '_' . $request->file('expertimage2')->getClientOriginalName();
-            $request->file('expertimage2')->move($destination_path, $expertfilename2);
-            $result = $s3->putObject(array(
-                'ACL' => 'public-read',
-                'Bucket' => config('constants.awbucket'),
-                'Key' => config('constants.debateexpert') . $expertfilename2,
-                'SourceFile' => $destination_path . $expertfilename2,
-            ));
-            if ($result['@metadata']['statusCode'] == 200) {
-                unlink($destination_path . $expertfilename2);
-            }
+            $fileTran->uploadFile($request->file('expertimage2'),config('constants.debateexpert'), $expertfilename2);
         }else{
            $expertfilename2=$request->expert_old_image2;
        }
@@ -557,18 +515,16 @@ class DebateController extends Controller {
         // Uploading and saving debate featured image
         if ($request->hasFile('debateimage')) {
             // Deleting old image if exist
-            DB::table('photos')->where('owner_id','=',$id)->where('owned_by','=','debate')->delete();
-            $debatefilename = time() . str_random(6) . '_' . $request->file('debateimage')->getClientOriginalName();
-            $request->file('debateimage')->move($destination_path, $debatefilename);
-            $result = $s3->putObject(array(
-                'ACL' => 'public-read',
-                'Bucket' => config('constants.awbucket'),
-                'Key' => config('constants.debatefeatured') . $debatefilename,
-                'SourceFile' => $destination_path . $debatefilename,
-            ));
-            if ($result['@metadata']['statusCode'] == 200) {
-                unlink($destination_path . $debatefilename);
+            
+            $photo=DB::table('photos')->where('owner_id','=',$id)->where('owned_by','=','debate')->first();
+            if($photo){
+                $fileTran->deleteFile(config('constants.debatefeatured'),$photo->photopath);
             }
+            DB::table('photos')->where('owner_id','=',$id)->where('owned_by','=','debate')->delete();
+            
+            $debatefilename = time() . str_random(6) . '_' . $request->file('debateimage')->getClientOriginalName();
+            $fileTran->uploadFile($request->file('debateimage'),config('constants.debatefeatured'), $debatefilename);
+          
             $photo = new Photo();
             $photo->channel_id = $request->channel;
             $photo->owned_by = 'debate';

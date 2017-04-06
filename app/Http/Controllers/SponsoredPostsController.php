@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Right;
 use Illuminate\Http\Request;
 use DB;
@@ -12,14 +13,17 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Classes\UploadHandler;
 use App\Classes\Zebra_Image;
+use App\Classes\FileTransfer;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
+
 class SponsoredPostsController extends Controller {
-     private $rightObj;
+
+    private $rightObj;
+
     public function __construct() {
-        $this->middleware('auth');    
-        $this->rightObj= new Right();
-    
+        $this->middleware('auth');
+        $this->rightObj = new Right();
     }
 
     /**
@@ -37,29 +41,28 @@ class SponsoredPostsController extends Controller {
         switch ($option) {
             case "published":
                 $valid = '1';
-                $rightId=28;
+                $rightId = 28;
                 break;
             case "deleted":
                 $valid = '0';
-                $rightId=29;
+                $rightId = 29;
                 break;
         }
-        
-        
-         /* Right mgmt start */
-        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
-        $channels=$this->rightObj->getAllowedChannels($rightId);
-        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+
+
+        /* Right mgmt start */
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
-        
-        
+
+
         //Get QB Array
         //$qbytes = QuickByte::where('status',$status);
-        $sposts = SponsoredPost::where('valid',$valid)->where('channel_id',$currentChannelId)->paginate(config('constants.recordperpage'));
-        
-        return view('sposts.' . $option, compact('sposts','channels','currentChannelId'));
-           
+        $sposts = SponsoredPost::where('valid', $valid)->where('channel_id', $currentChannelId)->paginate(config('constants.recordperpage'));
+
+        return view('sposts.' . $option, compact('sposts', 'channels', 'currentChannelId'));
     }
 
     public function getRights($uid, $parentId = 0) {
@@ -79,36 +82,35 @@ class SponsoredPostsController extends Controller {
      *
      * @return Response
      */
-    
     function imageUpload() {
         //  echo 'test';exit;
         $arg['script_url'] = url('sposts/image/upload');
         $upload_handler = new UploadHandler($arg);
     }
-    
-    public function create() { 
+
+    public function create() {
         //Authenticate User
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
-       
+
         $uid = Session::get('users')->id;
         /* Right mgmt start */
-        $rightId=27;
-        $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
-        $channels=$this->rightObj->getAllowedChannels($rightId);
-        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+        $rightId = 27;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
-        
-        /* Right mgmt end */    
-        
+
+        /* Right mgmt end */
+
         //$channel_arr = SponsoredPostsController::getUserChannels($uid);
-        $category = DB::table('category')->where('valid', '1')->where('channel_id',$currentChannelId)->get();
-        $event = DB::table('event')->where('valid', '1')->where('channel_id',$currentChannelId)->get();
+        $category = DB::table('category')->where('valid', '1')->where('channel_id', $currentChannelId)->get();
+        $event = DB::table('event')->where('valid', '1')->where('channel_id', $currentChannelId)->get();
         $photos = DB::table('photos')->where('valid', '1')->get();
         //videos in Edit mode
 
-        return view('sposts.create', compact('uid', 'channels', 'category', 'event', 'photos','currentChannelId'));
+        return view('sposts.create', compact('uid', 'channels', 'category', 'event', 'photos', 'currentChannelId'));
     }
 
     /**
@@ -139,14 +141,14 @@ class SponsoredPostsController extends Controller {
     public function store(Request $request) {
 //       echo '<pre>';
 //       print_r($request->all());
-        
+
         /* Right mgmt start */
-        $rightId=27;
-        $currentChannelId=$request->channel_sel;
-        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+        $rightId = 27;
+        $currentChannelId = $request->channel_sel;
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
-         /* Right mgmt start */
-        
+        /* Right mgmt start */
+
         $uid = $request->user()->id;
         $spost = new SponsoredPost();
         $spost->channel_id = $request->channel_sel;
@@ -167,7 +169,7 @@ class SponsoredPostsController extends Controller {
         }
         $spost->add_date = date('Y-m-d H:i:s');
         $spost->save();
-        $id=$spost->id;
+        $id = $spost->id;
         if (trim($request->videoTitle) || trim($request->videoCode) || trim($request->videoSource) || trim($request->videoURL)) {
             $objVideo = new Video();
             $objVideo->title = $request->videoTitle;
@@ -181,53 +183,24 @@ class SponsoredPostsController extends Controller {
             $objVideo->added_on = date('Y-m-d');
             $objVideo->save();
         }
-        if(trim($request->uploadedImages)){
-        $images = explode(',', $request->uploadedImages);
-        //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
-        $s3 = AWS::createClient('s3');
-        foreach ($images as $image) { //echo 'foreach--';
-            $source = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $image;
-            $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
-            $dest = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.sponsored_image_dir') . $image;
-            //echo $source; echo '<br>'; echo $dest;
-            
-            if (@copy($source, $dest)) { //echo 'copied--';
+        if (trim($request->uploadedImages)) {
+            $images = explode(',', $request->uploadedImages);
+            //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
+            $fileTran = new FileTransfer();
+            foreach ($images as $image) { //echo 'foreach--';
+                $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
+                $source = '';
+                $dest = config('constants.aw_sponsored_image_dir');
+                $fileTran->tranferFile($image, $source, $dest, false);
+                $destination = config('constants.aw_sponsored_image_thumb_dir');
+                $fileTran->resizeAndTransferFile($image, '160X90', $source, $destination);
+                $destination = config('constants.aw_sponsored_image_extralarge_dir');
+                $fileTran->resizeAndTransferFile($image, '680X450', $source, $destination);
 
-                $imaged = new Zebra_Image();
-
-                // indicate a source image
-                $imaged->source_path = $dest;
-                
-                //$imaged->source_path = $dest;
-                $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.sponsored_image_thumb_dir') . $image;
-                if ($imaged->resize(160, 90, ZEBRA_IMAGE_BOXED, -1)) {
-                    $result = $s3->putObject(array(
-                        'ACL'=>'public-read',
-                        'Bucket' => config('constants.awbucket'),
-                        'Key' => config('constants.aw_sponsored_image_thumb_dir') . $image,
-                        'SourceFile' => $imaged->target_path,
-                    ));
-                    if ($result['@metadata']['statusCode'] == 200) {
-                        unlink($imaged->target_path);
-                    }
-                }
-               
-                $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.sponsored_image_extralarge_dir') . $image;
-                if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)) {
-                    $result = $s3->putObject(array(
-                        'ACL'=>'public-read',
-                        'Bucket' => config('constants.awbucket'),
-                        'Key' => config('constants.aw_sponsored_image_extralarge_dir') . $image,
-                        'SourceFile' => $imaged->target_path,
-                    ));
-                    if ($result['@metadata']['statusCode'] == 200) {
-                        unlink($imaged->target_path);
-                    }
-                }
-                // echo 'before unlink'; exit;
-                unlink($source);
-                unlink($source_thumb);
-                unlink($dest);
+                if (is_file($_SERVER['DOCUMENT_ROOT'] . '/files/' . $image))
+                    unlink($_SERVER['DOCUMENT_ROOT'] . '/files/' . $image);
+                if (is_file($source_thumb))
+                    unlink($source_thumb);
                 $articleImage = new Photo();
                 $articleImage->photopath = $image;
                 $articleImage->imagefullPath = '';
@@ -239,10 +212,8 @@ class SponsoredPostsController extends Controller {
                 $articleImage->updated_at = date('Y-m-d H:i:s');
                 $articleImage->save();
             }
-
         }
-        }
-               //If has been Published/Deleted by Editor
+        //If has been Published/Deleted by Editor
         if ($request->status == 'P') {
             Session::flash('message', 'Your Sponsored Post has been Published successfully. It will appear on website shortly.');
             $page = 'published';
@@ -253,7 +224,7 @@ class SponsoredPostsController extends Controller {
             $page = 'deleted';
         }
         //fclose($asd);
-        return redirect('/sposts/list/' . $page.'?channel='.$currentChannelId);
+        return redirect('/sposts/list/' . $page . '?channel=' . $currentChannelId);
     }
 
     /**
@@ -263,36 +234,35 @@ class SponsoredPostsController extends Controller {
      * @return Response
      */
     public function show($id) {
-     
+
         $uid = Session::get('users')->id;
         if (!($uid)) {
             return redirect('/auth/login');
         }
         $spost = SponsoredPost::find($id);
-        
-         /* Right mgmt start */
-        $rightId=27;
-        $currentChannelId=$spost->channel_id;
-        $channels=$this->rightObj->getAllowedChannels($rightId);
-        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+
+        /* Right mgmt start */
+        $rightId = 27;
+        $currentChannelId = $spost->channel_id;
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
-         /* Right mgmt start */
-       // echo '<pre>';
-       //  print_r($spost); exit;
-        
+        /* Right mgmt start */
+        // echo '<pre>';
+        //  print_r($spost); exit;
         //fwrite($asd, "EDIT ARTICLE ID::".$article->article_id." \n");                
 
         $event = DB::table('event')->where('valid', '1')->get();
         //$channels = SponsoredPostsController::getUserChannels($uid);
-        $category = DB::table('category')->where('channel_id','=',$currentChannelId)->where('valid', '1')->get();
-        
-       // print_r($category);exit;
-        
+        $category = DB::table('category')->where('channel_id', '=', $currentChannelId)->where('valid', '1')->get();
+
+        // print_r($category);exit;
+
         $category2 = DB::table('category_two')->where('category_id', $spost->category1)->where('valid', '1')->get();
         $category3 = DB::table('category_three')->where('category_two_id', $spost->category2)->where('valid', '1')->get();
         $category4 = DB::table('category_four')->where('category_three_id', $spost->category4)->where('valid', '1')->get();
-        
-        $event = DB::table('event')->where('channel_id','=',$currentChannelId)->where('valid', '1')->get();
+
+        $event = DB::table('event')->where('channel_id', '=', $currentChannelId)->where('valid', '1')->get();
         $photos = DB::table('photos')->where('valid', '1')
                 ->where('owned_by', 'sponsoredpost')
                 ->where('owner_id', $id)
@@ -302,7 +272,7 @@ class SponsoredPostsController extends Controller {
 
         //fclose($asd);
 
-        return view('sposts.edit', compact('uid', 'spost', 'channels','currentChannelId','category', 'category2', 'category3', 'category4', 'event', 'photos', 'arrVideo'));
+        return view('sposts.edit', compact('uid', 'spost', 'channels', 'currentChannelId', 'category', 'category2', 'category3', 'category4', 'event', 'photos', 'arrVideo'));
 
         //return view('sposts.edit', compact('article','rights','channels','p1','postAs','country','states','newstype','category','magazine','event','campaign','columns','tags','photos','acateg','arrAuth','arrTags','arrVideo','userTup','arrTopics'));
     }
@@ -341,15 +311,15 @@ class SponsoredPostsController extends Controller {
      * @return Response
      */
     public function update(Request $request) {
-        
+
         /* Right mgmt start */
-        $rightId=27;
-        $currentChannelId=$request->channel_sel;
-        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
+        $rightId = 27;
+        $currentChannelId = $request->channel_sel;
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
-         /* Right mgmt start */
-        
-        
+        /* Right mgmt start */
+
+
         $uid = $request->user()->id;
 
 //        fwrite($asd, "Step 3.2 In Article POST Function ".$uid." \n");
@@ -373,7 +343,7 @@ class SponsoredPostsController extends Controller {
         $spost->feature_this = $request->feature ? 1 : 0;
         //echo 'test';exit;
         $spost->save();
-        
+
         $objVideo = Video::where('owner_id', $id)->where('owned_by', 'sponsoredpost')->first();
         if ($objVideo) {
             if (trim($request->videoTitle) || trim($request->videoCode) || trim($request->videoSource) || trim($request->videoURL)) {
@@ -401,55 +371,27 @@ class SponsoredPostsController extends Controller {
                 $objVideo->save();
             }
         }
-        
-        
-        if(trim($request->uploadedImages)){
-        $images = explode(',', $request->uploadedImages);
-        //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
-        $s3 = AWS::createClient('s3');
-        foreach ($images as $image) { //echo 'foreach--';
-            $source = $_SERVER['DOCUMENT_ROOT'] . '/files/' . $image;
-            $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
-            $dest = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.sponsored_image_dir') . $image;
-            //echo $source; echo '<br>'; echo $dest;
-            
-            if (@copy($source, $dest)) { //echo 'copied--';
 
-                $imaged = new Zebra_Image();
 
-                // indicate a source image
-                $imaged->source_path = $dest;
-                
-                //$imaged->source_path = $dest;
-                $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.sponsored_image_thumb_dir') . $image;
-                if ($imaged->resize(160, 90, ZEBRA_IMAGE_BOXED, -1)) {
-                    $result = $s3->putObject(array(
-                        'ACL'=>'public-read',
-                        'Bucket' => config('constants.awbucket'),
-                        'Key' => config('constants.aw_sponsored_image_thumb_dir') . $image,
-                        'SourceFile' => $imaged->target_path,
-                    ));
-                    if ($result['@metadata']['statusCode'] == 200) {
-                        unlink($imaged->target_path);
-                    }
-                }
-               
-                $imaged->target_path = $_SERVER['DOCUMENT_ROOT'] . '/' . config('constants.sponsored_image_extralarge_dir') . $image;
-                if ($imaged->resize(680, 450, ZEBRA_IMAGE_BOXED, -1)) {
-                    $result = $s3->putObject(array(
-                        'ACL'=>'public-read',
-                        'Bucket' => config('constants.awbucket'),
-                        'Key' => config('constants.aw_sponsored_image_extralarge_dir') . $image,
-                        'SourceFile' => $imaged->target_path,
-                    ));
-                    if ($result['@metadata']['statusCode'] == 200) {
-                        unlink($imaged->target_path);
-                    }
-                }
-                // echo 'before unlink'; exit;
-                unlink($source);
-                unlink($source_thumb);
-                unlink($dest);
+        if (trim($request->uploadedImages)) {
+            $images = explode(',', $request->uploadedImages);
+            //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
+            $fileTran = new FileTransfer();
+            foreach ($images as $image) { //echo 'foreach--';
+                $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
+                $source = '';
+                $dest = config('constants.aw_sponsored_image_dir');
+                $fileTran->tranferFile($image, $source, $dest, false);
+                $destination = config('constants.aw_sponsored_image_thumb_dir');
+                $fileTran->resizeAndTransferFile($image, '160X90', $source, $destination);
+                $destination = config('constants.aw_sponsored_image_extralarge_dir');
+                $fileTran->resizeAndTransferFile($image, '680X450', $source, $destination);
+
+                if (is_file($_SERVER['DOCUMENT_ROOT'] . '/files/' . $image))
+                    unlink($_SERVER['DOCUMENT_ROOT'] . '/files/' . $image);
+                if (is_file($source_thumb))
+                    unlink($source_thumb);
+
                 $articleImage = new Photo();
                 $articleImage->photopath = $image;
                 $articleImage->imagefullPath = '';
@@ -461,10 +403,8 @@ class SponsoredPostsController extends Controller {
                 $articleImage->updated_at = date('Y-m-d H:i:s');
                 $articleImage->save();
             }
+        }
 
-        }
-        }
-        
         $page = '';
         //If has been Published/Deleted by Editor
         if ($request->status == 'P') {
@@ -478,7 +418,7 @@ class SponsoredPostsController extends Controller {
         }
         //fclose($asd);
 
-        return redirect('/sposts/list/' . $page.'?channel='.$currentChannelId);
+        return redirect('/sposts/list/' . $page . '?channel=' . $currentChannelId);
     }
 
     /**
@@ -505,8 +445,8 @@ class SponsoredPostsController extends Controller {
         }
         return;
     }
-    
-     public function publishBulk() {
+
+    public function publishBulk() {
         if (isset($_GET['option'])) {
             $id = $_GET['option'];
         }
@@ -517,8 +457,8 @@ class SponsoredPostsController extends Controller {
             //fwrite($asd, " Delete Id : ".$d." \n\n");
             $deleteS = SponsoredPost::find($d);
             $deleteS->status = 'P';
-            $deleteS->valid='1';
-            $deleteS->published_by=$uid;
+            $deleteS->valid = '1';
+            $deleteS->published_by = $uid;
             $deleteS->publish_date = date('Y-m-d');
             $deleteS->publish_time = date('H:i:s');
             $deleteS->save();

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers; 
+namespace App\Http\Controllers;
 
 use App\FeatureBox;
 use Illuminate\Http\Request;
@@ -15,6 +15,7 @@ use App\Right;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use App\Classes\FileTransfer;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 
@@ -113,25 +114,25 @@ class FeatureBoxController extends Controller {
         $uid = $request->user()->id;
 
         $featureB = "";
-        
-        
+
+
         /* Right mgmt start */
         $rightId = 19;
         $currentChannelId = $request->channel_id;
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
+        $fileTran = new FileTransfer();
 
-        
-        
-        if($request->faid){
+
+        if ($request->faid) {
             $featureB = FeatureBox::find($request->faid);
-        //    fwrite($asd, " Is for Edit ::" .$request->faid  . "\n\n");
+            //    fwrite($asd, " Is for Edit ::" .$request->faid  . "\n\n");
         }//New Featured Article is being Added -
         else {
             //Unset existing Featured Article for Channel
             $current = FeatureBox::where('channel_id', '=', $request->channel_id)
-                ->where('featured', '=', '1')->where('valid', '=', '1')->first();
+                            ->where('featured', '=', '1')->where('valid', '=', '1')->first();
             //Unset Existing ACtive FA
             if ($current) {
                 $current->featured = '0';
@@ -139,73 +140,33 @@ class FeatureBoxController extends Controller {
             }
             $featureB = new FeatureBox();
             $featureB->featured_on = date('Y-m-d H:i:s');
-
         }
-        if($request ->position2_photo !=''){
-            $destination_path = 'uploads/';
+        if ($request->position2_photo != '') {
             $file = $request->file('position2_photo');
-          //  fwrite($asd, " File name:".$file."  \n");
             $filename = str_random(6) . '_' . $request->file('position2_photo')->getClientOriginalName();
-            //$file->move($destination_path, $filename);
-            $request->file('position2_photo')->move($destination_path, $filename);
+            $fileTran->uploadFile($file,config('constants.awfeaturebox2'), $filename); 
             $featureB->position2_photo = $filename;
-            
-            
-            $s3 = AWS::createClient('s3');
-            $oldPhotos=FeatureBox::where('id',$request->faid)->get();
-            foreach($oldPhotos as $ph){
-                $s3->deleteObject(array(
-			'Bucket'     => config('constants.awbucket'),
-			'Key'    => config('constants.awfeaturebox2').$ph->position2_photo
-                        ));
+            if (trim($request->position2val_photo)) {
+                $fileTran->deleteFile(config('constants.awfeaturebox2'),$request->position2val_photo);
             }
             
-            $result=$s3->putObject(array(
-                                'ACL'=>'public-read',
-                                'Bucket'     => config('constants.awbucket'),
-                                'Key'    => config('constants.awfeaturebox2').$filename,
-                                'SourceFile'   => $destination_path.$filename,
-                        ));
-                  if($result['@metadata']['statusCode']==200){
-                        unlink($destination_path . $filename);
-                }
-        } else{
-        if($request ->position2val_photo!=''){
-             $featureB->position2_photo = $request ->position2val_photo;
-             }
+        } else {
+            if ($request->position2val_photo != '') {
+                $featureB->position2_photo = $request->position2val_photo;
+            }
         }
-        if($request ->position3_photo !=''){
-            $destination_path = 'uploads/';
+        if ($request->position3_photo != '') {
             $file = $request->file('position3_photo');
-          //  fwrite($asd, " File name:".$file."  \n");
             $filename = str_random(6) . '_' . $request->file('position3_photo')->getClientOriginalName();
-            //$file->move($destination_path, $filename);
-            $request->file('position3_photo')->move($destination_path, $filename);
             $featureB->position3_photo = $filename;
-           
-            
-            $s3 = AWS::createClient('s3');
-            $oldPhotos=FeatureBox::where('id',$request->faid)->get();
-            foreach($oldPhotos as $ph){
-                $s3->deleteObject(array(
-			'Bucket'     => config('constants.awbucket'),
-			'Key'    => config('constants.awfeaturebox3').$ph->position3_photo
-                        ));
+            $fileTran->uploadFile($file,config('constants.awfeaturebox3'), $filename); 
+            if (trim($request->position3val_photo)) {
+               $fileTran->deleteFile(config('constants.awfeaturebox3'),$request->position3val_photo);
             }
-            
-            $result=$s3->putObject(array(
-                                'ACL'=>'public-read',
-                                'Bucket'     => config('constants.awbucket'),
-                                'Key'    => config('constants.awfeaturebox3').$filename,
-                                'SourceFile'   => $destination_path.$filename,
-                        ));
-                  if($result['@metadata']['statusCode']==200){
-                        unlink($destination_path . $filename);
-                }
-        }else{
-            
-              if($request ->position3val_photo!=''){
-            $featureB->position3_photo = $request ->position3val_photo;
+        } else {
+
+            if ($request->position3val_photo != '') {
+                $featureB->position3_photo = $request->position3val_photo;
             }
         }
         $featureB->title = $request->title;
@@ -213,15 +174,15 @@ class FeatureBoxController extends Controller {
         $featureB->url = $request->url;
         $featureB->channel_id = $request->channel_id;
         $featureB->editor_id = $uid;
-       
-       
-        
-        $featureB->position2_title = $request ->position2_title;
-        $featureB->position2_url = $request ->position2_url;
-        $featureB->position2_type = $request ->position2_type;
-        $featureB->position3_title = $request ->position3_title;
-        $featureB->position3_url = $request ->position3_url;
-        $featureB->position3_type = $request ->position3_type;
+
+
+
+        $featureB->position2_title = $request->position2_title;
+        $featureB->position2_url = $request->position2_url;
+        $featureB->position2_type = $request->position2_type;
+        $featureB->position3_title = $request->position3_title;
+        $featureB->position3_url = $request->position3_url;
+        $featureB->position3_type = $request->position3_type;
         $featureB->featured = '1';
         $featureB->valid = '1';
         $featureB->save();
@@ -229,43 +190,22 @@ class FeatureBoxController extends Controller {
         //Retrieve Generated ID
         $fid = $featureB->id;
 
-       // echo $request->mediaSel;
-//die;
+        // echo $request->mediaSel;
+        //die;
         //For Image or Video Added:
-        if($request->mediaSel == 'photo' ){
+        if ($request->mediaSel == 'photo') {
             //echo 'sumit';
-            
-            $photo = new Photo();
-            if($request->photo !=''){
-            $destination_path = 'uploads/';
-            $file = $request->file('photo');
-          //  fwrite($asd, " File name:".$file."  \n");
-            $filename = str_random(6) . '_' . $request->file('photo')->getClientOriginalName();
-            //$file->move($destination_path, $filename);
-            $request->file('photo')->move($destination_path, $filename);
 
-            $photo->photopath = $filename;
-            
-            $s3 = AWS::createClient('s3');
-            $oldPhotos=Photo::where('owned_by','featurebox')->where('owner_id',$fid)->get();
-            foreach($oldPhotos as $ph){
-                $s3->deleteObject(array(
-			'Bucket'     => config('constants.awbucket'),
-			'Key'    => config('constants.awfeaturebox').$ph->photopath
-                        ));
-            }
-            Photo::where('owned_by','featurebox')->where('owner_id',$fid)->delete();
-            $result=$s3->putObject(array(
-                                'ACL'=>'public-read',
-                                'Bucket'     => config('constants.awbucket'),
-                                'Key'    => config('constants.awfeaturebox').$filename,
-                                'SourceFile'   => $destination_path.$filename,
-                        ));
-                  if($result['@metadata']['statusCode']==200){
-                        unlink($destination_path . $filename);
-                }
-            
-            }else{
+            $photo = new Photo();
+            if ($request->photo != '') {
+                $file = $request->file('photo');
+                $filename = str_random(6) . '_' . $request->file('photo')->getClientOriginalName();
+                $photo->photopath = $filename;
+                $fileTran->uploadFile($file,config('constants.awfeaturebox'), $filename);
+                if (trim($request->photo_photo)) {
+                  $fileTran->deleteFile(config('constants.awfeaturebox'),$request->photo_photo);
+                } 
+            } else {
                 $photo->photopath = $request->photo_photo;
             }
             $photo->channel_id = $request->channel_id;
@@ -273,16 +213,16 @@ class FeatureBoxController extends Controller {
             $photo->owner_id = $fid;
             $photo->valid = '1';
             $photo->save();
-          echo  $pid = $photo->photo_id; 
-         //echo  $fid;
-          //die;
+            echo $pid = $photo->photo_id;
+            //echo  $fid;
+            //die;
             //Updating Feature Article
             $fBEdit = FeatureBox::find($fid);
             $fBEdit->photo_id = $pid;
             $fBEdit->update();
 
             //$pid = PhotosController::store($request);
-        }elseif($request->mediaSel == 'video' && $request->code!=''){
+        } elseif ($request->mediaSel == 'video' && $request->code != '') {
             $video = new Video();
             $video->code = $request->code;
             $video->channel_id = $request->channel_id;
@@ -298,7 +238,7 @@ class FeatureBoxController extends Controller {
         }
         /// fclose($asd);
         Session::flash('message', 'Your FeatureBox has been Published successfully.');
-        return redirect('/featurebox?channel='.$request->channel_id);
+        return redirect('/featurebox?channel=' . $request->channel_id);
     }
 
     /**

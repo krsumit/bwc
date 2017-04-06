@@ -1154,8 +1154,9 @@ class ArticlesController extends Controller {
             $fileTran->resizeAndTransferFile($image,'159X106',$source,$destination);
             $destination =config('constants.awarticleimagelargedir');
             $fileTran->resizeAndTransferFile($image,'367X232',$source,$destination);
-           
-                unlink($_SERVER['DOCUMENT_ROOT'] . '/files/'.$image);
+            
+                if(is_file($_SERVER['DOCUMENT_ROOT'] . '/files/'.$image))
+                    unlink($_SERVER['DOCUMENT_ROOT'] . '/files/'.$image);
                 if (is_file($source_thumb))
                     unlink($source_thumb);
                 $articleImage = new Photo();

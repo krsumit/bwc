@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth;
 use App\Http\Controllers\AuthorsController;
 use App\Http\Controllers\Controller;
 use App\Photo;
+use App\Classes\FileTransfer;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 
@@ -171,68 +172,29 @@ class VideoController extends Controller
         $rightId=65;
       //  print_r($_POST);
       //  print_r($_FILES);
-      //  print_r($request->all()); 
+      
         $currentChannelId=$request->channel;
         if(!$this->rightObj->checkRights($currentChannelId,$rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
         
+         // print_r($request->all()); 
+         // exit;
         //echo 'test'; exit;
         $uid = $request->user()->id;
+        $fileTran = new FileTransfer();
         $video = new MasterVideo();
        if($request ->video_name !=''){
-            $destination_path = 'uploads/';
             $file = $request->file('video_name');
-          //  fwrite($asd, " File name:".$file."  \n");
             $filename = str_random(6) . '_' . $request->file('video_name')->getClientOriginalName();
-            //$file->move($destination_path, $filename);
-            $request->file('video_name')->move($destination_path, $filename);
+            $fileTran->uploadFile($file, config('constants.awvideo'), $filename); 
             $video->video_name = $filename;
-            
-            
-           $s3 = AWS::createClient('s3');
-            
-            
-            $result=$s3->putObject(array(
-                                'ACL'=>'public-read',
-                                'Bucket'     => config('constants.awbucket'),
-                                'Key'    => config('constants.awvideo').$filename,
-                                'SourceFile'   => $destination_path.$filename,
-                        ));
-            
-            
-            unlink($destination_path.$filename);  
-                  
         }
-
         if($request ->video_thumb_name !=''){
-            $destination_path = 'uploads/';
             $file = $request->file('video_thumb_name');
-          //  fwrite($asd, " File name:".$file."  \n");
             $filename = str_random(6) . '_' . $request->file('video_thumb_name')->getClientOriginalName();
-            //$file->move($destination_path, $filename);
-            $request->file('video_thumb_name')->move($destination_path, $filename);
+            $fileTran->uploadFile($file, config('constants.awvideothumb'), $filename); 
             $video->video_thumb_name = $filename;
-            
-            
-            $s3 = AWS::createClient('s3');
-            $oldPhotos=MasterVideo::where('id',$request->faid)->get();
-            foreach($oldPhotos as $ph){
-                $s3->deleteObject(array(
-			'Bucket'     => config('constants.awbucket'),
-			'Key'    => config('constants.awvideothumb').$ph->video_thumb_name
-                        ));
-            }
-            
-            $result=$s3->putObject(array(
-                                'ACL'=>'public-read',
-                                'Bucket'     => config('constants.awbucket'),
-                                'Key'    => config('constants.awvideothumb').$filename,
-                                'SourceFile'   => $destination_path.$filename,
-                        ));
-                  if($result['@metadata']['statusCode']==200){
-                        unlink($destination_path . $filename);
-                }
         }
 
         // Add Arr Data to Album Table //
@@ -393,62 +355,31 @@ class VideoController extends Controller
         
         
         $video = MasterVideo::find($request->id);
-       
+        $fileTran = new FileTransfer();
        if($request ->video_name !=''){
-            $destination_path = 'uploads/';
+           
             $file = $request->file('video_name');
-          //  fwrite($asd, " File name:".$file."  \n");
             $filename = str_random(6) . '_' . $request->file('video_name')->getClientOriginalName();
-            //$file->move($destination_path, $filename);
-            $request->file('video_name')->move($destination_path, $filename);
+            $fileTran->uploadFile($file, config('constants.awvideo'), $filename); 
             $video->video_name = $filename;
-            
-            
-            $s3 = AWS::createClient('s3');
-            
-            
-            $result=$s3->putObject(array(
-                                'ACL'=>'public-read',
-                                'Bucket'     => config('constants.awbucket'),
-                                'Key'    => config('constants.awvideo').$filename,
-                                'SourceFile'   => $destination_path.$filename,
-                        ));
-           if($result['@metadata']['statusCode']==200){
-            unlink($destination_path.$filename);
-             }
+            if(trim($request->video_name_second)){
+                 $fileTran->deleteFile(config('constants.awvideo'), $request->video_name_second);
+            }    
+           
                   
         }else{
             $video->video_name = $request->video_name_second;
         }
 
         if($request ->video_thumb_name !=''){
-            $destination_path = 'uploads/';
+           
             $file = $request->file('video_thumb_name');
-          //  fwrite($asd, " File name:".$file."  \n");
             $filename = str_random(6) . '_' . $request->file('video_thumb_name')->getClientOriginalName();
-            //$file->move($destination_path, $filename);
-            $request->file('video_thumb_name')->move($destination_path, $filename);
+            $fileTran->uploadFile($file, config('constants.awvideothumb'), $filename); 
             $video->video_thumb_name = $filename;
-            
-            
-            $s3 = AWS::createClient('s3');
-            $oldPhotos=MasterVideo::where('id',$request->faid)->get();
-            foreach($oldPhotos as $ph){
-                $s3->deleteObject(array(
-			'Bucket'     => config('constants.awbucket'),
-			'Key'    => config('constants.awvideothumb').$ph->video_thumb_name
-                        ));
+            if(trim($request->video_thumb_name_second)){
+                 $fileTran->deleteFile(config('constants.awvideothumb'),$request->video_thumb_name_second);
             }
-            
-            $result=$s3->putObject(array(
-                                'ACL'=>'public-read',
-                                'Bucket'     => config('constants.awbucket'),
-                                'Key'    => config('constants.awvideothumb').$filename,
-                                'SourceFile'   => $destination_path.$filename,
-                        ));
-                  if($result['@metadata']['statusCode']==200){
-                        unlink($destination_path . $filename);
-                }
         }else{
             $video->video_thumb_name = $request->video_thumb_name_second;
         }

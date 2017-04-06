@@ -207,8 +207,6 @@ class AlbumController extends Controller {
         // Getting upladed images in array
         $images = explode(',', $request->uploadedImages);
 
-        // Copy uploaded from temporary location to specific location
-        //$s3 = AWS::createClient('s3');
         $fileTran=new FileTransfer();
         foreach ($images as $image) {
             if (isset($request->photographby[$image])) {
@@ -322,8 +320,6 @@ class AlbumController extends Controller {
         $id = $request->id;
         $images = explode(',', $request->uploadedImages);
 
-        // Copy uploaded from temporary location to specific location
-        //$s3 = AWS::createClient('s3');
         $fileTran=new FileTransfer();
         foreach ($images as $image) {
             if (isset($request->photographby[$image])) {
@@ -335,7 +331,7 @@ class AlbumController extends Controller {
                
                 //if ($result['@metadata']['statusCode'] == 200) {
                 if($fileTran->tranferFile($image, $source, $dest)){
-                    unlink($source);
+                    //unlink($source);
                     unlink($source_thumb);
                     $imageEntry = new Photo();
                     $imageEntry->title = $request->imagetitle[$image];

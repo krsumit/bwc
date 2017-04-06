@@ -73,7 +73,7 @@
                                 });
                                 $.each(one, function(ind, ele) {
                                     $.each(ele, function(index, element) {
-                                      
+                                       var baseUrl="{{config('constants.awsbaseurl')}}{{config('constants.quotesimage')}}";
                                         //alert(index);
                                          // alert(element);
                                         //alert(element);
@@ -89,7 +89,7 @@
                                        if (index == 'quotes_image') {
                                             //alert(1);
                                           var image =  $('#edit_quotes_image').val(element);
-					$('#quets_image img').attr('src','https://s3-ap-southeast-1.amazonaws.com/bwmedia/quotesimage/'+element);
+					$('#quets_image img').attr('src',baseUrl+element);
 					
                                         }
                                        if (index == 'tag') {  
