@@ -1,7 +1,5 @@
 <?php
-
 class Cron {
-
     var $conn;
     var $conn2;
     var $message;
@@ -2521,6 +2519,7 @@ class Cron {
         $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
         //anurag.batra@businessworld.in,sudipta@businessworld.in,
         //echo $mailbody; exit;
+        //sudipta@businessworld.in,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in
         mail("sudipta@businessworld.in,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
     }
 
@@ -2532,7 +2531,9 @@ class Cron {
             '4' => 'http://bwcio.businessworld.in/',
             '5' => 'http://bwdisrupt.businessworld.in/',
             '6' => 'http://bwwealth.businessworld.in/',
-            '7' => 'http://everythingexperiential.businessworld.in/'
+            '7' => 'http://everythingexperiential.businessworld.in/',
+            '8' => 'http://bwhr.businessworld.in/',
+            '9' => 'http://bweducation.businessworld.in/',
         );
 
         $displayDate = date('d-m-Y', strtotime("-1 days"));
@@ -2644,8 +2645,8 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' group by ch.channel_id");
         $sub = '=?UTF-8?B?' . base64_encode(" Do you know how many stories BW reporters did yesterday? ") . '?=';
         $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
         //anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in
-
-        mail("anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in", $sub, $mailbody, $headers);
+       //anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in         
+        mail("anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
     }
 
     // Debate Video

@@ -9,6 +9,7 @@ use DB;
 use Session;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Classes\FileTransfer;
 
 class TipTagsController extends Controller
 {
@@ -56,17 +57,15 @@ class TipTagsController extends Controller
     {   
         //
         $uid = $request->id;
-
-        //$asd = fopen("/home/sudipta/log.log", 'a+');
-        //print_r($_POST);
-        //exit;
-
-        //If TipTag is being Edited - Or if New being saved
+  
         if($request->tid){
             $TipTag = TipTag::find($request->tid);
         }else {
             $TipTag = new TipTag();
         }
+        
+        $fileTran = new FileTransfer();
+        
         $matchText= $request->ttag;
         $rstcount = DB::table('tiptags')->where('tag', "=", $matchText )->select('ttag_id as id', 'tag as name')->count();
        if($rstcount>0){
@@ -76,11 +75,10 @@ class TipTagsController extends Controller
             $TipTag->tag = $matchText; 
             $TipTag->sponsored_by = $request->sponsoredby;
             if($request->logofile !='') {
-                $destination_path = 'uploads/';
                 $filename = str_random(6) . '_' . $request->file('logofile')->getClientOriginalName();
-                //fwrite($asd, " File name:".$filename."  \n");
-                $request->file('logofile')->move($destination_path, $filename);
-                $TipTag->logopath = $destination_path . $filename;
+                $fileTran->uploadFile($request->file('logofile'),config('constants.awatipstag'), $filename); 
+                
+                $TipTag->logopath = $filename;
             }
             $TipTag->url = $request->url;
             $TipTag->save();

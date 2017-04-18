@@ -10,7 +10,7 @@ class Cron {
     
     
     function __construct() {
-        $this->conn = new mysqli('cmsdb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com', 'bwcms', 'bwpassword2015', 'bwcms') or die($this->conn->connect_errno);
+        $this->conn = new mysqli('cmsdb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com', 'bwcms', 'bw#digital#2017#cms', 'bwcms') or die($this->conn->connect_errno);
         //$this->conn = new mysqli('localhost', 'root', 'admin', '17novlivecms') or die($this->conn->connect_errno);
         $this->url='http://businessworld.in/';
         
@@ -63,6 +63,7 @@ class Cron {
           while ($authorRow = $authorResults->fetch_assoc()) {
               
               $email=$authorRow['email'];
+              //$email='shekhar@businessworld.in';
               //echo $email;exit;
               $name=  $authorRow['name'];
               $articletitle =  $authorRow['title'];
@@ -70,7 +71,7 @@ class Cron {
 	      $publish_date=date('d-m-Y',strtotime($authorRow['publish_date']));
               $article_id=  str_replace(' ', '-', $authorRow['article_id']);
               $url= $this->url.'article/'.preg_replace('/([^a-zA-Z0-9_.])+/', '-',$title).'/'.$publish_date.'-'.$article_id;
-             $user_email= 'BW Edit Team';
+              $user_email= 'BW Edit Team <noreply@businessworld.in>';
              //$user_email= 'noreply@businessworld.com';
              $urlcontact =$this->url.'contact-us/';
              
@@ -87,7 +88,7 @@ class Cron {
             //echo  $arr->data->url; exit;
             if($authorRow['author_type_id']==1)continue;
 
-             
+           //  
             $this->sendSms($url,$authorRow['mobile'],$authorRow['name'],$authorRow['title'],$arr->data->url);
               
              
@@ -252,6 +253,7 @@ class Cron {
         $return_html .= '</html>';
         //echo $return_html; exit;
         mail("$email","Your article on BW has been published",$return_html,$headers);
+        //echo $email.'test'; exit;
     }
     return true;
 }

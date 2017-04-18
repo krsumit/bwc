@@ -30,7 +30,7 @@ class SubscriptionPackageController extends Controller
     }
     
     public function index()
-    {   
+    {   echo 'test'; 
         /* Right mgmt start */
         $rightId = 87;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
