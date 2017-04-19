@@ -1,0 +1,112 @@
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=mastervideo'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=magazine'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=debate'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=Sponsored' 
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=article'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=quickbyte'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=tips'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=quotes'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=photoshoot'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=feature'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=featureviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=articleviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=sponsorviewcount'
+*/20 * * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=event'
+32 18 * * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=dailyreport'
+27 5 1,16 * * /usr/bin/php /var/www/html/public/cronscript/cronjob.php 'section=sendreport'
+
+*/10 * * * * /usr/bin/php /var/www/html/public/mailscript/mailjob.php 'section=sendmailauthor'
+
+
+
+
+*/10 * * * * /usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=mastervideo'
+*/10 * * * * /usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=article'
+*/10 * * * * /usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=quickbyte'
+*/10 * * * * /usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=tips'
+*/10 * * * * /usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=quotes'
+*/10 * * * * /usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=photoshoot'
+*/10 * * * * /usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=feature'
+*/10 * * * * /usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=featureviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=articleviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=sponsorviewcount'
+*/20 * * * * /usr/bin/php /var/www/html/public/dscronscript/cronjob.php 'section=event'
+
+*/10 * * * * /usr/bin/php /var/www/html/public/bwdmailscript/mailjob.php 'section=sendmailauthor'
+
+
+
+*/10 * * * * /usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=mastervideo'
+*/10 * * * * /usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=magazine'
+*/10 * * * * /usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=article'
+*/10 * * * * /usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=quickbyte'
+*/10 * * * * /usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=tips'
+*/10 * * * * /usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=quotes'
+*/10 * * * * /usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=photoshoot'
+*/10 * * * * /usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=feature'
+*/10 * * * * /usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=featureviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=articleviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=sponsorviewcount'
+*/20 * * * * /usr/bin/php /var/www/html/public/hotcronscript/cronjob.php 'section=event'
+
+*/10 * * * * /usr/bin/php /var/www/html/public/bwhmailscript/mailjob.php 'section=sendmailauthor'
+
+
+*/10 * * * * /usr/bin/php /var/www/html/public/bwcio/cronjob.php 'section=mastervideo'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwcio/cronjob.php 'section=article'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwcio/cronjob.php 'section=quickbyte'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwcio/cronjob.php 'section=tips'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwcio/cronjob.php 'section=quotes'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwcio/cronjob.php 'section=photoshoot'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwcio/cronjob.php 'section=feature'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwcio/cronjob.php 'section=featureviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwcio/cronjob.php 'section=articleviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwcio/cronjob.php 'section=sponsorviewcount'
+*/20 * * * * /usr/bin/php /var/www/html/public/bwcio/cronjob.php 'section=event'
+
+*/10 * * * * /usr/bin/php /var/www/html/public/bwciomailscript/mailjob.php 'section=sendmailauthor'
+
+
+*/10 * * * * /usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=mastervideo'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=magazine'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=article'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=tips'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=quotes'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=photoshoot'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=feature'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=featureviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=articleviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=sponsorviewcount'
+*/20 * * * * /usr/bin/php /var/www/html/public/bwsccronscript/cronjob.php 'section=event'
+
+*/10 * * * * /usr/bin/php /var/www/html/public/bwscmailscript/mailjob.php 'section=sendmailauthor'
+
+*/10 * * * * /usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=mastervideo'
+*/10 * * * * /usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=magazine'
+*/10 * * * * /usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=article'
+*/10 * * * * /usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=tips'
+*/10 * * * * /usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=quotes'
+*/10 * * * * /usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=photoshoot'
+*/10 * * * * /usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=feature'
+*/10 * * * * /usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=featureviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=articleviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=sponsorviewcount'
+*/20 * * * * /usr/bin/php /var/www/html/public/bweecronscript/cronjob.php 'section=event'
+
+*/10 * * * * /usr/bin/php /var/www/html/public/bweemailscript/mailjob.php 'section=sendmailauthor'
+
+
+
+*/10 * * * * /usr/bin/php /var/www/html/public/bwedcronscript/cronjob.php 'section=mastervideo'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwedcronscript/cronjob.php 'section=magazine'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwedcronscript/cronjob.php 'section=article'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwedcronscript/cronjob.php 'section=tips'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwedcronscript/cronjob.php 'section=quotes'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwedcronscript/cronjob.php 'section=photoshoot'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwedcronscript/cronjob.php 'section=feature'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwedcronscript/cronjob.php 'section=featureviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwedcronscript/cronjob.php 'section=articleviewcount'
+*/10 * * * * /usr/bin/php /var/www/html/public/bwedcronscript/cronjob.php 'section=sponsorviewcount'
+*/20 * * * * /usr/bin/php /var/www/html/public/bwedcronscript/cronjob.php 'section=event'
+
+
