@@ -5,10 +5,17 @@ composer.json
 .elasticbeanstalk/
 composer.json
 composer.phar
-../.env
-xyz/
+.env
+xyz
+abc
+/vendor/
+test1.php
+.env
+---.env---
+.ram
+test.env
+-.env-
 
-
-
+	
 
 /nbproject/private/

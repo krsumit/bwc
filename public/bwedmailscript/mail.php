@@ -10,7 +10,7 @@ class Cron {
     
     
     function __construct() {
-        $this->conn = new mysqli('cmsdb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com', 'bwcms', 'bwpassword2015', 'bwcms') or die($this->conn->connect_errno);
+        $this->conn = new mysqli('cmsdb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com', 'bwcms', 'bw#digital#2017#cms', 'bwcms') or die($this->conn->connect_errno);
         //$this->conn = new mysqli('localhost', 'root', 'admin', '17novlivecms') or die($this->conn->connect_errno);
         $this->url='http://bweducation.businessworld.in/';
         

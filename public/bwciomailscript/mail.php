@@ -12,7 +12,7 @@ class Cron {
     function __construct() {
         $this->conn = new mysqli('cmsdb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com', 'bwcms', 'bw#digital#2017#cms', 'bwcms') or die($this->conn->connect_errno);
         //$this->conn = new mysqli('localhost', 'root', 'admin', '17novlivecms') or die($this->conn->connect_errno);
-        $this->url='http://bwsmartcities.businessworld.in/';
+        $this->url='http://bwcio.businessworld.in/';
         
     }
 
@@ -31,7 +31,7 @@ class Cron {
 
     function sendMailAuthor() {
             //send_mail_status='0' AND
-        $articlesResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date FROM articles where  status ='P' and send_mail_status='0' and channel_id ='3'");
+        $articlesResults = $this->conn->query("SELECT articles.article_id,articles.title,articles.publish_date FROM articles where  status ='P' and send_mail_status='0' and channel_id ='4'");
         //echo $articlesResults->num_rows; exit;
         if ($articlesResults->num_rows > 0) {
 
@@ -67,7 +67,8 @@ class Cron {
 	      $publish_date=date('d-m-Y',strtotime($authorRow['publish_date']));
               $article_id=  str_replace(' ', '-', $authorRow['article_id']);
               $url= $this->url.'article/'.preg_replace('/([^a-zA-Z0-9_.])+/', '-',$title).'/'.$publish_date.'-'.$article_id;
-             $user_email= 'BW Edit Team';
+             //$user_email= 'BW Edit Team';
+             $user_email= 'BW Edit Team <noreply@businessworld.in>';
              //$user_email= 'noreply@businessworld.com';
              $urlcontact =$this->url.'contact-us/';
              

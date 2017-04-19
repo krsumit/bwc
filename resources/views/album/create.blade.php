@@ -198,7 +198,6 @@
                 </label>
             </div>
             <div class="span9 row-fluid" >
-                <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
                 <div class=" fileupload-buttonbar">
                     <div class="col-lg-7">
 
@@ -240,7 +239,7 @@
                     </div>
                 </div>
                 <!-- The table listing the files available for upload/download -->
-                
+                <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
                 <input type="text" style="height: 0;visibility: hidden;width: 0;" id="uploadedImages" name="uploadedImages">
             </div>
 
@@ -338,15 +337,19 @@
     <div class="container-fluid">
         <div class="control-group row-fluid">
             <div class="span12 span-inset">
+                 <label class="checkbox" >
+                    <input type="checkbox" class="uniformCheckbox" value="checkbox1" name="for_homepage">
+                    <a href="#" >Publish this to Home Page.</a>
+                </label>
 
                 <label class="checkbox" >
                     <input type="checkbox" class="uniformCheckbox" value="checkbox1" name="is_sponsored">
-                    <a href="#" target="_blank">This Is  Sponsored</a>
+                    <a href="#">This Is  Sponsored</a>
                 </label>
 
                 <label class="checkbox" >
                     <input type="checkbox" class="uniformCheckbox" value="checkbox1" name="is_featured">
-                    <a href="#" target="_blank">This Is  Featured</a>
+                    <a href="#" >This Is  Featured</a>
                 </label>
 
                 <script>
