@@ -1,4 +1,6 @@
 <?php
+require_once "Mail.php";
+require_once "Mail/mime.php";
 class Cron {
     var $conn;
     var $conn2;
@@ -2646,7 +2648,30 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' group by ch.channel_id");
         $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
         //anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in
        //anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in         
-        mail("anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
+       // mail("anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
+        $to='shekhar@businessworld.in';
+        $this->sendSmtpMail($from_email,$to,$sub,$mailbody);
+    }
+
+    function sendSmtpMail($from, $to, $subject, $message) {
+        
+        $smtp = Mail::factory('smtp', array('host' => 'smtp.sendgrid.net', 'port' => '2525', 'auth' => true, 'username' => 'godigital@businessworld.in', 'password' => 'bwdigital@1234'));
+        $mime = new Mail_mime();
+        $headers = array(
+            'To' => $to,
+            'From' => $from,
+            'Subject' => $subject
+        );
+        $mime->setTXTBody($message);
+        $mime->setHTMLBody($message);
+        $mimeparams['text_encoding'] = "8bit";
+        $mimeparams['text_charset'] = "UTF-8";
+        $mimeparams['html_charset'] = "UTF-8";
+        $mimeparams['head_charset'] = "UTF-8";
+        $mimeparams["debug"] = "True";
+        $body = $mime->get($mimeparams);
+        $headers = $mime->headers($headers);
+        $mail = $smtp->send($to, $headers, $body);
     }
 
     // Debate Video
