@@ -1,5 +1,6 @@
 <?php
-
+require_once "Mail.php";
+require_once "Mail/mime.php";
 class Cron {
 
     var $conn;
@@ -68,7 +69,7 @@ class Cron {
               //$publish_date=  str_replace(' ', '-',$publish_date);
               $article_id=  str_replace(' ', '-', $authorRow['article_id']);
               $url= $this->url.'article/'.preg_replace('/([^a-zA-Z0-9_.])+/', '-',$title).'/'.$publish_date.'-'.$article_id;
-             $user_email= 'BW Edit Team';
+              $user_email= 'BW Edit Team <noreply@businessworld.in>';
              //$user_email= 'noreply@businessworld.com';
              $urlcontact =$this->url.'contact-us/';
              
@@ -234,10 +235,31 @@ class Cron {
         $return_html .= '</body>';
         $return_html .= '</html>';
         //echo $return_html; exit;
-        mail("$email","Your article on BW has been published",$return_html,$headers);
+        //mail("$email","Your article on BW has been published",$return_html,$headers);
+        $this->sendSmtpMail($user_email,$email,'Your article on BW has been published',$return_html);
     }
     return true;
 }
+ function sendSmtpMail($from, $to, $subject, $message) {
+        
+        $smtp = Mail::factory('smtp', array('host' => 'smtp.sendgrid.net', 'port' => '2525', 'auth' => true, 'username' => 'godigital@businessworld.in', 'password' => 'bwdigital@1234'));
+        $mime = new Mail_mime();
+        $headers = array(
+            'To' => $to,
+            'From' => $from,
+            'Subject' => $subject
+        );
+        $mime->setTXTBody($message);
+        $mime->setHTMLBody($message);
+        $mimeparams['text_encoding'] = "8bit";
+        $mimeparams['text_charset'] = "UTF-8";
+        $mimeparams['html_charset'] = "UTF-8";
+        $mimeparams['head_charset'] = "UTF-8";
+        $mimeparams["debug"] = "True";
+        $body = $mime->get($mimeparams);
+        $headers = $mime->headers($headers);
+        $mail = $smtp->send($to, $headers, $body);
+    }
 // funtion to send sms to authors
 function sendSms($url,$mob,$authorName,$articleTitle){
     //$mob='9899415606';

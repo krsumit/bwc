@@ -2405,7 +2405,7 @@ class Cron {
     function generateReport() {
 
         //$template = file_get_contents('/var/www/html/bwcms/public/cronscript/editorial.html');
-        $template = file_get_contents('/var/www/html/public/cronscript/editorial.html');
+        $template = file_get_contents('/var/www/html/cms/public/cronscript/editorial.html');
 
         $end_date = date('Y-m-d', strtotime("-1 day"));
         if (date('d', strtotime("-1 day")) == 15) {
@@ -2522,8 +2522,10 @@ class Cron {
         //anurag.batra@businessworld.in,sudipta@businessworld.in,
         //echo $mailbody; exit;
         //sudipta@businessworld.in,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in
-        mail("sudipta@businessworld.in,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
-    }
+        //mail("sudipta@businessworld.in,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
+        $to='sudipta@businessworld.in,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in'; 
+        $this->sendSmtpMail($from_email,$to,$sub,$mailbody);
+   }
 
     function sendDailyReport() {
         $urls = array(
@@ -2541,7 +2543,7 @@ class Cron {
         $displayDate = date('d-m-Y', strtotime("-1 days"));
         $yesDate = date('Y-m-d', strtotime("-1 days"));
         //$template = file_get_contents('/var/www/html/bwcms2aw/public/cronscript/daily.html');
-        $template = file_get_contents('/var/www/html/public/cronscript/daily.html');
+        $template = file_get_contents('/var/www/html/cms/public/cronscript/daily.html');
 
         $total_article = 0;
 
@@ -2649,7 +2651,7 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' group by ch.channel_id");
         //anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in
        //anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in         
        // mail("anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
-        $to='shekhar@businessworld.in';
+        $to='anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in';
         $this->sendSmtpMail($from_email,$to,$sub,$mailbody);
     }
 
