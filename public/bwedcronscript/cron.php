@@ -71,7 +71,7 @@ class Cron {
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
-           //$condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
         $authorResults = $this->conn->query("SELECT * FROM authors where 1 $condition");

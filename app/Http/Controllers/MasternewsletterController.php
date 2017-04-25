@@ -187,7 +187,7 @@ class MasternewsletterController extends Controller {
         
         
         if($newsletter->channel_id=='1')
-            exec("/usr/bin/php /var/www/html/cms//public/cronscript/cronjob.php 'section=newsletter'");
+            exec("/usr/bin/php /var/www/html/cms/public/cronscript/cronjob.php 'section=newsletter'");
         elseif($newsletter->channel_id=='2')
              exec("/usr/bin/php /var/www/html/cms/public/hotcronscript/cronjob.php 'section=newsletter'");
         elseif($newsletter->channel_id=='5')
