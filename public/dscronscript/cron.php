@@ -1742,19 +1742,14 @@ function migrateMasterNewsLetter() {
         $delStmt->execute();
         $delStmt->close();
         //echo 'test'; exit;
-        $masterNewsLetterArticleRst = $this->conn->query("select * from master_newsletter_articles where master_newsletter_id=$id");
+        $masterNewsLetterArticleRst = $this->conn->query("select * from master_newsletter_articles where is_deleted=0 and master_newsletter_id=$id");
         while (($masterNewsLetterArticleRow = $masterNewsLetterArticleRst->fetch_assoc())) {
-	if ($masterNewsLetterArticleRow['is_deleted']=='0'){
+
             $masterNewsLetterArticleInsertStmt = $this->conn2->prepare("insert into master_newsletter_articles  set master_newsletter_id=?,article_id=?,sequence=?,is_deleted=?,updated_at=?") or die($this->conn2->error);
             $masterNewsLetterArticleInsertStmt->bind_param('iiiis', $masterNewsLetterArticleRow['master_newsletter_id'],  $masterNewsLetterArticleRow['article_id'],$masterNewsLetterArticleRow['sequence'], $masterNewsLetterArticleRow['is_deleted'], $masterNewsLetterArticleRow['updated_at']) or die($this->conn2->error);
             $masterNewsLetterArticleInsertStmt->execute() or die($this->conn2->error);
             $masterNewsLetterArticleInsertStmt->close();
-	} else {
-           $delStmt = $this->conn2->prepare("delete from master_newsletter_articles where article_id=?");
-           $delStmt->bind_param('i', $masterNewsLetterArticleRow['article_id']);
-           $delStmt->execute();
-                        
-          } 
+	
         }
 
        
