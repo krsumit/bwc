@@ -1,7 +1,7 @@
 <?php
 /* If you change store_location, awsbaseurl should be changed accordingaly */
 return [
-'store_location' =>'local',    
+'store_location' =>'aws',    
 'articleimagedir' => 'uploads/article/',
 'articleimagethambtdir' => 'uploads/article/articlethamb/',
 'articleimagemediumdir' => 'uploads/article/articlemediumimage/',
@@ -46,7 +46,7 @@ return [
 'debateexpert'=>'debate/expertimage/',     
 'awbucket'=>'bwmedia',
 'awsbaseurl_backup'=>'http://d1s8mqgwixvb29.cloudfront.net/   http://bwcms.localhost/files/',
-'awsbaseurl'=>'http://bwcms.localhost/files/',     
+'awsbaseurl'=>'http://d1s8mqgwixvb29.cloudfront.net/',     
 'recordperpage' => '20',
 'maxfilesize'=>'10',
 'maxfilesizevideo'=>'200',
