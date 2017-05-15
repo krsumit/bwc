@@ -1,11 +1,12 @@
 <?php
 date_default_timezone_set('Asia/Calcutta');
-define('HOST','cmsdb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com');
-define('USER','bwcms');
+define('HOST','130.211.250.132');
+define('USER','root');
 define('PASS','bw#digital#2017#cms');
-define('DATABASE','bwcms');
+define('DATABASE','bw_cms_db');
 
-define('LHOST','channelwebsite.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com');
-define('LUSER','bwchannelsuser');
+
+define('LHOST','104.199.166.236');
+define('LUSER','root');
 define('LPASS','bwchannelsuser2016');
-define('LDATABASE','bwhotelier');
+define('LDATABASE','bw_hot_db');

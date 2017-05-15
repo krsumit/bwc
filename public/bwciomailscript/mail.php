@@ -11,7 +11,7 @@ class Cron {
     
     
     function __construct() {
-        $this->conn = new mysqli('cmsdb.cfdluvagb8xv.ap-southeast-1.rds.amazonaws.com', 'bwcms', 'bw#digital#2017#cms', 'bwcms') or die($this->conn->connect_errno);
+        $this->conn = new mysqli('130.211.250.132', 'root', 'bw#digital#2017#cms', 'bw_cms_db') or die($this->conn->connect_errno);
         //$this->conn = new mysqli('localhost', 'root', 'admin', '17novlivecms') or die($this->conn->connect_errno);
         $this->url='http://bwcio.businessworld.in/';
         
