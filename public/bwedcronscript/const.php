@@ -1,4 +1,4 @@
-<?ph
+<?php
 date_default_timezone_set('Asia/Calcutta');
 define('HOST','130.211.250.132');
 define('USER','root');
