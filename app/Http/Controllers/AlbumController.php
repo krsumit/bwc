@@ -12,6 +12,9 @@ use App\Http\Controllers\Auth;
 use App\Http\Controllers\AuthorsController;
 use App\Http\Controllers\Controller;
 use App\Photo;
+use App\Classes\UploadHandler;
+use App\Classes\FileTransfer;
+use App\Classes\Zebra_Image;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 
@@ -209,22 +212,25 @@ class AlbumController extends Controller
         $images = explode(',', $request->uploadedImages);
           
             // Copy uploaded from temporary location to specific location
-            $s3 = AWS::createClient('s3');
+        
+            $fileTran=new FileTransfer();
+            
+            //$s3 = AWS::createClient('s3');
+            
             foreach ($images as $image) {
                 if(isset($request->photographby[$image])){
-                    
-                $source=$_SERVER['DOCUMENT_ROOT'].'/files/'.$image;
+                $source='';
                 $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
-                $dest=$_SERVER['DOCUMENT_ROOT'].'/'.config('constants.albumimagedir').$image;
-                $result=$s3->putObject(array(
-                                        'ACL'=>'public-read',
-					'Bucket'     => config('constants.awbucket'),
-					'Key'    => config('constants.awalbumimagedir').$image,
-					'SourceFile'   => $source,
-				));
-                if($result['@metadata']['statusCode']==200){
-                        unlink($source);
-                        unlink($source_thumb);
+                $dest=config('constants.awalbumimagedir');
+                $fileTran->tranferFile($image, $source, $dest,false);
+                
+                unlink($_SERVER['DOCUMENT_ROOT'] . '/files/'.$image);
+                if (is_file($source_thumb))
+                    unlink($source_thumb);
+                
+              // if($result['@metadata']['statusCode']==200){
+              //          unlink($source);
+              //          unlink($source_thumb);
                         $imageEntry=new Photo();
                         $imageEntry->title=$request->imagetitle[$image];
                         $imageEntry->description=$request->imagedesc[$image];
@@ -238,10 +244,9 @@ class AlbumController extends Controller
                         $imageEntry->owner_id=$id;
                         $imageEntry->active='1';
                         $imageEntry->save();
-                        
+               // }
                 }
-                }
-        
+            
             }
         //Redircting to specifi locationn with proper message
         if($request->status == 'P') {
@@ -336,22 +341,19 @@ class AlbumController extends Controller
        $images = explode(',', $request->uploadedImages);
            
             // Copy uploaded from temporary location to specific location
-            $s3 = AWS::createClient('s3');
+            $fileTran=new FileTransfer();
             foreach ($images as $image) {
                 if(isset($request->photographby[$image])){
                 $fname=$image;
-                $source=$_SERVER['DOCUMENT_ROOT'].'/files/'.$image;
+                $source='';
                 $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
-                $dest=$_SERVER['DOCUMENT_ROOT'].'/'.config('constants.albumimagedir').$fname;
-                $result=$s3->putObject(array(
-                                'ACL'=>'public-read',
-                                'Bucket'     => config('constants.awbucket'),
-                                'Key'    => config('constants.awalbumimagedir').$image,
-                                'SourceFile'   => $source,
-                        ));
-                if($result['@metadata']['statusCode']==200){
-                        unlink($source);
+                $dest=config('constants.awalbumimagedir');
+                $fileTran->tranferFile($image, $source, $dest,false);
+                
+                unlink($_SERVER['DOCUMENT_ROOT'] . '/files/'.$image);
+                if (is_file($source_thumb))
                         unlink($source_thumb);
+                
                         $imageEntry=new Photo();
                         $imageEntry->title=$request->imagetitle[$image];
                         $imageEntry->description=$request->imagedesc[$image];
@@ -365,8 +367,6 @@ class AlbumController extends Controller
                         $imageEntry->owner_id=$id;
                         $imageEntry->active='1';
                         $imageEntry->save();
-                       
-                }
                 }
             }
         //If it's puublished

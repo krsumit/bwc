@@ -2,7 +2,12 @@
 
 @section('title', 'Edit Article - BWCMS')
 @section('content')
- <style> .none { display:none; } </style>
+ <style> .none { display:none; } 
+ 
+
+   
+
+ </style>
 <div class="panel">
     <div class="panel-content filler">
         <div class="panel-logo"></div>
@@ -131,13 +136,13 @@
                                         var checkvalid=1;
                                         //alert(1);
                                     //$('.btn-success').click(function() {}
-                                   var as = $('#maxi').elrte('val');
+                                   var as = $('#maxi').val();
                                    $('.error.elrte-error').remove();
                                    $('.error.author-error').remove();
                                    $('.error.noborder').remove();
                                     if(as.length==0){
                                        // alert(1);
-                                        $('.elrte-wrapper').after('<span class="error elrte-error" style="display:block;" >Article description is required. </span>');
+                                        $('.elrte-wrapper').parent().after('<span class="error elrte-error" style="display:block;" >Article description is required. </span>');
                                         checkvalid=0;
                                     }
 //                                    else if (as.length < 500 || as.length > 80000){
@@ -926,6 +931,8 @@
                     <textarea name="description" id="maxi" rows="2" class="auto-resize required valid">{{nl2br(trim($article->description))}}</textarea>
                     <span for="description" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
                     <script>
+                        /*
+                        
                      elRTE.prototype.options.panels.web2pyPanel = [
                             'pastetext','bold', 'italic','underline','justifyleft', 'justifyright',
                            'justifycenter', 'justifyfull','forecolor','hilitecolor','fontsize','link',
@@ -938,7 +945,16 @@
                                 height: 200,
                                 toolbar: 'web2pyToolbar'
                         });
-                                            
+                                 */
+                                
+                      $(function() { 
+                        $('#maxi').froalaEditor({
+                            height: 400,
+                            htmlRemoveTags: [],
+                            pastePlain: true
+                          }) 
+                      });           
+                                
                       $(document).ready(function() { 
                                       @if($article->canonical_options==0)  
                                       $("#canonical").addClass("none");
@@ -950,8 +966,14 @@
                                         $("#canonical").removeClass("none");
                                         
                                     });
+                               $('.elrte-wrapper > div > div').eq(2).find('a').remove();
                                  });  
                     </script>
+                    <style>
+    .fr-top:nth-child(2){
+        display:none;
+    }
+</style>
                 </div>
             </div>
         </div>
@@ -1037,7 +1059,7 @@
                 //$("#Ltopics").pickList.empty();
                 //$('#genTopics').click(GTopics);
                 $("#genTopic").click(function() {
-                   // alert(1);
+                   // alert($('#maxi').val());
                 //function GTopics() {}
                 var token = $('input[name=_token]');
                         //alert($('#maxi').elrte('val'));
@@ -1045,7 +1067,7 @@
                         $.ajax({
                         type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
                                 url: '/article/generateTopics', // the url where we want to POST
-                                data: {detail: $('#maxi').elrte('val')},
+                                data: {detail: $('#maxi').val()},
                                 dataType: 'json', // what type of data do we expect back from the server
                                 encode: true,
                                 beforeSend  :function(data){
@@ -2451,6 +2473,12 @@ $(':radio[id=embedcodevideo]').change(function() {
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-video.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-validate.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-ui.js') }}"></script>
+
+<script type="text/javascript" src="{{ asset('js/florawysiwyg/froala_editor.pkgd.min.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ asset('css/florawysiwyg/froala_editor.pkgd.min.css') }}" media="all" />
+<link rel="stylesheet" type="text/css" href="{{ asset('css/florawysiwyg/froala_style.min.css') }}" media="all" />
+<link rel="stylesheet" type="text/css" href="{{ asset('css/florawysiwyg/font-awesome.min.css') }}" media="all" />
+
 <script>
     $(document).ready(function(){
 $('#validation_form').fileupload({
@@ -2521,5 +2549,6 @@ function getArg(url,name){
   }).disableSelection();
 
 </script>
-@stop
 
+
+@stop
