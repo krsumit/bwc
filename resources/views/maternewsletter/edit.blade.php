@@ -1,6 +1,6 @@
 @extends('layouts/master')
 
-@section('title', 'Edit Newsletter - BWCMS')
+@section('title', '111Edit Newsletter - BWCMS')
 
 @section('content')
 

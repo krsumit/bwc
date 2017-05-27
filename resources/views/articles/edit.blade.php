@@ -3,10 +3,6 @@
 @section('title', 'Edit Article - BWCMS')
 @section('content')
  <style> .none { display:none; } 
- 
-
-   
-
  </style>
 <div class="panel">
     <div class="panel-content filler">
@@ -136,13 +132,15 @@
                                         var checkvalid=1;
                                         //alert(1);
                                     //$('.btn-success').click(function() {}
+                                   $('#maxi').parent('div').removeClass('error'); 
                                    var as = $('#maxi').val();
                                    $('.error.elrte-error').remove();
                                    $('.error.author-error').remove();
                                    $('.error.noborder').remove();
                                     if(as.length==0){
                                        // alert(1);
-                                        $('.elrte-wrapper').parent().after('<span class="error elrte-error" style="display:block;" >Article description is required. </span>');
+                                       $('#maxi').parent('div').addClass('error');
+                                        $('.elrte-wrapper').after('<span class="error elrte-error" style="display:block;margin-top:10px;" >Article description is required. </span>');
                                         checkvalid=0;
                                     }
 //                                    else if (as.length < 500 || as.length > 80000){

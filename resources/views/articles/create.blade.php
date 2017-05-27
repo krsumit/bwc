@@ -2,7 +2,6 @@
 
 @section('title', 'Create Article - BWCMS')
 
-
 @section('content')
 <style> .none { display:none; } </style>
 <div class="panel">
@@ -27,7 +26,7 @@
             $("#fileupload").validate().cancelSubmit = true;
             });
                     $('#dumpSubmit').click(function(){
-            $('span.error').remove();
+                    $('span.error').remove();
                     $('div.error.noborder').remove();
                     $('.error').removeClass('error');
             });
@@ -41,7 +40,8 @@
                                     var checkvalid = 1;
                                             //alert(1);
                                             //$('.btn-success').click(function() {}
-                                            var as = $('#maxi').elrte('val');
+                                            $('#maxi').parent('div').removeClass('error');
+                                            var as = $('#maxi').val();
                                             $('.error.elrte-error').remove();
                                             $('.error.author-error').remove();
                                             $('.error.noborder').remove();
@@ -49,7 +49,7 @@
                                             if (as.length == 0){
                                     // alert(1);
                                     $('#maxi').parent('div').addClass('error');
-                                            $('.elrte-wrapper').after('<span class="error elrte-error" style="display:block;" >Article description is required. </span>');
+                                            $('.elrte-wrapper').after('<span class="error elrte-error" style="display:block;margin-top:10px;" >Article description is required. </span>');
                                             checkvalid = 0;
                                     }
 //                                    else if (as.length < 500 || as.length > 80000){
@@ -793,7 +793,7 @@
                     <span for="description" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
                     <script>
 
-                                        elRTE.prototype.options.panels.web2pyPanel = [
+                          /*              elRTE.prototype.options.panels.web2pyPanel = [
                                                 'pastetext', 'bold', 'italic', 'underline', 'justifyleft', 'justifyright',
                                                 'justifycenter', 'justifyfull', 'forecolor', 'hilitecolor', 'fontsize', 'link',
                                                 'image', 'insertorderedlist', 'insertunorderedlist'];
@@ -805,6 +805,16 @@
                                         height: 200,
                                         toolbar: 'web2pyToolbar'
                                 });
+                                
+                                */
+                               $(function() { 
+                                $('#maxi').froalaEditor({
+                                    height: 400,
+                                    htmlRemoveTags: [],
+                                    pastePlain: true
+                                  }) 
+                              });  
+                      
                                         $(document).ready(function() {
 
                                 $("#canonical").addClass("none");
@@ -882,7 +892,7 @@
                                 $.ajax({
                                 type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
                                         url         : '/article/generateTopics', // the url where we want to POST
-                                        data        :  { detail : $('#maxi').elrte('val') },
+                                        data        :  { detail : $('#maxi').val() },
                                         dataType    : 'json', // what type of data do we expect back from the server
                                         encode      : true,
                                         beforeSend  :function(data){
@@ -1840,6 +1850,13 @@
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-video.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-validate.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-ui.js') }}"></script>
+
+<script type="text/javascript" src="{{ asset('js/florawysiwyg/froala_editor.pkgd.min.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ asset('css/florawysiwyg/froala_editor.pkgd.min.css') }}" media="all" />
+<link rel="stylesheet" type="text/css" href="{{ asset('css/florawysiwyg/froala_style.min.css') }}" media="all" />
+<link rel="stylesheet" type="text/css" href="{{ asset('css/florawysiwyg/font-awesome.min.css') }}" media="all" />
+
+
 <script>
                                         $(document).ready(function(){
                                 $('#fileupload').fileupload({
