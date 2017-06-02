@@ -948,9 +948,8 @@
                       $(function() { 
                         $('#maxi').froalaEditor({
                             height: 400,
-                            htmlRemoveTags: [],
-                            pastePlain: true
-                          }) 
+                            htmlRemoveTags: []
+                        }) 
                       });           
                                 
                       $(document).ready(function() { 
