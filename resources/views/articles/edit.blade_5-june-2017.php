@@ -964,7 +964,7 @@
                                         $("#canonical").removeClass("none");
                                         
                                     });
-                          //     $('.elrte-wrapper > div > div').eq(2).find('a').remove();
+                               $('.elrte-wrapper > div > div').eq(2).find('a').remove();
                                  });  
                     </script>
                     <style>
