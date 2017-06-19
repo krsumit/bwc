@@ -292,7 +292,7 @@
                 <li  >
                     <div class="avatar-image"  >
                        @if($writers->photo)
-                        <img src="{{$writers->photo}}" alt="profile"/>
+                        <img src="{{ config('constants.awsbaseurl').config('constants.awauthordir').$writers->photo}}" alt="profile"/>
                         @else
                          <img src="images/photon/author_dummy.png" alt="profile"/>
                         @endif

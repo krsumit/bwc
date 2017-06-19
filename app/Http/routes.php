@@ -37,24 +37,24 @@ Route::get('/dashboard', ['middleware' => 'auth',   'uses' => function () {
         ->take(5)->get();
  
  $article_publish = DB::table('articles')
-         ->select('articles.*')
+         ->select('articles.article_id')
          ->where('articles.status', '=', 'p')  
          ->count();
  $quickbyte_publish = DB::table('quickbyte')
-         ->select('quickbyte.*')
+         ->select('quickbyte.id')
          ->where('quickbyte.status', '=', 'p')  
          ->count();
  
  $columns_publish = DB::table('columns')
-         ->select('columns.*')
+         ->select('columns.column_id')
          ->where('columns.valid', '=', '1')  
          ->count();
  $photos_publish = DB::table('photos')
-         ->select('photos.*')
+         ->select('photos.photo_id')
          ->where('photos.valid', '=', '1')  
          ->count();
- $videos_publish = DB::table('videos')
-         ->select('videos.*')
+$videos_publish = DB::table('videos')
+         ->select('videos.video_id')
          ->where('videos.valid', '=', '1')  
          ->count();
  

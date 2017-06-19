@@ -118,7 +118,7 @@ class RightsController extends Controller
         $this->validate($request,[
             //'caption'     => 'required|regex:/^[A-Za-z ]+$/',
             'name' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
             'password_confirmation' => 'required|same:password',
             'role' => 'required',
@@ -229,7 +229,7 @@ class RightsController extends Controller
           
         $this->validate($request,[
             'name' =>'required',
-            'email' => 'required|email',      
+            'email' => 'required|email|unique:users,email,'.$request->id,       
             'role' => 'required',
             'mobile' => 'numeric',
             'password' => 'min:6',
