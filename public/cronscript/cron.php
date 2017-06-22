@@ -2536,22 +2536,54 @@ class Cron {
             '5' => 'http://bwdisrupt.businessworld.in/',
             '6' => 'http://bwwealth.businessworld.in/',
             '7' => 'http://everythingexperiential.businessworld.in/',
-            '8' => 'http://bwhr.businessworld.in/',
+            '8' => 'http://bwpeople.businessworld.in/',
             '9' => 'http://bweducation.businessworld.in/',
         );
 
         $displayDate = date('d-m-Y', strtotime("-1 days"));
         $yesDate = date('Y-m-d', strtotime("-1 days"));
-        //$template = file_get_contents('/var/www/html/bwcms2aw/public/cronscript/daily.html');
-        $template = file_get_contents('/var/www/html/cms/public/cronscript/daily.html');
+        $template = file_get_contents('/var/www/html/bwcms/public/cronscript/daily.html');
+        //$template = file_get_contents('/var/www/html/cms/public/cronscript/daily.html');
 
         $total_article = 0;
 
-        $reporterStoriesRst = $this->conn->query("select ar.article_id,au.author_id,au.name,ar.article_id,ar.title,ar.channel_id,ch.channel,publish_date from authors au inner join article_author aau on au.author_id=aau.author_id inner join articles ar on aau.article_id=ar.article_id inner join channels  ch on ar.channel_id=ch.channel_id where (ar.publish_date='" . $yesDate . "') and ar.author_type=2 and ar.status='P' order by name");
+        $reporterStoriesRst = $this->conn->query("select ar.article_id,au.author_id,au.name,ar.view_count,ar.article_id,ar.title,ar.channel_id,ch.channel,publish_date from authors au inner join article_author aau on au.author_id=aau.author_id inner join articles ar on aau.article_id=ar.article_id inner join channels  ch on ar.channel_id=ch.channel_id where (ar.publish_date='" . $yesDate . "') and ar.author_type=2 and ar.status='P' and ar.channel_id=1 order by name");
+        
+        $editorStoriesRst=$this->conn->query("select count(*) as cs,users.name from articles inner join users on articles.user_id=users.id where publish_date='".$yesDate."' and articles.channel_id=1 group by user_id");
+        
+        $contentGridRst=$this->conn->query("select count(*) as cs,author_type.label,author_type.author_type_id as id from articles inner join author_type on articles.author_type=author_type.author_type_id where publish_date='".$yesDate."' and articles.channel_id=1 group by articles.author_type");
+        
+        
+        
+        $editorStored='';
         $reporterIds = array();
         $previousId = 0;
         $reporterWithStory = '';
+        $desk_story_report='';
+        $content_grid='';
         $tempData = array();
+        
+        $girdLabel=array('1'=>'Newswire/Rewrite','2'=>'BW Reporters’ Story','3'=>'Guest Author','4'=>'Columnist');
+        $girdValue=array('1'=>'0','2'=>'0','3'=>'0','4'=>'0');
+        
+        while($gridRow=$contentGridRst->fetch_assoc()){
+            $girdValue[$gridRow['id']]=$gridRow['cs'];
+        }
+        foreach($girdLabel as $key=>$value){
+         $content_grid.='<tr>
+                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" >' . $value . '</td>
+                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" >' . $girdValue[$key] . '</td>
+                           
+                        </tr>';
+        }
+        while ($editorStory=$editorStoriesRst->fetch_assoc()){
+             $desk_story_report.='<tr>
+                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" >' . $editorStory['name'] . '</td>
+                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" >' . $editorStory['cs'] . '</td>
+                           
+                        </tr>';
+        }
+        
         while ($reporterStory = $reporterStoriesRst->fetch_assoc()) {
             // echo $previousId.'<br/>';
             if ($previousId != $reporterStory['author_id']) {
@@ -2567,14 +2599,15 @@ class Cron {
                             $reporterWithStory.='<tr>
                                 <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" rowspan="' . $nonOfStory . '">' . $story['name'] . '</td>
                                 <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" rowspan="' . $nonOfStory . '">' . $nonOfStory . '</td>
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $story['channel'] . '</td>
+                                
                                 <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><a href="' . $url . '" target="_blank">' . substr($story['title'], 0, 20) . '...</a></td>
                                
                         </tr>';
                         } else {
                             $reporterWithStory.='<tr>
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $story['channel'] . '</td>
+                                
                                 <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><a href="' . $url . '" target="_blank">' . substr($story['title'], 0, 20) . '...</a></td>
+                               
                         </tr>';
                         }
                         $j++;
@@ -2599,13 +2632,12 @@ class Cron {
                     $reporterWithStory.='<tr>
                                 <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" rowspan="' . $nonOfStory . '">' . $story['name'] . '</td>
                                 <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" rowspan="' . $nonOfStory . '">' . $nonOfStory . '</td>
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $story['channel'] . '</td>
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><a href="' . $url . '" target="_blank">' . substr($story['title'], 0, 20) . '...</a></td>
-                               
+                                
+                              <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><a href="' . $url . '" target="_blank">' . substr($story['title'], 0, 20) . '...</a></td>
                         </tr>';
                 } else {
                     $reporterWithStory.='<tr>
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $story['channel'] . '</td>
+                                
                                 <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><a href="' . $url . '" target="_blank">' . substr($story['title'], 0, 20) . '...</a></td>
                         </tr>';
                 }
@@ -2627,20 +2659,20 @@ class Cron {
         }
 
         $channelsRst = $this->conn->query("select ch.channel_id,channel,cs from channels ch left join (select channel_id,count(*) as cs from articles where status='P' and publish_date='$yesDate'  group by channel_id) 
-ar on ch.channel_id=ar.channel_id where ch.valid='1' group by ch.channel_id");
+ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group by ch.channel_id");
         $channels_counts = '';
 
         while ($row = $channelsRst->fetch_assoc()) {
             $count = ($row['cs']) ? $row['cs'] : 0;
-            $channels_counts.=' <tr>
-                       <td  height="30" width="180">' . $row['channel'] . '
-                        </td>
-                         <td height="30" >' . $count . '
-                        </td>
-                        </tr>';
+//            $channels_counts.=' <tr>
+//                       <td  height="30" width="180">' . $row['channel'] . '
+//                        </td>
+//                         <td height="30" >' . $count . '
+//                        </td>
+//                        </tr>';
             $total_article+=$row['cs'];
         }
-        $mailbody = str_replace(array('[channels_counts]', '[yesterday_date]', '[total_stories]', '[reporter_without_story]', '[reporter_with_story]'), array($channels_counts, $displayDate, $total_article, $reportWithoutStory, $reporterWithStory), $template);
+         $mailbody = str_replace(array('[channels_counts]', '[yesterday_date]', '[total_stories]', '[reporter_without_story]', '[reporter_with_story]','[desk_story_report]','[content_grid]'), array($channels_counts, $displayDate, $total_article, $reportWithoutStory, $reporterWithStory,$desk_story_report,$content_grid), $template);
         $headers = 'MIME-Version: 1.0' . "\r\n";
         //echo $mailbody;
         //exit;

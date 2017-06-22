@@ -200,7 +200,7 @@
                         </tr>
                         <tr>
                             <td width="590" style="font-size: 22px; color: #2f2f36; text-align: center; font-weight: bold; font-family: Helvetica, Arial, sans-serif; line-height: 30px;">
-                                No. of Stories Published : [total_stories]							
+                              Number of Stories Published on BW on [yesterday_date] = : [total_stories]							
                             </td>
                         </tr>
                         <tr>
@@ -214,51 +214,94 @@
                                 </td>
                         </tr>-->
                        
-                        <tr border="none;"><td>This is a report of the contribution of stories we got from in-house reporters on [yesterday_date]</td></tr>
+                        <tr border="none;"><td><b>(This report is only for www.businessworld.in )</b></td></tr>
+			
+                     </table>
+                    
+                    <table width="590" border="0" cellpadding="0" cellspacing="0" align="center" class="scaleForMobile">
+                        <tr>
+                            <td width="590" height="12">									
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="590" style="font-size: 18px; color: #2f2f36; text-align: left; font-weight: bold; font-family: Helvetica, Arial, sans-serif; line-height: 30px;">
+                             Content Grid Report						
+                            </td>
+                        </tr>
+                     
 						 
-                    </table><!-- End Text Under The Header -->
-                    <br/>	
+                    </table>
+                  
+                    
+                    <table width="590" border="1" cellpadding="0" cellspacing="0" align="center" style="text-align:center; border:1px solid #ccc !important;" class="scaleForMobile">
+                        <tbody><tr>
+                                <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Content Type</b></th>
+                                <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Number</b></th>
+                            </tr>
+                            [content_grid]
+                             </tbody>
+                    </table>  
+                    
+                    
+                    
+                     <table width="590" border="0" cellpadding="0" cellspacing="0" align="center" class="scaleForMobile">
+                        <tr>
+                            <td width="590" height="12">									
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="590" style="font-size: 18px; color: #2f2f36; text-align: left; font-weight: bold; font-family: Helvetica, Arial, sans-serif; line-height: 30px;">
+                             Edit Desk Report						
+                            </td>
+                        </tr>
+                     
+						 
+                    </table>
+                  
+                    
+                    <table width="590" border="1" cellpadding="0" cellspacing="0" align="center" style="text-align:center; border:1px solid #ccc !important;" class="scaleForMobile">
+                        <tbody><tr>
+                                <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Desk Person Name</b></th>
+                                <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Total Edit/Upload</b></th>
+                            </tr>
+                            [desk_story_report]
+                             </tbody>
+                    </table>   
+                        
+                        
+                    </table>
+                     <table width="590" border="0" cellpadding="0" cellspacing="0" align="center" class="scaleForMobile">
+                        <tr>
+                            <td width="590" height="12">									
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="590" style="font-size: 18px; color: #2f2f36; text-align: left; font-weight: bold; font-family: Helvetica, Arial, sans-serif; line-height: 30px;">
+                             Individual Reporters Contribution							
+                            </td>
+                        </tr>
+                     
+						 
+                    </table>
+                  
+                    
                     <table width="590" border="1" cellpadding="0" cellspacing="0" align="center" style="text-align:center; border:1px solid #ccc !important;" class="scaleForMobile">
                         <tbody><tr>
                                 <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Reporter Name</b></th>
                                 <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>No of stories on <br/> ([yesterday_date])</b></th>
-                                <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Channel<br/>Name</b></th>
+                                
                                 <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Story title with url</b></th>
+                                
                                 
                             </tr>
                             [reporter_with_story]
                              </tbody>
                     </table> 
                     <br/>
-                    <table width="590" border="0" cellpadding="0" cellspacing="0" align="center" class="scaleForMobile">		
-                        <tr style="color:#FF0000">
-                        <td width="590" height="30">
-                            Existing Reporters with 0 story count for today includes -
-                        </td>
-                        </tr>
-                        <tr>
-                        <td width="590" height="30">
-                          &nbsp;
-                        </td>
-                        </tr>
-                        [reporter_without_story]
-                    </table>
+                    
                     <br/>
-                    <table width="590" border="0" cellpadding="0" cellspacing="0" align="center" class="scaleForMobile">		
-                        <tr>
-                        <td colspan="2">
-                            <b>Stories published on different BW Channels on [yesterday_date]</b>
-                        </td>
-                        </tr>
-                         <tr>
-                             <td colspan="2">&nbsp;
-                        </td>    
-                        </tr>
-                    </table>
-                    <table width="590" border="1" cellpadding="0" cellspacing="0" align="center" class="scaleForMobile">		
-                       [channels_counts]
-                    </table>
-                   
+                  
+                 
                     <table width="590" border="0" cellpadding="0" cellspacing="0" align="center" class="scaleForMobile">
 
                         <tr>
