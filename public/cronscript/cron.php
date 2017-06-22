@@ -2678,12 +2678,12 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
         //exit;
         $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
         $from_email = "reports@bwbusinessworld.com";
-        $sub = '=?UTF-8?B?' . base64_encode(" Do you know how many stories BW reporters did yesterday? ") . '?=';
+        $sub = '=?UTF-8?B?' . base64_encode("Daily online content report") . '?=';
         $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
         //anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in
        //anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in         
        // mail("anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
-        $to='anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in';
+        $to='anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in,hoshie@sudipta@businessworld.in,ankitas@businessworld.in';
         $this->sendSmtpMail($from_email,$to,$sub,$mailbody);
     }
 
