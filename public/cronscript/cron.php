@@ -2542,8 +2542,8 @@ class Cron {
 
         $displayDate = date('d-m-Y', strtotime("-1 days"));
         $yesDate = date('Y-m-d', strtotime("-1 days"));
-        $template = file_get_contents('/var/www/html/bwcms/public/cronscript/daily.html');
-        //$template = file_get_contents('/var/www/html/cms/public/cronscript/daily.html');
+        //$template = file_get_contents('/var/www/html/bwcms/public/cronscript/daily.html');
+        $template = file_get_contents('/var/www/html/cms/public/cronscript/daily.html');
 
         $total_article = 0;
 
