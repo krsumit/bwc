@@ -2523,7 +2523,7 @@ class Cron {
         //echo $mailbody; exit;
         //sudipta@businessworld.in,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in
         //mail("sudipta@businessworld.in,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
-        $to='sudipta@businessworld.in,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in'; 
+        $to='sudipta@businessworld.in,ankitas@businessworld.in'; 
         $this->sendSmtpMail($from_email,$to,$sub,$mailbody);
    }
 
@@ -2683,7 +2683,7 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
         //anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in
        //anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in         
        // mail("anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
-        $to='anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in,hoshie@businessworld.in,ankitas@businessworld.in';
+        $to='anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,hoshie@businessworld.in,ankitas@businessworld.in,brij@businessworld.in';
         $this->sendSmtpMail($from_email,$to,$sub,$mailbody);
     }
 
