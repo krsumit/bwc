@@ -2646,7 +2646,7 @@ class Cron {
         $sub = '=?UTF-8?B?' . base64_encode("Daily online content report-2") . '?=';
         $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
         
-        $to = 'sudipta@businessworld.in,shekhar@businessworld.in';
+        $to = 'sudipta@businessworld.in,tanvie@businessworld.in';
         $this->sendSmtpMail($from_email, $to, $sub, $mailbody);
     }
 
