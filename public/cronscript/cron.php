@@ -103,6 +103,9 @@ class Cron {
                 //echo 'test'; exit;
                 $this->generateReport();
                 break;
+            case 'eveningreport':
+                $this->generateEveningReport();
+                break;
             case 'dailyreport':
                 $this->sendDailyReport();
                 break;
@@ -2526,6 +2529,126 @@ class Cron {
         $to='sudipta@businessworld.in,ankitas@businessworld.in'; 
         $this->sendSmtpMail($from_email,$to,$sub,$mailbody);
    }
+
+   function generateEveningReport() {
+
+        //$template = file_get_contents('/var/www/html/bwcms/public/cronscript/evening.html');
+        $template = file_get_contents('/var/www/html/cms/public/cronscript/evening.html');
+
+        $yesterday_start_date = date('Y-m-d', strtotime("-1 day")) . ' 18:00:00';
+        $yesterday_end_date = date('Y-m-d', strtotime("-1 day")) . ' 23:59:59';
+        $today_start_date = date('Y-m-d') . ' 00:00:00';
+        $today_end_date = date('Y-m-d') . ' 17:59:59';
+
+        $channelsRst = $this->conn->query("select channel_id,channel from channels where valid='1'");
+        $channelids = array();
+        $channelsTotal = array();
+        $userTypeRst = $this->conn->query("select author_type_id as id,label from author_type where valid='1'");
+        $userTypes = array();
+
+        $countQueryYesterday = "select articles.channel_id,author_type.author_type_id,author_type.label,count(*) as cs,sum(view_count) as noofview  from articles inner join author_type on articles.author_type=author_type.author_type_id  where  concat(publish_date,' ',publish_time) between '$yesterday_start_date' and '$yesterday_end_date' group by author_type.author_type_id,articles.channel_id";
+        $countQueryToday = "select articles.channel_id,author_type.author_type_id,author_type.label,count(*) as cs,sum(view_count) as noofview  from articles inner join author_type on articles.author_type=author_type.author_type_id  where  concat(publish_date,' ',publish_time) between '$today_start_date' and '$today_end_date' group by author_type.author_type_id,articles.channel_id";
+        
+        $countsYesterday = array();
+        $countsToday = array();
+        $countRsultYesterday = $this->conn->query($countQueryYesterday);
+        $countRsultToday=$this->conn->query($countQueryToday);
+        $total_stories_yesterday = 0;
+        $total_stories_today=0;
+        
+        $report_type_tdata_yesterday = '<tr>
+                	<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Reporter Type</b></th>';
+        $report_type_tdata_today = '<tr>
+                	<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Reporter Type</b></th>';
+        
+        while ($channelRow = $channelsRst->fetch_assoc()) {
+            $report_type_tdata_yesterday.='<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>' . $channelRow['channel'] . '</b></th>';
+            $report_type_tdata_today.='<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>' . $channelRow['channel'] . '</b></th>';
+            $channelids[] = $channelRow['channel_id'];
+            $channelsTotalYesterday[$channelRow['channel_id']] = 0;
+            $channelsTotalToday[$channelRow['channel_id']] = 0;
+
+        }
+
+        while ($userTypeRow = $userTypeRst->fetch_assoc()) {
+            $userTypes[$userTypeRow['id']] = $userTypeRow['label'];
+        }
+        
+        while ($rowCount = $countRsultYesterday->fetch_assoc()) {
+            $countsYesterday[$rowCount['channel_id']][$rowCount['author_type_id']] = $rowCount['cs'];
+        }
+        
+         while ($rowCount = $countRsultToday->fetch_assoc()) {
+            $countsToday[$rowCount['channel_id']][$rowCount['author_type_id']] = $rowCount['cs'];
+        }
+        
+        
+       // $total_stories = 0;
+        foreach ($userTypes as $key => $value) {
+            //echo $key.'-'.$value; exit;
+            //print_r($channelids); exit;
+            $report_type_tdata_yesterday.='<tr>';
+            $report_type_tdata_today.='<tr>';
+            $report_type_tdata_yesterday.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $value . '</td>';
+            $report_type_tdata_today.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $value . '</td>';
+            foreach ($channelids as $id) {
+                $c = 0;
+                $ct=0;
+                if (isset($countsYesterday[$id])) {
+                    if (isset($countsYesterday[$id][$key])) {
+                        $c = $countsYesterday[$id][$key];
+                    }
+                }
+                if (isset($countsToday[$id])) {
+                    if (isset($countsToday[$id][$key])) {
+                        $ct = $countsToday[$id][$key];
+                    }
+                }
+                
+                
+                $total_stories_yesterday+=$c;
+                $total_stories_today+=$ct;
+                $report_type_tdata_yesterday.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $c . '</td>';
+                 $report_type_tdata_today.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $ct . '</td>';
+                $channelsTotalYesterday[$id] = $channelsTotalYesterday[$id] + $c;
+                $channelsTotalToday[$id] = $channelsTotalToday[$id] + $ct;
+            }
+            $report_type_tdata_yesterday.='</tr>';
+        }
+
+        $report_type_tdata_yesterday.='<tr>';
+        $report_type_tdata_today.='<tr>';
+        $report_type_tdata_yesterday.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Total</b></td>';
+        $report_type_tdata_today.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Total</b></td>';
+        
+        foreach ($channelsTotalYesterday as $total) {
+            $report_type_tdata_yesterday.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>' . $total . '</b></td>';
+        }
+        
+        foreach ($channelsTotalToday as $total) {
+            $report_type_tdata_today.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>' . $total . '</b></td>';
+        }
+        
+        $report_type_tdata_yesterday.='</tr>';
+        $report_type_tdata_today.='</tr>';
+        
+        
+        
+      
+
+        $mailbody = str_replace(array('[yesterday_from_date]', '[yesterday_to_date]', '[yesterday_total_stories]', '[yesterday_reporters_type_data]','[today_from_date]', '[today_to_date]','[today_total_stories]','[today_reporters_type_data]'), array($yesterday_start_date, $yesterday_end_date, $total_stories_yesterday,$report_type_tdata_yesterday,$today_start_date, $today_end_date, $total_stories_today,$report_type_tdata_today), $template);
+        
+       
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        //  echo  $mailbody; exit;
+        $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
+        $from_email = "reports@bwbusinessworld.com";
+        $sub = '=?UTF-8?B?' . base64_encode("Daily online content report-2") . '?=';
+        $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
+        
+        $to = 'sudipta@businessworld.in,shekhar@businessworld.in';
+        $this->sendSmtpMail($from_email, $to, $sub, $mailbody);
+    }
 
     function sendDailyReport() {
         $urls = array(
