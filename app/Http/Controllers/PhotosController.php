@@ -164,10 +164,12 @@ class PhotosController extends Controller
             $updatearray['social_image']='';
            
             // print_r($updatearray); exit;
-            DB::table('articles')
+            //if(trim($photo->photopath)){
+             DB::table('articles')
                     ->where('social_image', $photo->photopath)
+                     ->where('article_id',$photo->owner_id)
                     ->update($updatearray);
-            
+            //}
             
             if(count(Photo::where('photopath','=',$photo->photopath)->get())==1){
                 $fileTran->deleteFile(config('constants.awarticleimagethumbtdir'), $photo->photopath);
