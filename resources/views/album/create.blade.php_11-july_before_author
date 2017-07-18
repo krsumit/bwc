@@ -11,7 +11,7 @@
     <div class="panel-content filler">
         <div class="panel-logo"></div>
         <div class="panel-header">
-            <h1><small>Create New Album </small></h1>
+            <h1><small>Create New Album</small></h1>
 
         </div>
 
@@ -137,112 +137,6 @@
         </div>
         <!--Notifications end-->
     </div>
-    
-    
-    
-    <div class="container-fluid">
-        <div class="form-legend" id="Author-Detail">Author Detail
-        </div>
-        <div id="Simple_Select_Box" class="control-group row-fluid">
-            <div class="span3">
-                <label class="control-label" for="simpleSelectBox">Post As</label>
-            </div>
-            <div class="span9">
-                <div class="controls">
-
-                    {!! Form::select('authortype',$p1,null,
-                    ['class' => 'form-control formattedelement','id' =>'authortype' ]) !!}
-
-                </div>
-            </div>
-            <script>
-                                //simpleSelectAuthor
-                                $().ready(function(){
-                        $("#authortype").select2({
-                        dropdownCssClass: 'noSearch'
-                        });
-                        });</script>
-        </div>
-
-        <div class="bs-docs-example" id="tabarea">
-          
-            <div class="tab-content">
-                <div id="existing" class="tab-pane fade active in">
-
-                    <div id="Simple_Select_Box" class="control-group row-fluid">
-                        <div class="span3">
-                            <label class="control-label" for="simpleSelectBox">Author Name</label>
-                        </div>
-
-                        <div class="span9">
-
-                        </div>
-
-                        <div class="span9">
-
-                            <div class="controls">
-                                <input type="text" class="valid" name="author" id="author"/>
-                            </div>
-                            <script>
-
-                                                $().ready(function() {
-                                        $("#author").tokenInput(function(){
-                                            return "/article/authordd?option=" + $("#authortype").val();
-                                        },
-                                        {
-                                        theme: "facebook",
-                                                searchDelay: 300,
-                                                minChars: 3,
-                                                preventDuplicates: true,
-                                                tokenLimit:3,
-                                        });
-                                        });                            
-                                                                
-                            </script>
-
-
-                        </div>
-
-
-                    </div>
-
-
-
-                    <script type="text/javascript">
-
-                                        $(document).ready(function(){
-
-                                $("#authortype").change(function(){
-                                $("#author").tokenInput("clear");
-                                        $(this).find("option:selected").each(function(){
-
-
-
-                                if ($(this).attr("value") == "1"){
-
-                                $("#tabarea").hide();
-                                } else {
-                                $("#tabarea").show();
-                                }
-                               
-                                });
-                                }).change();
-                                        $("#event_id_author").change(function(){
-                                $("#author").tokenInput("clear");
-                                });
-                                });                        
-                                                
-                    </script>
-
-                </div>
-
-              
-            </div>
-        </div>
-    </div><!-- end container1 -->
-    
-    
-    
     <div class="container-fluid">
 
         <div class="form-legend" id="Channel">Channel</div>
@@ -697,13 +591,6 @@
                                                     },
                                                     "author_type": {
                                                         required: true,
-                                                    },
-                                                    "author": {
-                                                        required: {
-                                                            depends: function(element) {
-                                                            return $("#authortype").val()==2;
-                                                            }
-                                                        }
                                                     },
                                                     "title": {
                                                         required: true

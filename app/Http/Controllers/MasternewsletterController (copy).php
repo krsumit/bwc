@@ -312,17 +312,15 @@ class MasternewsletterController extends Controller {
         
         
         if (isset($_GET['option'])) {
-            $ids = $_GET['option'];
+            $id = $_GET['option'];
         }
         
         //echo $id ; exit;
-        $ids=  explode(',',$ids);
-        foreach($ids as $id){
-            $na = NewsletterArticles::find($id);
-            $na->is_deleted = 1;
-            $na->updated_at = date('Y-m-d H:i:s');
-            $na->save();
-        }
+        $na = NewsletterArticles::find($id);
+        $na->is_deleted = 1;
+        $na->updated_at = date('Y-m-d H:i:s');
+        $na->save();
+        
         $newsletter=Newsletter::find($na->master_newsletter_id);
         $newsletter->updated_at=date('Y-m-d H:i:s');
         $newsletter->update();

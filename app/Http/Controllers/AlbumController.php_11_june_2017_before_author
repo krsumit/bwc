@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 use App\Author;
-use App\AlbumAuthor;
 use App\Tag;
 use Illuminate\Http\Request;
 use App\Right;
@@ -114,13 +113,12 @@ class AlbumController extends Controller
         
         
         //$asd = fopen("/home/sudipta/log.log", 'a+');
-         // $event = DB::table('event')->where('channel_id', $currentChannelId)->where('valid', '1')->orderBy('start_date','desc')->get();
         $uid = Session::get('users')->id;
         $authors = Author::where('author_type_id','=',2)->get();
         $tags = Tag::where('valid','1')->get();
         $p1= DB::table('author_type')->where('valid','1')->whereIn('author_type_id',[1,2])->lists('label','author_type_id');
         //fclose($asd);
-        return view('album.create', compact('uid','channels','p1','authors','tags','currentChannelId','event'));
+        return view('album.create', compact('uid','channels','p1','authors','tags','currentChannelId'));
     }
     /*
      * Get Page Rights of the User
@@ -180,104 +178,85 @@ class AlbumController extends Controller
      * @param  Request  $request
      * @return Response
      */
-    public function store(Request $request) {
-
+    public function store(Request $request)
+    { 
+        
         $uid = $request->user()->id;
-
+       
         //echo '<pre>';
-        // print_r($request->all());exit;
+       // print_r($request->all());exit;
 
-        /* Right mgmt start */
-        $rightId = 59;
-        $currentChannelId = $request->channel;
-        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+         /* Right mgmt start */
+        $rightId=59;
+        $currentChannelId=$request->channel;
+        if(!$this->rightObj->checkRights($currentChannelId,$rightId))
             return redirect('/dashboard');
-
+        
         /* Right mgmt end */
-
-
+        
+        
         $album = new Album();
 
         // Add Arr Data to Album Table //
         $album->channel_id = $request->channel;
-        $album->author_type = $request->authortype;
         $album->title = $request->title;
         $album->description = $request->featuredesc;
         $album->tags = $request->Taglist;
-        $album->sponsored = ($request->is_sponsored) ? '1' : '0';
-        $album->featured = ($request->is_featured) ? '1' : '0';
-        $album->for_homepage = ($request->for_homepage) ? '1' : '0';
+        $album->sponsored = ($request->is_sponsored)?'1':'0';
+        $album->featured = ($request->is_featured)?'1':'0';
+        $album->for_homepage = ($request->for_homepage)?'1':'0';
         $album->save();
         //Get Album id
         $id = $album->id;
         // Getting upladed images in array
         $images = explode(',', $request->uploadedImages);
-
-        // Copy uploaded from temporary location to specific location
-
-        $fileTran = new FileTransfer();
-
-        //$s3 = AWS::createClient('s3');
-
-        foreach ($images as $image) {
-            if (isset($request->photographby[$image])) {
-                $source = '';
-                $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
-                $dest = config('constants.awalbumimagedir');
-                $fileTran->tranferFile($image, $source, $dest, false);
-
-                unlink($_SERVER['DOCUMENT_ROOT'] . '/files/' . $image);
+          
+            // Copy uploaded from temporary location to specific location
+        
+            $fileTran=new FileTransfer();
+            
+            //$s3 = AWS::createClient('s3');
+            
+            foreach ($images as $image) {
+                if(isset($request->photographby[$image])){
+                $source='';
+                $source_thumb=$_SERVER['DOCUMENT_ROOT'].'/files/thumbnail/'.$image;
+                $dest=config('constants.awalbumimagedir');
+                $fileTran->tranferFile($image, $source, $dest,false);
+                
+                unlink($_SERVER['DOCUMENT_ROOT'] . '/files/'.$image);
                 if (is_file($source_thumb))
                     unlink($source_thumb);
-
-                // if($result['@metadata']['statusCode']==200){
-                //          unlink($source);
-                //          unlink($source_thumb);
-                $imageEntry = new Photo();
-                $imageEntry->title = $request->imagetitle[$image];
-                $imageEntry->description = $request->imagedesc[$image];
-                $imageEntry->source = $request->photosource[$image];
-                $imageEntry->source_url = $request->sourceurl[$image];
-                $imageEntry->photo_by = $request->photographby[$image];
-                $imageEntry->photopath = $image;
-                $imageEntry->imagefullPath = url(config('constants.albumimagedir') . $image);
-                $imageEntry->channel_id = $request->channel;
-                $imageEntry->owned_by = 'album';
-                $imageEntry->owner_id = $id;
-                $imageEntry->active = '1';
-                $imageEntry->save();
-                // }
-            }
-        }
-
-      
-       if ($request->authortype != '1') {
-            $author_count = 0;
-            
-            if ($request->author) {
-                $autorids = explode(',', $request->author);
-                $autorids = array_unique($autorids);
-                foreach ($autorids as $key => $value) {
-           
-                    $article_author = new AlbumAuthor();
-                    $article_author->album_id = $id;
-                    $article_author->author_id = $value;
-                    $article_author->save();
+                
+              // if($result['@metadata']['statusCode']==200){
+              //          unlink($source);
+              //          unlink($source_thumb);
+                        $imageEntry=new Photo();
+                        $imageEntry->title=$request->imagetitle[$image];
+                        $imageEntry->description=$request->imagedesc[$image];
+                        $imageEntry->source=$request->photosource[$image];
+                        $imageEntry->source_url=$request->sourceurl[$image];
+                        $imageEntry->photo_by=$request->photographby[$image];
+                        $imageEntry->photopath=$image;
+                        $imageEntry->imagefullPath=url(config('constants.albumimagedir').$image);
+                        $imageEntry->channel_id=$request->channel;
+                        $imageEntry->owned_by='album';
+                        $imageEntry->owner_id=$id;
+                        $imageEntry->active='1';
+                        $imageEntry->save();
+               // }
                 }
+            
             }
-          
-        }
-
-
         //Redircting to specifi locationn with proper message
-        if ($request->status == 'P') {
+        if($request->status == 'P') {
             Session::flash('message', 'Your album has been Published successfully.');
-            return redirect('/album/list/published?channel=' . $request->channel);
+            return redirect('/album/list/published?channel='.$request->channel);
         }
-
-        if ($request->status == 'D') {
+      
+        if($request->status == 'D') {
             Session::flash('message', 'Your album has deleted successfully.');
-            return redirect('/album/list/deleted?channel=' . $request->channel);
+            return redirect('/album/list/deleted?channel='.$request->channel);
         }
     }
 
@@ -289,6 +268,7 @@ class AlbumController extends Controller
      */
     public function show($id)
     {   
+        
         $album=Album::find($id);
         $photos=DB::table('photos')
                 ->where('owned_by','album')
@@ -300,29 +280,19 @@ class AlbumController extends Controller
                 ->whereIn('tags_id',explode(',',$album->tags))->get());
        
         $uid = Session::get('users')->id;
-         
-        $postAs= DB::table('author_type')->where('valid','1')->whereIn('author_type_id',[1,2])->lists('label','author_type_id');
-        
-        $arrAuth = DB::table('album_author')
-                            ->join('authors', 'authors.author_id', '=', 'album_author.author_id')
-                            ->select('album_author.author_id as id', 'authors.name')
-                            ->where('album_id', '=', $id)->get();
-          
-        $authors=json_encode($arrAuth);
         
          /* Right mgmt start */
         $rightId=59;
         $currentChannelId=$album->channel_id;
         $channels=$this->rightObj->getAllowedChannels($rightId);
-       
-   
         if(!$this->rightObj->checkRights($currentChannelId,$rightId))
             return redirect('/dashboard');
         
         /* Right mgmt end */
         
+        
        // $channels = AlbumController::getUserChannels($uid);
-        return view('album.edit', compact('album','photos','tags','channels','postAs','authors'));
+        return view('album.edit', compact('album','photos','tags','channels'));
        
     }
 
@@ -354,15 +324,13 @@ class AlbumController extends Controller
             return redirect('/dashboard');
         
         /* Right mgmt end */
-        //dd($request->all());
+        
         $album = Album::find($request->id);
-        $oldAuthorType=$album->author_type;
         // Add Arr Data to Article Table //
         $album->channel_id = $request->channel;
         $album->title = $request->title;
         $album->description = $request->featuredesc;
         $album->tags = $request->Taglist;
-        $album->author_type = $request->authortype;
         $album->sponsored = ($request->is_sponsored)?'1':'0';
         $album->featured = ($request->is_featured)?'1':'0';
         $album->for_homepage = ($request->for_homepage)?'1':'0';
@@ -401,29 +369,6 @@ class AlbumController extends Controller
                         $imageEntry->save();
                 }
             }
-            
-          
-            if ($request->authortype=='2') {
-                $autorids = explode(',', $request->author);
-                $autorids = array_unique($autorids);
-                if($oldAuthorType==$request->authortype)
-                    $deleteOldAuthor=DB::table('album_author')->where('album_id', '=', $id)->whereNotIn('author_id',$autorids)->delete();
-                else
-                    $deleteOldAuthor=DB::table('album_author')->where('album_id', '=', $id)->delete();
-                
-                foreach ($autorids as $key => $value) {
-                    if (DB::table('album_author')->where('album_id', '=', $id)->where('author_id', $value)->count() == 0) {
-                        $article_author = new AlbumAuthor();
-                        $article_author->album_id = $id;
-                        $article_author->author_id = $value;
-                        $article_author->save();
-                    }
-                }
-            }else{
-                $deleteOldAuthor=DB::table('album_author')->where('album_id', '=', $id)->delete();
-            }
-        
-        
         //If it's puublished
         if($request->status == 'P') {
             Session::flash('message', 'Your album has been Published successfully.');

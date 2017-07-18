@@ -263,7 +263,7 @@
                                 <th>Title</th>
                                 <th>Date Of Publish</th>
                                 <th>Author</th>
-                                <th><input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectallN"></th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -273,10 +273,7 @@
                                 <td>{{$article->title}} </td>
                                 <td class="center">{{$article->publish_date}}</td>
                                 <td> {{$article->name}}</td>
-                                <td class="center"> 
-                                 
-                                    <input type="checkbox" class="uniformCheckbox" name="checkItemN[]" value="{{ $article->asigned_id}}">
-                                </td>
+                                <td class="center"> <button type="button" class="btn btn-mini btn-danger" onClick="deleteArticle({{$article->asigned_id}})">Dump</button></td>
                             </tr>
                              @endforeach
                         </tbody>
@@ -302,17 +299,6 @@
                     //                            $("#simpleSelectBox").select2({
                     //                                dropdownCssClass: 'noSearch'
                     //                            }); 
-                      $('#selectallN').click(function () {
-                        if ($(this).is(':checked')) {
-                            $('input[name="checkItemN[]"]').each(function () {
-                                $(this).attr('checked', 'checked');
-                            });
-                        } else {
-                            $('input[name="checkItemN[]"]').each(function () {
-                                $(this).removeAttr('checked');
-                            });
-                        }
-                    });
                 });
                 
                 function createNewsletter() {
@@ -329,17 +315,9 @@
                     }
                 }
                 
-                function deleteArticle() {
-                     var ids = '';
-                        var checkedVals = $('input[name="checkItemN[]"]:checkbox:checked').map(function () {
-                           return this.value;
-                        }).get();
-                        if (checkedVals.length > 0) {
-                            var ids = checkedVals.join(",");
-                        }
-                  
+                function deleteArticle(id) {
                         $.get("{{ url('/newsletter/delete/?channel=').$currentChannelId}}",
-                                {option: ids},
+                                {option: id},
                         function (data) {
                             if (data.trim() == 'success') {
                                  $('#notificationdiv').show();
@@ -381,13 +359,7 @@
 
 
         </div>
-         <div class="control-group row-fluid">
-            <div class="span12 span-inset">
-                @if(in_array('83',Session::get('user_rights')))
-                <button type="button" class="btn btn-danger" onclick="deleteArticle()">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
-                @endif
-            </div>
-        </div>
+
         </div>
      
 </div>
