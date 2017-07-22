@@ -256,6 +256,7 @@ class Cron {
                             $this->conn2->query("insert into photo_shoot_tags set photo_shoot_id=$id,tag_id=$tag");
                         }
                         $this->migratePhotoshootPhoto($id, 0, $condition);
+                        $this->migratePhotoshootAuthor($id, 0, $condition);
                     }else {
                         $delStmt = $this->conn2->prepare("delete from photo_shoot where photo_shoot_id=?");
                         $delStmt->bind_param('i', $id);
@@ -284,6 +285,7 @@ class Cron {
                             $this->conn2->query("insert into photo_shoot_tags set photo_shoot_id=$iid,tag_id=$tag");
                         }
                         $this->migratePhotoshootPhoto($iid, 1, $condition);
+                        $this->migratePhotoshootAuthor($iid, 1, $condition);
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
                     }
                 }
