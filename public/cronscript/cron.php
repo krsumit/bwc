@@ -248,14 +248,21 @@ class Cron {
                         //print_r($photoshootUpdateStmt);exit;
                         if ($photoshootUpdateStmt->affected_rows)
                             $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                        
+                        $this->conn2->query("delete from photo_shoot_tags where photo_shoot_id=$id");
+                        
+                        $tags = explode(',', $photoshootRow['tags']);
+                        foreach ($tags as $tag) {
+                            $this->conn2->query("insert into photo_shoot_tags set photo_shoot_id=$id,tag_id=$tag");
+                        }
                         $this->migratePhotoshootPhoto($id, 0, $condition);
                     }else {
                         $delStmt = $this->conn2->prepare("delete from photo_shoot where photo_shoot_id=?");
                         $delStmt->bind_param('i', $id);
                         $delStmt->execute();
-
-
                         if ($delStmt->affected_rows) {
+                            $this->conn2->query("delete from photo_shoot_tags where photo_shoot_id=$id");
+                            $this->conn2->query("delete from photo_shoot_authors where photo_shoot_id=$id");
                             $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
                             $this->deletePhotoshootRelatedRelated($id);
                         }
@@ -325,6 +332,35 @@ class Cron {
         }
     }
 
+    
+    function migratePhotoshootAuthor($id, $isNew = 0, $condition = '') {
+
+        if ($isNew == '1') {
+            $albumAuthorResultset = $this->conn->query("select * from album_author where album_id=$id");
+            while ($authorRow = $albumAuthorResultset->fetch_assoc()) {
+                $tauthId = $authorRow['author_id'];
+                $auInsertStmt = $this->conn2->prepare("insert into photo_shoot_authors set photo_shoot_id=?,author_id=?");
+                $auInsertStmt->bind_param('ii', $authorRow['album_id'],$authorRow['author_id']);
+                $auInsertStmt->execute();
+                $auInsertStmt->close();
+            }
+            
+        } else {
+            
+            $this->conn2->query("delete from photo_shoot_authors where photo_shoot_id=$id");
+            
+            $albumAuthorResultset = $this->conn->query("select * from album_author where album_id=$id");
+            
+            while ($authorRow = $albumAuthorResultset->fetch_assoc()) {
+                $tauthId = $authorRow['author_id'];
+                $auInsertStmt = $this->conn2->prepare("insert into photo_shoot_authors set photo_shoot_id=?,author_id=?");
+                $auInsertStmt->bind_param('ii', $authorRow['album_id'], $authorRow['author_id']);
+                $auInsertStmt->execute();
+                $auInsertStmt->close();
+            }            
+        }
+    }
+    
     function deletePhotoshootRelatedRelated($id) {
         $delStmt = $this->conn2->prepare("delete from photo_shoot_photos where photo_shoot_id=?");
         $delStmt->bind_param('i', $id);
