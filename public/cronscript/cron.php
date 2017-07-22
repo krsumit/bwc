@@ -240,9 +240,9 @@ class Cron {
                 $checkResult = $this->conn2->query("select photo_shoot_title from photo_shoot where photo_shoot_id=$id");
                 if ($checkResult->num_rows > 0) {  //echo 'test';exit;
                     if ($photoshootRow['valid'] == '1') {//echo 'sumit'; exit();
-                        $photoshootUpdateStmt = $this->conn2->prepare("update photo_shoot set photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,photo_shoot_published_date=?,photo_shoot_updated_at=?,campaign_id=? where photo_shoot_id=?");
+                        $photoshootUpdateStmt = $this->conn2->prepare("update photo_shoot set photo_shoot_author_type=?,photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,photo_shoot_published_date=?,photo_shoot_updated_at=?,campaign_id=? where photo_shoot_id=?");
                         //echo 'sumit';
-                        $photoshootUpdateStmt->bind_param('ssiissii', $photoshootRow['title'], $photoshootRow['description'], $photoshootRow['sponsored'], $photoshootRow['featured'], $photoshootRow['created_at'], $photoshootRow['updated_at'], $photoshootRow['campaign_id'], $id) or die($this->conn2->error);
+                        $photoshootUpdateStmt->bind_param('issiissii',$photoshootRow['author_type'],$photoshootRow['title'], $photoshootRow['description'], $photoshootRow['sponsored'], $photoshootRow['featured'], $photoshootRow['created_at'], $photoshootRow['updated_at'], $photoshootRow['campaign_id'], $id) or die($this->conn2->error);
                         //echo 'abcd'.$this->conn2->error;exit;
                         $photoshootUpdateStmt->execute();
                         //print_r($photoshootUpdateStmt);exit;
@@ -270,9 +270,9 @@ class Cron {
                         $delStmt->close();
                     }
                 } else {//echo 'test4';exit;
-                    $insertStmt = $this->conn2->prepare("insert into photo_shoot set photo_shoot_id=?,"
-                            . "photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,photo_shoot_published_date=?,photo_shoot_updated_at=?,campaign_id=?");
-                    $insertStmt->bind_param('issiissi', $photoshootRow['id']
+                    $insertStmt = $this->conn2->prepare("insert into photo_shoot set photo_shoot_id=?,photo_shoot_author_type=?"
+                            . ",photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,photo_shoot_published_date=?,photo_shoot_updated_at=?,campaign_id=?");
+                    $insertStmt->bind_param('iissiissi', $photoshootRow['id'],$photoshootRow['author_type']
                             , $photoshootRow['title'], $photoshootRow['description'], $photoshootRow['sponsored'], $photoshootRow['featured'], $photoshootRow['created_at'], $photoshootRow['updated_at'], $photoshootRow['campaign_id']);
                     $insertStmt->execute();
                     //print_r($insertStmt);exit;
