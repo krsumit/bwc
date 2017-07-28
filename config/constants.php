@@ -42,6 +42,7 @@ return [
 'awvideothumb'=> 'mastervideothumb/',
 'awvideothumb_small'=> 'mastervideothumb/thumb/',    
 'awsstaticimage'=> 'static/images/',
+'awsupload'=> 'upload/',     
 'debatefeatured'=>'debate/featuredimage/',
 'debateexpert'=>'debate/expertimage/',     
 'awbucket'=>'bwmedia',

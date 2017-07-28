@@ -406,6 +406,8 @@ Route::match(['get', 'post'], 'article/addPhotos', ['as' => 'article/addPhotos',
 /*
  *  Delete Image from Create Article Form - Ajax Request
  */
+Route::post('photo/editor/store',['middleware' => 'auth',   'uses' => 'PhotosController@storeEditorImage']);
+
 Route::get('photo/crop', ['middleware' => 'auth',   'uses' => 'PhotosController@cropImage']);
 Route::get('photo/resize/crop', ['middleware' => 'auth','uses' => 'PhotosController@resizeCropImage']);
 

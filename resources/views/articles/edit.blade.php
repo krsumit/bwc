@@ -945,13 +945,22 @@
                         });
                                  */
                                 
-                      $(function() { 
-                        $('#maxi').froalaEditor({
-                            height: 400,
-                            htmlRemoveTags: [],
-                            pastePlain: true
-                          }) 
-                      });           
+                      
+                       $(function() {
+                            $('#maxi').froalaEditor({
+                                    height: 400,
+                                    htmlRemoveTags: [],
+                                    pastePlain: true,
+                                    imageUploadURL: '/photo/editor/store',
+                                    imageUploadParams: {
+                                    _token: $('input[name="_token"]').val()
+                                    },
+                                    imageMaxSize: 1024 * 1024 * 1 / 2
+                            });
+                            $('#maxi').on('froalaEditor.image.error', function (e, editor, error, response) {
+                            alert(error.message);
+                            });
+                        });       
                                 
                       $(document).ready(function() { 
                                       @if($article->canonical_options==0)  

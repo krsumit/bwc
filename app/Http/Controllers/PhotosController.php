@@ -111,6 +111,33 @@ class PhotosController extends Controller
         return $ppass;
 
     }
+    
+    function storeEditorImage(Request $request){
+              $fileTran = new FileTransfer();
+ 
+      if ($request->file('file')) { // echo 'test';exit;
+                    $file = $request->file('file');
+                  
+                    //$filename = str_random(6) . '_' . $request->file('file')->getClientOriginalName();
+                    
+                    $filename=str_random(6) . '_' .preg_replace('/[^a-zA-Z0-9_.]/', '_', $request->file('file')->getClientOriginalName());                    
+                    //$name = $request->name;
+                    $destination_path = config('constants.awsupload');
+
+                    $fileTran->uploadFile($file, $destination_path, $filename);
+                    
+                    //$imageurl = $filename;
+                    
+                    $returnArray['link']=config('constants.awsbaseurl').config('constants.awsupload').$filename;
+                    
+                     return response()->json($returnArray);
+                     
+                    //{"link":"https://i.froala.com/download/2cb3f80ce1aae357553252eca3a9463118261e2d.png?1501236701"}
+                    
+                    
+                    }
+        
+    }
 
     /**
      * Display the specified resource.
