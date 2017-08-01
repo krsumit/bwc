@@ -817,7 +817,7 @@
             </div>
         </div>
 
-        <div class="control-group row-fluid">
+        <div class="control-group row-fluid" id="submitsection">
             <div class="span12 span-inset">
                 <button value="P" name="status" class="btn btn-warning" type="submit">Publish</button>
                 <img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>	
@@ -1020,7 +1020,7 @@
                         //$("#pageSubmit").onclick: true,
                         onclick: true,
                         invalidHandler: function (event, validator) {
-
+                            $('#submitsection').show();
                             for (var i in validator.errorMap) {
 
                                 if ($('#' + i).hasClass('formattedelement')) {
@@ -1051,7 +1051,11 @@
                             }
                         }
                     });
-
+                    
+                    $('#submitsection button').click(function(){
+                        $('#submitsection').hide();
+                     });  
+                     
                     $('select.formattedelement').change(function () {
                         if ($(this).val().trim() != '')
                             $(this).siblings('.formattedelement').removeClass('error');

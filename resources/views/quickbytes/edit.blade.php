@@ -892,7 +892,7 @@
             </div>
         </div>
 
-        <div class="control-group row-fluid">
+        <div class="control-group row-fluid" id="submitsection">
             <div class="span12 span-inset">
                 <button type="submit" class="btn btn-warning" name="status" value="P">Publish</button>	
                 <button class="btn btn-danger" id="dumpSubmit" value="D" name="status" type="submit">Dump</button>
@@ -1053,8 +1053,6 @@
                         });
                     });
 
-
-
                     $('#fileupload').bind('fileuploaddone', function (e, data) {
                         //console.log(e);
                         var dataa = JSON.parse(data.jqXHR.responseText);
@@ -1099,7 +1097,7 @@
                         //$("#pageSubmit").onclick: true,
                         onclick: true,
                         invalidHandler: function (event, validator) {
-
+                            $('#submitsection').show();
                             for (var i in validator.errorMap) {
 
                                 if ($('#' + i).hasClass('formattedelement')) {
@@ -1127,6 +1125,9 @@
                             }
                         }
                     });
+                    $('#submitsection button').click(function(){
+                        $('#submitsection').hide();
+                     });  
 
                     $('select.formattedelement').change(function () {
                         if ($(this).val().trim() != '')

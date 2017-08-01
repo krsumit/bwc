@@ -135,6 +135,8 @@
                                             if (checkvalid == 0){
                                     $('#submitsection').prepend('<div class="error noborder">An error has occured. Please check the above form.</div>');
                                             return false;
+                                    }else{
+                                        $('#submitsection').hide();
                                     }
                                     // else
                                     // $("#fileupload").submit();

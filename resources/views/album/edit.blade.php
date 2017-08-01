@@ -566,7 +566,7 @@
         <!--Select Box with Filter Search end-->
     </div>  
                 <div class="container-fluid">
-             	<div class="control-group row-fluid">
+             	<div class="control-group row-fluid" >
 					<div class="span12 span-inset">
                                          <label class="checkbox" >
                                    <input type="checkbox" @if($album->for_homepage==1) checked @endif class="uniformCheckbox" value="checkbox1" name="for_homepage">
@@ -593,7 +593,7 @@
                  
 				</div>
                 
-				<div class="control-group row-fluid">
+				<div class="control-group row-fluid" id="submitsection">
                             <div class="span12 span-inset">
                                  <button value="P" name="status" type="submit" class="btn btn-warning">Publish</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>	
                                  <button value="D" name="status" type="submit" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>	
@@ -805,8 +805,9 @@ function getArg(url,name){
                             errorClass: "error",
                             //$("#pageSubmit").onclick: true,
                             onclick: true,
+                            
                             invalidHandler: function(event, validator) {
-                         
+                                            $('#submitsection').show();
                                     for (var i in validator.errorMap) {
                                         
                                             if($('#'+i).hasClass('formattedelement')){
@@ -835,7 +836,9 @@ function getArg(url,name){
                                     }
                             }
                     });
-              
+          $('#submitsection button').click(function(){
+             $('#submitsection').hide();
+          });     
           $('select.formattedelement').change(function(){
            if($(this).val().trim()!='')
             $(this).siblings('.formattedelement').removeClass('error');
