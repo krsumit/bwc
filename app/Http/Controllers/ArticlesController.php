@@ -1387,5 +1387,5 @@ class ArticlesController extends Controller {
     public static function compareByCount($a, $b) {
         return strcmp($a->cs, $b->cs);
     }
-
+    
 }

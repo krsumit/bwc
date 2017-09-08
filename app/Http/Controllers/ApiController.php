@@ -22,6 +22,32 @@ class ApiController extends Controller {
     public function __construct() {
         $this->key = md5('apivideogist@bw@businessworld@businessworld.in');
     }
+    
+    public function insertArticle(){
+        //http://35.194.177.143/xml/BES1-MH-IVF-CALF.xml
+        //http://35.194.177.143/xml/WRG29-WEATHER-CHART%202%20LAST%20(BES9).xml
+      $string=file_get_contents('http://35.194.177.143/xml/BES1-MH-IVF-CALF.xml');
+      $xml = simplexml_load_string($string);
+      echo '<pre>';
+      //print_r($xml); 
+      echo $xml->channel->item->title;
+      echo '<br><br><br><br><br>'; 
+       //  echo trim($xml->channel->item->description);exit;
+      
+       $search_array=array('/\n\t/','/\n/');
+       $replace_array=array('<br><br>',' ');
+     
+      //$search_array=array('/\n\t/','/\n\b/','/\n\'/');
+      //$replace_array=array('<br><br>',' ',' \'');
+      echo trim(preg_replace($search_array,$replace_array, utf8_decode($xml->channel->item->description)));
+      
+        echo '<br><br><br><br><br>'; 
+        
+        
+      echo $xml->channel->item->category;
+      exit;
+      dd($xml);
+    }
 
     public function videoApi(Request $request) {
         $msgArray = array();
