@@ -706,7 +706,7 @@
                                                     "author": {
                                                         required: {
                                                             depends: function(element) {
-                                                            return $("#authortype").val()!=2;
+                                                            return $("#authortype").val()!=1;
                                                             }
                                                         }
                                                     },
