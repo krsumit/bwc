@@ -185,7 +185,7 @@
                             </div>
                             <script>
 
-                                                $().ready(function() {
+                                         $().ready(function() {
                                         $("#author").tokenInput(function(){
                                             return "/article/authordd?option=" + $("#authortype").val();
                                         },
@@ -196,6 +196,11 @@
                                                 preventDuplicates: true,
                                                 tokenLimit:3,
                                         });
+                                        
+                                            $("#author").show();
+                                            
+                                            $("#author").css({visibility:"hidden",width:"0",height:"0"});
+                                        
                                         });                            
                                                                 
                             </script>
@@ -701,7 +706,7 @@
                                                     "author": {
                                                         required: {
                                                             depends: function(element) {
-                                                            return $("#authortype").val()==2;
+                                                            return $("#authortype").val()!=2;
                                                             }
                                                         }
                                                     },

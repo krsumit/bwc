@@ -63,7 +63,8 @@ class QuotesController extends Controller
             $query=Quote::where('channel_id', $request->channel)
                 ->select('quotes.*','quotetags.tag')
                 ->join('quotetags','quotes.q_tags','=','quotetags.tag_id')    
-                ->where('quotes.valid', '1');
+                ->where('quotes.valid', '1')
+                ->orderBy('quotes.add_date','desc');
             if($request->keyword){
                 $keyword=$request->keyword;
                 $query->where(function($q) use ($keyword) {

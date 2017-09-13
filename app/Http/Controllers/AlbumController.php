@@ -118,7 +118,7 @@ class AlbumController extends Controller
         $uid = Session::get('users')->id;
         $authors = Author::where('author_type_id','=',2)->get();
         $tags = Tag::where('valid','1')->get();
-        $p1= DB::table('author_type')->where('valid','1')->whereIn('author_type_id',[1,2])->lists('label','author_type_id');
+        $p1= DB::table('author_type')->where('valid','1')->whereIn('author_type_id',[1,2,5])->lists('label','author_type_id');
         //fclose($asd);
         return view('album.create', compact('uid','channels','p1','authors','tags','currentChannelId','event'));
     }
@@ -301,7 +301,7 @@ class AlbumController extends Controller
        
         $uid = Session::get('users')->id;
          
-        $postAs= DB::table('author_type')->where('valid','1')->whereIn('author_type_id',[1,2])->lists('label','author_type_id');
+        $postAs= DB::table('author_type')->where('valid','1')->whereIn('author_type_id',[1,2,5])->lists('label','author_type_id');
         
         $arrAuth = DB::table('album_author')
                             ->join('authors', 'authors.author_id', '=', 'album_author.author_id')
@@ -403,7 +403,7 @@ class AlbumController extends Controller
             }
             
           
-            if ($request->authortype=='2') {
+            if ($request->authortype!='1') {
                 $autorids = explode(',', $request->author);
                 $autorids = array_unique($autorids);
                 if($oldAuthorType==$request->authortype)

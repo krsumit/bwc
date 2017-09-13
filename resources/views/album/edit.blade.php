@@ -1,8 +1,6 @@
 @extends('layouts/master')
 
 @section('title', 'Edit Album - BWCMS')
-
-
 @section('content')
 <?php
 //echo '<pre>';
@@ -203,6 +201,10 @@
                                                 tokenLimit:3,
                                                 prePopulate: <?php echo $authors ?>,
                                         });
+                                
+                                        $("#author").show();
+                                            
+                                        $("#author").css({visibility:"hidden",width:"0",height:"0"});
                                    });                            
                             </script>
 
@@ -833,7 +835,14 @@ function getArg(url,name){
                                     },
                                     "featuredesc":{
                                     required: true
-                                    }
+                                    },
+                                    "author": {
+                                        required: {
+                                            depends: function(element) {
+                                            return $("#simpleSelectAuthor").val()!=1;
+                                            }
+                                        }
+                                    },
                             }
                     });
           $('#submitsection button').click(function(){
