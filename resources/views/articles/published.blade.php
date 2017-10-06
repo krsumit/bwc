@@ -212,14 +212,14 @@
                         </tr>-->
                             @foreach($articles as $article)
                             <tr  class="gradeX"  id="rowCur{{$article->article_id}}">
-                                <td><a href="/article/{{ $article->article_id }}">{{ $article->article_id }}</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: {{ $article->name }}"><i class="icon-photon info-circle"></i></a></td>
-                                <td><a href="/article/{{ $article->article_id }}">{{ $article->title }}</a>
+                                <td @if($article->pti_auto_published == 1) style="background-color: #cce3cf;" @endif ><a href="/article/{{ $article->article_id }}">{{ $article->article_id }}</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: {{ $article->name }}"><i class="icon-photon info-circle"></i></a></td>
+                                <td @if($article->pti_auto_published == 1) style="background-color: #cce3cf;" @endif ><a href="/article/{{ $article->article_id }}">{{ $article->title }}</a>
                                 </td>
-                                <td><a href="/article/{{ $article->article_id }}">{{ $article->name }}</a></td>
-                                <td class="center"><a href="/article/{{ $article->article_id }}">{{ $article->publish_date }}</a>
+                                <td @if($article->pti_auto_published == 1) style="background-color: #cce3cf;" @endif ><a href="/article/{{ $article->article_id }}">{{ $article->name }}</a></td>
+                                <td @if($article->pti_auto_published == 1) style="background-color: #cce3cf;" @endif class="center"><a href="/article/{{ $article->article_id }}">{{ $article->publish_date }}</a>
                                     <a href="/article/{{ $article->article_id }}">{{ $article->publish_time }}</a>
                                 </td>
-                                <td class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="{{ $article->article_id }}"></td>
+                                <td @if($article->pti_auto_published == 1) style="background-color: #cce3cf;" @endif class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="{{ $article->article_id }}"></td>
                             </tr>
                             @endforeach
                             <!--

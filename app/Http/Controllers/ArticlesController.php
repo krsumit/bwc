@@ -123,10 +123,10 @@ class ArticlesController extends Controller {
                     ->Leftjoin('authors', 'article_author.author_id', '=', 'authors.author_id');
             if ($option == 'new') {
                 $q->join('users', 'articles.user_id', '=', 'users.id');
-                $q->select(DB::raw('articles.article_id,articles.title,articles.created_at,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.channel_id,articles.locked_by,users.name as username'));
+                $q->select(DB::raw('articles.article_id,articles.title,articles.created_at,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.pti_auto_published,articles.channel_id,articles.locked_by,users.name as username'));
                 $q->orderBy('articles.created_at', 'desc');
             } else {
-                $q->select(DB::raw('articles.article_id,articles.title,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.channel_id,articles.locked_by'));
+                $q->select(DB::raw('articles.article_id,articles.title,articles.pti_auto_published,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.channel_id,articles.locked_by'));
                 if ($option == 'scheduled') {
                     $q->orderBy('articles.updated_at', 'desc');
                 } else {
@@ -606,7 +606,7 @@ class ArticlesController extends Controller {
         $article->state = $request->state;
         $article->news_type = $request->newstype;
         $article->magazine_id = $request->magazine;
-        #$article->pti_auto_published = 0;
+        $article->pti_auto_published = 0;
         if($request->authortype=="6")
             $article->event_id = $request->event_id_author;
         else
