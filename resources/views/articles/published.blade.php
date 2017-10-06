@@ -211,7 +211,7 @@
                             <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
                         </tr>-->
                             @foreach($articles as $article)
-                            <tr class="gradeX"  id="rowCur{{$article->article_id}}">
+                            <tr @if($article->pti_auto_published==1) style="background-color: #cce3cf;" @endif class="gradeX"  id="rowCur{{$article->article_id}}">
                                 <td><a href="/article/{{ $article->article_id }}">{{ $article->article_id }}</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: {{ $article->name }}"><i class="icon-photon info-circle"></i></a></td>
                                 <td><a href="/article/{{ $article->article_id }}">{{ $article->title }}</a>
                                 </td>

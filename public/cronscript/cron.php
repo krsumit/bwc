@@ -2850,6 +2850,13 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
         $this->sendSmtpMail($from_email,$to,$sub,$mailbody);
     }
 
+    
+    function checkPtiServer(){
+        
+        
+    }
+    
+    
     function sendSmtpMail($from, $to, $subject, $message) {
         
         $smtp = Mail::factory('smtp', array('host' => 'smtp.sendgrid.net', 'port' => '2525', 'auth' => true, 'username' => 'godigital@businessworld.in', 'password' => 'bwdigital@1234'));

@@ -606,6 +606,7 @@ class ArticlesController extends Controller {
         $article->state = $request->state;
         $article->news_type = $request->newstype;
         $article->magazine_id = $request->magazine;
+        $article->pti_auto_published = 0;
         if($request->authortype=="6")
             $article->event_id = $request->event_id_author;
         else
