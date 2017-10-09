@@ -113,6 +113,9 @@ class Cron {
                 //echo 'test'; exit;
                 $this->migrateCampaing();
                 break;
+            case 'chkpti':
+                $this->checkPtiServer();
+                break;
             case 'subscriber':
                 $this->migrateNewsletterSubscriber();
         endswitch;
@@ -2852,6 +2855,22 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
 
     
     function checkPtiServer(){
+        $ptiAuthorId=84707;
+        $currentDate=date('Y-m-d H:i:s');
+        $channelsRst=$this->conn->query("select timestampdiff(minute,max(updated_at),'".$currentDate."') as time_diff from article_author where author_id=84707") or die($this->conn->error);
+        $row = $channelsRst->fetch_assoc();
+        if($row['time_diff']>1){
+        //    echo 'time diff is : '. $row['time_diff'];
+        $headers = 'MIME-Version: 1.0' . "\r\n";
+        $mailbody='Hi BW Businessworld Digital Team, <br><br> There is no article published in last '.$row['time_diff'].' minutes using PTI feed, Please check configuration. <br><br> Regards,<br>Bw PTI server';
+        $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
+        $from_email = "reports@bwbusinessworld.com";
+        $sub = '=?UTF-8?B?' . base64_encode("Pti server error ") . '?=';
+        $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
+        //sudipta@businessworld.in
+        $to='shekhar@businessworld.in';
+        $this->sendSmtpMail($from_email,$to,$sub,$mailbody);
+        }
         
         
     }
