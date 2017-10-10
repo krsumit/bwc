@@ -2495,7 +2495,7 @@ $('#validation_form').fileupload({
         //xhrFields: {withCredentials: true},
         url: '<?php echo url('article/image/upload') ?>',
         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-        maxFileSize: 10000000
+        maxFileSize: 2000000
     });
      });
      $('#validation_form').bind('fileuploaddone', function (e, data) {

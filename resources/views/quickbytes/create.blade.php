@@ -970,7 +970,7 @@
                             //xhrFields: {withCredentials: true},
                             url: '<?php echo url('quickbyte/image/upload') ?>',
                             acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-                            maxFileSize: 10000000
+                            maxFileSize: 2000000
                         });
                     });
 

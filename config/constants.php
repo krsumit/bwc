@@ -49,7 +49,7 @@ return [
 'awsbaseurl_backup'=>'http://d1s8mqgwixvb29.cloudfront.net/   http://bwcms.localhost/files/',
 'awsbaseurl'=>'http://d1s8mqgwixvb29.cloudfront.net/',     
 'recordperpage' => '20',
-'maxfilesize'=>'10',
+'maxfilesize'=>'2',
 'maxfilesizevideo'=>'200',
 'filesizein'=>'MB',
 'dimension_article'=>'870X470',

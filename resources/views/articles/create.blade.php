@@ -1876,7 +1876,7 @@
                                 //xhrFields: {withCredentials: true},
                                 url: '<?php echo url('article/image/upload') ?>',
                                         acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-                                        maxFileSize: 10000000
+                                        maxFileSize: 2000000
                                 });
                                         $('.authorimagespn').append('<input type="file" name="photo" id="photo">');
                                 });
