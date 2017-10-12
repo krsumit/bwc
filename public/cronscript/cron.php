@@ -2859,7 +2859,7 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
         $currentDate=date('Y-m-d H:i:s');
         $channelsRst=$this->conn->query("select timestampdiff(minute,max(updated_at),'".$currentDate."') as time_diff from article_author where author_id=84707") or die($this->conn->error);
         $row = $channelsRst->fetch_assoc();
-        if($row['time_diff']>120){
+        if($row['time_diff']>240){
         //    echo 'time diff is : '. $row['time_diff'];
         $headers = 'MIME-Version: 1.0' . "\r\n";
         $mailbody='Hi BW Businessworld Digital Team, <br><br> There is no article published in last '.$row['time_diff'].' minutes using PTI feed, Please check configuration. <br><br> Regards,<br>Bw PTI server';
