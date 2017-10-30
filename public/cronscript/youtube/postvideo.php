@@ -2,7 +2,7 @@
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-include '/var/www/html/public/cronscript/const.php'; // live
+include '/var/www/html/cms/public/cronscript/youtube/const.php'; // live
 //include '../const.php'; // local
 require_once 'vendor/autoload.php';
 $conn = new mysqli(HOST, USER, PASS, DATABASE) or die($conn->connect_errno);
@@ -35,6 +35,7 @@ $client->setScopes('https://www.googleapis.com/auth/youtube');
 $client->setAccessType('offline');
 
 
+
 // Define an object that will be used to make all API requests.
 $youtube = new Google_Service_YouTube($client);
 
@@ -48,7 +49,6 @@ if (isset($_GET['code'])) {
     $_SESSION['token'] = $client->getAccessToken();
     header('Location: ' . $redirect);
 }
-
 
 if ((isset($_SESSION['token']))) {
     //$_SESSION['token']['created']+$_SESSION['token']['expires_in'].'----'.time();exit;
