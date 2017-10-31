@@ -2,7 +2,7 @@
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-include '/var/www/html/cms/public/cronscript/youtube/const.php'; // live
+include '/var/www/html/cms/public/cronscript/const.php'; // live
 //include '../const.php'; // local
 require_once 'vendor/autoload.php';
 $conn = new mysqli(HOST, USER, PASS, DATABASE) or die($conn->connect_errno);
