@@ -38,7 +38,6 @@ class VideoController extends Controller
     {
         //echo count($arr);exit;
         //
-        
         /* Right mgmt start */
         $rightId=62;
         $currentChannelId=$this->rightObj->getCurrnetChannelId($rightId);
@@ -187,7 +186,7 @@ class VideoController extends Controller
        if($request ->video_name !=''){
             $file = $request->file('video_name');
             $filename = str_random(6) . '_' . $request->file('video_name')->getClientOriginalName();
-            $fileTran->uploadFile($file, config('constants.awvideo'), $filename); 
+            $fileTran->uploadFile($file, config('constants.awvideo'), $filename,false); 
             $video->video_name = $filename;
         }
         if($request ->video_thumb_name !=''){

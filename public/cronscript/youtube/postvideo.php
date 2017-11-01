@@ -2,8 +2,8 @@
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-include '/var/www/html/cms/public/cronscript/const.php'; // live
-//include '../const.php'; // local
+//include '/var/www/html/cms/public/cronscript/const.php'; // live
+include '/var/www/html/bwcms/public/cronscript/const.php'; // local
 require_once 'vendor/autoload.php';
 $conn = new mysqli(HOST, USER, PASS, DATABASE) or die($conn->connect_errno);
 $conn->set_charset('utf8');
@@ -67,10 +67,10 @@ if ((isset($_SESSION['token']))) {
 // Check to ensure that the access token was successfully acquired.
 if ($client->getAccessToken()) {
     while ($masterVideoRow = $masterVideoResults->fetch_assoc()) {
-         $videoPath = $_SERVER['DOCUMENT_ROOT'] . '/files/'.$masterVideoRow['video_name']; 
-        $videourl = 'http://d1s8mqgwixvb29.cloudfront.net/videomaster/'.$masterVideoRow['video_name']; 
+         $videoPath = $_SERVER['DOCUMENT_ROOT'] . '/files/videomaster/'.$masterVideoRow['video_name']; 
+        //$videourl = 'http://d1s8mqgwixvb29.cloudfront.net/videomaster/'.$masterVideoRow['video_name']; 
         $namename = '';
-        copy($videourl, $videoPath);
+        //copy($videourl, $videoPath);
         if (file_exists($videoPath)) {
             try {
                 $snippet = new Google_Service_YouTube_VideoSnippet();

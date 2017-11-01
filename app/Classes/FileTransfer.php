@@ -29,15 +29,15 @@ class FileTransfer {
      }
      
      
-    public function uploadFile($file, $destination,$fileName) {
+    public function uploadFile($file, $destination,$fileName,$removeSource=true) {
         $this->fileDir=$destination; 
         $this->fileName = $fileName;
         $file->move($this->docroot.$destination, $fileName);
         
         if (config('constants.store_location') == 'aws') {
-            $this->transferToAws();
+            $this->transferToAws($removeSource);
         } elseif (config('constants.store_location') == 'google') {
-            $this->transferToGoogle();
+            $this->transferToGoogle($removeSource);
         }
        
     }
@@ -81,7 +81,7 @@ class FileTransfer {
         }
     }
 
-    private function transferToAws() {
+    private function transferToAws($removeSource=true) {
         $s3 = AWS::createClient('s3');
         $result = $s3->putObject(array(
             'ACL' => 'public-read',
@@ -90,11 +90,12 @@ class FileTransfer {
             'SourceFile' => $this->docroot.$this->fileDir . $this->fileName,
         ));
         if ($result['@metadata']['statusCode'] == 200) {
-            unlink($this->docroot.$this->fileDir . $this->fileName);
+            if($removeSource)
+                unlink($this->docroot.$this->fileDir . $this->fileName);
         }
     }
 
-    private function transferToGoogle() {
+    private function transferToGoogle($removeSource=true) {
         // Code to transfer file to google
 
         /* Code to unlink file from root */
