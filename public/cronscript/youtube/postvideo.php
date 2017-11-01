@@ -3,7 +3,7 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 //include '/var/www/html/cms/public/cronscript/const.php'; // live
-include '/var/www/html/bwcms/public/cronscript/const.php'; // local
+include '/var/www/html/cms/public/cronscript/youtube/vendor/autoload.php'; // local
 require_once 'vendor/autoload.php';
 $conn = new mysqli(HOST, USER, PASS, DATABASE) or die($conn->connect_errno);
 $conn->set_charset('utf8');
