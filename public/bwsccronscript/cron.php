@@ -666,8 +666,8 @@ function migrateBwArticle() {
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' bwscarticle(s) inserted, ' . $_SESSION['noofupd'] . ' bwscarticle(s) updated and ' . $_SESSION['noofdel'] . ' bwscarticle(s) deleted.</h5>';
         $key= md5(date('dmY').'businessworld');
 	    file_get_contents('http://bwsmartcities.businessworld.in/create-json/'.$key);
-
-        
+            file_get_contents('http://bwsmartcities.businessworld.in/create-article-json/'.$key);
+  
     }
    
 
