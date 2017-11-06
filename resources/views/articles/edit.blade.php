@@ -1410,7 +1410,18 @@
                         $().ready(function(){
                 $("#magazine_id").select2();
                         //$("#selectBoxFilter20").select2();
-                });</script>
+                });
+           </script>
+        </div>
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter">Featured in print </label>
+            </div>
+            <div class="span1">
+                <div style="margin:18px 0 0 5px">
+                  <input type="checkbox" name="featured_in_print" class="uniformCheckbox3" @if($article->featured_in_print == 1) checked @endif value="1">
+                </div>
+            </div>
         </div>
 
         <!--Select Box with Filter Search end-->
@@ -2315,8 +2326,14 @@ $(':radio[id=embedcodevideo]').change(function() {
 
                 <label class="checkbox" >
                     <input type="checkbox" name="web_exclusive" class="uniformCheckbox3" value="checkbox1" @if($article->web_exclusive == 1) checked @endif>
-                           <a href="#" target="_blank">Web Exclusive.</a>
+                           <a href="#" target="_blank">Web Exclusive(Featured)</a>
                 </label>
+                 <label class="checkbox" >
+                    <input type="checkbox" name="exclusive_non_featured" class="uniformCheckbox3" value="1" @if($article->exclusive_non_featured == 1) checked @endif>
+                           <a href="#" target="_blank">Web Exclusive(Non featured)</a>
+                </label>
+                
+                
                 <script>
                             $().ready(function(){
                     $(".uniformCheckbox3").uniform();

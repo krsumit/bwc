@@ -113,7 +113,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrauthor' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpoauthor' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -149,7 +149,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrauthor',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwpoauthor',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -161,7 +161,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='bwhrfeaturviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
+        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='bwpofeaturviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
 
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -200,7 +200,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='bwhrfeaturviewcount',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='bwpofeaturviewcount',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -214,7 +214,7 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrPhotoshoot' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpoPhotoshoot' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -273,7 +273,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrPhotoshoot',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwpoPhotoshoot',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -325,7 +325,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='bwhrsponsorviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
+        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='bwposponsorviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -365,7 +365,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='bwhrsponsorviewcount',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='bwposponsorviewcount',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -377,7 +377,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='bwhrarticleviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
+        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='bwpoarticleviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
 
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -416,7 +416,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='bwhrarticleviewcount',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='bwpoarticleviewcount',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -428,7 +428,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrevent' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpoevent' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -458,7 +458,7 @@ class Cron {
         $this->migrateSpeakerTag();
         $this->migrateSpeaker();
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrevent',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwpoevent',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -474,7 +474,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrtips' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpotips' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -524,7 +524,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrtips',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwpotips',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -536,7 +536,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrtipstagcomb' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpotipstagcomb' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -581,7 +581,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrtipstagcomb',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwpotipstagcomb',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -593,7 +593,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrtipCategory' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpotipCategory' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -639,7 +639,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrtipCategory',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwpotipCategory',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -653,7 +653,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrquotes' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpoquotes' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -706,7 +706,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrquotes',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwpoquotes',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -718,7 +718,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrquotescategory' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpoquotescategory' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -762,7 +762,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrquotescategory',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwpoquotescategory',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -774,7 +774,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrquotetags' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpoquotetags' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -816,7 +816,7 @@ class Cron {
 
         //echo 'here'; exit;
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrquotetags',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwpoquotetags',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -829,7 +829,7 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrtopiccategory' order by start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpotopiccategory' order by start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         
         if ($cronresult->num_rows > 0) {
@@ -873,7 +873,7 @@ class Cron {
         }
         
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrtopiccategory',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwpotopiccategory',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -888,7 +888,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrcategory' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpocategory' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         $cronLastExecutionTime = 0;
         if ($cronresult->num_rows > 0) {
@@ -944,7 +944,7 @@ class Cron {
         //echo $condition; exit;
         $this->migrateSubCategoryDirect($cronLastExecutionTime);
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrcategory',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwpocategory',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -1092,7 +1092,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrtag' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpotag' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1125,7 +1125,7 @@ class Cron {
             }
         }
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrtag',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwpotag',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -1137,7 +1137,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrspeakertag' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpospeakertag' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1172,7 +1172,7 @@ class Cron {
         
         
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrspeakertag',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwpospeakertag',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -1186,7 +1186,7 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrspeaker' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpospeaker' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1226,7 +1226,7 @@ class Cron {
 
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrspeaker',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwpospeaker',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -1238,7 +1238,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrnewstype' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwponewstype' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1270,7 +1270,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrnewstype',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwponewstype',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -1284,7 +1284,7 @@ class Cron {
       $_SESSION['noofupd'] = 0;
       $conStartTime = date('Y-m-d H:i:s');
 
-      $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrmagazine' order by  start_time desc limit 0,1") or die($this->conn->error);
+      $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpomagazine' order by  start_time desc limit 0,1") or die($this->conn->error);
       $condition = '';
       if ($cronresult->num_rows > 0) {
       $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1323,7 +1323,7 @@ class Cron {
       }
       }
       $cronEndTime = date('Y-m-d H:i:s');
-      $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrmagazine',start_time=?,end_time=?");
+      $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwpomagazine',start_time=?,end_time=?");
       $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
       $updatecronstmt->execute();
       $updatecronstmt->close();
@@ -1338,7 +1338,7 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrtopics' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpotopics' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1379,7 +1379,7 @@ class Cron {
         }
         
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrtopics',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwpotopics',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -1397,7 +1397,7 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrquickbyte' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpoquickbyte' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1484,7 +1484,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrquickbyte',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwpoquickbyte',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -1538,7 +1538,7 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrarticle' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpoarticle' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1614,7 +1614,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrarticle',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwpoarticle',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -1629,7 +1629,7 @@ class Cron {
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
 
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrfeatur' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpofeatur' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1690,7 +1690,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrfeatur',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwpofeatur',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -1940,7 +1940,7 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrsponsoredposts' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwposponsoredposts' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -2013,7 +2013,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrsponsoredposts',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwposponsoredposts',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -2124,7 +2124,7 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrmagazineissue' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpomagazineissue' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -2175,7 +2175,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrmagazineissue',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwpomagazineissue',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -2194,7 +2194,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrmastervideo' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpomastervideo' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -2262,7 +2262,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrmastervideo',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwpomastervideo',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -2307,7 +2307,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrcampaing' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpocampaing' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -2344,7 +2344,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrcampaing',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwpocampaing',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -2357,7 +2357,7 @@ function migrateMasterNewsLetter() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrmasternewsletter' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpomasternewsletter' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -2419,7 +2419,7 @@ function migrateMasterNewsLetter() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrmasternewsletter',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwpomasternewsletter',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();

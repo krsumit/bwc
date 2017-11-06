@@ -639,7 +639,8 @@ class ArticlesController extends Controller {
         }
         $article->important = $request->important ? 1 : 0;
         $article->web_exclusive = $request->web_exclusive ? 1 : 0;
-
+        $article->exclusive_non_featured = $request->exclusive_non_featured ? 1 : 0;
+        $article->featured_in_print = $request->featured_in_print ? 1 : 0;
         $article->slug = 'slug';
         //echo $request->status;exit;
         if ($request->status != 'SV')
@@ -1014,6 +1015,8 @@ class ArticlesController extends Controller {
 
         $article->important = $request->important ? 1 : 0;
         $article->web_exclusive = $request->web_exclusive ? 1 : 0;
+        $article->exclusive_non_featured = $request->exclusive_non_featured ? 1 : 0;
+        $article->featured_in_print = $request->featured_in_print ? 1 : 0;
 
         $article->slug = 'slug';
         $article->status = $request->status;

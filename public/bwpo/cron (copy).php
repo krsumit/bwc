@@ -1,7 +1,7 @@
 <?php
-require_once "Mail.php";
-require_once "Mail/mime.php";
+
 class Cron {
+
     var $conn;
     var $conn2;
     var $message;
@@ -14,7 +14,7 @@ class Cron {
         mysqli_set_charset($this->conn, "utf8");
         $this->conn2 = new mysqli(LHOST, LUSER, LPASS, LDATABASE) or die($this->conn2->connect_errro);
         mysqli_set_charset($this->conn2, "utf8");
-        $this->channelId = 1;
+        $this->channelId = 10;
     }
 
     function migrateData($section) {
@@ -52,7 +52,7 @@ class Cron {
                 $this->migratequotesCategory();
                 break;
 
-            case 'Sponsored':
+	   case 'Sponsored':
                 $this->migrateSponsored();
                 break;
             case 'tipstagcombinations':
@@ -96,30 +96,16 @@ class Cron {
             case 'mastervideo':
                 $this->migrateMasterVideo();
                 break;
-            case 'debate':
-                $this->migrateDebate();
-                break;
-            case 'sendreport':
-                //echo 'test'; exit;
-                $this->generateReport();
-                break;
-            case 'eveningreport':
-                $this->generateEveningReport();
-                break;
-            case 'dailyreport':
+            
+	     case 'dailyreport':
                 $this->sendDailyReport();
-                break;
+		break;
             case 'campaing':
                 //echo 'test'; exit;
                 $this->migrateCampaing();
                 break;
-            case 'chkpti':
-                $this->checkPtiServer();
-                break;
-            case 'subscriber':
-                $this->migrateNewsletterSubscriber();
         endswitch;
-
+		
         $_SESSION['message'] = $this->message;
     }
 
@@ -127,11 +113,11 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='author' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrauthor' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
-            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+            // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
         $authorResults = $this->conn->query("SELECT * FROM authors where  1 $condition");
@@ -163,7 +149,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='author',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrauthor',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -175,7 +161,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='featurviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
+        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='bwhrfeaturviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
 
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -214,7 +200,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='featurviewcount',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='bwhrfeaturviewcount',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -228,13 +214,13 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='Photoshoot' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrPhotoshoot' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
-        $photoshootResults = $this->conn->query("SELECT *  FROM album where channel_id='1' $condition");
+        $photoshootResults = $this->conn->query("SELECT *  FROM album where channel_id='10' $condition");
         //echo $photoshootResults->num_rows;exit;
         if ($photoshootResults->num_rows > 0) {
             while ($photoshootRow = $photoshootResults->fetch_assoc()) {
@@ -243,39 +229,31 @@ class Cron {
                 $checkResult = $this->conn2->query("select photo_shoot_title from photo_shoot where photo_shoot_id=$id");
                 if ($checkResult->num_rows > 0) {  //echo 'test';exit;
                     if ($photoshootRow['valid'] == '1') {//echo 'sumit'; exit();
-                        $photoshootUpdateStmt = $this->conn2->prepare("update photo_shoot set photo_shoot_author_type=?,photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,photo_shoot_published_date=?,photo_shoot_updated_at=?,campaign_id=? where photo_shoot_id=?");
+                        $photoshootUpdateStmt = $this->conn2->prepare("update photo_shoot set photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,photo_shoot_published_date=?,photo_shoot_updated_at=?,campaign_id=? where photo_shoot_id=?");
                         //echo 'sumit';
-                        $photoshootUpdateStmt->bind_param('issiissii',$photoshootRow['author_type'],$photoshootRow['title'], $photoshootRow['description'], $photoshootRow['sponsored'], $photoshootRow['featured'], $photoshootRow['created_at'], $photoshootRow['updated_at'], $photoshootRow['campaign_id'], $id) or die($this->conn2->error);
+                        $photoshootUpdateStmt->bind_param('ssiissii', $photoshootRow['title'], $photoshootRow['description'], $photoshootRow['sponsored'], $photoshootRow['featured'], $photoshootRow['created_at'], $photoshootRow['updated_at'], $photoshootRow['campaign_id'], $id) or die($this->conn2->error);
                         //echo 'abcd'.$this->conn2->error;exit;
                         $photoshootUpdateStmt->execute();
                         //print_r($photoshootUpdateStmt);exit;
                         if ($photoshootUpdateStmt->affected_rows)
                             $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
-                        
-                        $this->conn2->query("delete from photo_shoot_tags where photo_shoot_id=$id");
-                        
-                        $tags = explode(',', $photoshootRow['tags']);
-                        foreach ($tags as $tag) {
-                            $this->conn2->query("insert into photo_shoot_tags set photo_shoot_id=$id,tag_id=$tag");
-                        }
                         $this->migratePhotoshootPhoto($id, 0, $condition);
-                        $this->migratePhotoshootAuthor($id, 0, $condition);
                     }else {
                         $delStmt = $this->conn2->prepare("delete from photo_shoot where photo_shoot_id=?");
                         $delStmt->bind_param('i', $id);
                         $delStmt->execute();
+
+
                         if ($delStmt->affected_rows) {
-                            $this->conn2->query("delete from photo_shoot_tags where photo_shoot_id=$id");
-                            $this->conn2->query("delete from photo_shoot_authors where photo_shoot_id=$id");
                             $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
                             $this->deletePhotoshootRelatedRelated($id);
                         }
                         $delStmt->close();
                     }
                 } else {//echo 'test4';exit;
-                    $insertStmt = $this->conn2->prepare("insert into photo_shoot set photo_shoot_id=?,photo_shoot_author_type=?"
-                            . ",photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,photo_shoot_published_date=?,photo_shoot_updated_at=?,campaign_id=?");
-                    $insertStmt->bind_param('iissiissi', $photoshootRow['id'],$photoshootRow['author_type']
+                    $insertStmt = $this->conn2->prepare("insert into photo_shoot set photo_shoot_id=?,"
+                            . "photo_shoot_title=?,photo_shoot_description=?,photo_shoot_sponsered=?,photo_shoot_featured=?,photo_shoot_published_date=?,photo_shoot_updated_at=?,campaign_id=?");
+                    $insertStmt->bind_param('issiissi', $photoshootRow['id']
                             , $photoshootRow['title'], $photoshootRow['description'], $photoshootRow['sponsored'], $photoshootRow['featured'], $photoshootRow['created_at'], $photoshootRow['updated_at'], $photoshootRow['campaign_id']);
                     $insertStmt->execute();
                     //print_r($insertStmt);exit;
@@ -288,7 +266,6 @@ class Cron {
                             $this->conn2->query("insert into photo_shoot_tags set photo_shoot_id=$iid,tag_id=$tag");
                         }
                         $this->migratePhotoshootPhoto($iid, 1, $condition);
-                        $this->migratePhotoshootAuthor($iid, 1, $condition);
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
                     }
                 }
@@ -296,7 +273,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='Photoshoot',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrPhotoshoot',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -310,7 +287,7 @@ class Cron {
                 //print_r($photo);exit;
                 $photoInsStmt = $this->conn2->prepare("insert into photo_shoot_photos set photo_shoot_id=?,photo_shoot_photo_name=?,photo_shoot_photo_url=?"
                         . ",photo_shoot_photo_title=?,photo_by=?,photo_shoot_photo_description=?,sequence=?");
-                $photoInsStmt->bind_param('isssssi', $id, $photo->photopath, $photo->imagefullPath, $photo->title, $photo->photo_by, $photo->description, $photo->sequence);
+                $photoInsStmt->bind_param('isssssi', $id, $photo->photopath, $photo->imagefullPath, $photo->title, $photo->photo_by, $photo->description,$photo->sequence);
                 $photoInsStmt->execute();
             }
         } else {
@@ -330,42 +307,13 @@ class Cron {
                     $photoInsStmt = $this->conn2->prepare("insert into photo_shoot_photos set photo_shoot_id=?,photo_shoot_photo_name=?,photo_shoot_photo_url=?"
                             . ",photo_shoot_photo_title=?,photo_by=?,photo_shoot_photo_description=?,sequence=?") or die($this->conn2->error);
                     ;
-                    $photoInsStmt->bind_param('isssssi', $id, $photo->photopath, $photo->imagefullPath, $photo->title, $photo->photo_by, $photo->description, $photo->sequence) or die($this->conn2->error);
+                    $photoInsStmt->bind_param('isssssi', $id, $photo->photopath, $photo->imagefullPath, $photo->title, $photo->photo_by, $photo->description,$photo->sequence) or die($this->conn2->error);
                     $photoInsStmt->execute() or die($this->conn2->error);
                 }
             }
         }
     }
 
-    
-    function migratePhotoshootAuthor($id, $isNew = 0, $condition = '') {
-
-        if ($isNew == '1') {
-            $albumAuthorResultset = $this->conn->query("select * from album_author where album_id=$id");
-            while ($authorRow = $albumAuthorResultset->fetch_assoc()) {
-                $tauthId = $authorRow['author_id'];
-                $auInsertStmt = $this->conn2->prepare("insert into photo_shoot_authors set photo_shoot_id=?,author_id=?");
-                $auInsertStmt->bind_param('ii', $authorRow['album_id'],$authorRow['author_id']);
-                $auInsertStmt->execute();
-                $auInsertStmt->close();
-            }
-            
-        } else {
-            
-            $this->conn2->query("delete from photo_shoot_authors where photo_shoot_id=$id");
-            
-            $albumAuthorResultset = $this->conn->query("select * from album_author where album_id=$id");
-            
-            while ($authorRow = $albumAuthorResultset->fetch_assoc()) {
-                $tauthId = $authorRow['author_id'];
-                $auInsertStmt = $this->conn2->prepare("insert into photo_shoot_authors set photo_shoot_id=?,author_id=?");
-                $auInsertStmt->bind_param('ii', $authorRow['album_id'], $authorRow['author_id']);
-                $auInsertStmt->execute();
-                $auInsertStmt->close();
-            }            
-        }
-    }
-    
     function deletePhotoshootRelatedRelated($id) {
         $delStmt = $this->conn2->prepare("delete from photo_shoot_photos where photo_shoot_id=?");
         $delStmt->bind_param('i', $id);
@@ -377,7 +325,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='sponsorviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
+        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='bwhrsponsorviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -417,7 +365,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='sponsorviewcount',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='bwhrsponsorviewcount',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -429,7 +377,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='articleviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
+        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='bwhrarticleviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
 
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -468,7 +416,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='articleviewcount',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='bwhrarticleviewcount',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -480,26 +428,26 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='event' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrevent' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
-        $eventrResults = $this->conn->query("SELECT * FROM event  WHERE channel_id= '1'  $condition");
+        $eventrResults = $this->conn->query("SELECT * FROM event  WHERE channel_id= '10'  $condition");
         if ($eventrResults->num_rows > 0) {
             while ($eventRow = $eventrResults->fetch_assoc()) {
                 $eventId = $eventRow['event_id'];
                 $checkEventExistResultSet = $this->conn2->query("select event_id,title from event where event_id=$eventId");
                 if ($checkEventExistResultSet->num_rows > 0) { //echo 'here'; exit;
-                    $eventUpdateStmt = $this->conn2->prepare("update event set title=?,description=?,imagepath=?,image_url=?,start_date=?,end_date=?,start_time=?,end_time=?,country=?,state=?,valid=?,created_at=?,updated_at=? where event_id=?") or die($this->conn->error);
-                    $eventUpdateStmt->bind_param('ssssssssiiissi', $eventRow['title'], $eventRow['description'], $eventRow['imagepath'], $eventRow['image_url'], $eventRow['start_date'], $eventRow['end_date'], $eventRow['start_time'], $eventRow['end_time'], $eventRow['country'],$eventRow['state'], $eventRow['valid'], $eventRow['created_at'], $eventRow['updated_at'], $eventRow['event_id']) or die($this->conn->error);
+                    $eventUpdateStmt = $this->conn2->prepare("update event set title=?,description=?,imagepath=?,image_url=?,banner_image=?,start_date=?,end_date=?,start_time=?,end_time=?,country=?,state=?,valid=?,created_at=?,updated_at=? where event_id=?") or die($this->conn->error);
+                    $eventUpdateStmt->bind_param('sssssssssiiissi', $eventRow['title'], $eventRow['description'], $eventRow['imagepath'], $eventRow['image_url'], $eventRow['banner_image'], $eventRow['start_date'], $eventRow['end_date'], $eventRow['start_time'], $eventRow['end_time'], $eventRow['country'], $eventRow['state'], $eventRow['valid'], $eventRow['created_at'], $eventRow['updated_at'], $eventRow['event_id']) or die($this->conn->error);
                     $eventUpdateStmt->execute()or die($this->conn->error);
                     if ($eventUpdateStmt->affected_rows)
                         $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                 }else {
-                    $eventInsertStmt = $this->conn2->prepare("insert into event set event_id=?,title=?,description=?,imagepath=?,image_url=?,start_date=?,end_date=?,start_time=?,end_time=?,country=?,state=?,valid=?,created_at=?,updated_at=?");
-                    $eventInsertStmt->bind_param('issssssssiiiss', $eventRow['event_id'], $eventRow['title'], $eventRow['description'], $eventRow['imagepath'], $eventRow['image_url'], $eventRow['start_date'], $eventRow['end_date'], $eventRow['start_time'], $eventRow['end_time'], $eventRow['country'],$eventRow['state'], $eventRow['valid'], $eventRow['created_at'], $eventRow['updated_at']);
+                    $eventInsertStmt = $this->conn2->prepare("insert into event set event_id=?,title=?,description=?,imagepath=?,image_url=?,banner_image=?,start_date=?,end_date=?,start_time=?,end_time=?,country=?,state=?,valid=?,created_at=?,updated_at=?");
+                    $eventInsertStmt->bind_param('isssssssssiiiss', $eventRow['event_id'], $eventRow['title'], $eventRow['description'], $eventRow['imagepath'], $eventRow['image_url'], $eventRow['banner_image'], $eventRow['start_date'], $eventRow['end_date'], $eventRow['start_time'], $eventRow['end_time'], $eventRow['country'], $eventRow['state'], $eventRow['valid'], $eventRow['created_at'], $eventRow['updated_at']);
                     $eventInsertStmt->execute();
                     if ($eventInsertStmt->affected_rows) {
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
@@ -510,7 +458,7 @@ class Cron {
         $this->migrateSpeakerTag();
         $this->migrateSpeaker();
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='event',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrevent',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -526,14 +474,14 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='tips' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrtips' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
         //echo "SELECT * FROM tips  WHERE 1 $condition";exit;
-        $tipsrResults = $this->conn->query("SELECT * FROM tips  WHERE channel_id = '1'   $condition");
+        $tipsrResults = $this->conn->query("SELECT * FROM tips  WHERE channel_id = '10'   $condition");
         //echo $tipsrResults->num_rows;exit; 
         if ($tipsrResults->num_rows > 0) {
 
@@ -576,7 +524,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='tips',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrtips',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -588,7 +536,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='tipstagcomb' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrtipstagcomb' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -633,7 +581,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='tipstagcomb',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrtipstagcomb',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -645,7 +593,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='tipCategory' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrtipCategory' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -691,7 +639,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='tipCategory',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrtipCategory',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -705,14 +653,14 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='quotes' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrquotes' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
         //echo "SELECT * FROM event  WHERE 1 $condition";exit;
-        $quotesrResults = $this->conn->query("SELECT * FROM quotes WHERE channel_id = '1'  $condition");
+        $quotesrResults = $this->conn->query("SELECT * FROM quotes WHERE channel_id = '10'  $condition");
         //echo $quotesrResults->num_rows;exit;
         if ($quotesrResults->num_rows > 0) {
 
@@ -723,26 +671,27 @@ class Cron {
                 $checkQuotesExistResultSet = $this->conn2->query("select quote_id,quote from channel_quote where quote_id=$quotesId");
                 if ($checkQuotesExistResultSet->num_rows > 0) { //echo 'test';exit;
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
-                    if ($quotesRow['valid'] == 1) {
+		if($quotesRow['valid']==1){
 
-                        $quotesUpdateStmt = $this->conn2->prepare("update channel_quote set quote=?,quote_description=?,q_author_id=?,q_tags=?,quotes_image=?,valid=?,quote_update_at=?,quote_created_at=? where quote_id=?") or die($this->conn->error);
-                        $quotesUpdateStmt->bind_param('ssississi', $quotesRow['quote'], $quotesRow['description'], $quotesRow['q_category_id'], $quotesRow['q_tags'], $quotesRow['quotes_image'], $quotesRow['valid'], $quotesRow['updated_at'], $quotesRow['created_at'], $quotesId) or die($this->conn->error);
-                        //echo $this->conn2->error;exit;
-                        $quotesUpdateStmt->execute()or die($this->conn->error);
-                        //print_r($tagUpdateStmt);exit;
-                        //echo $eventUpdateStmt->affected_rows;exit;
-                        if ($quotesUpdateStmt->affected_rows)
-                            $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
-                    }else {
+                    $quotesUpdateStmt = $this->conn2->prepare("update channel_quote set quote=?,quote_description=?,q_author_id=?,q_tags=?,quotes_image=?,valid=?,quote_update_at=?,quote_created_at=? where quote_id=?") or die($this->conn->error);
+                    $quotesUpdateStmt->bind_param('ssississi', $quotesRow['quote'], $quotesRow['description'], $quotesRow['q_category_id'], $quotesRow['q_tags'],$quotesRow['quotes_image'], $quotesRow['valid'], $quotesRow['updated_at'], $quotesRow['created_at'], $quotesId) or die($this->conn->error);
+                    //echo $this->conn2->error;exit;
+                    $quotesUpdateStmt->execute()or die($this->conn->error);
+                    //print_r($tagUpdateStmt);exit;
+                    //echo $eventUpdateStmt->affected_rows;exit;
+                    if ($quotesUpdateStmt->affected_rows)
+                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+		   }else{
 
-                        $delStmt = $this->conn2->prepare("delete from channel_quote where quote_id=?");
+			$delStmt = $this->conn2->prepare("delete from channel_quote where quote_id=?");
                         $delStmt->bind_param('i', $quotesId);
                         $delStmt->execute();
-                    }
-                } else {//echo 'goint to insert';exit;
+			}
+                }else {//echo 'goint to insert';exit;
+			
                     $quotesInsertStmt = $this->conn2->prepare("insert into channel_quote set quote_id=?,quote=?,quote_description=?,q_author_id=?,q_tags=?,quotes_image=?,valid=?,quote_update_at=?,quote_created_at=?");
                     //echo $this->conn2->error; exit;
-                    $quotesInsertStmt->bind_param('issississ', $quotesRow['quote_id'], $quotesRow['quote'], $quotesRow['description'], $quotesRow['q_category_id'], $quotesRow['q_tags'], $quotesRow['quotes_image'], $quotesRow['valid'], $quotesRow['updated_at'], $quotesRow['created_at']);
+                    $quotesInsertStmt->bind_param('issississ', $quotesRow['quote_id'], $quotesRow['quote'], $quotesRow['description'], $quotesRow['q_category_id'], $quotesRow['q_tags'],$quotesRow['quotes_image'],$quotesRow['valid'], $quotesRow['updated_at'], $quotesRow['created_at']);
                     //print_r($tipstagcombInsertStmt);exit;
                     //echo $tipstagcombInsertStmt->affected_rows;exit;
                     $quotesInsertStmt->execute();
@@ -757,7 +706,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='quotes',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrquotes',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -769,7 +718,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='quotescategory' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrquotescategory' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -813,7 +762,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='quotescategory',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrquotescategory',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -825,7 +774,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='quotetags' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrquotetags' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -839,8 +788,8 @@ class Cron {
 
             while ($tagRow = $tagrResults->fetch_assoc()) {
                 //print_r($tagRow);
-                $tagtId = $tagRow['tag_id'];
-                // echo "select tag_id,tag from quotetags where tag_id=$tagtId"; exit;
+                $tagtId = $tagRow['tag_id']; 
+               // echo "select tag_id,tag from quotetags where tag_id=$tagtId"; exit;
                 $checkTagExistResultSet = $this->conn2->query("select tag_id,tag from quotetags where tag_id=$tagtId");
                 if ($checkTagExistResultSet->num_rows > 0) { //echo 'test';exit;
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
@@ -864,23 +813,25 @@ class Cron {
             }
         }
         //        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' quotetags(s) inserted and ' . $_SESSION['noofupd'] . ' quotetags(s) updated.</h5>';
+
         //echo 'here'; exit;
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='quotetags',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrquotetags',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' quotetags(s) inserted and ' . $_SESSION['noofupd'] . ' quotetags(s) updated.</h5>';
     }
 
-    function migrateTopicCategory() {
+    
+    function migrateTopicCategory(){
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='topiccategory' order by start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrtopiccategory' order by start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
-
+        
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
@@ -893,25 +844,26 @@ class Cron {
                 $cid = $catrow['id'];
                 $checkCatExistResultSet = $this->conn2->query("select * from topic_category where id=$cid");
                 if ($checkCatExistResultSet->num_rows > 0) {
-                    $existingCatRow = $checkCatExistResultSet->fetch_assoc();
+                    $existingCatRow=$checkCatExistResultSet->fetch_assoc();
                     $checkCatExistResultSet->close();
-                    if ($catrow['is_deleted'] == 0) {
-                        $catUpdateStmt = $this->conn2->prepare("update topic_category set name=?,parent_id=? where id=?");
-                        //echo $this->conn2->error;exit;
-                        $catUpdateStmt->bind_param('sii', $catrow['name'], $catrow['parent_id'], $cid);
-                        $catUpdateStmt->execute();
-                        if ($catUpdateStmt->affected_rows)
-                            $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
-                    }else {
-                        $delStmt = $this->conn2->prepare("delete from topic_category where id=?");
-                        $delStmt->bind_param('i', $catrow['id']);
-                        $delStmt->execute();
-                        $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
+                    if($catrow['is_deleted']==0){
+                    $catUpdateStmt = $this->conn2->prepare("update topic_category set name=?,parent_id=? where id=?");
+                    //echo $this->conn2->error;exit;
+                    $catUpdateStmt->bind_param('sii', $catrow['name'], $catrow['parent_id'],$cid);
+                    $catUpdateStmt->execute();
+                    if ($catUpdateStmt->affected_rows)
+                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                    
+                    }else{
+                       $delStmt = $this->conn2->prepare("delete from topic_category where id=?");
+                       $delStmt->bind_param('i', $catrow['id']);
+                       $delStmt->execute();
+                       $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
                     }
-                } else {
+                }else {
                     $catInsertStmt = $this->conn2->prepare("insert into topic_category set id=?,name=?,parent_id=?") or die($this->conn2->error);
-
-                    $catInsertStmt->bind_param('isi', $catrow['id'], $catrow['name'], $catrow['parent_id']);
+                    
+                    $catInsertStmt->bind_param('isi', $catrow['id'], $catrow['name'],$catrow['parent_id']);
                     $catInsertStmt->execute();
                     if ($catInsertStmt->insert_id) {
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
@@ -919,22 +871,24 @@ class Cron {
                 }
             }
         }
-
+        
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='topiccategory',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrtopiccategory',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
 
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' topic category(ies) inserted,   ' . $_SESSION['noofupd'] . ' topic category(ies) updated and ' . $_SESSION['noofdel'] . ' topic category(ies) deleted.</h5>';
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' topic category(ies) inserted,   ' . $_SESSION['noofupd'] . ' topic category(ies) updated and '.$_SESSION['noofdel'].' topic category(ies) deleted.</h5>';
+        
+            
     }
-
+    
     function migrateCategory() {
         //echo 'test'; exit;
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='category' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrcategory' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         $cronLastExecutionTime = 0;
         if ($cronresult->num_rows > 0) {
@@ -942,7 +896,7 @@ class Cron {
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-//        $catresults = $this->conn->query("SELECT category_id as id,name,channel_id as parent_id,valid,'1' as level  FROM category where channel_id='1' $condition
+//        $catresults = $this->conn->query("SELECT category_id as id,name,channel_id as parent_id,valid,'1' as level  FROM category where channel_id='10' $condition
 //union
 //select category_two_id as id,name,category_id as parent,valid,'2' as level from category_two where 1=1 $condition
 //union
@@ -951,7 +905,7 @@ class Cron {
 //select category_four_id as id,name,category_three_id as parent,valid,'4' as level from category_four where 1=1 $condition");
 //        
 //        echo $catresults->num_rows;exit;
-        $catresults = $this->conn->query("SELECT category_id as id,name,channel_id as parent_id,valid,'1' as level  FROM category where channel_id='1' $condition");
+        $catresults = $this->conn->query("SELECT category_id as id,name,channel_id as parent_id,valid,'1' as level  FROM category where channel_id='10' $condition");
         //echo $catresults->num_rows;exit;
 
         while ($catrow = $catresults->fetch_assoc()) {
@@ -990,7 +944,7 @@ class Cron {
         //echo $condition; exit;
         $this->migrateSubCategoryDirect($cronLastExecutionTime);
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='category',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrcategory',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -1138,7 +1092,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='tag' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrtag' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1171,25 +1125,25 @@ class Cron {
             }
         }
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='tag',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrtag',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
 
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' tag(s) inserted and ' . $_SESSION['noofupd'] . ' tag(s) updated.</h5>';
     }
-
+    
     function migrateSpeakerTag() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='speakertag' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrspeakertag' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
-
+        
         $tagResults = $this->conn->query("SELECT tags_id as id,tag,valid  FROM speaker_tags where 1 $condition");
         //echo $tagResults->num_rows;exit;
         if ($tagResults->num_rows > 0) {
@@ -1206,7 +1160,7 @@ class Cron {
                 }else {
                     if ($tagrow['valid']) {
                         $tagInsertStmt = $this->conn2->prepare("insert into speaker_tags set tags_id=?,tag=?,valid=?");
-                        $tagInsertStmt->bind_param('isi', $tagrow['id'], $tagrow['tag'], $tagrow['valid']);
+                        $tagInsertStmt->bind_param('isi', $tagrow['id'], $tagrow['tag'],$tagrow['valid']);
                         $tagInsertStmt->execute();
                         if ($tagInsertStmt->insert_id) {
                             $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
@@ -1215,24 +1169,24 @@ class Cron {
                 }
             }
         }
-
-
+        
+        
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='speakertag',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrspeakertag',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
 
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' speaker tag(s) inserted and ' . $_SESSION['noofupd'] . ' speaker tag(s) updated.</h5>';
     }
-
+    
     function migrateSpeaker() {
-
+        
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='speaker' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrspeaker' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1245,10 +1199,10 @@ class Cron {
                 // print_r($authorRow); exit;
                 $authorId = $authorRow['id'];
                 $checkAthorExistResultSet = $this->conn2->query("select id from event_speaker where id=$authorId");
-                if ($checkAthorExistResultSet->num_rows > 0) {
+                if ($checkAthorExistResultSet->num_rows > 0) { 
                     if ($authorRow['status']) {
                         $authorUpdateStmt = $this->conn2->prepare("update event_speaker set event_id=?,name=?,email=?,photo=?,twitter=?,description=?,tag=?,sequence=? where id=?");
-                        $authorUpdateStmt->bind_param('issssssii', $authorRow['event_id'], $authorRow['name'], $authorRow['email'], $authorRow['photo'], $authorRow['twitter'], $authorRow['description'], $authorRow['tag'], $authorRow['sequence'], $authorRow['id']);
+                        $authorUpdateStmt->bind_param('issssssii', $authorRow['event_id'], $authorRow['name'], $authorRow['email'],$authorRow['photo'], $authorRow['twitter'], $authorRow['description'], $authorRow['tag'], $authorRow['sequence'],$authorRow['id']);
                         $authorUpdateStmt->execute();
                         if ($authorUpdateStmt->affected_rows)
                             $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
@@ -1256,11 +1210,12 @@ class Cron {
                         $authorDelStmt = $this->conn2->prepare("delete from event_speaker where id=?");
                         $authorDelStmt->bind_param('i', $authorRow['id']);
                         $authorDelStmt->execute();
-                        $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
+                        $_SESSION['noofdel']=$_SESSION['noofdel']+1;
                     }
+
                 } else {
                     $authorInsertStmt = $this->conn2->prepare("insert into event_speaker set id=?,event_id=?,name=?,email=?,photo=?,twitter=?,description=?,tag=?,sequence=?");
-                    $authorInsertStmt->bind_param('iissssssi', $authorRow['id'], $authorRow['event_id'], $authorRow['name'], $authorRow['email'], $authorRow['photo'], $authorRow['twitter'], $authorRow['description'], $authorRow['tag'], $authorRow['sequence']);
+                    $authorInsertStmt->bind_param('iissssssi', $authorRow['id'], $authorRow['event_id'], $authorRow['name'], $authorRow['email'],$authorRow['photo'], $authorRow['twitter'], $authorRow['description'], $authorRow['tag'], $authorRow['sequence']);
                     $authorInsertStmt->execute();
                     if ($authorInsertStmt->affected_rows) {
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
@@ -1271,11 +1226,11 @@ class Cron {
 
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='speaker',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrspeaker',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' speaker(s) inserted, ' . $_SESSION['noofupd'] . ' speaker(s) updated and ' . $_SESSION['noofdel'] . ' speaker(s) deleted.</h5>';
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' speaker(s) inserted, ' . $_SESSION['noofupd'] . ' speaker(s) updated and '.$_SESSION['noofdel'].' speaker(s) deleted.</h5>';
     }
 
     function migrateNewsType() {
@@ -1283,7 +1238,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='newstype' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrnewstype' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1315,7 +1270,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='newstype',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrnewstype',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -1329,7 +1284,7 @@ class Cron {
       $_SESSION['noofupd'] = 0;
       $conStartTime = date('Y-m-d H:i:s');
 
-      $cronresult = $this->conn->query("select start_time from cron_log where section_name='magazine' order by  start_time desc limit 0,1") or die($this->conn->error);
+      $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrmagazine' order by  start_time desc limit 0,1") or die($this->conn->error);
       $condition = '';
       if ($cronresult->num_rows > 0) {
       $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1368,7 +1323,7 @@ class Cron {
       }
       }
       $cronEndTime = date('Y-m-d H:i:s');
-      $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='magazine',start_time=?,end_time=?");
+      $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrmagazine',start_time=?,end_time=?");
       $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
       $updatecronstmt->execute();
       $updatecronstmt->close();
@@ -1383,7 +1338,7 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='topics' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrtopics' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1391,29 +1346,30 @@ class Cron {
         }
 
         $results = $this->conn->query("SELECT * FROM topics where 1 $condition");
-        if ($results->num_rows > 0) {
+         if ($results->num_rows > 0) {
             while ($row = $results->fetch_assoc()) {
                 $id = $row['id'];
                 $checkExistanceRst = $this->conn2->query("select * from channel_topics where topic_id=$id");
                 if ($checkExistanceRst->num_rows > 0) {
-                    $existingRow = $checkExistanceRst->fetch_assoc();
+                    $existingRow=$checkExistanceRst->fetch_assoc();
                     $checkExistanceRst->close();
-                    if ($row['valid'] == 1) {
-                        $catUpdateStmt = $this->conn2->prepare("update channel_topics set topic_name=?,category_id=? where topic_id=?");
-                        //echo $this->conn2->error;exit;
-                        $catUpdateStmt->bind_param('sii', $row['topic'], $row['category_id'], $id);
-                        $catUpdateStmt->execute();
-                        if ($catUpdateStmt->affected_rows)
-                            $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
-                    }else {
-                        $delStmt = $this->conn2->prepare("delete from channel_topics where topic_id=?");
-                        $delStmt->bind_param('i', $id);
-                        $delStmt->execute();
-                        $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
+                    if($row['valid']==1){
+                    $catUpdateStmt = $this->conn2->prepare("update channel_topics set topic_name=?,category_id=? where topic_id=?");
+                    //echo $this->conn2->error;exit;
+                    $catUpdateStmt->bind_param('sii', $row['topic'], $row['category_id'],$id);
+                    $catUpdateStmt->execute();
+                    if ($catUpdateStmt->affected_rows)
+                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                    
+                    }else{  
+                       $delStmt = $this->conn2->prepare("delete from channel_topics where topic_id=?");
+                       $delStmt->bind_param('i', $id);
+                       $delStmt->execute();
+                       $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
                     }
-                } else {
+                }else {
                     $insertStmt = $this->conn2->prepare("insert into channel_topics set topic_id=?,topic_name=?,category_id=?") or die($this->conn2->error);
-                    $insertStmt->bind_param('isi', $row['id'], $row['topic'], $row['category_id']);
+                    $insertStmt->bind_param('isi', $row['id'], $row['topic'],$row['category_id']);
                     $insertStmt->execute();
                     if ($insertStmt->insert_id) {
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
@@ -1421,14 +1377,16 @@ class Cron {
                 }
             }
         }
-
+        
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='topics',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrtopics',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
 
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' topic(s) inserted,   ' . $_SESSION['noofupd'] . ' topic(s) updated and ' . $_SESSION['noofdel'] . ' topic(s) deleted.</h5>';
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' topic(s) inserted,   ' . $_SESSION['noofupd'] . ' topic(s) updated and '.$_SESSION['noofdel'].' topic(s) deleted.</h5>';
+       
+        
     }
 
     function migrateQuickByte() {
@@ -1439,13 +1397,13 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='quickbyte' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrquickbyte' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
-        $quickBytesResults = $this->conn->query("SELECT *  FROM quickbyte where channel_id='1' $condition");
+        $quickBytesResults = $this->conn->query("SELECT *  FROM quickbyte where channel_id='10' $condition");
         //echo $quickBytesResults->num_rows;exit;
         if ($quickBytesResults->num_rows > 0) {
             while ($quickBytesRow = $quickBytesResults->fetch_assoc()) {
@@ -1526,7 +1484,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='quickbyte',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrquickbyte',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -1540,7 +1498,7 @@ class Cron {
                 //print_r($photo);exit;
                 $photoInsStmt = $this->conn2->prepare("insert into quick_bytes_photos set quick_byte_id=?,quick_byte_photo_name=?"
                         . ",quick_byte_photo_title=?,quick_byte_photo_description=?,photo_by=?,sequence=?");
-                $photoInsStmt->bind_param('issssi', $id, $photo->photopath, $photo->title, $photo->description, $photo->photo_by, $photo->sequence);
+                $photoInsStmt->bind_param('issssi', $id, $photo->photopath, $photo->title, $photo->description, $photo->photo_by,$photo->sequence);
                 $photoInsStmt->execute();
             }
         } else {
@@ -1550,7 +1508,7 @@ class Cron {
                 //print_r($photo);exit;
                 $photoInsStmt = $this->conn2->prepare("insert into quick_bytes_photos set quick_byte_id=?,quick_byte_photo_name=?"
                         . ",quick_byte_photo_title=?,quick_byte_photo_description=?,photo_by=?,sequence=?");
-                $photoInsStmt->bind_param('issssi', $id, $photo->photopath, $photo->title, $photo->description, $photo->photo_by, $photo->sequence);
+                $photoInsStmt->bind_param('issssi', $id, $photo->photopath, $photo->title, $photo->description, $photo->photo_by,$photo->sequence);
                 $photoInsStmt->execute();
             }
         }
@@ -1563,9 +1521,7 @@ class Cron {
     function migrateArticle() {
         //echo 'test'; exit;
         // updating scheduled articles
-	//Pti server url to insert article in cms: http://35.194.177.143/news/importfeed.php
-	file_get_contents('http://35.194.177.143/news/importfeed.php');
-        $this->conn->query("update articles set status='P',updated_at='".date('Y-m-d H:i:s')."' where status='SD' and channel_id = $this->channelId and concat(publish_date,' ',publish_time) <= '" . date('Y-m-d H:i:s') . "'") or die($this->conn->error);
+        $this->conn->query("update articles set status='P',updated_at='".date('Y-m-d h:i:s')."' where status='SD' and concat(publish_date,' ',publish_time) <= '" . date('Y-m-d H:i:s') . "'") or die($this->conn->error);
         //echo date('Y-m-d h:i:s'); exit;
         //exit;
         $this->migrateCampaing();
@@ -1582,14 +1538,14 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='article' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrarticle' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $articleResults = $this->conn->query("SELECT *  FROM articles where  channel_id='1'  $condition");
+        $articleResults = $this->conn->query("SELECT *  FROM articles where  channel_id='10'  $condition");
         //echo $articleResults->num_rows ;exit;
         if ($articleResults->num_rows > 0) {
             // exit;
@@ -1615,10 +1571,10 @@ class Cron {
                         $pubDate = $articleRow['publish_date'] . ' ' . $articleRow['publish_time'];
                         $status = 'published';
                         $articleUpdateStmt = $this->conn2->prepare("update articles set article_title=?,article_description=?,article_summary=?,"
-                                . "article_type=?,article_published_date=?,article_slug=?,article_status=?,important_article=?,video_Id=?,display_to_homepage=?,is_exclusive=?,exclusive_non_featured=?,featured_in_print=?,"
-                                . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,social_title=?,social_summary=?,social_image=?,bitly_url=?,article_location_country=?,article_location_state=?,event_id=?,hide_image=?,campaign_id=? where article_id=?");
-                        $articleUpdateStmt->bind_param('sssisssiiiiiiiissssssiiiiii', $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
-                                , $pubDate, $articleRow['slug'], $status, $articleRow['important'], $articleRow['video_Id'], $articleRow['for_homepage'], $articleRow['web_exclusive'],$articleRow['exclusive_non_featured'],$articleRow['featured_in_print'], $articleRow['magazine_id'], $articleRow['canonical_options'], $articleRow['video_type'], $articleRow['canonical_url'], $articleRow['social_title'], $articleRow['social_summary'], $articleRow['social_image'], $articleRow['bitly_url'], $articleRow['country'], $articleRow['state'], $articleRow['event_id'], $articleRow['hide_image'], $articleRow['campaign_id'], $articleRow['article_id']
+                                . "article_type=?,article_published_date=?,article_slug=?,article_status=?,important_article=?,video_Id=?,display_to_homepage=?,is_exclusive=?,"
+                                . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,social_title=?,social_summary=?,social_image=?,article_location_country=?,article_location_state=?,hide_image=?,campaign_id=?,event_id=? where article_id=?");
+                        $articleUpdateStmt->bind_param('sssisssiiiiiisssssiiiiii', $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
+                                , $pubDate, $articleRow['slug'], $status, $articleRow['important'], $articleRow['video_Id'], $articleRow['for_homepage'], $articleRow['web_exclusive'], $articleRow['magazine_id'], $articleRow['canonical_options'], $articleRow['video_type'], $articleRow['canonical_url'],$articleRow['social_title'],$articleRow['social_summary'],$articleRow['social_image'], $articleRow['country'], $articleRow['state'], $articleRow['hide_image'], $articleRow['campaign_id'], $articleRow['event_id'], $articleRow['article_id']
                         );
                         $articleUpdateStmt->execute();
                         if ($articleUpdateStmt->affected_rows) {
@@ -1626,7 +1582,6 @@ class Cron {
                         }
                         $this->callArticleRelatedContent($articleRow['article_id'], 0, $condition);
                     } else {
-
                         $this->deleteArticleRelated($id);
                         $delStmt = $this->conn2->prepare("delete from articles where article_id=?");
                         $delStmt->bind_param('i', $id);
@@ -1641,10 +1596,10 @@ class Cron {
                         $pubDate = $articleRow['publish_date'] . ' ' . $articleRow['publish_time'];
                         $status = 'published';
                         $articleInsertStmt = $this->conn2->prepare("insert articles set article_id=?,article_title=?,article_description=?,article_summary=?,"
-                                . "article_type=?,article_published_date=?,article_slug=?,article_status=?,video_Id=?,important_article=?,display_to_homepage=?,is_exclusive=?,exclusive_non_featured=?,featured_in_print=?,"
-                                . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,social_title=?,social_summary=?,social_image=?,bitly_url=?,article_location_country=?,article_location_state=?,event_id=?,is_old=?,hide_image=?,campaign_id=?");
-                        $articleInsertStmt->bind_param('isssisssiiiiiiiissssssiiiiii', $articleRow['article_id'], $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
-                                , $pubDate, $articleRow['slug'], $status, $articleRow['video_Id'], $articleRow['important'], $articleRow['for_homepage'], $articleRow['web_exclusive'],$articleRow['exclusive_non_featured'],$articleRow['featured_in_print'], $articleRow['magazine_id'], $articleRow['canonical_options'], $articleRow['video_type'], $articleRow['canonical_url'], $articleRow['social_title'], $articleRow['social_summary'], $articleRow['social_image'],$articleRow['bitly_url'], $articleRow['country'], $articleRow['state'], $articleRow['event_id'], $articleRow['is_old'], $articleRow['hide_image'], $articleRow['campaign_id']);
+                                . "article_type=?,article_published_date=?,article_slug=?,article_status=?,video_Id=?,important_article=?,display_to_homepage=?,is_exclusive=?,"
+                                . "magzine_issue_name=?,canonical_options=?,video_type=?,canonical_url=?,social_title=?,social_summary=?,social_image=?,article_location_country=?,article_location_state=?,is_old=?,hide_image=?,campaign_id=?,event_id=?");
+                        $articleInsertStmt->bind_param('isssisssiiiiiisssssiiiiii', $articleRow['article_id'], $articleRow['title'], $articleRow['description'], $articleRow['summary'], $articleRow['news_type']
+                                , $pubDate, $articleRow['slug'], $status, $articleRow['video_Id'], $articleRow['important'], $articleRow['for_homepage'], $articleRow['web_exclusive'], $articleRow['magazine_id'], $articleRow['canonical_options'], $articleRow['video_type'], $articleRow['canonical_url'],$articleRow['social_title'],$articleRow['social_summary'],$articleRow['social_image'],$articleRow['country'], $articleRow['state'], $articleRow['is_old'], $articleRow['hide_image'], $articleRow['campaign_id'], $articleRow['event_id']);
                         $articleInsertStmt->execute();
                         //print_r($articleInsertStmt);exit;
                         // echo $articleInsertStmt->insert_id;exit;    
@@ -1659,13 +1614,13 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='article',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrarticle',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' article(s) inserted, ' . $_SESSION['noofupd'] . ' article(s) updated and ' . $_SESSION['noofdel'] . ' article(s) deleted.</h5>';
-        $key = md5(date('dmY') . 'businessworld');
-        file_get_contents('http://businessworld.in/create-json/' . $key);
+        $key= md5(date('dmY').'businessworld');
+	    file_get_contents('http://businessworld.in/create-json/'.$key);
     }
 
     function migrateFeature() {
@@ -1674,14 +1629,14 @@ class Cron {
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
 
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='featur' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrfeatur' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $featurResults = $this->conn->query("SELECT *  FROM featuredarticle where channel_id='1' $condition");
+        $featurResults = $this->conn->query("SELECT *  FROM featuredarticle where channel_id='10' $condition");
         // echo $featurResults->num_rows ;exit;
         //print_r($featurResults);exit;
         if ($featurResults->num_rows > 0) {
@@ -1735,11 +1690,12 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='featur',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrfeatur',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' featur(s) inserted, ' . $_SESSION['noofupd'] . ' featur(s) updated and ' . $_SESSION['noofdel'] . ' featur(s) deleted.</h5>';
+        
     }
 
     function callFeaturRelatedContent($featurId, $condition) {
@@ -1849,12 +1805,15 @@ class Cron {
     }
 
     function migrateArticleAuthor($articleId, $isNew = 0, $condition = '') {
-
-        $allauthorRst = $this->conn2->query("select author_id,author_type from author");
+        
+        $articleRst=$this->conn->query("select author_type from articles where article_id=".$articleId);
+        $articleRow=$articleRst->fetch_object();
+        
+        /*$allauthorRst = $this->conn2->query("select author_id,author_type from author");
         $allAuthArr = array();
         while ($autRow = $allauthorRst->fetch_object()) {
             $allAuthArr[$autRow->author_id] = $autRow->author_type;
-        }
+        }*/
         //echo '<pre>';
         //echo print_r($allAuthArr); exit;
         if ($isNew == '1') {
@@ -1862,7 +1821,7 @@ class Cron {
             while ($authorRow = $articleAuthorResultset->fetch_assoc()) {
                 $tauthId = $authorRow['author_id'];
                 $auInsertStmt = $this->conn2->prepare("insert into article_author set article_id=?,author_type=?,author_id=?");
-                $auInsertStmt->bind_param('iii', $authorRow['article_id'], $allAuthArr[$tauthId], $authorRow['author_id']);
+                $auInsertStmt->bind_param('iii', $authorRow['article_id'], $articleRow->author_type, $authorRow['author_id']);
                 $auInsertStmt->execute();
                 $auInsertStmt->close();
             }
@@ -1875,7 +1834,7 @@ class Cron {
             while ($authorRow = $articleAuthorResultset->fetch_assoc()) {
                 $tauthId = $authorRow['author_id'];
                 $auInsertStmt = $this->conn2->prepare("insert into article_author set article_id=?,author_type=?,author_id=?");
-                $auInsertStmt->bind_param('iii', $authorRow['article_id'], $allAuthArr[$tauthId], $authorRow['author_id']);
+                $auInsertStmt->bind_param('iii', $authorRow['article_id'], $articleRow->author_type, $authorRow['author_id']);
                 $auInsertStmt->execute();
                 $auInsertStmt->close();
             }
@@ -1918,7 +1877,7 @@ class Cron {
                 $imInsertStmt = $this->conn2->prepare("insert into article_images set article_id=?,photopath=?,image_url=?,image_title=?"
                         . ",image_source_name=?,image_source_url=?,photo_by=?,image_status=?,sequence=?");
                 $status = ($imageRow['active'] == '1') ? 'enabled' : 'disabled';
-                $imInsertStmt->bind_param('isssssssi', $imageRow['owner_id'], $imageRow['photopath'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $imageRow['photo_by'], $status, $imageRow['sequence']);
+                $imInsertStmt->bind_param('isssssssi', $imageRow['owner_id'], $imageRow['photopath'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $imageRow['photo_by'], $status,$imageRow['sequence']);
                 $imInsertStmt->execute();
                 $imInsertStmt->close();
             }
@@ -1936,7 +1895,7 @@ class Cron {
                 $imInsertStmt = $this->conn2->prepare("insert into article_images set article_id=?,photopath=?,image_url=?,image_title=?"
                         . ",image_source_name=?,image_source_url=?,photo_by=?,image_status=?,sequence=?");
                 $status = ($imageRow['active'] == '1') ? 'enabled' : 'disabled';
-                $imInsertStmt->bind_param('isssssssi', $imageRow['owner_id'], $imageRow['photopath'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $imageRow['photo_by'], $status, $imageRow['sequence']);
+                $imInsertStmt->bind_param('isssssssi', $imageRow['owner_id'], $imageRow['photopath'], $imageRow['imagefullPath'], $imageRow['title'], $imageRow['source'], $imageRow['source_url'], $imageRow['photo_by'], $status,$imageRow['sequence']);
                 $imInsertStmt->execute();
                 $imInsertStmt->close();
             }
@@ -1981,14 +1940,14 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='sponsoredposts' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrsponsoredposts' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $sponsoredResults = $this->conn->query("SELECT *  FROM sponsoredposts  where channel_id = 1");
+        $sponsoredResults = $this->conn->query("SELECT *  FROM sponsoredposts  where channel_id = 10");
         //echo $sponsoredResults->num_rows ;exit; 
         if ($sponsoredResults->num_rows > 0) {
             // exit;
@@ -2034,12 +1993,12 @@ class Cron {
                     }
                 } else {
                     if ($sponsoredRow['status'] == 'P') {
-
-                        $pubDate = $sponsoredRow['publish_date'] . ' ' . $sponsoredRow['publish_time'];
-                        $status = 'published';
+                        
+                         $pubDate = $sponsoredRow['publish_date'] . ' ' . $sponsoredRow['publish_time'];
+                         $status = 'published';
                         //echo 'sumit insert'; exit;
                         $sponsoredpostsInsertStmt = $this->conn2->prepare("insert sponsoredposts set sponsoredposts_id=?,sponsoredposts_title=?,sponsoredposts_description=?,sponsoredposts_summary=?,sponsoredposts_type=?,sponsoredposts_published_date=?,sponsoredposts_status=?,important_sponsoredposts=?");
-                        $sponsoredpostsInsertStmt->bind_param('issssssi', $sponsoredRow['id'], $sponsoredRow['title'], $sponsoredRow['description'], $sponsoredRow['summary'], $sponsoredRow['event_id'], $pubDate, $status, $sponsoredRow['feature_this']);
+                        $sponsoredpostsInsertStmt->bind_param('issssssi', $sponsoredRow['id'], $sponsoredRow['title'], $sponsoredRow['description'], $sponsoredRow['summary'], $sponsoredRow['event_id'],$pubDate, $status, $sponsoredRow['feature_this']);
                         $sponsoredpostsInsertStmt->execute();
                         //print_r($sponsoredpostsInsertStmt);exit;
                         // echo $sponsoredpostsInsertStmt->insert_id;exit;    
@@ -2054,7 +2013,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='sponsoredposts',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrsponsoredposts',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -2103,7 +2062,7 @@ class Cron {
         }
     }
 
-    function migrateSponsoredCategory($sponsId) {
+    function migrateSponsoredCategory($sponsId ) {
         $catResultSet = '';
         $this->conn2->query("delete from sponsoredposts_category where sponsoredposts_id=$sponsId");
 
@@ -2130,7 +2089,7 @@ class Cron {
         }
     }
 
-    function migrateSponsoredVideo($SponsoredId, $isNew = 0) {
+    function migrateSponsoredVideo($SponsoredId, $isNew = 0 ) {
         //$articleId= 71; 
         //$isNew = 1;
         if ($isNew == '1') {
@@ -2165,13 +2124,13 @@ class Cron {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='magazineissue' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrmagazineissue' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
-        $magazinerResults = $this->conn->query("SELECT * FROM magazine  WHERE channel_id ='1' $condition");
+        $magazinerResults = $this->conn->query("SELECT * FROM magazine  WHERE channel_id ='10' $condition");
         if ($magazinerResults->num_rows > 0) {
             //echo $magazinerResults->num_rows; exit;
             //echo 'testsumit';
@@ -2189,13 +2148,13 @@ class Cron {
                     $checkMagazineExistResultSet = $this->conn2->query("select magazine_id,title from magazine where magazine_id=$magazineId");
                     if ($checkMagazineExistResultSet->num_rows > 0) { //echo 'here'; exit;
                         $magazineUpdateStmt = $this->conn2->prepare("update magazine set title=?,imagepath=?,publish_date_m=?,story1_title=?,story1_url=?,story2_title=?,story2_url=?,story3_title=?,story3_url=?,story4_title=?, story4_url=?,story5_title=?,story5_url=?,flipbook_url=?,buy_digital=?,created_at=?,updated_at=? where magazine_id=?") or die($this->conn2->error);
-                        $magazineUpdateStmt->bind_param('sssssssssssssssssi', $magazineRow['title'], $magazineRow['imagepath'], $magazineRow['publish_date_m'], $magazineRow['story1_title'], $magazineRow['story1_url'], $magazineRow['story2_title'], $magazineRow['story2_url'], $magazineRow['story3_title'], $magazineRow['story3_url'], $magazineRow['story4_title'], $magazineRow['story4_url'], $magazineRow['story5_title'], $magazineRow['story5_url'], $magazineRow['flipbook_url'], $magazineRow['buy_digital'], $magazineRow['created_at'], $magazineRow['updated_at'], $magazineRow['magazine_id']) or die($this->conn2->error);
+                        $magazineUpdateStmt->bind_param('sssssssssssssssssi', $magazineRow['title'], $magazineRow['imagepath'], $magazineRow['publish_date_m'], $magazineRow['story1_title'], $magazineRow['story1_url'], $magazineRow['story2_title'], $magazineRow['story2_url'], $magazineRow['story3_title'], $magazineRow['story3_url'], $magazineRow['story4_title'], $magazineRow['story4_url'], $magazineRow['story5_title'], $magazineRow['story5_url'],$magazineRow['flipbook_url'],$magazineRow['buy_digital'], $magazineRow['created_at'], $magazineRow['updated_at'], $magazineRow['magazine_id']) or die($this->conn2->error);
                         $magazineUpdateStmt->execute() or die($this->conn2->error);
                         if ($magazineUpdateStmt->affected_rows)
                             $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                     }else {//echo 'here sumit';echo $magazineRow['magazine_id']; exit;
                         $magazineInsertStmt = $this->conn2->prepare("insert into magazine set magazine_id=?,title=?,imagepath=?,publish_date_m=?,story1_title=?,story1_url=?,story2_title=?,story2_url=?,story3_title=?,story3_url=?,story4_title=?,story4_url=?,story5_title=?,story5_url=?,flipbook_url=?,buy_digital=?,created_at=?,updated_at=?") or die($this->conn2->error);
-                        $magazineInsertStmt->bind_param('isssssssssssssssss', $magazineRow['magazine_id'], $magazineRow['title'], $magazineRow['imagepath'], $magazineRow['publish_date_m'], $magazineRow['story1_title'], $magazineRow['story1_url'], $magazineRow['story2_title'], $magazineRow['story2_url'], $magazineRow['story3_title'], $magazineRow['story3_url'], $magazineRow['story4_title'], $magazineRow['story4_url'], $magazineRow['story5_title'], $magazineRow['story5_url'], $magazineRow['flipbook_url'], $magazineRow['buy_digital'], $magazineRow['created_at'], $magazineRow['updated_at']) or die($this->conn2->error);
+                        $magazineInsertStmt->bind_param('isssssssssssssssss', $magazineRow['magazine_id'], $magazineRow['title'], $magazineRow['imagepath'], $magazineRow['publish_date_m'], $magazineRow['story1_title'], $magazineRow['story1_url'], $magazineRow['story2_title'], $magazineRow['story2_url'], $magazineRow['story3_title'], $magazineRow['story3_url'], $magazineRow['story4_title'], $magazineRow['story4_url'], $magazineRow['story5_title'], $magazineRow['story5_url'],$magazineRow['flipbook_url'],$magazineRow['buy_digital'], $magazineRow['created_at'], $magazineRow['updated_at']) or die($this->conn2->error);
                         $magazineInsertStmt->execute() or die($this->conn2->error);
                         if ($magazineInsertStmt->affected_rows) {
                             $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
@@ -2216,7 +2175,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='magazineissue',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrmagazineissue',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -2225,676 +2184,8 @@ class Cron {
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' magazineissue(s) inserted,  ' . $_SESSION['noofupd'] . ' magazineissue(s) updated and ' . $_SESSION['noofdel'] . ' magazineissue(s) deleted.</h5>';
     }
 
-    function migrateDebate() {
-        // $this->migrateCategory();
-        // $this->migrateTag();
-        $_SESSION['noofins'] = 0;
-        $_SESSION['noofupd'] = 0;
-        $_SESSION['noofdel'] = 0;
-        $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='debate' order by  start_time desc limit 0,1") or die($this->conn->error);
-        $condition = '';
-        if ($cronresult->num_rows > 0) {
-            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
-            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
-        }
-
-
-        $debateResults = $this->conn->query("SELECT *  FROM debates where channel_id='1' $condition");
-        //echo $quickBytesResults->num_rows;exit;
-        if ($debateResults->num_rows > 0) {
-
-            // Mapping category to map four category table data into one table
-
-            $catMapArray = array();
-
-            $articleCatDataRst = $this->conn2->query("select * from channel_category");
-            while ($articleCatDataRow = $articleCatDataRst->fetch_assoc()) {
-                $key = $articleCatDataRow['cms_cat_id'] . '_' . $articleCatDataRow['cms_cat_level'];
-                $catMapArray[$key] = $articleCatDataRow['category_id'];
-            }
-            $this->categoryMapping = $catMapArray;
-
-
-
-            while ($debateRow = $debateResults->fetch_assoc()) {
-                $id = $debateRow['id'];
-                $checkResult = $this->conn2->query("select title from debates where id=$id") or die($this->conn2->error);
-                if ($checkResult->num_rows > 0) {
-                    if ($debateRow['valid'] == '1') {
-
-                        $videoUrl = '';
-                        $imagePath = '';
-
-                        $debateImageRst = $this->conn->query("select photopath from photos where owned_by='debate' and owner_id='$id'");
-                        if ($debateImageRst->num_rows > 0) {
-                            $debateImageRow = $debateImageRst->fetch_assoc();
-                            $imagePath = $debateImageRow['photopath'];
-                        }
-
-
-                        $updateStmt = $this->conn2->prepare("update debates set title=?,"
-                                . "description=?,viedo_url=?,imagepath=?,is_featured=?,created_at=?,updated_at=? where id=?") or die($this->conn2->error);
-                        $updateStmt->bind_param('ssssissi', $debateRow['title'], $debateRow['description']
-                                        , $videoUrl, $imagePath, $debateRow['is_featured'], $debateRow['created_at'], $debateRow['updated_at'], $debateRow['id']) or die($this->conn2->error);
-                        $updateStmt->execute() or die($this->conn2->error);
-                        $iid = $debateRow['id'];
-                        $updateStmt->close();
-                        $this->migrateDebateRelated($iid);
-                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
-
-                        // updating quickbyte
-                    } else {
-                        // deleting debate code goes here 
-
-                        $delStmt = $this->conn2->prepare("delete from debates where id=?") or die($this->conn2->error);
-                        $delStmt->bind_param('i', $id) or die($this->conn2->error);
-                        $delStmt->execute();
-                        if ($delStmt->affected_rows) {
-                            $_SESSION['noofdel'] = $_SESSION['noofdel'] + 1;
-                            //Delete debates related content
-                        }
-                        $delStmt->close();
-                    }
-                } else {
-                    if ($debateRow['valid'] == '1') {
-                        $videoUrl = '';
-                        $imagePath = '';
-
-                        $debateImageRst = $this->conn->query("select photopath from photos where owned_by='debate' and owner_id='$id'");
-                        if ($debateImageRst->num_rows > 0) {
-                            $debateImageRow = $debateImageRst->fetch_assoc();
-                            $imagePath = $debateImageRow['photopath'];
-                        }
-
-                        $insertStmt = $this->conn2->prepare("insert into debates set id=?,title=?,"
-                                . "description=?,viedo_url=?,imagepath=?,is_featured=?,created_at=?,updated_at=?") or die($this->conn2->error);
-                        $insertStmt->bind_param('issssiss', $debateRow['id'], $debateRow['title'], $debateRow['description']
-                                        , $videoUrl, $imagePath, $debateRow['is_featured'], $debateRow['created_at'], $debateRow['updated_at']) or die($this->conn2->error);
-                        $insertStmt->execute() or die($this->conn2->error);
-                        //print_r($articleInsertStmt);exit;
-                        // echo $articleInsertStmt->insert_id;exit;    
-                        if ($insertStmt->insert_id) {
-                            $iid = $insertStmt->insert_id;
-                            $insertStmt->close();
-
-
-                            $this->migrateDebateRelated($iid, 1);
-                            $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
-                        }
-                    }
-                }
-            }
-        }
-
-        $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='debate',start_time=?,end_time=?");
-        $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
-        $updatecorstmt->execute();
-        $updatecorstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' debate(s) inserted, ' . $_SESSION['noofupd'] . ' debate(s) updated and ' . $_SESSION['noofdel'] . ' debate(s) deleted.</h5>';
-    }
-
-    function migrateDebateRelated($id) {
-
-        $delStmt = $this->conn2->prepare("delete from debate_category where debate_id=?") or die($this->conn2->error);
-        $delStmt->bind_param('i', $id) or die($this->conn2->error);
-        $delStmt->execute();
-        $delStmt->close();
-        //echo 'test'; exit;
-        $debateCatRst = $this->conn->query("select * from debate_category where debate_id=$id");
-        while (($debateCatRow = $debateCatRst->fetch_assoc())) {
-            //echo $debateCatRow['cat_id'].'_'.$debateCatRow['cat_level']; exit;
-            //echo $this->categoryMapping[$debateCatRow['cat_id'].'_'.$debateCatRow['cat_level']]; exit;
-            //print_r($debateCatRow); exit;
-            $catInsertStmt = $this->conn2->prepare("insert into debate_category  set id=?,debate_id=?,cat_id=?,cat_level=?") or die($this->conn2->error);
-            $catInsertStmt->bind_param('iiii', $debateCatRow['id'], $id, $this->categoryMapping[$debateCatRow['cat_id'] . '_' . $debateCatRow['cat_level']], $debateCatRow['cat_level']) or die($this->conn2->error);
-            $catInsertStmt->execute() or die($this->conn2->error);
-            $catInsertStmt->close();
-        }
-
-
-        // Deleting expert view if exist
-        $delStmt = $this->conn2->prepare("delete from debate_expert_view where debate_id=?") or die($this->conn2->error);
-        $delStmt->bind_param('i', $id) or die($this->conn2->error);
-        $delStmt->execute();
-        $delStmt->close();
-        // Inserting expert view
-        $debateExpertViewRst = $this->conn->query("select * from debate_expert_view where debate_id=$id");
-        while (($debateExpertViewRow = $debateExpertViewRst->fetch_assoc())) {
-            $expertViewInsertStmt = $this->conn2->prepare("insert into debate_expert_view  set id=?,debate_id=?,name=?,designation=?,"
-                    . "expert_photo=?,twitter_ac=?,view=?");
-            $expertViewInsertStmt->bind_param('iisssss', $debateExpertViewRow['id'], $id, $debateExpertViewRow['name'], $debateExpertViewRow['designation'], $debateExpertViewRow['expert_photo'], $debateExpertViewRow['twitter_ac'], $debateExpertViewRow['view']);
-            $expertViewInsertStmt->execute();
-            $expertViewInsertStmt->close();
-        }
-        // Deleting tag if already exist
-        $delStmt = $this->conn2->prepare("delete from debate_tag where debate_id=?") or die($this->conn2->error);
-        $delStmt->bind_param('i', $id) or die($this->conn2->error);
-        $delStmt->execute();
-        $delStmt->close();
-        // Inserting tags
-        $debateTagRst = $this->conn->query("select * from debate_tag where debate_id=$id");
-        while (($debateTagRow = $debateTagRst->fetch_assoc())) {
-            $tagInsertStmt = $this->conn2->prepare("insert into debate_tag  set id=?,debate_id=?,tag_id=?") or die($this->conn2->error);
-            $tagInsertStmt->bind_param('iii', $debateTagRow['id'], $id, $debateTagRow['tag_id']) or die($this->conn2->error);
-            $tagInsertStmt->execute() or die($this->conn2->error);
-            $tagInsertStmt->close();
-        }
-
-        // Deleting video if already exist
-        $delStmt = $this->conn2->prepare("delete from debate_video where debate_id=?") or die($this->conn2->error);
-        $delStmt->bind_param('i', $id) or die($this->conn2->error);
-        $delStmt->execute();
-        $delStmt->close();
-
-        // Debate Video
-
-        $debateVideoRst = $this->conn->query("select * from videos where owned_by='debate' and owner_id='$id'") or die($this->conn->error);
-        //echo $debateVideoRst->num_rows;exit;
-        if ($debateVideoRst->num_rows > 0) {
-            while ($debateVideoRow = $debateVideoRst->fetch_assoc()) {
-
-                //print_r($debateVideoRow); exit;
-
-                $videoInsertStmt = $this->conn2->prepare("insert into debate_video set debate_id=?,debate_video_ecode_url=?") or die($this->conn2->error);
-                $videoInsertStmt->bind_param('is', $id, $debateVideoRow['code']) or die($this->conn2->error);
-                $videoInsertStmt->execute() or die($this->conn2->error);
-                $videoInsertStmt->close();
-                //print_r($debateVideoRow); exit;
-            }
-        }
-    }
-
-    /* function generateReport(){
-      //echo 'test'; exit;
-      $start_published_date=date('Y-m-d H:i:s', strtotime("last Sunday")-604800); //echo '<br>';
-      $end_published_date=date('Y-m-d H:i:s', strtotime("last Saturday")+86399);  //echo '<br>';
-      $query="select author.author_id,author_name,count(*) as article_count from author left join article_author on author.author_id=article_author.author_id left join articles on article_author.article_id=articles.article_id where author.author_type='2' and articles.article_published_date between '".$start_published_date."' and '".$end_published_date."' group by author.author_id order by article_count desc;";
-      $rst=$this->conn2->query($query);
-      //echo '<pre>';
-      $storycount=0;
-      $viewcount=0;
-      $avgView=0;
-      $reportdata='<table><tr>
-      <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Reporter</b></th>
-      <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Story</b></th>
-      <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Views</b></th>
-      <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Average views per article</b></th>
-      </tr>';
-      while($row=$rst->fetch_assoc()){
-
-      if($row['article_count']>0){
-      $storycount=$row['article_count'];
-      $viwcountquery="select articles.article_id,article_author.author_id,count(*) as cs from articles inner join article_author on articles.article_id=article_author.article_id left join article_view  on articles.article_id=article_view.article_id where articles.article_published_date between '".$start_published_date."' and '".$end_published_date."' and article_author.author_id='".$row['author_id']."' group by article_author.author_id ;
-      ";
-
-      $viewCountRst=$this->conn2->query($viwcountquery);
-      $viewCountRow=$viewCountRst->fetch_assoc();
-
-      $viewcount=$viewCountRow['cs'];
-
-      if($viewcount>0) $avgView=intval($viewcount/$storycount);
-
-      }
-      $reportdata.='<tr>
-      <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.$row['author_name'].'</td>
-      <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.$storycount.'</td>
-      <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.$viewcount.'</td>
-      <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">'.$avgView.'</td>
-      </tr>';
-      }
-      $reportdata.='</table>';
-      echo $reportdata; exit;
-      } */
-
-    function generateReport() {
-
-        //$template = file_get_contents('/var/www/html/bwcms/public/cronscript/editorial.html');
-        $template = file_get_contents('/var/www/html/cms/public/cronscript/editorial.html');
-
-        $end_date = date('Y-m-d', strtotime("-1 day"));
-        if (date('d', strtotime("-1 day")) == 15) {
-            $daysback = 15;
-            $start_date = date('Y-m-d', strtotime("-$daysback day"));
-        } else {
-            $daysback = 16 - (31 - date('d', strtotime("-1 day")));
-            $start_date = date('Y-m-d', strtotime("-$daysback day"));
-        }
-
-        $start_published_date = $start_date . ' 00:00:00';
-        $end_published_date = $end_date . ' 23:59:59';
-
-
-//        $start_published_date = date('Y-m-d H:i:s', strtotime("last Sunday") - 604800); //echo '<br>';
-//        $end_published_date = date('Y-m-d H:i:s', strtotime("last Saturday") + 86399);  //echo '<br>';
-//        $start_date=date('Y-m-d', strtotime("last Sunday") - 604800);
-//        $end_date=date('Y-m-d', strtotime("last Saturday") + 86399);
-        //$countQuery = "select author_type.author_type_id,author_type.label,count(*) as cs,sum(view_count) as noofview  from articles inner join author_type on articles.author_type=author_type.author_type_id  where  concat(publish_date,' ',publish_time) between '$start_published_date' and '$end_published_date' group by author_type.author_type_id";
-
-        $channelsRst = $this->conn->query("select channel_id,channel from channels where valid='1'");
-        $channelids = array();
-        $channelsTotal = array();
-        $userTypeRst = $this->conn->query("select author_type_id as id,label from author_type where valid='1'");
-        $userTypes = array();
-
-        $countQuery = "select articles.channel_id,author_type.author_type_id,author_type.label,count(*) as cs,sum(view_count) as noofview  from articles inner join author_type on articles.author_type=author_type.author_type_id  where  concat(publish_date,' ',publish_time) between '$start_published_date' and '$end_published_date' group by author_type.author_type_id,articles.channel_id";
-        $counts = array();
-        $countRsult = $this->conn->query($countQuery);
-        $total_stories = 0;
-        $repor_type_tdata = '<tr>
-                	<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Reporter Type</b></th>';
-        while ($channelRow = $channelsRst->fetch_assoc()) {
-            $repor_type_tdata.='<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>' . $channelRow['channel'] . '</b></th>';
-            $channelids[] = $channelRow['channel_id'];
-            $channelsTotal[$channelRow['channel_id']] = 0;
-        }
-
-        while ($userTypeRow = $userTypeRst->fetch_assoc()) {
-            $userTypes[$userTypeRow['id']] = $userTypeRow['label'];
-        }
-        while ($rowCount = $countRsult->fetch_assoc()) {
-            $counts[$rowCount['channel_id']][$rowCount['author_type_id']] = $rowCount['cs'];
-        }
-        $total_stories = 0;
-        foreach ($userTypes as $key => $value) {
-            //echo $key.'-'.$value; exit;
-            //print_r($channelids); exit;
-            $repor_type_tdata.='<tr>';
-            $repor_type_tdata.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $value . '</td>';
-            foreach ($channelids as $id) {
-                $c = 0;
-                if (isset($counts[$id])) {
-                    if (isset($counts[$id][$key])) {
-                        $c = $counts[$id][$key];
-                    }
-                }
-                $total_stories+=$c;
-                $repor_type_tdata.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $c . '</td>';
-                $channelsTotal[$id] = $channelsTotal[$id] + $c;
-            }
-            $repor_type_tdata.='</tr>';
-        }
-
-        $repor_type_tdata.='<tr>';
-        $repor_type_tdata.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Total</b></td>';
-        foreach ($channelsTotal as $total) {
-            $repor_type_tdata.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>' . $total . '</b></td>';
-        }
-        $repor_type_tdata.='</tr>';
-
-
-        //echo $query="select authors.name,ar.cs,ar.views_count,tbqb.qb_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '" . $start_published_date . "' and '" . $end_published_date . "' group by article_author.author_id) ar on authors.author_id=ar.author_id  left join (select id,author_id,count(*) as qb_count  from quickbyte where publish_date between '".$start_date."' and '".$end_date."' and valid=1 group by author_id) as tbqb on authors.author_id=tbqb.author_id where authors.author_type_id='2' and (views_count is not null or qb_count is not null)  order by ar.cs desc";
-        $query = "select authors.name,ar.cs,ar.views_count,tbqb.qb_count from authors left join (select articles.article_id,title,publish_date,count(*) as cs,sum(articles.view_count) as views_count,article_author.author_id from articles inner join article_author on articles.article_id=article_author.article_id where concat(publish_date,' ',publish_time) between '" . $start_published_date . "' and '" . $end_published_date . "' group by article_author.author_id) ar on authors.author_id=ar.author_id  left join (select id,author_id,count(*) as qb_count  from quickbyte where publish_date between '" . $start_date . "' and '" . $end_date . "' and valid=1 group by author_id) as tbqb on authors.author_id=tbqb.author_id where authors.author_type_id='2' and authors.author_status='1' order by ar.cs desc";
-        $rst = $this->conn->query($query);
-        //echo '<pre>';
-
-        $reportdata = '
-                    <tr>
-                	<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Reporter</b></th>
-                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>No Of Stories</b></th>
-                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Average views per article</b></th>
-                    <th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>No of Quickbyte</b></th>
-                </tr>';
-
-        while ($row = $rst->fetch_assoc()) {
-            $storycount = 0;
-            $viewcount = 0;
-            $avgView = 0;
-            $qbcount = ($row['qb_count']) ? $row['qb_count'] : 0;
-            //print_r($row);
-            if ($row['cs'] > 0) {
-                //$total_stories+=$row['cs'];	
-                $storycount = $row['cs'];
-                $viewcount = $row['views_count'];
-                if ($viewcount > 0)
-                    $avgView = intval($viewcount / $storycount);
-            }
-            $reportdata.='<tr>
-                	<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $row['name'] . '</td>
-                    <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $storycount . '</td>
-                    <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $avgView . '</td>
-                    <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $qbcount . '</td>
-                </tr>';
-        }
-
-        $mailbody = str_replace(array('[from_date]', '[to_date]', '[total_stories]', '[reporters_data]', '[reporters_type_data]'), array($start_published_date, $end_published_date, $total_stories, $reportdata, $repor_type_tdata), $template);
-        $headers = 'MIME-Version: 1.0' . "\r\n";
-        //  echo  $mailbody; exit;
-        $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
-        $from_email = "reports@bwbusinessworld.com";
-        $sub = '=?UTF-8?B?' . base64_encode("Last 15 Days Report – Article Contribution to Digital") . '?=';
-        $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
-        //anurag.batra@businessworld.in,sudipta@businessworld.in,
-        //echo $mailbody; exit;
-        //sudipta@businessworld.in,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in
-        //mail("sudipta@businessworld.in,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
-        $to='sudipta@businessworld.in,ankitas@businessworld.in'; 
-        $this->sendSmtpMail($from_email,$to,$sub,$mailbody);
-   }
-
-   function generateEveningReport() {
-
-        //$template = file_get_contents('/var/www/html/bwcms/public/cronscript/evening.html');
-        $template = file_get_contents('/var/www/html/cms/public/cronscript/evening.html');
-
-        $yesterday_start_date = date('Y-m-d', strtotime("-1 day")) . ' 18:00:00';
-        $yesterday_end_date = date('Y-m-d', strtotime("-1 day")) . ' 23:59:59';
-        $today_start_date = date('Y-m-d') . ' 00:00:00';
-        $today_end_date = date('Y-m-d') . ' 17:59:59';
-
-        $channelsRst = $this->conn->query("select channel_id,channel from channels where valid='1'");
-        $channelids = array();
-        $channelsTotal = array();
-        $userTypeRst = $this->conn->query("select author_type_id as id,label from author_type where valid='1'");
-        $userTypes = array();
-
-        $countQueryYesterday = "select articles.channel_id,author_type.author_type_id,author_type.label,count(*) as cs,sum(view_count) as noofview  from articles inner join author_type on articles.author_type=author_type.author_type_id  where  concat(publish_date,' ',publish_time) between '$yesterday_start_date' and '$yesterday_end_date' group by author_type.author_type_id,articles.channel_id";
-        $countQueryToday = "select articles.channel_id,author_type.author_type_id,author_type.label,count(*) as cs,sum(view_count) as noofview  from articles inner join author_type on articles.author_type=author_type.author_type_id  where  concat(publish_date,' ',publish_time) between '$today_start_date' and '$today_end_date' group by author_type.author_type_id,articles.channel_id";
-        
-        $countsYesterday = array();
-        $countsToday = array();
-        $countRsultYesterday = $this->conn->query($countQueryYesterday);
-        $countRsultToday=$this->conn->query($countQueryToday);
-        $total_stories_yesterday = 0;
-        $total_stories_today=0;
-        
-        $report_type_tdata_yesterday = '<tr>
-                	<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Reporter Type</b></th>';
-        $report_type_tdata_today = '<tr>
-                	<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Reporter Type</b></th>';
-        
-        while ($channelRow = $channelsRst->fetch_assoc()) {
-            $report_type_tdata_yesterday.='<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>' . $channelRow['channel'] . '</b></th>';
-            $report_type_tdata_today.='<th style="font-size: 14px; border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>' . $channelRow['channel'] . '</b></th>';
-            $channelids[] = $channelRow['channel_id'];
-            $channelsTotalYesterday[$channelRow['channel_id']] = 0;
-            $channelsTotalToday[$channelRow['channel_id']] = 0;
-
-        }
-
-        while ($userTypeRow = $userTypeRst->fetch_assoc()) {
-            $userTypes[$userTypeRow['id']] = $userTypeRow['label'];
-        }
-        
-        while ($rowCount = $countRsultYesterday->fetch_assoc()) {
-            $countsYesterday[$rowCount['channel_id']][$rowCount['author_type_id']] = $rowCount['cs'];
-        }
-        
-         while ($rowCount = $countRsultToday->fetch_assoc()) {
-            $countsToday[$rowCount['channel_id']][$rowCount['author_type_id']] = $rowCount['cs'];
-        }
-        
-        
-       // $total_stories = 0;
-        foreach ($userTypes as $key => $value) {
-            //echo $key.'-'.$value; exit;
-            //print_r($channelids); exit;
-            $report_type_tdata_yesterday.='<tr>';
-            $report_type_tdata_today.='<tr>';
-            $report_type_tdata_yesterday.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $value . '</td>';
-            $report_type_tdata_today.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $value . '</td>';
-            foreach ($channelids as $id) {
-                $c = 0;
-                $ct=0;
-                if (isset($countsYesterday[$id])) {
-                    if (isset($countsYesterday[$id][$key])) {
-                        $c = $countsYesterday[$id][$key];
-                    }
-                }
-                if (isset($countsToday[$id])) {
-                    if (isset($countsToday[$id][$key])) {
-                        $ct = $countsToday[$id][$key];
-                    }
-                }
-                
-                
-                $total_stories_yesterday+=$c;
-                $total_stories_today+=$ct;
-                $report_type_tdata_yesterday.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $c . '</td>';
-                 $report_type_tdata_today.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;">' . $ct . '</td>';
-                $channelsTotalYesterday[$id] = $channelsTotalYesterday[$id] + $c;
-                $channelsTotalToday[$id] = $channelsTotalToday[$id] + $ct;
-            }
-            $report_type_tdata_yesterday.='</tr>';
-        }
-
-        $report_type_tdata_yesterday.='<tr>';
-        $report_type_tdata_today.='<tr>';
-        $report_type_tdata_yesterday.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Total</b></td>';
-        $report_type_tdata_today.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>Total</b></td>';
-        
-        foreach ($channelsTotalYesterday as $total) {
-            $report_type_tdata_yesterday.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>' . $total . '</b></td>';
-        }
-        
-        foreach ($channelsTotalToday as $total) {
-            $report_type_tdata_today.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>' . $total . '</b></td>';
-        }
-        
-        $report_type_tdata_yesterday.='</tr>';
-        $report_type_tdata_today.='</tr>';
-        
-        
-        
-      
-
-        $mailbody = str_replace(array('[yesterday_from_date]', '[yesterday_to_date]', '[yesterday_total_stories]', '[yesterday_reporters_type_data]','[today_from_date]', '[today_to_date]','[today_total_stories]','[today_reporters_type_data]'), array($yesterday_start_date, $yesterday_end_date, $total_stories_yesterday,$report_type_tdata_yesterday,$today_start_date, $today_end_date, $total_stories_today,$report_type_tdata_today), $template);
-        
-       
-        $headers = 'MIME-Version: 1.0' . "\r\n";
-        //  echo  $mailbody; exit;
-        $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
-        $from_email = "reports@bwbusinessworld.com";
-        $sub = '=?UTF-8?B?' . base64_encode("Daily online content report-2") . '?=';
-        $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
-        
-        $to = 'sudipta@businessworld.in,tanvie@businessworld.in';   
-        $this->sendSmtpMail($from_email, $to, $sub, $mailbody);
-    }
-
-    function sendDailyReport() {
-        $urls = array(
-            '1' => 'http://businessworld.in/',
-            '2' => 'http://bwhotelier.businessworld.in/',
-            '3' => 'http://bwsmartcities.businessworld.in/',
-            '4' => 'http://bwcio.businessworld.in/',
-            '5' => 'http://bwdisrupt.businessworld.in/',
-            '6' => 'http://bwwealth.businessworld.in/',
-            '7' => 'http://everythingexperiential.businessworld.in/',
-            '8' => 'http://bwpeople.businessworld.in/',
-            '9' => 'http://bweducation.businessworld.in/',
-        );
-
-        $displayDate = date('d-m-Y', strtotime("-1 days"));
-        $yesDate = date('Y-m-d', strtotime("-1 days"));
-        //$template = file_get_contents('/var/www/html/bwcms/public/cronscript/daily.html');
-        $template = file_get_contents('/var/www/html/cms/public/cronscript/daily.html');
-
-        $total_article = 0;
-
-        $reporterStoriesRst = $this->conn->query("select ar.article_id,au.author_id,au.name,ar.view_count,ar.article_id,ar.title,ar.channel_id,ch.channel,publish_date from authors au inner join article_author aau on au.author_id=aau.author_id inner join articles ar on aau.article_id=ar.article_id inner join channels  ch on ar.channel_id=ch.channel_id where (ar.publish_date='" . $yesDate . "') and ar.author_type=2 and ar.status='P' and ar.channel_id=1 order by name");
-        
-        $editorStoriesRst=$this->conn->query("select count(*) as cs,users.name from articles inner join users on articles.user_id=users.id where publish_date='".$yesDate."' and articles.channel_id=1 group by user_id");
-        
-        $contentGridRst=$this->conn->query("select count(*) as cs,author_type.label,author_type.author_type_id as id from articles inner join author_type on articles.author_type=author_type.author_type_id where publish_date='".$yesDate."' and articles.channel_id=1 group by articles.author_type");
-        
-        
-        
-        $editorStored='';
-        $reporterIds = array();
-        $previousId = 0;
-        $reporterWithStory = '';
-        $desk_story_report='';
-        $content_grid='';
-        $tempData = array();
-        
-        $girdLabel=array('1'=>'Newswire/Rewrite','2'=>'BW Reporters’ Story','3'=>'Guest Author','4'=>'Columnist');
-        $girdValue=array('1'=>'0','2'=>'0','3'=>'0','4'=>'0');
-        
-        while($gridRow=$contentGridRst->fetch_assoc()){
-            $girdValue[$gridRow['id']]=$gridRow['cs'];
-        }
-        foreach($girdLabel as $key=>$value){
-         $content_grid.='<tr>
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" >' . $value . '</td>
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" >' . $girdValue[$key] . '</td>
-                           
-                        </tr>';
-        }
-        while ($editorStory=$editorStoriesRst->fetch_assoc()){
-             $desk_story_report.='<tr>
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" >' . $editorStory['name'] . '</td>
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" >' . $editorStory['cs'] . '</td>
-                           
-                        </tr>';
-        }
-        
-        while ($reporterStory = $reporterStoriesRst->fetch_assoc()) {
-            // echo $previousId.'<br/>';
-            if ($previousId != $reporterStory['author_id']) {
-
-                $nonOfStory = count($tempData);
-                if ($nonOfStory > 0) {
-                    $j = 0;
-                    foreach ($tempData as $story) {
-                        $publish_date = date('m-d-Y', strtotime($story['publish_date']));
-                        $url = $urls[$story['channel_id']] . 'article/' . preg_replace('/[^a-zA-Z0-9_.]/', '-', $story['title']) . '/' . $publish_date . '-' . $story['article_id'];
-
-                        if ($j == 0) {
-                            $reporterWithStory.='<tr>
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" rowspan="' . $nonOfStory . '">' . $story['name'] . '</td>
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" rowspan="' . $nonOfStory . '">' . $nonOfStory . '</td>
-                                
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><a href="' . $url . '" target="_blank">' . substr($story['title'], 0, 20) . '...</a></td>
-                               
-                        </tr>';
-                        } else {
-                            $reporterWithStory.='<tr>
-                                
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><a href="' . $url . '" target="_blank">' . substr($story['title'], 0, 20) . '...</a></td>
-                               
-                        </tr>';
-                        }
-                        $j++;
-                    }
-                    $tempData = array();
-                }
-            }
-
-            $tempData[] = $reporterStory;
-            $reporterIds[] = $previousId = $reporterStory['author_id'];
-        }
-        //exit;
-        // This for last author
-        $nonOfStory = count($tempData);
-        if ($nonOfStory > 0) {
-            $j = 0;
-            foreach ($tempData as $story) {
-                $publish_date = date('m-d-Y', strtotime($story['publish_date']));
-                $url = $urls[$story['channel_id']] . 'article/' . preg_replace('/[^a-zA-Z0-9_.]/', '-', $story['title']) . '/' . $publish_date . '-' . $story['article_id'];
-
-                if ($j == 0) {
-                    $reporterWithStory.='<tr>
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" rowspan="' . $nonOfStory . '">' . $story['name'] . '</td>
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;" rowspan="' . $nonOfStory . '">' . $nonOfStory . '</td>
-                                
-                              <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><a href="' . $url . '" target="_blank">' . substr($story['title'], 0, 20) . '...</a></td>
-                        </tr>';
-                } else {
-                    $reporterWithStory.='<tr>
-                                
-                                <td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><a href="' . $url . '" target="_blank">' . substr($story['title'], 0, 20) . '...</a></td>
-                        </tr>';
-                }
-                $j++;
-            }
-        }
-
-
-        $reporterWithoutStoryRst = $this->conn->query("select * from authors where author_type_id=2 and author_id not in (" . implode(',', $reporterIds) . ") and valid=1 and author_status=1 order by name");
-        $i = 1;
-        $reportWithoutStory = '';
-        while ($reporterWithoutStoryRow = $reporterWithoutStoryRst->fetch_assoc()) {
-            $reportWithoutStory.='<tr>
-                        <td width="590" height="30">
-                           ' . $i . '. ' . $reporterWithoutStoryRow['name'] . '
-                        </td>
-                        </tr>';
-            $i++;
-        }
-
-        $channelsRst = $this->conn->query("select ch.channel_id,channel,cs from channels ch left join (select channel_id,count(*) as cs from articles where status='P' and publish_date='$yesDate'  group by channel_id) 
-ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group by ch.channel_id");
-        $channels_counts = '';
-
-        while ($row = $channelsRst->fetch_assoc()) {
-            $count = ($row['cs']) ? $row['cs'] : 0;
-//            $channels_counts.=' <tr>
-//                       <td  height="30" width="180">' . $row['channel'] . '
-//                        </td>
-//                         <td height="30" >' . $count . '
-//                        </td>
-//                        </tr>';
-            $total_article+=$row['cs'];
-        }
-         $mailbody = str_replace(array('[channels_counts]', '[yesterday_date]', '[total_stories]', '[reporter_without_story]', '[reporter_with_story]','[desk_story_report]','[content_grid]'), array($channels_counts, $displayDate, $total_article, $reportWithoutStory, $reporterWithStory,$desk_story_report,$content_grid), $template);
-        $headers = 'MIME-Version: 1.0' . "\r\n";
-        //echo $mailbody;
-        //exit;
-        $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
-        $from_email = "reports@bwbusinessworld.com";
-        $sub = '=?UTF-8?B?' . base64_encode("Daily online content report") . '?=';
-        $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
-        //anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,,akanksha@businessworld.in,ankitas@businessworld.in,shekhar@businessworld.in
-       //anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in         
-       // mail("anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,shekhar@businessworld.in", $sub, $mailbody, $headers);
-        $to='anurag.batra@businessworld.in,sudipta@businessworld.in,sameer.sikka@businessworld.in,hoshie@businessworld.in,ankitas@businessworld.in,brij@businessworld.in';
-        $this->sendSmtpMail($from_email,$to,$sub,$mailbody);
-    }
 
     
-    function checkPtiServer(){
-        $ptiAuthorId=84707;
-        $currentDate=date('Y-m-d H:i:s');
-        $channelsRst=$this->conn->query("select timestampdiff(minute,max(updated_at),'".$currentDate."') as time_diff from article_author where author_id=84707") or die($this->conn->error);
-        $row = $channelsRst->fetch_assoc();
-        if($row['time_diff']>240){
-        //    echo 'time diff is : '. $row['time_diff'];
-        $headers = 'MIME-Version: 1.0' . "\r\n";
-        $mailbody='Hi BW Businessworld Digital Team, <br><br> There is no article published in last '.$row['time_diff'].' minutes using PTI feed, Please check configuration. <br><br> Regards,<br>Bw PTI server';
-        $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
-        $from_email = "reports@bwbusinessworld.com";
-        $sub = '=?UTF-8?B?' . base64_encode("Pti server error ") . '?=';
-        $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
-        //sudipta@businessworld.in
-        $to='sudipta@businessworld.in,shekhar@businessworld.in';
-        $this->sendSmtpMail($from_email,$to,$sub,$mailbody);
-        }
-        
-    }
-    
-    
-    function sendSmtpMail($from, $to, $subject, $message) {
-        
-        $smtp = Mail::factory('smtp', array('host' => 'smtp.sendgrid.net', 'port' => '2525', 'auth' => true, 'username' => 'godigital@businessworld.in', 'password' => 'bwdigital@1234'));
-        $mime = new Mail_mime();
-        $headers = array(
-            'To' => $to,
-            'From' => $from,
-            'Subject' => $subject
-        );
-        $mime->setTXTBody($message);
-        $mime->setHTMLBody($message);
-        $mimeparams['text_encoding'] = "8bit";
-        $mimeparams['text_charset'] = "UTF-8";
-        $mimeparams['html_charset'] = "UTF-8";
-        $mimeparams['head_charset'] = "UTF-8";
-        $mimeparams["debug"] = "True";
-        $body = $mime->get($mimeparams);
-        $headers = $mime->headers($headers);
-        $mail = $smtp->send($to, $headers, $body);
-    }
 
     // Debate Video
     //video module
@@ -2903,14 +2194,14 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='mastervideo' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrmastervideo' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $masterVideoResults = $this->conn->query("SELECT * FROM video_master where channel_id=1  $condition");
+        $masterVideoResults = $this->conn->query("SELECT * FROM video_master where channel_id=10  $condition");
         //echo $masterVideoResults->num_rows; exit;
         if ($masterVideoResults->num_rows > 0) {
 
@@ -2928,48 +2219,50 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
                 $checkmasterVideoExistResultSet = $this->conn2->query("select video_id, video_title,video_summary, video_name,video_thumb_name,tags,created_at,updated_at from video_master where video_id=$masterVideoId");
                 if ($checkmasterVideoExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
-                    if ($masterVideoRow['video_status'] == '1') {//echo 'sumit'; exit();
-                        $masterVideoUpdateStmt = $this->conn2->prepare("update video_master set video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=? where video_id=?");
-                        //echo $this->conn2->error; exit;
-                        $masterVideoUpdateStmt->bind_param('sssssssisi', $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'], $masterVideoRow['updated_at'], $masterVideoRow['campaign_id'], $masterVideoRow['video_by'], $masterVideoId);
-                        $masterVideoUpdateStmt->execute() or die($this->conn2->error);
-                        //print_r($masterVideoUpdateStmt);exit;
+                    if($masterVideoRow['video_status']=='1'){//echo 'sumit'; exit();
+                    $masterVideoUpdateStmt = $this->conn2->prepare("update video_master set video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=? where video_id=?");
+                    //echo $this->conn2->error; exit;
+                    $masterVideoUpdateStmt->bind_param('sssssssisi', $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'], $masterVideoRow['updated_at'], $masterVideoRow['campaign_id'], $masterVideoRow['video_by'], $masterVideoId);
+                    $masterVideoUpdateStmt->execute() or die($this->conn2->error);
+                    //print_r($masterVideoUpdateStmt);exit;
 
-                        $iid = $masterVideoRow['id'];
-                        //echo $iid ; exit;
-                        $this->callVideoRelatedContent($iid);
-                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                    $iid = $masterVideoRow['id'];
+                    //echo $iid ; exit;
+                    $this->callVideoRelatedContent($iid);
+                    $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                     } else {
                         $delStmt = $this->conn2->prepare("delete from video_master where video_id=?");
                         $delStmt->bind_param('i', $masterVideoId);
                         $delStmt->execute();
+                        
                     }
                     // echo  $_SESSION['noofupd'];
-                } else {//echo 'going to insert';exit;
-                    if ($masterVideoRow['video_status'] == '1') {
-                        $masterVideoInsertStmt = $this->conn2->prepare("insert into video_master set video_id=?,video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=?");
-                        //echo $this->conn2->error; exit;
-                        $masterVideoInsertStmt->bind_param('isssssssis', $masterVideoRow['id'], $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'], $masterVideoRow['updated_at'], $masterVideoRow['campaign_id'], $masterVideoRow['video_by']);
-                        $masterVideoInsertStmt->execute() or die($this->conn2->error);
-                        //print_r($masterVideoInsertStmt);exit;
-                        // echo $articleInsertStmt->insert_id;exit;    
-                        if ($masterVideoInsertStmt->insert_id) {
-                            $iid = $masterVideoInsertStmt->insert_id;
-                            $masterVideoInsertStmt->close();
-                            $this->callVideoRelatedContent($iid);
-                            $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
-                        }
-                    } else {
+                   } else {//echo 'going to insert';exit;
+                    if($masterVideoRow['video_status']=='1'){
+                    $masterVideoInsertStmt = $this->conn2->prepare("insert into video_master set video_id=?,video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=?");
+                    //echo $this->conn2->error; exit;
+                    $masterVideoInsertStmt->bind_param('isssssssis', $masterVideoRow['id'], $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'], $masterVideoRow['updated_at'], $masterVideoRow['campaign_id'], $masterVideoRow['video_by']);
+                    $masterVideoInsertStmt->execute() or die($this->conn2->error);
+                    //print_r($masterVideoInsertStmt);exit;
+                    // echo $articleInsertStmt->insert_id;exit;    
+                    if ($masterVideoInsertStmt->insert_id) {
+                        $iid = $masterVideoInsertStmt->insert_id;
+                        $masterVideoInsertStmt->close();
+                        $this->callVideoRelatedContent($iid);
+                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                    }
+                  } else {
                         $delStmt = $this->conn2->prepare("delete from video_master where video_id=?");
                         $delStmt->bind_param('i', $masterVideoRow['id']);
                         $delStmt->execute();
-                    }
+                        
+                    }  
                 }
             }
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='mastervideo',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrmastervideo',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -3006,7 +2299,6 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
             $tagInsertStmt->close();
         }
     }
-
     //video module end here 
     //
    //campain module start here 
@@ -3015,14 +2307,14 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='campaing' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrcampaing' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $campaingResults = $this->conn->query("SELECT * FROM campaign where channel_id=1 $condition");
+        $campaingResults = $this->conn->query("SELECT * FROM campaign where channel_id=10 $condition");
         //echo $authorResults->num_rows; exit;
         if ($campaingResults->num_rows > 0) {
 
@@ -3052,7 +2344,7 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='campaing',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrcampaing',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -3060,23 +2352,23 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
     }
 
 //campain module end here 
-    function migrateMasterNewsLetter() {
-
+function migrateMasterNewsLetter() {
+    
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='masternewsletter' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhrmasternewsletter' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
-            //$condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+             //$condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
         //echo 'sumit' ;exit;
-        $masterNewsLetterResults = $this->conn->query("SELECT * FROM master_newsletter where channel_id= 1  $condition");
-        // echo $masterNewsLetterResults->num_rows; exit;
+        $masterNewsLetterResults = $this->conn->query("SELECT * FROM master_newsletter where channel_id= 10  $condition");
+       // echo $masterNewsLetterResults->num_rows; exit;
         if ($masterNewsLetterResults->num_rows > 0) {
 
-
+            
 
             while ($masterNewsLetterRow = $masterNewsLetterResults->fetch_assoc()) {
                 //print_r($masterNewsLetterRow); exit;
@@ -3084,55 +2376,57 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
                 $checkmasterNewsLettertResultSet = $this->conn2->query("select * from master_newsletter where id=$masterNewsLetterId");
                 if ($checkmasterNewsLettertResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
-                    if ($masterNewsLetterRow['is_deleted'] == '0') {//echo 'sumit'; exit();
-                        $masterNewsLetterUpdateStmt = $this->conn2->prepare("update master_newsletter set title=?,created_at=?,updated_at=? where id=?");
-                        //echo $this->conn2->error; exit;
-                        $masterNewsLetterUpdateStmt->bind_param('sssi', $masterNewsLetterRow['title'], $masterNewsLetterRow['created_at'], $masterNewsLetterRow['updated_at'], $masterNewsLetterId);
-                        $masterNewsLetterUpdateStmt->execute() or die($this->conn2->error);
-                        //print_r($masterNewsLetterUpdateStmt);exit;
+                    if($masterNewsLetterRow['is_deleted']=='0'){//echo 'sumit'; exit();
+                    $masterNewsLetterUpdateStmt = $this->conn2->prepare("update master_newsletter set title=?,created_at=?,updated_at=? where id=?");
+                    //echo $this->conn2->error; exit;
+                    $masterNewsLetterUpdateStmt->bind_param('sssi', $masterNewsLetterRow['title'], $masterNewsLetterRow['created_at'], $masterNewsLetterRow['updated_at'], $masterNewsLetterId);
+                    $masterNewsLetterUpdateStmt->execute() or die($this->conn2->error);
+                    //print_r($masterNewsLetterUpdateStmt);exit;
 
-                        $iid = $masterNewsLetterRow['id'];
-                        //echo $iid ; exit;
-                        $this->callNewsLetterRelatedContent($iid);
-                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                    $iid = $masterNewsLetterRow['id'];
+                    //echo $iid ; exit;
+                    $this->callNewsLetterRelatedContent($iid);
+                    $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                     } else {
                         $delStmt = $this->conn2->prepare("delete from master_newsletter where id=?");
                         $delStmt->bind_param('i', $masterNewsLetterId);
                         $delStmt->execute();
+                        
                     }
                     // echo  $_SESSION['noofupd'];
                 } else {//echo 'going to insert';exit;
-                    if ($masterNewsLetterRow['is_deleted'] == '0') {
-                        $masterNewsLetterInsertStmt = $this->conn2->prepare("insert into master_newsletter set id=?,title=?,created_at=?,updated_at=?");
-                        //echo $this->conn2->error; exit;
-                        $masterNewsLetterInsertStmt->bind_param('isss', $masterNewsLetterRow['id'], $masterNewsLetterRow['title'], $masterNewsLetterRow['created_at'], $masterNewsLetterRow['updated_at']);
-                        $masterNewsLetterInsertStmt->execute() or die($this->conn2->error);
-                        //print_r($masterNewsLetterInsertStmt);exit;
-                        // echo $masterNewsLetterInsertStmt->insert_id;exit;    
-                        if ($masterNewsLetterInsertStmt->insert_id) {
-                            $iid = $masterNewsLetterInsertStmt->insert_id;
-                            $masterNewsLetterInsertStmt->close();
-                            $this->callNewsLetterRelatedContent($iid);
-                            $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
-                        }
-                    } else {
+                    if($masterNewsLetterRow['is_deleted']=='0'){
+                    $masterNewsLetterInsertStmt = $this->conn2->prepare("insert into master_newsletter set id=?,title=?,created_at=?,updated_at=?");
+                    //echo $this->conn2->error; exit;
+                    $masterNewsLetterInsertStmt->bind_param('isss', $masterNewsLetterRow['id'], $masterNewsLetterRow['title'],$masterNewsLetterRow['created_at'], $masterNewsLetterRow['updated_at']);
+                    $masterNewsLetterInsertStmt->execute() or die($this->conn2->error);
+                    //print_r($masterNewsLetterInsertStmt);exit;
+                    // echo $masterNewsLetterInsertStmt->insert_id;exit;    
+                    if ($masterNewsLetterInsertStmt->insert_id) {
+                        $iid = $masterNewsLetterInsertStmt->insert_id;
+                        $masterNewsLetterInsertStmt->close();
+                        $this->callNewsLetterRelatedContent($iid);
+                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                    }
+                  } else {
                         $delStmt = $this->conn2->prepare("delete from master_newsletter where id=?");
                         $delStmt->bind_param('i', $masterNewsLetterId);
                         $delStmt->execute();
-                    }
+                        
+                    }  
                 }
             }
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='masternewsletter',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhrmasternewsletter',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' masternewsletter(s) inserted and ' . $_SESSION['noofupd'] . ' masternewsletter(s) updated.</h5>';
     }
 
-    function callNewsLetterRelatedContent($id) {
+     function callNewsLetterRelatedContent($id) {
         //echo $id ; exit;
         $delStmt = $this->conn2->prepare("delete from master_newsletter_articles where master_newsletter_id=?") or die($this->conn2->error);
         $delStmt->bind_param('i', $id) or die($this->conn2->error);
@@ -3141,74 +2435,17 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
         //echo 'test'; exit;
         $masterNewsLetterArticleRst = $this->conn->query("select * from master_newsletter_articles where is_deleted=0 and master_newsletter_id=$id");
         while (($masterNewsLetterArticleRow = $masterNewsLetterArticleRst->fetch_assoc())) {
-                $masterNewsLetterArticleInsertStmt = $this->conn2->prepare("insert into master_newsletter_articles  set master_newsletter_id=?,article_id=?,sequence=?,is_deleted=?,updated_at=?") or die($this->conn2->error);
-                $masterNewsLetterArticleInsertStmt->bind_param('iiiis', $masterNewsLetterArticleRow['master_newsletter_id'], $masterNewsLetterArticleRow['article_id'], $masterNewsLetterArticleRow['sequence'], $masterNewsLetterArticleRow['is_deleted'], $masterNewsLetterArticleRow['updated_at']) or die($this->conn2->error);
-                $masterNewsLetterArticleInsertStmt->execute() or die($this->conn2->error);
-                $masterNewsLetterArticleInsertStmt->close();
-        }
-    }
 
-    function migrateNewsletterSubscriber() {    
-        $_SESSION['noofins'] = 0;
-        $_SESSION['noofupd'] = 0;
-        $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='subscriber' order by  start_time desc limit 0,1") or die($this->conn->error);
-        $condition = '';
-        if ($cronresult->num_rows > 0) {
-            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
-            $condition = " and  (subscription_date >='$cronLastExecutionTime')";
+            $masterNewsLetterArticleInsertStmt = $this->conn2->prepare("insert into master_newsletter_articles  set master_newsletter_id=?,article_id=?,sequence=?,is_deleted=?,updated_at=?") or die($this->conn2->error);
+            $masterNewsLetterArticleInsertStmt->bind_param('iiiis', $masterNewsLetterArticleRow['master_newsletter_id'],  $masterNewsLetterArticleRow['article_id'],$masterNewsLetterArticleRow['sequence'],$masterNewsLetterArticleRow['is_deleted'], $masterNewsLetterArticleRow['updated_at']) or die($this->conn2->error);
+            $masterNewsLetterArticleInsertStmt->execute() or die($this->conn2->error);
+            $masterNewsLetterArticleInsertStmt->close();
+	
         }
-        $subscriberResults = $this->conn2->query("SELECT * FROM newsletter_Subscriber where  1 $condition");
+
+       
         
-        if ($subscriberResults->num_rows > 0) {
-
-            while ($subscriberRow = $subscriberResults->fetch_assoc()) {
-                //print_r($subscriberRow); exit;
-                $email = $subscriberRow['subscriber_email_id'];
-                $checkSubscriberExistResultSet = $this->conn->query("select id from subscribers where email='$email'");
-                
-                if ($checkSubscriberExistResultSet->num_rows > 0) {
-
-                    $checkSubscriberRow = $checkSubscriberExistResultSet->fetch_assoc();
-                    $id = $checkSubscriberRow['id'];
-
-                    $checkSubscriptionRst = $this->conn->query("select id from subscriber_newsletter where subscriber_id=$id and channel_id=$this->channelId");
-                   
-                    if ($checkSubscriptionRst->num_rows == 0) {
-                        //echo 'test';
-                        $updated_at = date('Y-m-d H:i:s');
-                        $subsciptionInsertStmt = $this->conn->prepare("insert into subscriber_newsletter set subscriber_id=?,channel_id=?,sub_date=?,updated_at=?");
-                        $subsciptionInsertStmt->bind_param('iiss', $id, $this->channelId, $subscriberRow['subscription_date'], $updated_at);
-                        $subsciptionInsertStmt->execute();
-                        if ($subsciptionInsertStmt->affected_rows)
-                            $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
-                    }
-                   
-                }else {
-                    $updated_at = date('Y-m-d H:i:s');
-                    $suscriberInsertStmt = $this->conn->prepare("insert into subscribers set email=?,created_at=?,updated_at=?");
-                    $suscriberInsertStmt->bind_param('sss', $email,$updated_at,$updated_at);
-                    $suscriberInsertStmt->execute();
-                    $id = $suscriberInsertStmt->insert_id;
-                    $subsciptionInsertStmt = $this->conn->prepare("insert into subscriber_newsletter set subscriber_id=?,channel_id=?,sub_date=?,updated_at=?");
-                    $subsciptionInsertStmt->bind_param('iiss', $id, $this->channelId, $subscriberRow['subscription_date'], $updated_at);
-                    $subsciptionInsertStmt->execute();
-                    if ($suscriberInsertStmt->affected_rows) {
-                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
-                    }
-                }
-            }
-          
-        }
-        
-        $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='subscriber',start_time=?,end_time=?");
-        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
-        $updatecronstmt->execute();
-        $updatecronstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' subscriber(s) inserted and ' . $_SESSION['noofupd'] . ' subscriber(s) updated.</h5>';
     }
-
 }
 
 ?>
