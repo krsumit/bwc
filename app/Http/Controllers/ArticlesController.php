@@ -260,6 +260,80 @@ class ArticlesController extends Controller {
      * @returns boolean 1:0
      */
 
+public function channelarticles($option) {
+        if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
+        $uid = Session::get('users')->id;
+        $rightLabel = "";
+
+        $rightId = '';
+        //exit;
+       
+        //echo 'test'; exit;
+        /* Right mgmt start */
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+
+        $editor = '';
+        $ChennalArr = DB::table('channels')->get();
+        //For My Drafts Page
+            $i = 0;
+            $articles = array();
+            DB::enableQueryLog();
+            $condition = '';
+
+            $q = DB::table('articles')
+                    ->Leftjoin('article_author', 'articles.article_id', '=', 'article_author.article_id')
+                    ->Leftjoin('authors', 'article_author.author_id', '=', 'authors.author_id');
+            
+                $q->select(DB::raw('articles.article_id,articles.title,articles.pti_auto_published,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.channel_id,articles.locked_by'));
+                
+                $q->orderBy('articles.publish_date', 'desc');
+                $q->orderBy('articles.publish_time', 'desc');
+                
+            
+            $q->where('articles.channel_id', $currentChannelId)
+                    ->where('status', 'p');
+            if (isset($_GET['searchin'])) {
+                if ($_GET['searchin'] == 'title') {
+                    $q->where('articles.title', 'like', '%' . $_GET['keyword'] . '%');
+                }
+                if (@$_GET['searchin'] == 'article_id') {
+                    $q->where('articles.article_id', $_GET['keyword']);
+                }
+                if (@$_GET['searchin'] == 'author') {
+                    $q->where('authors.name', 'like', '%' . $_GET['keyword'] . '%');
+                }
+            }
+
+            $articles = $q->groupBy('articles.article_id')->paginate(config('constants.recordperpage'));
+
+            $editor = DB::table('users')
+                    ->join('articles', 'users.id', '=', 'articles.locked_by')
+                    ->select('users.name', 'articles.article_id')
+                    ->where('status', 'p')
+                    ->get();
+        if(isset($_GET['channelto'])){
+        $idchannel = $_GET['channelto'];
+         }else{
+            $idchannel = '';
+            }
+        if(isset($_GET['channelto'])){
+         $idchannelf = $_GET['channel'];
+        }else{
+        $idchannelf ='';
+        }
+        //echo $currentChannelId; exit;
+        //print_r($channels); exit;
+        return view('channelarticles.' . $option, compact('articles', 'editor', 'channels', 'currentChannelId','idchannel','idchannelf','ChennalArr'));
+    }
+
+
+
     public function sortImage($id, Request $request) {
 
         foreach ($request->row as $k => $itm) {
@@ -1293,6 +1367,198 @@ class ArticlesController extends Controller {
             $deleteAl->publish_time = date('H:i:s');
             $deleteAl->save();
         }
+        return 'success';
+    }
+
+public function articlechannelinsert(Request $request) {
+
+        if (!Session::has('users')) {
+            return 'Please login first.';
+        }
+
+        /* Right mgmt start */
+        $rightId = 13;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId)) {
+            return 'You are not authorized to access';
+        }
+        /* Right mgmt end */
+
+        $uid = Session::get('users')->id;
+        
+       if (isset($_POST['checkItem'])) {
+        $ArArr = $_POST['checkItem'];
+         $channel_selfm = $_POST['channel_selfm'];
+         $channel_sel = $_POST['channel_sel'];
+         print_r($ArArr);
+         $ChennalArr = DB::table('channels')->where('channel_id', '=', $channel_sel)->first();
+         $ChennalArr->channelurl;
+         //print_r($ChennalArr);
+         //exit();
+         //DB::enableQueryLog();
+        $ArticleArr=Article::whereIn('article_id', $ArArr)->where('channel_id', '=', $channel_sel)->get();
+        //dd(DB::getQueryLog());
+            //print_r($ArticleArr);
+            //exit();
+                foreach($ArticleArr as $articleRow) {
+                    $article = new Article();
+                    // Add Arr Data to Article Table //
+                    $publish_date=date('d-m-Y',strtotime($articleRow->publish_date));
+                    $title=  str_replace(' ', '-', $articleRow->title);
+                    $article->channel_id = $channel_selfm;
+                    $article->user_id = $uid;
+                    $article->author_type = $articleRow->author_type;
+                    $article->is_columnist = $articleRow->is_columnist;                  
+                    $article->title = $articleRow->title;
+                    $article->summary = $articleRow->summary;
+                    $article->description = $articleRow->description;
+                    $article->country = $articleRow->country;
+                    $article->state = $articleRow->state;
+                    $article->news_type = $articleRow->news_type;
+                    $article->magazine_id = $articleRow->magazine_id;                    
+                    $article->event_id = $articleRow->event_id;
+                    $article->canonical_options = $articleRow->canonical_options;
+                    $article->view_count = $articleRow->view_count;
+                    $article-> exclusive_non_featured = $articleRow->exclusive_non_featured;
+                    $article-> featured_in_print = $articleRow->featured_in_print;
+                    $article-> send_mail_status = $articleRow->send_mail_status;
+                    $article-> bitly_url = $articleRow->bitly_url;
+                    $article-> pti_auto_published = $articleRow->pti_auto_published;
+                    $article->copyarticle_id = $articleRow->article_id;
+                    if($articleRow->canonical_url!=''){
+                    $article->canonical_url = $articleRow->canonical_url;
+                    }else{
+                        $article->canonical_url = $ChennalArr->channelurl.'/'. preg_replace('/([^a-zA-Z0-9_.])+/', '-',$title). '/'.$publish_date.'-'.$articleRow->article_id;
+                        }
+                   
+                    $article->social_title = $articleRow->social_title;
+                    $article->social_summary = $articleRow->social_summary;
+                    $article->video_Id = $articleRow->video_Id;
+                    $article->rating_point = $articleRow->rating_point;
+                    $article->social_image = $articleRow->social_image;
+                    $article->hide_image = $articleRow->hide_image;
+                    $article->video_type = $articleRow->video_type;
+                    $article->campaign_id = $articleRow->campaign_id;
+                    $article->for_homepage = $articleRow->for_homepage;
+                    $article->publish_date = $articleRow->publish_date;
+                    $article->publish_time = $articleRow->publish_time;
+                    $article->important = $articleRow->important;
+                    $article->web_exclusive = $articleRow->web_exclusive;
+                    $article->slug = $articleRow->slug;
+                    $article->status = $articleRow->status;
+                    $article->save();
+                    $oldid= $articleRow->article_id;
+                    //Get Article_id
+                    echo $id = $article->article_id;
+                   
+        //DB::enableQueryLog();
+        $channelAth=ArticleAuthor::where('article_id', $oldid)->get();
+        //dd(DB::getQueryLog());
+         foreach($channelAth as $authRow) {
+        // Assignig static author if author type is online bureau
+            $article_author = new ArticleAuthor();
+            $article_author->article_id = $id;
+            $article_author->channel_id = $channel_selfm;
+            $article_author->article_author_rank = $authRow['article_author_rank'];
+            $article_author->author_id = $authRow['author_id']; // It's fixed in for all onlien bureau
+            $article_author->valid = $authRow['valid'];
+            //print_r($ArticleArr);
+             // echo   $authRow['valid'];
+            $article_author->save();
+        }
+        //Article Topics - Save
+        $channelAto=ArticleTopic::where('article_id', $oldid)->get();
+        if (!empty($channelAto)){
+         foreach($channelAto as $topicRow) {
+                $article_topics = new ArticleTopic();
+                $article_topics->article_id = $id;
+                $article_topics->topic_id = $topicRow['topic_id'];
+                 echo $topicRow['topic_id'];
+                
+                $article_topics->save();
+            }
+        }
+        
+        //Article Tags - Save
+        $channelAtg=ArticleTag::where('article_id', $oldid)->get();
+        //print_r($channelAtg);
+        
+        if (!empty($channelAtg)){
+         foreach($channelAtg as $tagRow) { 
+                $article_tags = new ArticleTag();
+                $article_tags->article_id = $id;
+                $article_tags->tags_id = $tagRow['tags_id'];
+                    
+                $article_tags->save();
+            }
+        }
+
+
+            $CategoryArr = DB::table('category')->where('channel_id', '=', $channel_selfm)->first();
+                   
+            $article_category = new ArticleCategory();
+            $article_category->article_id = $id;
+            $article_category->category_id = $CategoryArr->category_id;
+            $article_category->level = 1;
+            $article_category->save();
+         
+
+        //- Update article_id to respective table -//
+        //Video table (article_id)- Save
+        $channelVid=Video::where('owner_id', $oldid)->get();
+        if (!empty($channelVid)){
+         foreach($channelVid as $VidRow) {  
+            $objVideo = new Video();
+            $objVideo->title = $VidRow['title'];
+            $objVideo->code = $VidRow['code'];
+            $objVideo->source = $VidRow['source'];
+            $objVideo->url = $VidRow['url'];
+            $objVideo->channel_id = $channel_selfm;
+            $objVideo->owned_by = $VidRow['owned_by'];
+            $objVideo->owner_id = $VidRow['owner_id'];
+            $objVideo->added_by = $VidRow['added_by'];
+            $objVideo->added_on = $VidRow['added_on'];
+            $objVideo->save();
+        }
+
+        }
+         //DB::enableQueryLog();
+         $channelpho=Photo::where('owner_id', $oldid)->get();
+         //print_r($channelpho);
+          //dd(DB::getQueryLog());
+         if (!empty($channelpho)){
+         foreach($channelpho as $phoRow) {
+            
+                $articleImage = new Photo();
+                $articleImage->photopath = $phoRow['photopath'];
+                $articleImage->photo_by = $phoRow['photo_by'];
+                $articleImage->title = $phoRow['title'];
+                $articleImage->channel_id = $channel_selfm;
+                $articleImage->description = $phoRow['description'];
+                $articleImage->imagefullPath = $phoRow['imagefullPath'];
+                $articleImage->sequence = $phoRow['sequence'];
+                $articleImage->source = $phoRow['source'];
+                $articleImage->source_url = $phoRow['source_url'];
+                $articleImage->channel_id = $phoRow['channel_id'];
+                $articleImage->owned_by = $phoRow['owned_by'];
+                $articleImage->owner_id = $id;
+                $articleImage->active = $phoRow['active'];
+                $articleImage->created_at = $phoRow['created_at'];
+                $articleImage->updated_at = $phoRow['updated_at'];
+                $articleImage->save();
+                echo 'sumitsdsdsfsd---';
+            }
+           }
+        //return redirect('/article/list/new?channel=' . $channel_selfm);
+
+        //return redirect('/dashboard');
+        //return Redirect::to('/dashboard');
+        //return view('/dashboard');
+            }
+            
+        }
+        
         return 'success';
     }
 

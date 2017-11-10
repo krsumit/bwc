@@ -73,8 +73,8 @@ Route::get('child', function () {
 // Article - Module
 Route::get('article/create', ['middleware' => 'auth',   'uses' => 'ArticlesController@create']);
 Route::get('article/list/{option}', ['middleware' => 'auth',   'uses' => 'ArticlesController@index']);
-
-//Route::get('article/list/{option}',['middleware' => 'auth', 'uses' => 'ArticlesController@index','as' => 'search']);
+Route::get('article/list/channelarticles/{option}', ['middleware' => 'auth',   'uses' => 'ArticlesController@channelarticles']);
+//Route::get('article/list/channelarticles/{option}',['middleware' => 'auth', 'uses' => 'ArticlesController@index','as' => 'search']);
 
 
 
@@ -160,6 +160,10 @@ Route::match(['get', 'post'], 'article/delPhotos', ['as' => 'article/delPhotos',
  *  Delete article using ajax
  */
 Route::match(['get', 'post'], 'article/delete', ['as' => 'article/delete', 'uses' => 'ArticlesController@destroy']);
+/*
+ *  Delete article using ajax
+ */
+Route::match(['get', 'post'], 'article/articlechannelinsert', ['as' => 'article/articlechannelinsert', 'uses' => 'ArticlesController@articlechannelinsert']);
 
 /*
  *  Publish image using ajax

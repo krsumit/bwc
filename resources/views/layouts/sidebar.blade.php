@@ -27,6 +27,11 @@
                             <a href="/article/list/new">New Articles</a>
                         </li>
                         @endif
+                        @if(in_array('96',Session::get('user_rights')))
+                        <li>
+                            <a href="/article/list/channelarticles/published">Channel Articles</a>
+                        </li>
+                        @endif
 			@if(in_array('15',Session::get('user_rights')))			
                         <li>
                             <a href="/article/list/scheduled">Scheduled Articles</a>
