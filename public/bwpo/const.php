@@ -24,5 +24,3 @@ define('LPASS','admin');
 define('LDATABASE','17novlivewebsite');
 */
 
-
-mysql -h localhost -u root -p bw_po_db  < /home/sumit/dumps/Dump20171025.sql

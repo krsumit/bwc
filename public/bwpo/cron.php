@@ -1620,7 +1620,7 @@ class Cron {
         $updatecorstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' article(s) inserted, ' . $_SESSION['noofupd'] . ' article(s) updated and ' . $_SESSION['noofdel'] . ' article(s) deleted.</h5>';
         $key= md5(date('dmY').'businessworld');
-	    file_get_contents('http://businessworld.in/create-json/'.$key);
+	    
     }
 
     function migrateFeature() {
