@@ -168,6 +168,22 @@
         <div class="container-fluid">
             <div class="form-legend" id="Channel">Channel</div>
                 <!--Select Box with Filter Search begin-->
+                
+                <div  class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label" for="channel_sel">Channel From</label>
+                    </div>
+                    <div class="span9">
+                        <div class="controls">
+                            <select name="channel_sel" id="channel_sel1" >
+                                @foreach($ChennalArr as $channelf)
+                                <option @if($channelf->channel_id==$idchannel) disabled="disabled" @elseif($channelf->channel_id==$idchannelf) selected="selected" @endif  value="{{ $channelf->channel_id }}">{{ $channelf->channel }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                            
+                </div>
                 <div  class="control-group row-fluid">
                     <div class="span3">
                         <label class="control-label" for="channel_sel">Channel To</label>
@@ -187,21 +203,6 @@
 
                         </div>
                     </div>
-                </div>
-                <div  class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label" for="channel_sel">Channel From</label>
-                    </div>
-                    <div class="span9">
-                        <div class="controls">
-                            <select name="channel_sel" id="channel_sel1" >
-                                @foreach($ChennalArr as $channelf)
-                                <option @if($channelf->channel_id==$idchannel) disabled="disabled" @elseif($channelf->channel_id==$idchannelf) selected="selected" @endif  value="{{ $channelf->channel_id }}">{{ $channelf->channel }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                            
                 </div>
 
                 <!--Select Box with Filter Search end-->
