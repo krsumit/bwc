@@ -315,7 +315,7 @@
 
                 function deleteArticle() {
                     var data = $('#artcilechannelin').serialize();  
-                        alert(data);
+                        //alert(data);
                         var data = $('#artcilechannelin').serialize();  
                         //alert('sumit');return false;
                        $.ajax({
@@ -325,7 +325,7 @@
                             //cache: false,
                             // handle a successful response
                                 success: function( response ) {
-                                    alert(response);
+                                    //alert(response);
                                     window.location = '{{url("article/list/published")}}' + '?channel=' + $("#channel_sel2").val();
                                 }
                             
