@@ -1657,5 +1657,26 @@ public function articlechannelinsert(Request $request) {
     public static function compareByCount($a, $b) {
         return strcmp($a->cs, $b->cs);
     }
+public function trending() {
+        if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
+        $uid = Session::get('users')->id;
+        $rightLabel = "";
+
+        $rightId = '';
+        
+        //echo 'test'; exit;
+        /* Right mgmt start */
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+
+        $editor = '';
+        
+        return view('trandingnow.' . 'trending', compact('editor'));
+    }
     
 }

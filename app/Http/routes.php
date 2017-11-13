@@ -73,6 +73,7 @@ Route::get('child', function () {
 // Article - Module
 Route::get('article/create', ['middleware' => 'auth',   'uses' => 'ArticlesController@create']);
 Route::get('article/list/{option}', ['middleware' => 'auth',   'uses' => 'ArticlesController@index']);
+Route::get('article/trending', ['middleware' => 'auth',   'uses' => 'ArticlesController@trending']);
 Route::get('article/list/channelarticles/{option}', ['middleware' => 'auth',   'uses' => 'ArticlesController@channelarticles']);
 //Route::get('article/list/channelarticles/{option}',['middleware' => 'auth', 'uses' => 'ArticlesController@index','as' => 'search']);
 

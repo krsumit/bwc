@@ -276,7 +276,7 @@
             <div class="control-group row-fluid">
                 <div class="span12 span-inset">
                     @if(in_array('13',Session::get('user_rights')))
-                    <button type="button" class="btn btn-danger" onclick="deleteArticle()">Copy</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                    <button type="button" class="btn btn-danger" onclick="copyArticle()">Copy</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
                     @endif
                 </div>
             </div>
@@ -314,7 +314,7 @@
                     });
                 });
 
-                function deleteArticle() {
+                function copyArticle() {
                     var data = $('#artcilechannelin').serialize();  
                         //alert(data);
                         var data = $('#artcilechannelin').serialize();  
