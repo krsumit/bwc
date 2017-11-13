@@ -359,7 +359,7 @@ class VideoController extends Controller
            
             $file = $request->file('video_name');
             $filename = str_random(6) . '_' . $request->file('video_name')->getClientOriginalName();
-            $fileTran->uploadFile($file, config('constants.awvideo'), $filename); 
+            $fileTran->uploadFile($file, config('constants.awvideo'), $filename,false); 
             $video->video_name = $filename;
             if(trim($request->video_name_second)){
                  $fileTran->deleteFile(config('constants.awvideo'), $request->video_name_second);
