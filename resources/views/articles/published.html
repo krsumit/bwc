@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+		<title>Published Articles - BWCMS</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="shortcut icon" src="http://bwcms.localhost/images/favicon.ico" />
+        <link rel="apple-touch-icon" src="http://bwcms.localhost/images/iosicon.png" />
+<!--    DEVELOPMENT LESS -->
+<!--          <link rel="stylesheet/less" href="css/photon.less" media="all" />
+        <link rel="stylesheet/less" href="css/photon-responsive.less" media="all" /> -->
+<!--    PRODUCTION CSS -->
+		<link rel="stylesheet" type="text/css" href="/build/output/final-d0dabf6a.css" media="all" />
+		<link rel="stylesheet" type="text/css" href="http://bwcms.localhost/css/token-input-facebook.css" media="all" />
+                <link rel="stylesheet" type="text/css" href="http://bwcms.localhost/css/dev.css" media="all" />
+                <link rel="stylesheet" type="text/css" href="http://bwcms.localhost/css/jquery.fileupload.css" media="all" />
+		
+<!--[if IE]>
+        <link rel="stylesheet" type="text/css" href="css/css_compiled/ie-only-min.css" />
+
+<![endif]-->
+
+<!--[if lt IE 9]>
+        <link rel="stylesheet" type="text/css" href="css/css_compiled/ie8-only-min.css" />
+        <script type="text/javascript" src="js/plugins/excanvas.js"></script>
+        <script type="text/javascript" src="js/plugins/html5shiv.js"></script>
+        <script type="text/javascript" src="js/plugins/respond.min.js"></script>
+        <script type="text/javascript" src="js/plugins/fixFontIcons.js"></script>
+<![endif]-->
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
+	
+<!-- <script type="text/javascript" src="/build/output/login-one-05a54975.js"></script> -->
+
+<script type="text/javascript" src="http://bwcms.localhost/js/bootstrap/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/bootstrap/bootstrap-dialog.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/modernizr.custom.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.pnotify.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/less-1.3.1.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/xbreadcrumbs.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.maskedinput-1.3.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.autotab-1.1b.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/charCount.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.textareaCounter.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/elrte.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/elrte.en.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/select2.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery-picklist.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.validate.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.validate.file.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/additional-methods.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.form.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.metadata.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.mockjax.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.uniform.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.tagsinput.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.rating.pack.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/farbtastic.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.timeentry.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.jstree.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/dataTables.bootstrap.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.mousewheel.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.mCustomScrollbar.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.flot.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.flot.stack.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.flot.pie.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.flot.resize.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/raphael.2.1.0.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/justgage.1.0.1.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.qrcode.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.clock.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.countdown.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.jqtweet.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/jquery.cookie.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/bootstrap-fileupload.min.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/prettify/prettify.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/bootstrapSwitch.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/plugins/mfupload.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/common.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/jquery.tokeninput.js"></script>
+<script type="text/javascript" src="http://bwcms.localhost/js/custom.js"></script>
+
+        <!--<script>
+            $().ready(function() {
+
+                var isDragActive = false;
+                // Quicklaunch Widget
+                $( "#sortable" ).sortable({
+                    cancel: '#sortable li:last-child',
+                    start: function(event, ui) {
+                        isDragActive = true;
+                        $('.dashboard-quick-launch li img').tooltip('hide');
+                    },
+                    stop: function(event, ui) {
+                        isDragActive = false;
+                    },
+                    containment: 'parent',
+                    tolerance: 'pointer'
+                });
+
+                // Make widgets sortable
+                $( "#photon_widgets" ).sortable({
+                    cancel: '.blank-widget, .flip-it',
+                    placeholder: 'dashboard-widget-placeholder',
+                    start: function(event, ui) {
+                        isDragActive = true;
+                        $('.widget-holder').addClass('noPerspective');
+                        $('.dashboard-quick-launch li img').tooltip('hide');
+                    },
+                    stop: function(event, ui) {
+                        isDragActive = false;
+                        $('.widget-holder').removeClass('noPerspective');
+                    },
+                    tolerance: 'pointer'
+                });
+
+
+                $('.dashboard-quick-launch li img').not('.dashboard-quick-launch li:last-child').tooltip({
+                    placement: 'top',
+                    html: true,
+                    trigger: 'manual',
+                    title: '<a href="javascript:;"><span class="left">Edit</span></a><a href="javascript:;"><span class="right">Delete</span></a>'
+                });
+
+
+                var hoverTimeout;
+                $('.dashboard-quick-launch li').hover(function () {
+                    if (!$(this).find('.tooltip').length){
+                        $activeQL = $(this);
+                        clearTimeout(hoverTimeout);
+                        hoverTimeout = setTimeout(function() {
+                            if (isDragActive) return;
+                            $activeQL.find('img').tooltip('show');
+                        }, 1000);
+                    }
+                }, function () {
+                    clearTimeout(hoverTimeout);
+                    $('.dashboard-quick-launch li').find('img').tooltip('hide');
+                });
+                
+                var firstHover = true;
+                $('.dashboard-quick-launch li').hover(function(){
+                    if (firstHover) {
+                        firstHover = false;
+                        setTimeout(function(){
+                            $.pnotify({
+                               title: 'Assignment Alert',
+							   type: 'info',
+							   text: 'You have 2 New Articles to write'
+                            });
+                        }, 400);
+                    }
+                });
+            });
+        </script> -->
+
+    </head>
+    
+    <body class="body-dashboard light-version">
+    
+    <div class="btn-toolbar btn-mobile-menus">
+        <button class="btn btn-main-menu"></button>
+        <button class="btn btn-user-menu"><i class="icon-logo"></i></button>
+    </div>
+        
+                    
+            
+          <div class="container">
+				    
+<div class="panel">
+    <div class="panel-content filler">
+        <div class="panel-logo"></div>
+        <div class="panel-header">
+            <h1><small>Published Articles</small></h1>
+
+        </div>
+        <div class="panel-search container-fluid">
+            <form class="form-horizontal" method="get" action="">
+                <input type="hidden" name="channel" value="1"/>
+                <input id="panelSearch" required  placeholder="Search" value="" type="text" name="keyword">
+                <button class="btn btn-search" type="submit"></button>
+                
+                <label class="radio">
+                    <input type="radio"   required name="searchin" class="uniformRadio" value="title">
+                           Search by Article Title
+                </label>
+                <label class="radio">
+                    <input type="radio"  required name="searchin" class="uniformRadio" value="article_id">
+                           Search by Article ID
+                </label>
+                <label class="radio">
+                    <input type="radio"  required name="searchin" class="uniformRadio" value="author">
+                           Search by Reporter Name
+                </label>
+
+            </form>
+        </div>
+
+
+
+        <script>
+            $().ready(function () {
+                $(".uniformRadio").uniform({
+                    radioClass: 'uniformRadio'
+                });
+                $("#channel_sel").change(function () {
+                    $(this).find("option:selected").each(function () {
+
+                        if ($(this).attr("value").trim().length != 0) {
+
+                            window.location = 'http://bwcms.localhost/article/list/published' + '?channel=' + $(this).attr("value").trim();
+                        }
+
+                        else if ($(this).attr("value") == "none") {
+
+                            $("#quote_list").hide();
+
+                        }
+
+                    });
+
+                });
+
+            });
+        </script>
+        <br><br>
+        <div class="panel-header">
+            <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
+        </div>
+        <script type="text/javascript">
+            $(function () {
+                $("#jstree").jstree({
+                    "json_data": {
+                        "data": [
+                            {
+                                "data": {
+                                    "title": "Published Articles",
+                                    "attr": {"href": "#Basic_Non-responsive_Table"}
+                                }
+                            },
+                        ]
+                    },
+                    "plugins": ["themes", "json_data", "ui"]
+                })
+                        .bind("click.jstree", function (event) {
+                            var node = $(event.target).closest("li");
+                            document.location.href = node.find('a').attr("href");
+                            return false;
+                        })
+                        .delegate("a", "click", function (event, data) {
+                            event.preventDefault();
+                        });
+            });
+        </script>
+        <div class="sidebarMenuHolder">
+            <div class="JStree">
+                <div class="Jstree_shadow_top"></div>
+                <div id="jstree"></div>
+                <div class="Jstree_shadow_bottom"></div>
+            </div>
+        </div>    </div>
+    <div class="panel-slider">
+        <div class="panel-slider-center">
+            <div class="panel-slider-arrow"></div>
+        </div>
+    </div>
+</div>
+<div class="main-content">
+    <div class="breadcrumb-container">
+        <ul class="xbreadcrumbs">
+            <li>
+                <a href="/dashboard">
+                    <i class="icon-photon home"></i>
+                </a>
+            </li>
+            <li class="current">
+                <a href="javascript:;">Published Articles</a>
+            </li>
+        </ul>
+    </div>           <header>
+        <i class="icon-big-notepad"></i>
+        <h2><small>Published Articles</small></h2>
+    </header>
+    <div class="form-horizontal">
+
+        <div class="container-fluid">
+
+            <div class="form-legend" id="Channel">Channel</div>
+
+            <!--Select Box with Filter Search begin-->
+            <div  class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="channel_sel">Channel</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <select name="channel_sel" id="channel_sel" class="required channel_sel formattedelement">
+                                                        <option  selected="selected"  value="1">BW Businessworld</option>
+                                                        <option  value="5">BW Disrupt</option>
+                                                        <option  value="9">BW Education</option>
+                                                        <option  value="2">BW Hotelier</option>
+                                                        <option  value="8">BW HR</option>
+                                                        <option  value="4">BWCIO</option>
+                                                        <option  value="3">BWSC</option>
+                                                        <option  value="7">EE</option>
+                                                    </select>
+
+                    </div>
+                </div>
+                <script>
+                    $().ready(function () {
+                        $("#channel_sel").select2();
+                    });</script>
+            </div>
+
+            <!--Select Box with Filter Search end-->
+        </div>
+    </div>
+    <form class="form-horizontal">
+
+        <div class="container-fluid" id="notificationdiv"  style="display: none"  >
+
+             <div class="form-legend" id="Notifications">Notifications</div>
+
+            <!--Notifications begin-->
+            <div class="control-group row-fluid" >
+                <div class="span12 span-inset">
+                    
+                                    </div>
+            </div>
+            <!--Notifications end-->
+
+        </div>
+
+        <div class="container-fluid">
+
+            <!--Sortable Non-responsive Table begin-->
+            <div class="row-fluid">
+                <div class="span12">
+                    <table class="table table-striped" id="tableSortable">
+                        <thead>
+                            <tr>
+                                <th>Article ID</th>
+                                <th>Title</th>
+                                <th>Reporter Name</th>
+                                <th>Date,Time</th>
+                                <th><input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectall"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+<!--                            <tr class="gradeX">
+                            <td><a href="create-new-articles.html">234567890987654</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: Sharabani Mukherjee."><i class="icon-photon info-circle"></i></a></td>
+                            <td><a href="create-new-articles.html">English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay</a>
+                            </td>
+                            <td><a href="create-new-articles.html">Brigadier CHITRANJAN SAWANT,VSM</a></td>
+                            <td class="center"><a href="create-new-articles.html">11/03/2013</a>
+                                <a href="create-new-articles.html">12:13 pm</a>
+                            </td>
+                            <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
+                        </tr>-->
+                                                        <tr  class="gradeX"  id="rowCur115041">
+                                <td  style="background-color: #cce3cf;"  ><a href="/article/115041">115041</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  style="background-color: #cce3cf;"  ><a href="/article/115041">7 Tamil films not released in protest against local body tax</a>
+                                </td>
+                                <td  style="background-color: #cce3cf;"  ><a href="/article/115041"></a></td>
+                                <td  style="background-color: #cce3cf;"  class="center"><a href="/article/115041">2017-10-06</a>
+                                    <a href="/article/115041">20:23:32</a>
+                                </td>
+                                <td  style="background-color: #cce3cf;"  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="115041"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur115040">
+                                <td  style="background-color: #cce3cf;"  ><a href="/article/115040">115040</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  style="background-color: #cce3cf;"  ><a href="/article/115040">7 Tamil films not released in protest against local body tax</a>
+                                </td>
+                                <td  style="background-color: #cce3cf;"  ><a href="/article/115040"></a></td>
+                                <td  style="background-color: #cce3cf;"  class="center"><a href="/article/115040">2017-10-06</a>
+                                    <a href="/article/115040">18:48:42</a>
+                                </td>
+                                <td  style="background-color: #cce3cf;"  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="115040"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur115012">
+                                <td  ><a href="/article/115012">115012</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/115012">Focus on stability, have no discordant voices at Infy:Nilekani</a>
+                                </td>
+                                <td  ><a href="/article/115012"></a></td>
+                                <td  class="center"><a href="/article/115012">2017-10-05</a>
+                                    <a href="/article/115012">17:36:10</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="115012"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur115013">
+                                <td  ><a href="/article/115013">115013</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/115013">Rajnish Kumar replaces Arundhati Bhattacharya as SBI chief</a>
+                                </td>
+                                <td  ><a href="/article/115013"></a></td>
+                                <td  class="center"><a href="/article/115013">2017-10-05</a>
+                                    <a href="/article/115013">17:36:10</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="115013"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur115014">
+                                <td  ><a href="/article/115014">115014</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/115014">Yuvraj Singh Launches YouWeCan Foundation in Collaboration</a>
+                                </td>
+                                <td  ><a href="/article/115014"></a></td>
+                                <td  class="center"><a href="/article/115014">2017-10-05</a>
+                                    <a href="/article/115014">17:36:10</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="115014"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur115015">
+                                <td  ><a href="/article/115015">115015</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/115015">IMA Reveals CMA Exam Top Performers From India</a>
+                                </td>
+                                <td  ><a href="/article/115015"></a></td>
+                                <td  class="center"><a href="/article/115015">2017-10-05</a>
+                                    <a href="/article/115015">17:36:10</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="115015"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur115011">
+                                <td  ><a href="/article/115011">115011</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/115011">KOLKATA-BULLION-OPENING</a>
+                                </td>
+                                <td  ><a href="/article/115011"></a></td>
+                                <td  class="center"><a href="/article/115011">2017-10-05</a>
+                                    <a href="/article/115011">17:36:09</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="115011"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur115006">
+                                <td  ><a href="/article/115006">115006</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/115006">KOLKATA-BULLION-OPENING</a>
+                                </td>
+                                <td  ><a href="/article/115006"></a></td>
+                                <td  class="center"><a href="/article/115006">2017-10-05</a>
+                                    <a href="/article/115006">17:33:21</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="115006"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur115007">
+                                <td  ><a href="/article/115007">115007</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/115007">Focus on stability, have no discordant voices at Infy:Nilekani</a>
+                                </td>
+                                <td  ><a href="/article/115007"></a></td>
+                                <td  class="center"><a href="/article/115007">2017-10-05</a>
+                                    <a href="/article/115007">17:33:21</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="115007"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur115008">
+                                <td  ><a href="/article/115008">115008</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/115008">Rajnish Kumar replaces Arundhati Bhattacharya as SBI chief</a>
+                                </td>
+                                <td  ><a href="/article/115008"></a></td>
+                                <td  class="center"><a href="/article/115008">2017-10-05</a>
+                                    <a href="/article/115008">17:33:21</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="115008"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur115009">
+                                <td  ><a href="/article/115009">115009</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/115009">Yuvraj Singh Launches YouWeCan Foundation in Collaboration</a>
+                                </td>
+                                <td  ><a href="/article/115009"></a></td>
+                                <td  class="center"><a href="/article/115009">2017-10-05</a>
+                                    <a href="/article/115009">17:33:21</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="115009"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur115010">
+                                <td  ><a href="/article/115010">115010</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/115010">IMA Reveals CMA Exam Top Performers From India</a>
+                                </td>
+                                <td  ><a href="/article/115010"></a></td>
+                                <td  class="center"><a href="/article/115010">2017-10-05</a>
+                                    <a href="/article/115010">17:33:21</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="115010"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur114995">
+                                <td  ><a href="/article/114995">114995</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/114995">KOLKATA-BULLION-OPENING</a>
+                                </td>
+                                <td  ><a href="/article/114995"></a></td>
+                                <td  class="center"><a href="/article/114995">2017-10-05</a>
+                                    <a href="/article/114995">15:02:05</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="114995"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur114996">
+                                <td  ><a href="/article/114996">114996</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/114996">Focus on stability, have no discordant voices at Infy:Nilekani</a>
+                                </td>
+                                <td  ><a href="/article/114996"></a></td>
+                                <td  class="center"><a href="/article/114996">2017-10-05</a>
+                                    <a href="/article/114996">15:02:05</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="114996"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur114997">
+                                <td  ><a href="/article/114997">114997</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/114997">Rajnish Kumar replaces Arundhati Bhattacharya as SBI chief</a>
+                                </td>
+                                <td  ><a href="/article/114997"></a></td>
+                                <td  class="center"><a href="/article/114997">2017-10-05</a>
+                                    <a href="/article/114997">15:02:05</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="114997"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur114998">
+                                <td  ><a href="/article/114998">114998</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/114998">Yuvraj Singh Launches YouWeCan Foundation in Collaboration</a>
+                                </td>
+                                <td  ><a href="/article/114998"></a></td>
+                                <td  class="center"><a href="/article/114998">2017-10-05</a>
+                                    <a href="/article/114998">15:02:05</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="114998"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur114999">
+                                <td  ><a href="/article/114999">114999</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/114999">IMA Reveals CMA Exam Top Performers From India</a>
+                                </td>
+                                <td  ><a href="/article/114999"></a></td>
+                                <td  class="center"><a href="/article/114999">2017-10-05</a>
+                                    <a href="/article/114999">15:02:05</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="114999"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur114993">
+                                <td  ><a href="/article/114993">114993</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/114993">Yuvraj Singh Launches YouWeCan Foundation in Collaboration</a>
+                                </td>
+                                <td  ><a href="/article/114993"></a></td>
+                                <td  class="center"><a href="/article/114993">2017-10-05</a>
+                                    <a href="/article/114993">14:23:28</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="114993"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur114994">
+                                <td  ><a href="/article/114994">114994</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/114994">IMA Reveals CMA Exam Top Performers From India</a>
+                                </td>
+                                <td  ><a href="/article/114994"></a></td>
+                                <td  class="center"><a href="/article/114994">2017-10-05</a>
+                                    <a href="/article/114994">14:23:28</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="114994"></td>
+                            </tr>
+                                                        <tr  class="gradeX"  id="rowCur114990">
+                                <td  ><a href="/article/114990">114990</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: "><i class="icon-photon info-circle"></i></a></td>
+                                <td  ><a href="/article/114990">KOLKATA-BULLION-OPENING</a>
+                                </td>
+                                <td  ><a href="/article/114990"></a></td>
+                                <td  class="center"><a href="/article/114990">2017-10-05</a>
+                                    <a href="/article/114990">14:23:27</a>
+                                </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="114990"></td>
+                            </tr>
+                                                        <!--
+                               <tr class="gradeC">
+                                   <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
+                                   <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
+                                   </td>
+                                   <td> Brigadier CHITRANJAN SAWANT,VSM</td>
+                                   <td class="center">11/03/2013</td>
+                                   <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
+                               </tr>
+                               <tr class="gradeA">
+                                   <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
+                                   <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
+                                   </td>
+                                   <td> Brigadier CHITRANJAN SAWANT,VSM</td>
+                                   <td class="center">11/03/2013</td>
+                                   <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
+                               </tr>
+                               <tr class="gradeA">
+                                   <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
+                                   <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
+                                   </td>
+                                   <td> Brigadier CHITRANJAN SAWANT,VSM</td>
+                                   <td class="center">11/03/2013</td>
+                                   <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
+                               </tr>
+                               <tr class="gradeA">
+                                   <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
+                                   <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
+                                   </td>
+                                   <td> Brigadier CHITRANJAN SAWANT,VSM</td>
+                                   <td class="center">11/03/2013</td>
+                                   <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
+                               </tr>
+                               <tr class="gradeA">
+                                   <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
+                                   <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
+                                   </td>
+                                   <td> Brigadier CHITRANJAN SAWANT,VSM</td>
+                                   <td class="center">11/03/2013</td>
+                                   <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
+                               </tr>
+                               <tr class="gradeA">
+                                   <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
+                                   <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
+                                   </td>
+                                   <td> Brigadier CHITRANJAN SAWANT,VSM</td>
+                                   <td class="center">11/03/2013</td>
+                                   <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
+                               </tr>
+                               <tr class="gradeA">
+                                   <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
+                                   <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
+                                   </td>
+                                   <td> Brigadier CHITRANJAN SAWANT,VSM</td>
+                                   <td class="center">11/03/2013</td>
+                                   <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
+                               </tr>
+                               <tr class="gradeA">
+                                   <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
+                                   <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
+                                   </td>
+                                   <td> Brigadier CHITRANJAN SAWANT,VSM</td>
+                                   <td class="center">11/03/2013</td>
+                                   <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
+                               </tr>
+                            -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--Sortable Non-responsive Table end-->
+
+
+            <script>
+                $(document).ready(function () {
+                    $('#tableSortable').dataTable({
+                        bInfo: false,
+                        bPaginate: false,
+                        "aaSorting": [],
+                        "aoColumnDefs": [{"bSortable": false, "aTargets": [4]}],
+                        "fnInitComplete": function () {
+                            $(".dataTables_wrapper select").select2({
+                                dropdownCssClass: 'noSearch'
+                            });
+                        }
+                    });
+                    //                            $("#simpleSelectBox").select2({
+                    //                                dropdownCssClass: 'noSearch'
+                    //                            });
+                    $('#selectall').click(function () {
+                        if ($(this).is(':checked')) {
+                            $('input[name="checkItem[]"]').each(function () {
+                                $(this).attr('checked', 'checked');
+                            });
+                        } else {
+                            $('input[name="checkItem[]"]').each(function () {
+                                $(this).removeAttr('checked');
+                            });
+                        }
+                    });
+                });
+
+                function deleteArticle() {
+                    var ids = '';
+                    var checkedVals = $('input[name="checkItem[]"]:checkbox:checked').map(function () {
+                        //var row = 'rowCur' + this.value;
+                        //$("#" + row).hide();
+                        return this.value;
+                    }).get();
+                    if (checkedVals.length > 0) {
+                        var ids = checkedVals.join(",");
+                        //alert(ids);return false;
+                        $.get("http://bwcms.localhost/article/delete/?channel=1",
+                                {option: ids},
+                        function (data) {
+                            if (data.trim() == 'success') {
+                                $.each(checkedVals, function (i, e) {
+                                    var row = 'rowCur' + e;
+                                    $("#" + row).hide();
+                                });
+                                $('#notificationdiv').show();
+                                $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
+                            <i class="icon-alert icon-alert-info"></i><button type="button" class="close" data-dismiss="alert">\n\
+                            &times;</button><strong>This is Success Notification</strong>\n\
+                            <span></span>Selected records dumped.</div>');
+                            } else {
+                                alert(data);
+                            }
+                            //alert(1);
+                        });
+                    } else {
+                        alert('Please select at least one record.');
+                    }
+                }
+
+            </script>
+            <div class="dataTables_paginate paging_bootstrap pagination">
+
+                <ul class="pagination"><li class="disabled"><span>&laquo;</span></li> <li class="active"><span>1</span></li><li><a href="http://bwcms.localhost/article/list/published/?page=2">2</a></li><li><a href="http://bwcms.localhost/article/list/published/?page=3">3</a></li><li><a href="http://bwcms.localhost/article/list/published/?page=4">4</a></li><li><a href="http://bwcms.localhost/article/list/published/?page=5">5</a></li><li><a href="http://bwcms.localhost/article/list/published/?page=6">6</a></li><li><a href="http://bwcms.localhost/article/list/published/?page=7">7</a></li><li><a href="http://bwcms.localhost/article/list/published/?page=8">8</a></li><li class="disabled"><span>...</span></li><li><a href="http://bwcms.localhost/article/list/published/?page=2458">2458</a></li><li><a href="http://bwcms.localhost/article/list/published/?page=2459">2459</a></li> <li><a href="http://bwcms.localhost/article/list/published/?page=2" rel="next">&raquo;</a></li></ul>
+            </div>
+        </div><!-- end container -->
+
+
+        <div class="control-group row-fluid">
+            <div class="span12 span-inset">
+                                <button type="button" class="btn btn-danger" onclick="deleteArticle()">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                            </div>
+        </div>
+    </form>
+</div>
+		</div>
+    
+        
+        <div class="dashboard-watermark"></div>
+
+        <!--Modal Dialogs' HTML begin-->
+        
+        <div id="modal-add-quick-launch-custom" class="modal hide fade">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3>Create Quick Launch Item</h3>
+            </div>
+            <div class="modal-body">
+                <div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label" for="Shortcut_Label">Shortcut Label</label>
+                    </div>
+                    <div class="span9">
+                        <div class="controls">
+                            <input id="Shortcut_Label" type="text" placeholder="Enter the name of your shortcut" name="inputFieldPlaceholder" />
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label" for="Shortcut_URL">Shortcut URL</label>
+                    </div>
+                    <div class="span9">
+                        <div class="controls">
+                            <input id="Shortcut_URL" type="text" placeholder="Enter the address of your shortcut" name="inputFieldPlaceholder" />
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group row-fluid">
+                    <div class="span3">
+                        <label class="control-label">Upload Icon</label>
+                    </div>
+                    <div class="span9">
+                        <div class="fileupload fileupload-new" data-provides="fileupload">
+                            <div class="input-append">
+                                <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview">Upload Image</span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" /></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="alternative">Or select one of the predefined icons</p>
+            </div>
+            <div class="modal-body predefined-icons">
+                <ul>
+                    <li><img src="http://bwcms.localhost/images/photon/icons/ql1@2x.png" alt="Predefined"></li>
+                    <li><img src="http://bwcms.localhost/images/photon/icons/ql2@2x.png" alt="Predefined"></li>
+                    <li><img src="http://bwcms.localhost/images/photon/icons/ql3@2x.png" alt="Predefined"></li>
+                    <li><img src="http://bwcms.localhost/images/photon/icons/ql4@2x.png" alt="Predefined"></li>
+                    <li><img src="http://bwcms.localhost/images/photon/icons/ql6@2x.png" alt="Predefined"></li>
+                    <li><img src="http://bwcms.localhost/images/photon/icons/ql7@2x.png" alt="Predefined"></li>
+                    <li><img src="http://bwcms.localhost/images/photon/icons/ql8@2x.png" alt="Predefined"></li>
+                    <li><img src="http://bwcms.localhost/images/photon/icons/ql9@2x.png" alt="Predefined"></li>
+                    <li><img src="http://bwcms.localhost/images/photon/icons/ql10@2x.png" alt="Predefined"></li>
+                </ul>
+            </div>
+
+            <div class="modal-footer">
+                <a href="javascript:;" class="btn btn-primary" data-dismiss="modal">Create Item</a>
+                <a href="javascript:;" class="btn" data-dismiss="modal">Cancel</a>
+            </div>
+        </div>
+        <!--Modal Dialogs' HTML end-->
+
+    </body>
+</html>
+
+<div>
+             
+           <div class="nav-fixed-left" style="visibility: hidden">
+        <ul class="nav nav-side-menu">
+            <li class="shadow-layer"></li>
+            <li>
+                <a href="/dashboard" >
+                    <i class="icon-photon home"></i>
+                    <span class="nav-selection">Dashboard</span>
+                                    </a>
+            </li>
+                        <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon document_alt_stroke"></i>
+                    <span class="nav-selection">Articles</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                                                <li>
+                            <a href="/article/create">Create New Articles</a>
+                        </li>
+						
+                                                <li>
+                            <a href="/article/list/new">New Articles</a>
+                        </li>
+                        						
+                        <li>
+                            <a href="/article/list/scheduled">Scheduled Articles</a>
+                        </li>
+                                                                        <li>
+                            <a href="/article/list/published">Published Article</a>
+                        </li>
+                        			<li>
+                            <a href="/article/list/drafts">My Drafts</a>
+                        </li>
+                                                <li>
+                            <a href="/article/list/deleted">Deleted Articles</a>
+                        </li>
+                        						
+                        <li>
+                            <a href="/featurebox">Feature Box Management</a>
+                        </li>
+                        						
+                        <li>
+                            <a href="/campaing/add-management">Campaign Management</a>
+                        </li>
+                                                                        <li>
+                            <a href="/magazineissue">Add A Magazine Issue</a>
+                        </li>
+                                                
+<!--                        <li>
+                            <a href="tips.html">Tips</a>
+                        </li>-->
+                        
+                                                <li>
+                            <a href="#">Show reports (General)</a>
+                        </li>
+                        						
+                        <li>
+                            <a href="#">Show reports (General)</a>
+                        </li>
+                                            </ul>
+                </div>
+            </li>
+                                    <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon comment_alt2_stroke"></i>
+                    <span class="nav-selection">Tips &amp; Quotes</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        	
+                        <li>
+                            <a href="/tips">Tips</a>
+                        </li>
+                                                	
+                        <li>
+                            <a href="/tip-tags">Tags</a>
+                        </li>
+                                                	
+                        <li>
+                            <a href="/quotes">Quotes</a>
+                        </li>
+                                                	
+<!--                        <li>
+                            <a href="#">Reports</a>
+                        </li>	
+                       	
+                        <li>
+                            <a href="#">Help</a>
+                        </li>-->
+                        
+                    </ul>
+                </div>
+            </li>
+                                    <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon mic"></i>
+                    <span class="nav-selection">Debate</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        	
+                        <li>
+                            <a href="/debate/published">Published Debate</a>
+                        </li>
+                                                	
+                        <li>
+                            <a href="#">Deleted Debate</a>
+                        </li>
+                        							
+                        <li>
+                            <a href="/debate/create">Create New Debates</a>
+                        </li>
+                        <!--                        <li>
+                            <a href="profanity-filter.html">Profanity Filter</a>
+                        </li>
+						<li>
+                            <a href="#">Reports</a>
+                        </li>
+						<li>
+                            <a href="#">Help</a>
+                        </li>-->
+                    </ul>
+                </div>
+            </li>
+                                    <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon pen"></i>
+                    <span class="nav-selection">Authors Profile
+                    </span>
+                    <i class="icon-menu-arrow"></i> </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        
+                        	
+                        <li>
+                            <a href="/article/add-edit-author">Add/Edit Columnist</a>
+                        </li>
+                                                 	
+                        <li>
+                            <a href="/guestauthor/add-edit-gustauthor">Add/Edit Guest Author</a>
+                        </li>
+                                                 	
+                        <li>
+                            <a href="/bwreporters/add-edit-bw-reporters">Add/Edit Reporters</a>
+                        </li>
+                        <!--                        <li>
+                            <a href="#">Help</a>
+                        </li>-->
+                    </ul>
+                </div>
+            </li>
+            			
+	    	 
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon movie"></i>
+                    <span class="nav-selection">Events</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                                                <li>
+                            <a href="http://bwcms.localhost/event/add-event-management">Add New Events</a>
+                        </li>
+                                                                        <li>
+                            <a href="http://bwcms.localhost/event/published">Published Events</a>
+                        </li>
+                                                                        <li>
+                            <a href="#">Reports</a>
+                        </li>
+                        <!--                        <li>
+                            <a href="#">Help</a> 
+                        </li>-->
+                    </ul>
+                </div>
+            </li>
+                        	 
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon steering_wheel"></i>
+                    <span class="nav-selection">Quick Bytes</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                                                 <li>
+                            <a href="/quickbyte/create">Create New Quick Byte</a>
+                        </li>
+                                                                          <li>
+                            <a href="/quickbyte/list/published">Published Quick Bytes</a>
+                        </li>
+                         			 			
+                        <li>
+                            <a href="/quickbyte/list/deleted">Deleted Quick Bytes</a>
+                        </li>
+                         <!--                         <li>
+                             <a href="#">Reports</a>
+                         </li>
+                         <li>
+                             <a href="#">Help</a>
+                         </li>-->
+                    </ul>
+                </div>
+            </li>
+            	    	 	
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon document_stroke"></i>
+                    <span class="nav-selection">Sponsored Post</span>
+                    <i class="icon-menu-arrow"></i>     </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                                                <li>
+                            <a href="/sposts/create">Create New Sponsored Post</a>
+                        </li>
+                                                                          <li>
+                            <a href="/sposts/list/published">Published Sponsored Posts</a>
+                        </li>
+                                                                          <li>
+                            <a href="/sposts/list/deleted">Deleted Sponsored Posts</a>
+                        </li>
+                         <!--                        <li>
+                            <a href="#">Reports</a>
+                        </li>
+                        <li>
+                            <a href="#">Help</a>
+                        </li>-->
+                    </ul>
+                </div>
+            </li>
+	                	 	
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon new_window"></i>
+                    <span class="nav-selection">Photos</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                                                <li>
+                            <a href="http://bwcms.localhost/album/create">Upload New Album</a>
+                        </li>
+                                                                          <li>
+                            <a href="http://bwcms.localhost/album/list/published">Published Album</a>
+                        </li>
+                         			 			
+                        <li>
+                            <a href="http://bwcms.localhost/album/list/deleted">Deleted Photos</a>
+                        </li>
+                         						
+<!--                         <li>
+                            <a href="#">Reports</a>
+                        </li>
+						
+                        <li>
+                            <a href="#">Help</a>
+                        </li>-->
+                    </ul>
+                </div>
+            </li>
+                        	 	
+          <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon play"></i>
+                    <span class="nav-selection">Videos</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                                                <li>
+                            <a href="/video/create">Upload New Video</a>
+                        </li>
+                                                                        <li>
+                            <a href="/video/list">Published Videos</a>
+                        </li>
+                                                                        <li>
+                            <a href="#">Deleted Videos</a>
+                        </li>
+                                                                        <li>
+                            <a href="#">Featured Videos</a>
+                        </li>
+                        <!--                        <li>
+                            <a href="#">Reports</a>
+                        </li>
+                        <li>
+                            <a href="#">Help</a>
+                        </li>-->
+                    </ul>
+                </div>
+            </li>
+                        
+            	 	
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon cog"></i>
+                    <span class="nav-selection">Site Management</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                                                <li>
+                            <a href="/category/add-master-category">Category Master</a>
+                        </li>
+                                                                        <li>
+                            <a href="location-master.html">Location Master</a>
+                        </li>
+                                                                        <li>
+                            <a href="/topics">Topic Master</a>
+                        </li>
+                                                                        <li>
+                            <a href="/topic/category/list">Topic Category</a>
+                        </li>
+                                                                        <li>
+                            <a href="#">Tags Master</a>
+                        </li>
+                                            </ul>
+                </div>
+            </li>
+                        
+            	 	
+                <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon mail"></i>
+                    <span class="nav-selection">Newsletter</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                                                <li>
+                            <a href="http://bwcms.localhost/newsletter/subscriber">Subscriber</a>
+                        </li>                       
+                                                                        <li>
+                            <a href="http://bwcms.localhost/newsletter">Manage Newsletter</a>
+                        </li>
+                                                                        <li>
+                            <a href="http://bwcms.localhost/newsletter/create">Create Newsletter</a>
+                        </li>
+                                                
+                    </ul>
+                </div>
+            </li>
+                        
+            	 	
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon cog"></i>
+                    <span class="nav-selection">Rights Management</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                                                <li>
+                            <a href="http://bwcms.localhost/rights">CMS Rights</a>
+                        </li>
+                        
+                                                                        <li>
+                            <a href="http://bwcms.localhost/roles/manage">Manage Roles</a>
+                        </li>
+                        
+                        <li>
+                            <a href="http://bwcms.localhost/roles/add">Add Roles</a>
+                        </li>
+                        <!--                        <li>
+                            <a href="#">Reports</a>
+                        </li>
+                        <li>
+                            <a href="#">Help</a>
+                        </li>-->
+                    </ul>
+                </div>
+            </li>
+                        
+            	 	
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon book"></i>
+                    <span class="nav-selection">Subscription</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                                                <li>
+                            <a href="/subscription/packages">Manage Package</a>
+                        </li>
+                                                                        <li>
+                            <a href="/subscription/discounts">Manage Discount</a>
+                        </li>
+                                                                        
+                        <li>
+                            <a href="/subscription/freebies">Manage Freebies</a>
+                        </li>
+                                                                        <li>
+                            <a href="/subscribers">Subscriber</a>
+                        </li>
+                        <li>
+                            <a href="/subscribers/deleted">Deleted Subscriber</a>
+                        </li>
+                                                                        <li>
+                            <a href="/subscriptions/active">Active Orders</a>
+                        </li>
+                                                                        <li>
+                            <a href="/subscriptions/expiring">Expiring Soon</a>
+                        </li>
+                                                                         <li>
+                            <a href="/subscriptions/expired">Expired Orders</a>
+                        </li>
+                                                
+                                                 <li>
+                            <a href="/subscriptions/pending">Pending Orders</a>
+                        </li>
+                                                
+                        
+                    </ul>
+                </div>
+            </li>
+                    <li class="nav-logout">
+                <a href="/auth/logout">
+                    <i class="icon-photon key_stroke"></i><span class="nav-selection">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
