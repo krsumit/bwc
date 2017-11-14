@@ -436,14 +436,7 @@
                        
                     </select>
                     <span for="campaign" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
-                    <!--<div class="control-group row-fluid">
-                                    <div class="span12 span-inset">
-                                    <button class="btn btn-warning" type="button" style="display:block; float:left;">Delete</button>
-                                     <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;"/>
-                                      <button type="button" class="btn btn-primary" style="display:block; float:left; margin-left:5px;">Attach</button>
-                                      <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;"/>
-                                    </div>
-                            </div>-->
+                   
                 </div>
             </div>
 
@@ -486,7 +479,26 @@
                 });</script>
         </div>
         <!--Select Box with Filter Search end-->
-
+        <div class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="simpleSelectBox">Video Type</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="video_type" id="simpleSelectBox">
+                        <option value="0"> Select Video Type</option>
+                        @foreach($videotypes as $videotype)
+                        <option @if($video->video_type == $videotype->news_type_id) selected="selected" @endif value="{{ $videotype->news_type_id }}"> {{ $videotype->name }} </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <script>
+                       $().ready(function(){
+                        $("#simpleSelectBox").select2();
+                        });
+             </script>
+        </div>
     </div>
         
         <div class="control-group row-fluid">

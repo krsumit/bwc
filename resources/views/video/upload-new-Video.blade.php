@@ -431,9 +431,30 @@
                 </div>
             </div>
             <script>
-                                $().ready(function(){
+                       $().ready(function(){
                         $("#campaign_id").select2();
-                        });</script>
+                        });
+             </script>
+        </div>
+        <div class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="simpleSelectBox">Video Type</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="video_type" id="simpleSelectBox">
+                        <option value="0"> Select Video Type</option>
+                        @foreach($videotypes as $videotype)
+                        <option value="{{ $videotype->news_type_id }}"> {{ $videotype->name }} </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <script>
+                       $().ready(function(){
+                        $("#simpleSelectBox").select2();
+                        });
+             </script>
         </div>
         <!--Select Box with Filter Search end-->
 

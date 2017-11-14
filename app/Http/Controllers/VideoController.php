@@ -98,11 +98,12 @@ class VideoController extends Controller
         $uid = Session::get('users')->id;
         //$channels = VideoController::getUserChannels($uid);
         $authors = Author::where('author_type_id','=',2)->get();
+        $videotypes = DB::table('news_type')->where('valid', '1')->get();
         $tags = Tag::where('valid','1')->get();
         $campaign = DB::table('campaign')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
         $p1= DB::table('author_type')->where('valid','1')->whereIn('author_type_id',[1,2])->lists('label','author_type_id');
         //fclose($asd);
-        return view('video.upload-new-Video', compact('uid','channels','p1','authors','tags','currentChannelId','campaign','category'));
+        return view('video.upload-new-Video', compact('uid','videotypes','channels','p1','authors','tags','currentChannelId','campaign','category'));
     }
     /*
      * Get Page Rights of the User
@@ -200,7 +201,7 @@ class VideoController extends Controller
         $video->channel_id = $request->channel;
         $video->video_title = $request->video_title;
         $video->video_summary = $request->video_summary;
-        #$video->tags = $request->Taglist;
+        $video->video_type=$request->video_type;
         $video->video_status = '1';
         $video->campaign_id = $request->campaign;
         $video->save();
@@ -264,6 +265,7 @@ class VideoController extends Controller
        #$tags=  json_encode(DB::table('tags')
                 #->select('tags_id as id','tag as name')
                 #->whereIn('tags_id',explode(',',$video->tags))->get());
+       $videotypes = DB::table('news_type')->where('valid', '1')->get();
        $campaign = DB::table('campaign')->where('channel_id',$currentChannelId)->where('valid', '1')->get();
        $category = DB::table('category')->where('channel_id','=',$currentChannelId)->where('valid','1')->orderBy('name')->get();
        $acateg2 = DB::table('video_category')
@@ -320,7 +322,7 @@ class VideoController extends Controller
        
         $uid = Session::get('users')->id;
         //$channels = VideoController::getUserChannels($uid);
-        return view('video.edit', compact('video','tags','channels','campaign','acateg','category'));
+        return view('video.edit', compact('video','tags','channels','campaign','acateg','category','videotypes'));
        
     }
 
@@ -386,7 +388,7 @@ class VideoController extends Controller
         $video->channel_id = $request->channel;
         $video->video_title = $request->video_title;
         $video->video_summary = $request->video_summary;
-        #$video->tags = $request->Taglist;
+        $video->video_type=$request->video_type;
         $video->video_status = '1';
         $video->campaign_id = $request->campaign;
         $video->save();
