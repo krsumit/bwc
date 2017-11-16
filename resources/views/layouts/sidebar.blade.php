@@ -32,6 +32,12 @@
                             <a href="/article/list/channelarticles/published">Channel Articles</a>
                         </li>
                         @endif
+                         @if(in_array('97',Session::get('user_rights')))
+                        <li>
+                            <a href="/article/trending">Trending</a>
+                        </li>
+                        @endif
+                        
 			@if(in_array('15',Session::get('user_rights')))			
                         <li>
                             <a href="/article/list/scheduled">Scheduled Articles</a>

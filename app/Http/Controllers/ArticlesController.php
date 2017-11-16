@@ -12,6 +12,7 @@ use App\User;
 use App\Video;
 use Illuminate\Http\Request;
 //use DB;
+use App\Trending;
 use Session;
 use App\Article;
 use App\QuickByte;
@@ -1675,8 +1676,70 @@ public function trending() {
         /* Right mgmt end */
 
         $editor = '';
+        $trending=Trending::first();
+        //dd($trending);
+        return view('trandingnow.' . 'trending', compact('trending'));
+    }
+
+public function trendinginsert(Request $request) {
+        if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
+        $uid = Session::get('users')->id;
+        $rightLabel = "";
+
+        $rightId = '';
         
-        return view('trandingnow.' . 'trending', compact('editor'));
+        //echo 'test'; exit;
+        /* Right mgmt start */
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+
+        echo $request->id;
+       
+        
+        //DB::enableQueryLog();
+        if($request->id !=''){
+            $trending = Trending::find($request->id);
+            print_r($trending);
+           
+        }else{
+           $trending = new Trending();
+        }
+         
+        //dd(DB::getQueryLog());
+
+        $trending->channel_id = '1';
+        $trending->user_id = $uid;
+        $trending->author_type = '1';
+        $trending->t1topic = $request->t1topic;                  
+        $trending->t1url = $request->t1url;
+        $trending->t1article1 = $request->t1article1;
+        $trending->t1a1url = $request->t1a1url;
+        $trending->t1article2 = $request->t1article2;
+        $trending->optionsRadios = $request->optionsRadios;
+        $trending->t1a1url2 = $request->t1a1url2;
+        $trending->t2topic = $request->t2topic;
+        $trending->t2url = $request->t2url;                    
+        $trending->t2article1 = $request->t2article1;
+        $trending->t2a1url = $request->t2a1url;
+        $trending->t2article2 = $request->t2article2;
+        $trending->t2a1url2 = $request->t2a1url2;
+        $trending->t3topic = $request->t3topic;
+        $trending->t3url = $request->t3url;
+        $trending->t3article1 = $request->t3article1;
+        $trending->t3a1url = $request->t3a1url;
+        $trending->t3article2 = $request->t3article2;
+        $trending->t3a1url2 = $request->t3a1url2;
+       if(!empty($request->id)){
+            $trending->update();
+        }else{
+            $trending->save();
+        }
+        return 'success';
     }
     
 }

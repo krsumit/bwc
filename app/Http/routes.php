@@ -167,6 +167,11 @@ Route::match(['get', 'post'], 'article/delete', ['as' => 'article/delete', 'uses
 Route::match(['get', 'post'], 'article/articlechannelinsert', ['as' => 'article/articlechannelinsert', 'uses' => 'ArticlesController@articlechannelinsert']);
 
 /*
+ *  Trending article using ajax
+ */
+Route::match(['get', 'post'], 'article/trendinginsert', ['as' => 'article/trendinginsert', 'uses' => 'ArticlesController@trendinginsert']);
+
+/*
  *  Publish image using ajax
  */
 Route::match(['get', 'post'], 'article/publish', ['as' => 'article/publish', 'uses' => 'ArticlesController@publishBulk']);
