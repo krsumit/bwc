@@ -118,6 +118,8 @@ class Cron {
                 break;
             case 'subscriber':
                 $this->migrateNewsletterSubscriber();
+            case 'trending':
+                $this->migrateNewsTrending();
         endswitch;
 
         $_SESSION['message'] = $this->message;
@@ -2929,9 +2931,9 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
                 if ($checkmasterVideoExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
                     if ($masterVideoRow['video_status'] == '1') {//echo 'sumit'; exit();
-                        $masterVideoUpdateStmt = $this->conn2->prepare("update video_master set video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=?,video_type=? where video_id=?");
+                        $masterVideoUpdateStmt = $this->conn2->prepare("update video_master set video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=?,video_type=?,for_automated_news_video=? where video_id=?");
                         //echo $this->conn2->error; exit;
-                        $masterVideoUpdateStmt->bind_param('sssssssisii', $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'], $masterVideoRow['updated_at'], $masterVideoRow['campaign_id'], $masterVideoRow['video_by'],$masterVideoRow['video_type'], $masterVideoId);
+                        $masterVideoUpdateStmt->bind_param('sssssssisiii', $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'], $masterVideoRow['updated_at'], $masterVideoRow['campaign_id'], $masterVideoRow['video_by'],$masterVideoRow['video_type'],$masterVideoRow['for_automated_news_video'], $masterVideoId);
                         $masterVideoUpdateStmt->execute() or die($this->conn2->error);
                         //print_r($masterVideoUpdateStmt);exit;
 
@@ -2947,9 +2949,9 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
                     // echo  $_SESSION['noofupd'];
                 } else {//echo 'going to insert';exit;
                     if ($masterVideoRow['video_status'] == '1') {
-                        $masterVideoInsertStmt = $this->conn2->prepare("insert into video_master set video_id=?,video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=?,video_type=?");
+                        $masterVideoInsertStmt = $this->conn2->prepare("insert into video_master set video_id=?,video_title=?,video_summary=?,video_name=?,video_thumb_name=?,tags=?,created_at=?,updated_at=?,campaign_id=?,video_by=?,video_type=?,for_automated_news_video=?");
                         //echo $this->conn2->error; exit;
-                        $masterVideoInsertStmt->bind_param('isssssssisi', $masterVideoRow['id'], $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'], $masterVideoRow['updated_at'], $masterVideoRow['campaign_id'], $masterVideoRow['video_by'],$masterVideoRow['video_type']);
+                        $masterVideoInsertStmt->bind_param('isssssssisii', $masterVideoRow['id'], $masterVideoRow['video_title'], $masterVideoRow['video_summary'], $masterVideoRow['video_name'], $masterVideoRow['video_thumb_name'], $masterVideoRow['tags'], $masterVideoRow['created_at'], $masterVideoRow['updated_at'], $masterVideoRow['campaign_id'], $masterVideoRow['video_by'],$masterVideoRow['video_type'],$masterVideoRow['for_automated_news_video']);
                         $masterVideoInsertStmt->execute() or die($this->conn2->error);
                         //print_r($masterVideoInsertStmt);exit;
                         // echo $articleInsertStmt->insert_id;exit;    
@@ -3058,8 +3060,57 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
         $updatecronstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' campaing(s) inserted and ' . $_SESSION['noofupd'] . ' campaing(s) updated.</h5>';
     }
+//Trending module start here 
+    function migrateNewsTrending() {
+        //echo 'sumit';exit;
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='trending' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
 
-//campain module end here 
+        $trendingResults = $this->conn->query("SELECT * FROM trending where channel_id=1 $condition");
+        //echo $trendingResults->num_rows; exit;
+        if ($trendingResults->num_rows > 0) {
+
+            while ($trendingRow = $trendingResults->fetch_assoc()) {
+                //print_r($trendingRow); exit;
+                $trendingId = $trendingRow['id'];
+                $checktrendingExistResultSet = $this->conn2->query("select * from trending where id=$trendingId");
+                if ($checktrendingExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
+                    //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
+                    $trendingUpdateStmt = $this->conn2->prepare("update trending set t1topic=?,t1url=?,t1article1=?,t1a1url=?,t1article2=?,t1a1url2=?,t2topic=?,t2url=?,t2article1=?,t2a1url=?,t2article2=?,t2a1url2=?,t3topic=?,t3url=?,t3article1=?,t3a1url=?,t3article2=?,t3a1url2=?,optionsRadios=? where id=?");
+                    $trendingUpdateStmt->bind_param('ssssssssssssssssssii', $trendingRow['t1topic'], $trendingRow['t1url'], $trendingRow['t1article1'], $trendingRow['t1a1url'], $trendingRow['t1article2'], $trendingRow['t1a1url2'],$trendingRow['t2topic'], $trendingRow['t2url'], $trendingRow['t2article1'], $trendingRow['t2a1url'], $trendingRow['t2article2'], $trendingRow['t2a1url2'], $trendingRow['t3topic'], $trendingRow['t3url'], $trendingRow['t3article1'], $trendingRow['t3a1url'], $trendingRow['t3article2'], $trendingRow['t3a1url2'], $trendingRow['optionsRadios'],$trendingId);
+                    $trendingUpdateStmt->execute();
+                    if ($trendingUpdateStmt->affected_rows)
+                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                    // echo  $_SESSION['noofupd'];
+                }else {
+                    //echo 'sumit'; exit;
+                    $trendingInsertStmt = $this->conn2->prepare("insert into trending set id=?, t1topic=?,t1url=?,t1article1=?,t1a1url=?,t1article2=?,t1a1url2=?,t2topic=?,t2url=?,t2article1=?,t2a1url=?,t2article2=?,t2a1url2=?,t3topic=?,t3url=?,t3article1=?,t3a1url=?,t3article2=?,t3a1url2=?,optionsRadios=?");
+                    //echo $this->conn2->error; exit;
+                    $trendingInsertStmt->bind_param('issssssssssssssssssi', $trendingId,$trendingRow['t1topic'], $trendingRow['t1url'], $trendingRow['t1article1'], $trendingRow['t1a1url'], $trendingRow['t1article2'], $trendingRow['t1a1url2'],$trendingRow['t2topic'], $trendingRow['t2url'], $trendingRow['t2article1'], $trendingRow['t2a1url'], $trendingRow['t2article2'], $trendingRow['t2a1url2'], $trendingRow['t3topic'], $trendingRow['t3url'], $trendingRow['t3article1'], $trendingRow['t3a1url'], $trendingRow['t3article2'], $trendingRow['t3a1url2'], $trendingRow['optionsRadios']);
+                    $trendingInsertStmt->execute();
+                    if ($trendingInsertStmt->affected_rows) {
+                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                    }
+                }
+            }
+        }
+
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='trending',start_time=?,end_time=?");
+        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecronstmt->execute();
+        $updatecronstmt->close();
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' trending(s) inserted and ' . $_SESSION['noofupd'] . ' trending(s) updated.</h5>';
+    }
+
+//Trending module end here 
     function migrateMasterNewsLetter() {
 
         $_SESSION['noofins'] = 0;
