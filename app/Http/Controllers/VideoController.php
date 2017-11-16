@@ -202,6 +202,7 @@ class VideoController extends Controller
         $video->video_title = $request->video_title;
         $video->video_summary = $request->video_summary;
         $video->video_type=$request->video_type;
+        $video->for_automated_news_video=$request->for_automated_news_video;
         $video->video_status = '1';
         $video->campaign_id = $request->campaign;
         $video->save();
@@ -389,6 +390,7 @@ class VideoController extends Controller
         $video->video_title = $request->video_title;
         $video->video_summary = $request->video_summary;
         $video->video_type=$request->video_type;
+        $video->for_automated_news_video=$request->for_automated_news_video;
         $video->video_status = '1';
         $video->campaign_id = $request->campaign;
         $video->save();

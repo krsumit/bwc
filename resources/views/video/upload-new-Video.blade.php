@@ -455,10 +455,25 @@
                         $("#simpleSelectBox").select2();
                         });
              </script>
+             
         </div>
         <!--Select Box with Filter Search end-->
-
+        
     </div>
+    <div class="control-group row-fluid">
+            <div class="span12 span-inset">
+
+                <label class="checkbox" >
+                    <input type="checkbox" name="for_automated_news_video" class="uniformCheckbox" value="1"  >
+                    <a href="#" target="_blank">Automated News Video</a>
+                </label>
+                <script>
+                    $().ready(function(){
+                    $(".uniformCheckbox").uniform();
+                    });
+                </script>
+            </div>
+        </div>
 
     <div class="control-group row-fluid">
         <div class="span12 span-inset">

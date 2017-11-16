@@ -500,7 +500,20 @@
              </script>
         </div>
     </div>
-        
+        <div class="control-group row-fluid">
+            <div class="span12 span-inset">
+
+                <label class="checkbox" >
+                    <input type="checkbox" name="for_automated_news_video" class="uniformCheckbox" value="$video->for_automated_news_video"  @if($video->for_automated_news_video == '1') checked="checked" @endif >
+                    <a href="#" target="_blank">Automated News Video</a>
+                </label>
+                <script>
+                    $().ready(function(){
+                    $(".uniformCheckbox").uniform();
+                    });
+                </script>
+            </div>
+        </div>
         <div class="control-group row-fluid">
             <div class="span12 span-inset">
                 <button  type="submit" class="btn btn-info">Save</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
