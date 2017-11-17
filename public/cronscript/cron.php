@@ -1550,7 +1550,7 @@ class Cron {
         // $this->categoryMapping
         $catResultSet = '';
         if ($isNew == '1') {
-            $quickbyteCatRst = $this->conn->query("SELECT concat(`category_id`,'_',`category_level`) as catlevel,level FROM `quickbyte_category` WHERE  `quickbyte_id`='$quickbyteId'");
+            $quickbyteCatRst = $this->conn->query("SELECT concat(`category_id`,'_',`category_level`) as catlevel,category_level FROM `quickbyte_category` WHERE  `quickbyte_id`='$quickbyteId'");
             while ($catRow = $quickbyteCatRst->fetch_assoc()) {
                 $insertQickbyteCategoryStmt = $this->conn2->prepare("insert into quickbyte_category set quickbyte_id=?,category_id=?,category_level=?");
                 $insertQickbyteCategoryStmt->bind_param('iii', $quickbyteId, $this->categoryMapping[$catRow['catlevel']], $catRow['level']);
@@ -1560,7 +1560,7 @@ class Cron {
         } else {
             $this->conn2->query("delete from quickbyte_category where quickbyte_id=$quickbyteId");
 
-            $quickbyteCatRst = $this->conn->query("SELECT concat(`category_id`,'_',`category_level`) as catlevel,level FROM `quickbyte_category` WHERE  `quickbyte_id`='$quickbyteId'");
+            $quickbyteCatRst = $this->conn->query("SELECT concat(`category_id`,'_',`category_level`) as catlevel,category_level FROM `quickbyte_category` WHERE  `quickbyte_id`='$quickbyteId'");
 
             while ($catRow = $quickbyteCatRst->fetch_assoc()) {//print_r($catRow);exit;
                 $insertQickbyteCategoryStmt = $this->conn2->prepare("insert into quickbyte_category set quickbyte_id=?,category_id=?,category_level=?");
