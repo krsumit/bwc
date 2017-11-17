@@ -202,7 +202,7 @@ class VideoController extends Controller
         $video->video_title = $request->video_title;
         $video->video_summary = $request->video_summary;
         $video->video_type=$request->video_type;
-         if($request->for_automated_news_video !='')
+         if($request->for_automated_news_video !=''){
         $video->for_automated_news_video=$request->for_automated_news_video;
         }else{
         $video->for_automated_news_video = '0';
@@ -394,7 +394,7 @@ class VideoController extends Controller
         $video->video_title = $request->video_title;
         $video->video_summary = $request->video_summary;
         $video->video_type=$request->video_type;
-        if($request->for_automated_news_video !='')
+        if($request->for_automated_news_video !=''){
         $video->for_automated_news_video=$request->for_automated_news_video;
         }else{
         $video->for_automated_news_video = '0';
