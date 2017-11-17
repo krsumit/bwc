@@ -61,7 +61,7 @@ class FileTransfer {
         //echo config('constants.store_location'); exit;
     }
 
-    public function resizeAndTransferFile($fileName, $size, $source, $destination) {
+    public function resizeAndTransferFile($fileName, $size, $source, $destination){
         $imaged = new Zebra_Image();
         $imaged->source_path=$this->docroot.$source.$fileName;
         $imaged->target_path=$this->docroot.$destination.$fileName;

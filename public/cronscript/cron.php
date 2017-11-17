@@ -1450,6 +1450,15 @@ class Cron {
         $quickBytesResults = $this->conn->query("SELECT *  FROM quickbyte where channel_id='1' $condition");
         //echo $quickBytesResults->num_rows;exit;
         if ($quickBytesResults->num_rows > 0) {
+            
+            $catMapArray = array();
+            $articleCatDataRst = $this->conn2->query("select * from channel_category");
+            while ($articleCatDataRow = $articleCatDataRst->fetch_assoc()) {
+                $key = $articleCatDataRow['cms_cat_id'] . '_' . $articleCatDataRow['cms_cat_level'];
+                $catMapArray[$key] = $articleCatDataRow['category_id'];
+            }
+            $this->categoryMapping = $catMapArray;
+            
             while ($quickBytesRow = $quickBytesResults->fetch_assoc()) {
                 $id = $quickBytesRow['id'];
                 $checkResult = $this->conn2->query("select quick_byte_title from quick_bytes where quick_byte_id=$id") or die($this->conn2->error);
@@ -1481,6 +1490,7 @@ class Cron {
                         }
 
                         $this->migrateQuickBytePhoto($iid, 0);
+                        $this->migrateQuickByteCategory($iid,0);
                         $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
 
                         //   }
@@ -1520,6 +1530,7 @@ class Cron {
                                 $this->conn2->query("insert into quick_bytes_tags set quick_byte_id=$iid,tag_id=$tag");
                             }
                             $this->migrateQuickBytePhoto($iid, 1);
+                             $this->migrateQuickByteCategory($iid,1);
                             $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
                         }
                     }
@@ -1533,6 +1544,32 @@ class Cron {
         $updatecorstmt->execute();
         $updatecorstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' quickbyte(s) inserted, ' . $_SESSION['noofupd'] . ' quickbyte(s) updated and ' . $_SESSION['noofdel'] . ' quickbyte(s) deleted.</h5>';
+    }
+    
+    function migrateQuickByteCategory($quickbyteId, $isNew = 0) {
+        // $this->categoryMapping
+        $catResultSet = '';
+        if ($isNew == '1') {
+            $quickbyteCatRst = $this->conn->query("SELECT concat(`category_id`,'_',`category_level`) as catlevel,level FROM `quickbyte_category` WHERE  `quickbyte_id`='$quickbyteId'");
+            while ($catRow = $quickbyteCatRst->fetch_assoc()) {
+                $insertQickbyteCategoryStmt = $this->conn2->prepare("insert into quickbyte_category set quickbyte_id=?,category_id=?,category_level=?");
+                $insertQickbyteCategoryStmt->bind_param('iii', $quickbyteId, $this->categoryMapping[$catRow['catlevel']], $catRow['level']);
+                $insertQickbyteCategoryStmt->execute();
+                $insertQickbyteCategoryStmt->close();
+            }
+        } else {
+            $this->conn2->query("delete from quickbyte_category where quickbyte_id=$quickbyteId");
+
+            $quickbyteCatRst = $this->conn->query("SELECT concat(`category_id`,'_',`category_level`) as catlevel,level FROM `quickbyte_category` WHERE  `quickbyte_id`='$quickbyteId'");
+
+            while ($catRow = $quickbyteCatRst->fetch_assoc()) {//print_r($catRow);exit;
+                $insertQickbyteCategoryStmt = $this->conn2->prepare("insert into quickbyte_category set quickbyte_id=?,category_id=?,category_level=?");
+                $insertQickbyteCategoryStmt->bind_param('iii', $quickbyteId, $this->categoryMapping[$catRow['catlevel']], $catRow['level']);
+                $insertQickbyteCategoryStmt->execute();
+                $insertQickbyteCategoryStmt->close();
+            }
+            // }
+        }
     }
 
     function migrateQuickBytePhoto($id, $is_new = 0) {
@@ -1602,6 +1639,7 @@ class Cron {
                 $catMapArray[$key] = $articleCatDataRow['category_id'];
             }
             $this->categoryMapping = $catMapArray;
+            
             //print_r( $this->categoryMapping);exit;
             //print_r($catMapArray);exit;
             // echo $articleCatDataRst->num_rows;exit;
