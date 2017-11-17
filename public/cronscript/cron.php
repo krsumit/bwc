@@ -3110,6 +3110,7 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' trending(s) inserted and ' . $_SESSION['noofupd'] . ' trending(s) updated.</h5>';
     }
 
+
 //Trending module end here 
     function migrateMasterNewsLetter() {
 
