@@ -90,7 +90,7 @@
             <h2><small>Trending</small></h2>
         </header>
         <form class="form-horizontal" id="trendinginfo" method="post">
-        <input type="hidden" name="id"  value="{{$trending->id}}">
+        <input type="hidden" name="id"  value="{{@$trending->id}}">
             <div class="container-fluid" id="msg">
                 <div class="form-legend" id="Notifications">Notifications</div>
                 <!--Notifications begin-->
@@ -117,13 +117,13 @@
                     </div>
                     <div class="span3">		
                         <label class="radio">
-                            <input type="radio" name="optionsRadios" class="uniformRadio" value="1" {{ $trending->optionsRadios == '1' ? 'checked' : '' }}>
+                            <input type="radio" name="optionsRadios" class="uniformRadio" value="1" {{ @$trending->optionsRadios == '1' ? 'checked' : '' }}>
                                  On
                         </label>
                     </div>
                     <div class="span3">
                         <label class="radio">
-                            <input type="radio" name="optionsRadios" class="uniformRadio" value="2" {{ $trending->optionsRadios == '2' ? 'checked' : '' }}>
+                            <input type="radio" name="optionsRadios" class="uniformRadio" value="2" {{ @$trending->optionsRadios == '2' ? 'checked' : '' }}>
                                 Off
                         </label>
                     </div>
@@ -146,7 +146,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="text" name="t1topic" id="t1topic" value="{{$trending->t1topic}}" maxlength="80">
+                            <input type="text" name="t1topic" id="t1topic" value="{{@$trending->t1topic}}" maxlength="80">
                         </div>
                          <div id="t1topic_err"></div>
                          
@@ -158,7 +158,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="url" name="t1url" id="t1url" value="{{$trending->t1url}}">
+                            <input type="url" name="t1url" id="t1url" value="{{@$trending->t1url}}">
                         </div>
                          <div id="t1url_err"></div>
                     </div>
@@ -170,7 +170,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="text" name="t1article1" id="t1article1" value="{{$trending->t1article1}}" maxlength="80">
+                            <input type="text" name="t1article1" id="t1article1" value="{{@$trending->t1article1}}" maxlength="80">
                         </div>
                         <div id="t1article1_err"></div>
                     </div>
@@ -181,7 +181,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="url" name="t1a1url" id="t1a1url" value="{{$trending->t1a1url}}">
+                            <input type="url" name="t1a1url" id="t1a1url" value="{{@$trending->t1a1url}}">
                         </div>
                         <div id="t1a1url_err"></div>
                     </div>
@@ -193,7 +193,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="text" name="t1article2" id="t1article2" value="{{$trending->t1article2}}" maxlength="80">
+                            <input type="text" name="t1article2" id="t1article2" value="{{@$trending->t1article2}}" maxlength="80">
                         </div>
                          <div id="t1article2_err"></div>
                     </div>
@@ -204,7 +204,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="url" name="t1a1url2" id="t1a1url2" value="{{$trending->t1a1url2}}">
+                            <input type="url" name="t1a1url2" id="t1a1url2" value="{{@$trending->t1a1url2}}">
                         </div>
                         <div id="t1a1url2_err"></div>
                      </div>
@@ -219,7 +219,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="text" name="t2topic" id="t2topic" value="{{$trending->t2topic}}" maxlength="80">
+                            <input type="text" name="t2topic" id="t2topic" value="{{@$trending->t2topic}}" maxlength="80">
                             
                         </div>
                         <div id="t2topic_err"></div>
@@ -231,7 +231,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="url" name="t2url" id="t2url" value="{{$trending->t2url}}">
+                            <input type="url" name="t2url" id="t2url" value="{{@$trending->t2url}}">
                         </div>
                          <div id="t2url_err"></div>
                     </div>
@@ -242,7 +242,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="text" name="t2article1" id="t2article1" value="{{$trending->t2article1}}" maxlength="80">
+                            <input type="text" name="t2article1" id="t2article1" value="{{@$trending->t2article1}}" maxlength="80">
                         </div>
                         <div id="t2article1_err"></div>
                     </div>
@@ -253,7 +253,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="url" name="t2a1url" id="t2a1url" value="{{$trending->t2a1url}}">
+                            <input type="url" name="t2a1url" id="t2a1url" value="{{@$trending->t2a1url}}">
                         </div>
                         <div id="t2a1url_err"></div>
                     </div>
@@ -265,7 +265,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="text" name="t2article2" id="t2article2" value="{{$trending->t2article2}}" maxlength="80">
+                            <input type="text" name="t2article2" id="t2article2" value="{{@$trending->t2article2}}" maxlength="80">
                         </div>
                         <div id="t2article2_err"></div>
                     </div>
@@ -276,7 +276,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="url" name="t2a1url2" id="t2a1url2" value="{{$trending->t2a1url2}}">
+                            <input type="url" name="t2a1url2" id="t2a1url2" value="{{@$trending->t2a1url2}}">
                         </div>
                          <div id="t2a1url2_err"></div>
                     </div>
@@ -291,7 +291,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="text" name="t3topic" id="t3topic" value="{{$trending->t3topic}}" maxlength="80">
+                            <input type="text" name="t3topic" id="t3topic" value="{{@$trending->t3topic}}" maxlength="80">
                         </div>
                         <div id="t3topic_err"></div>
                     </div>
@@ -302,7 +302,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="url" name="t3url" id="t3url" value="{{$trending->t3url}}">
+                            <input type="url" name="t3url" id="t3url" value="{{@$trending->t3url}}">
                         </div>
                         <div id="t3url_err"></div>
                     </div>
@@ -313,7 +313,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="text" name="t3article1" id="t3article1" value="{{$trending->t3article1}}" maxlength="80">
+                            <input type="text" name="t3article1" id="t3article1" value="{{@$trending->t3article1}}" maxlength="80">
                         </div>
                          <div id="t3article1_err"></div>
                     </div>
@@ -324,7 +324,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="url" name="t3a1url" id="t3a1url" value="{{$trending->t3a1url}}">
+                            <input type="url" name="t3a1url" id="t3a1url" value="{{@$trending->t3a1url}}">
                         </div>
                         <div id="t3a1url_err"></div>
                     </div>
@@ -335,7 +335,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="text" name="t3article2" id="t3article2" value="{{$trending->t3article2}}" maxlength="80">
+                            <input type="text" name="t3article2" id="t3article2" value="{{@$trending->t3article2}}" maxlength="80">
                         </div>
                         <div id="t3article2_err"></div>
                     </div>
@@ -346,7 +346,7 @@
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <input type="url" name="t3a1url2" id="t3a1url2" value="{{$trending->t3a1url2}}">
+                            <input type="url" name="t3a1url2" id="t3a1url2" value="{{@$trending->t3a1url2}}">
                         </div>
                          <div id="t3a1url2_err"></div>
                     </div>
