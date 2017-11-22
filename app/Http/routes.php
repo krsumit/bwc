@@ -74,6 +74,8 @@ Route::get('child', function () {
 Route::get('article/create', ['middleware' => 'auth',   'uses' => 'ArticlesController@create']);
 Route::get('article/list/{option}', ['middleware' => 'auth',   'uses' => 'ArticlesController@index']);
 Route::get('article/trending', ['middleware' => 'auth',   'uses' => 'ArticlesController@trending']);
+Route::get('article/magazinearticlelist', ['middleware' => 'auth',   'uses' => 'ArticlesController@MagazineArticlelist']);
+
 Route::get('article/list/channelarticles/{option}', ['middleware' => 'auth',   'uses' => 'ArticlesController@channelarticles']);
 //Route::get('article/list/channelarticles/{option}',['middleware' => 'auth', 'uses' => 'ArticlesController@index','as' => 'search']);
 
@@ -165,6 +167,7 @@ Route::match(['get', 'post'], 'article/delete', ['as' => 'article/delete', 'uses
  *  Delete article using ajax
  */
 Route::match(['get', 'post'], 'article/articlechannelinsert', ['as' => 'article/articlechannelinsert', 'uses' => 'ArticlesController@articlechannelinsert']);
+
 
 /*
  *  Trending article using ajax
@@ -453,6 +456,11 @@ Route::post('/magazineissue/add', ['middleware' => 'auth',   'uses' => 'Magazine
 Route::match(['get', 'post'], 'magazineissue/edit', ['as' => 'magazineissue/edit', 'uses' => 'MagazineissueController@edit']);
 Route::match(['get', 'post'], 'magazineissue/delete', ['as' => 'magazineissue/delete', 'uses' => 'MagazineissueController@destroy']);
 Route::match(['get', 'post'], 'magazineissue/update', ['as' => 'magazineissue/update', 'uses' => 'MagazineissueController@update']);
+
+/*
+ *  insert mgarticle using ajax
+ */
+Route::match(['get', 'post'], 'magazineissue/mginsertArticle', ['as' => 'magazineissue/mginsertArticle', 'uses' => 'MagazineissueController@mgainsert']);
 
 
 

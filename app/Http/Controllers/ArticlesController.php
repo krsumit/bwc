@@ -1470,7 +1470,7 @@ public function articlechannelinsert(Request $request) {
         }
         //Article Topics - Save
         $channelAto=ArticleTopic::where('article_id', $oldid)->get();
-        if (!empty($channelAto)){
+        if (count($channelAto) > 0){
          foreach($channelAto as $topicRow) {
                 $article_topics = new ArticleTopic();
                 $article_topics->article_id = $id;
@@ -1485,7 +1485,7 @@ public function articlechannelinsert(Request $request) {
         $channelAtg=ArticleTag::where('article_id', $oldid)->get();
         //print_r($channelAtg);
         
-        if (!empty($channelAtg)){
+        if (count($channelAtg) > 0){
          foreach($channelAtg as $tagRow) { 
                 $article_tags = new ArticleTag();
                 $article_tags->article_id = $id;
@@ -1508,7 +1508,7 @@ public function articlechannelinsert(Request $request) {
         //- Update article_id to respective table -//
         //Video table (article_id)- Save
         $channelVid=Video::where('owner_id', $oldid)->get();
-        if (!empty($channelVid)){
+        if (count($channelVid) > 0){
          foreach($channelVid as $VidRow) {  
             $objVideo = new Video();
             $objVideo->title = $VidRow['title'];
@@ -1528,7 +1528,7 @@ public function articlechannelinsert(Request $request) {
          $channelpho=Photo::where('owner_id', $oldid)->get();
          //print_r($channelpho);
           //dd(DB::getQueryLog());
-         if (!empty($channelpho)){
+         if (count($channelpho) > 0){
          foreach($channelpho as $phoRow) {
             
                 $articleImage = new Photo();
@@ -1704,7 +1704,7 @@ public function trendinginsert(Request $request) {
         //DB::enableQueryLog();
         if($request->id !=''){
             $trending = Trending::find($request->id);
-            print_r($trending);
+            //print_r($trending);
            
         }else{
            $trending = new Trending();
@@ -1741,5 +1741,7 @@ public function trendinginsert(Request $request) {
         }
         return 'success';
     }
+
+
     
 }

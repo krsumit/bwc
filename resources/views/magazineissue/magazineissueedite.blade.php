@@ -9,76 +9,90 @@
     <div class="panel-content filler">
         <div class="panel-logo"></div>
         <div class="panel-header">
-            <h1><small>Edit Magazine Issue</small></h1>
+            <h1><small>Magazine Articles</small></h1>
         </div>
-        <script>
-          
-            function addmagazineissuefunction(){
-            var valid=1
-            $('#new input').removeClass('error');
-            if ($('select[name=channel]').val().trim() == 0){
-                valid = 0;
-                $('select[name=channel]').addClass('error');
-                $('select[name=channel]').after(errorMessage('Please enter channel'));
-                }
-            if($('input[name=publish_date_m]').val().trim()==0){
-            valid=0;
-            $('input[name=publish_date_m]').addClass('error');
-            $('input[name=publish_date_m]').after(errorMessage('Please select date'));
-            }
-            if ($('input[name=title]').val().trim() == 0){
-                valid = 0;
-                $('input[name=title]').addClass('error');
-                $('input[name=title]').after(errorMessage('Please enter name'));
-                }
-             
-            if(valid==0)
-                return false;
-            else
-            return true;
-            }
-            function errorMessage($msg){
-             return '<span class="error">'+$msg+'</span>';
-            }
-                
+        <div class="panel-search container-fluid">
+            <form class="form-horizontal" action="javascript:;">
+                <input id="panelSearch" placeholder="Search" type="text" name="panelSearch">
+                <button class="btn btn-search"></button>
+                <script>
+                    $().ready(function(){
+                        var searchTags = [
+                            "Dashboard",
+                            "Form Elements",
+                            "Graphs and Statistics",
+                            "Typography",
+                            "Grid",
+                            "Tables",
+                            "Maps",
+                            "Sidebar Widgets",
+                            "Error Pages",
+                            "Help",
+                            "Input Fields",
+                            "Masked Input Fields",
+                            "Autotabs",
+                            "Text Areas",
+                            "Select Menus",
+                            "Other Form Elements",
+                            "Form Validation",
+                            "UI Elements",
+                            "Graphs",
+                            "Statistical Elements",
+                            "400 Bad Request",
+                            "401 Unauthorized",
+                            "403 Forbidden",
+                            "404 Page Not Found",
+                            "500 Internal Server Error",
+                            "503 Service Unavailable"
+                        ];
+                        $( "#panelSearch" ).autocomplete({
+                            source: searchTags
+                        });
+                    });            
                 </script>
-     
-
+            </form>
+        </div>	
+	<label class="radio">
+            <input type="radio" name="optionsRadios" class="uniformRadio" value="radio1">
+            Search by Columnist Name
+        </label>
+        <label class="radio">
+            <input type="radio" name="optionsRadios" class="uniformRadio" value="radio1">
+                Search by Email ID
+        </label>						
         <script>
-            $().ready(function () {
+            $().ready(function(){
                 $(".uniformRadio").uniform({
                     radioClass: 'uniformRadio'
-                });
-
-            });
+                });           
+            });            
         </script>
         <br><br>
         <div class="panel-header">
-    <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
+        <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
         </div> 
         <script type="text/javascript">
-            $(function () {
-                $("#jstree").jstree({
-                    "json_data": {
-                        "data": [
-                            {
-                                "data": {
-                                    "title": "Add Magazine Issue",
-                                    "attr": {"href": "#new"}
-                                }
-                            },
-                        ]
-                    },
-                    "plugins": ["themes", "json_data", "ui"]
-                })
-                        .bind("click.jstree", function (event) {
-                            var node = $(event.target).closest("li");
-                            document.location.href = node.find('a').attr("href");
-                            return false;
-                        })
-                        .delegate("a", "click", function (event, data) {
-                            event.preventDefault();
-                        });
+        $(function () {
+            $("#jstree").jstree({ 
+                "json_data" : {
+                    "data" : [
+                                                {
+                            "data" : { 
+                                "title" : "Magazine Articles", 
+                                "attr" : { "href" : "#ma" } 
+                            }
+                        },
+
+                                            ]
+                },
+                "plugins" : [ "themes", "json_data", "ui" ]
+            })
+            .bind("click.jstree", function (event) {
+                var node = $(event.target).closest("li");
+                document.location.href = node.find('a').attr("href");
+                return false;
+            })
+            .delegate("a", "click", function (event, data) { event.preventDefault(); });
             });
         </script>
         <div class="sidebarMenuHolder">
@@ -87,7 +101,8 @@
                 <div id="jstree"></div>
                 <div class="Jstree_shadow_bottom"></div>
             </div>
-        </div>    </div>
+        </div>    
+    </div>
     <div class="panel-slider">
         <div class="panel-slider-center">
             <div class="panel-slider-arrow"></div>
@@ -102,57 +117,49 @@
                     <i class="icon-photon home"></i>
                 </a>
             </li>
-            <li class="current">
-                <a href="javascript:;">Edit Magazine Issue</a>
+                    <li class="current">
+                <a href="javascript:;">Magazine Articles</a>
             </li>
         </ul>
-    </div>           <header>
+    </div>          
+    <header>
         <i class="icon-big-notepad"></i>
-        <h2><small>Edit Magazine Issue</small></h2>
-
+        <h2><small>Magazine Articles</small></h2>        
     </header>
-    @foreach($posts as $a)
-    {!! Form::open(array('url'=>'magazineissue/update','class'=> 'form-horizontal','id'=>'validation_form', 'files' => true,'onsubmit'=>'return addmagazineissuefunction()')) !!}
-    {!! csrf_field() !!}
-    <input type="hidden" id='magazine_id' name="magazine_id" value="{{$a->magazine_id}}">
-    <input type="hidden" id='photoname' name="photoname" value="{{$a->imagepath}}">
-        <div class="container-fluid">
-
-            <div class="form-legend" id="Notifications">Notifications</div>
-
-            <!--Notifications begin-->
-             <div class="control-group row-fluid">
-                <div class="span12 span-inset">
-                    @if (Session::has('message'))
-                    <div class="alert alert-success alert-block">
-                        <i class="icon-alert icon-alert-info"></i>
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>This is Success Notification</strong>
-                        <span>{{ Session::get('message') }}</span>
+    <form class="form-horizontal method="post" id="artcilmg">
+        <input type="hidden" name="m_id" value="{{$id}}" >
+         {{ csrf_field() }}
+         <div class="container-fluid" id="msg">
+                <div class="form-legend" id="Notifications">Notifications</div>
+                <!--Notifications begin-->
+                <div class="control-group row-fluid">
+                    <div class="span12 span-inset">
+                        <div   class="alert alert-success alert-block">
+                            <i class="icon-alert icon-alert-info"></i>
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            <strong>This is Success Notification</strong>
+                            <span>Your data has been successfully modified.</span>
+                        </div>
+                        
+                       
+                        
                     </div>
-                      @endif 
-                    
                 </div>
+                <!--Notifications end-->
             </div>
-            <!--Notifications end-->
-
-        </div>
+                
         <div class="container-fluid">
-
-            <div class="form-legend">Channel</div>
-
-            <!--Select Box with Filter Search begin-->
-            <div id="channel" class="control-group row-fluid">
+                		
+            <div class="form-legend" > Magazine Issue Name</div>                            
+            <div  class="control-group row-fluid" id="ch-reporter">
                 <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Channel</label>
+                    <label class="control-label" for="selectBoxFilter">Magazine Issue Name</label>
                 </div>
                 <div class="span9">
                     <div class="controls">
                         <select name="channel" id="selectBoxFilter20">
-                            <option value="">--select Channel--</option>
-                            @foreach($channels as $channel)
-                       <option value="{{ $channel->channel_id }}" @if($channel->channel_id == $a->channel_id) selected="selected" @endif >{{ $channel->channel }}</option>
-                        @endforeach
+                            <option value="">{{$posts->title}}</option>
+                            
                         </select>
                     </div>
                 </div>
@@ -160,274 +167,100 @@
                     $().ready(function () {
                         $("#selectBoxFilter20").select2();
                     });
-                </script>
-            </div>
-
-            <!--Select Box with Filter Search end-->					
-        </div>
-
-
+                </script>                           
+            </div>                            
+        </div>  
         <div class="container-fluid">
-            <div class="form-legend" id="new">Edit Magazine Issue
+            <div class="form-legend" id="ma">Magazine Articles</div>
+                <!--Sortable Responsive Media Table begin-->
+               <div class="row-fluid">
+                   <div class="span12">
+                       <table class="table table-striped table-responsive" >
+                           <thead class="cf sorthead">
+                               <tr>
+                                   <th>Article ID</th>
+                                   <th>Title</th>
+                                   <th>Featured</th>
+                                   <th>Last Word</th>
+                                   <th>Editor-In-Chief's Note</th>
+                               </tr>
+                           </thead>
+                           <tbody>
+                               
+                                @foreach($ArticleArr as $article)
+                                <tr  class="gradeX"  id="rowCur{{$article->article_id}}">
+                                   <td>{{ $article->article_id }}</td>
+                                   <td><a href="/article/{{ $article->article_id }}">{{ $article->title }}</a></td>
+                                   <td class="center"><input type="checkbox" class="uniformCheckbox" value="{{$article->article_id}}" name="checkItem[]"></td>
+                                   <td class="center">
+                                                <div class="uniformRadio" id="uniform-ifyes"><span><input id="ifyes" name="m_lw" class="uniformRadio" value="{{$article->article_id}}" style="opacity: 0;" type="radio"></span></div>
+                                   </td>
+                                   <td class="center">
+                                                <div class="uniformRadio" id="uniform-ifno"><span ><input id="ifno"  name="m_eicn" class="uniformRadio" value="{{$article->article_id}}" style="opacity: 0;" type="radio"></span></div>
+                                   </td>
+                               </tr>
+                              @endforeach  
+                               
+                           </tbody>
+                       </table>
 
-            </div>
+                   </div>
+               </div>
+               <!--<div class="dataTables_paginate paging_bootstrap pagination">
 
-
-            <div  class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="datepicker">
-                        Publish Date<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Click to choose date."><i class="icon-photon info-circle"></i></a>
-                    </label>
-                </div>
-                <div class="span9">
-                <div class="controls">
-                    <input type="text" name="publish_date_m" id="datepicker" class="span3" />
-                </div>
-            </div>
-                                                          
-            </div>
-            <script>
-                $(function () {
-                    $("#datepicker").datepicker();
-                    $("#datepickerInline").datepicker();
-                    $("#datepickerMulti").datepicker({
-                        numberOfMonths: 3,
-                        showButtonPanel: true
-                    });
-                    $('#timeEntry').timeEntry().change();
-                });
-            </script> 
-
-            <div id="File_Upload" class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label">Cover Photo (Size:{{config('constants.dimension_magz')}}, File Size<={{config('constants.maxfilesize').' '.config('constants.filesizein')}})</label>
-                </div>
-                <div class="span9">
-                    <div class="fileupload fileupload-new" data-provides="fileupload">
-                        <div class="input-append">
-                            <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input name="photo" type="file"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                            <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_magz')}}')">&nbsp;Need to crop images? Click here</a>
-                        </div>
-                         {{$a->imagepath}}
-                        
+                    
+                </div>-->
+               <!--Sortable Responsive Media Table end-->
+           </div><!-- end container -->
+            <div class="container-fluid">		
+                <div class="control-group row-fluid">
+                    <div class="span12 span-inset">
+                         <button type="button" class="btn btn-success" onclick="mginsertArticle()">Copy</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+			<!--<button type="button" class="btn btn-success">Save</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>-->							
                     </div>
-                </div>
+		</div>				
             </div>
+           <script>
+               $(document).ready(function() {
+                   $('#tableSortable, #tableSortableRes, #tableSortableResMed').dataTable( {
+                       "sPaginationType": "bootstrap",
+                       "fnInitComplete": function(){
+                           $(".dataTables_wrapper select").select2({
+                               dropdownCssClass: 'noSearch'
+                           });
+                       }
+                   });
 
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="inputField">Name</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="title" name="title" type="text" value="{{$a->title}}">
-                    </div>
-                </div>
-            </div>
+               });
+           </script>			   			   
+       </form>
+   </div>
+<script>
+       $(document).ready(function () {
+        document.getElementById("msg").style.display = "none"; 
+        });          
+    function mginsertArticle() {
+        var data = $('#artcilmg').serialize();  
+            alert(data);
+            var data = $('#artcilmg').serialize();  
+            //alert('sumit');return false;
+           $.ajax({
+                url : "/magazineissue/mginsertArticle", // the endpoint
+                type : "POST", // http method
+                data : $('#artcilmg').serialize(), // data sent with the post request
+                //cache: false,
+                // handle a successful response
+                    success: function( response ) {
+                        //alert(response);
+                       document.getElementById("msg").style.display = "block";
+                       $('html, body').scrollTop($("#msg").offset().top);
+                    }
 
-        </div>
+            });
 
+    }
 
-        <div class="container-fluid">
-
-            <div class="form-legend">Story 1</div>
-
-            <!--Select Box with Filter Search begin-->
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Title</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story1_title" name="story1_title" value="{{$a->story1_title}}"type="text"/>
-                    </div>   
-                </div>
-            </div>
-
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">URL</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story1_url" name="story1_url"  value="{{$a->story1_url}}" type="url"/>
-                    </div>   
-                </div>
-            </div>
-
-            <!--Select Box with Filter Search end-->					
-        </div>
-
-        <div class="container-fluid">
-
-            <div class="form-legend">Story 2</div>
-
-            <!--Select Box with Filter Search begin-->
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Title</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story2_title" name="story2_title"   value="{{$a->story2_title}}" type="text"/>
-                    </div>   
-                </div>
-            </div>
-
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">URL</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story2_url" name="story2_url"  value="{{$a->story2_url}}" type="url"/>
-                    </div>   
-                </div>
-            </div>
-
-            <!--Select Box with Filter Search end-->					
-        </div>
-
-        <div class="container-fluid">
-
-            <div class="form-legend">Story 3</div>
-
-            <!--Select Box with Filter Search begin-->
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Title</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story3_title" name="story3_title"  value="{{$a->story3_title}}"  type="text"/>
-                    </div>   
-                </div>
-            </div>
-
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">URL</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story3_url" name="story3_url"  value="{{$a->story3_url}}" type="url"/>
-                    </div>   
-                </div>
-            </div>
-
-            <!--Select Box with Filter Search end-->					
-        </div>
-
-        <div class="container-fluid">
-
-            <div class="form-legend">Story 4</div>
-
-            <!--Select Box with Filter Search begin-->
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Title</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story4_title" name="story4_title" value="{{$a->story4_title}}"  type="text"/>
-                    </div>   
-                </div>
-            </div>
-
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">URL</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story4_url" name="story4_url"  value="{{$a->story4_url}}" type="url"/>
-                    </div>   
-                </div>
-            </div>
-
-            <!--Select Box with Filter Search end-->					
-        </div>
-
-        <div class="container-fluid">
-
-            <div class="form-legend">Story 5</div>
-
-            <!--Select Box with Filter Search begin-->
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Title</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story5_title" name="story5_title" value="{{$a->story5_title}}" type="text"/>
-                    </div>   
-                </div>
-            </div>
-
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">URL</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story5_url" name="story5_url" value="{{$a->story5_url}}" type="url"/>
-                    </div>   
-                </div>
-            </div>
-
-            <!--Select Box with Filter Search end-->					
-        </div>
-
-        <div class="container-fluid">
-
-            <div class="form-legend">FlIP URL</div>
-
-            <!--Select Box with Filter Search begin-->
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Url</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="flip_url" name="flipbook_url" value="{{$a->flipbook_url}}" type="text"/>
-                    </div>   
-                </div>
-            </div>
-
-           
-
-            <!--Select Box with Filter Search end-->					
-        </div>
-                <div class="container-fluid">
-
-            <div class="form-legend">BUY DIGITAL</div>
-
-            <!--Select Box with Filter Search begin-->
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Url</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="buy_digital" name="buy_digital" value="{{$a->buy_digital}}" type="text"/>
-                    </div>   
-                </div>
-            </div>
-
-           
-
-            <!--Select Box with Filter Search end-->					
-        </div>
-
-        <div class="container-fluid">
-            <div class="control-group row-fluid">
-                <div class="span12 span-inset">
-                    <button type="submit" class="btn btn-success">Publish</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
-                </div>
-            </div>
-        </div>
-        {!! Form::close() !!}
-       @endforeach 
-</div>
+</script>
+ 
 
 @stop

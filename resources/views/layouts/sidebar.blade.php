@@ -73,7 +73,8 @@
                         </li>
                         @endif
                         
-<!--                        <li>
+                        
+                    <!--<li>
                             <a href="tips.html">Tips</a>
                         </li>-->
                         

@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Article;
 use App\FeatureBox;
 use Illuminate\Http\Request;
 use App\Magazineissue;
+use App\Magazineissuearticle;
 use DB;
 use Session;
 use App\Right;
@@ -146,7 +147,10 @@ class MagazineissueController extends Controller {
      */
     public function edit() {
 
-        $uid = Session::get('users')->id;
+       $uid = Session::get('users')->id;
+        $rightLabel = "";
+
+        $rightId = '';
         if (isset($_GET['id'])) {
             $id = $_GET['id'];
         }
@@ -154,7 +158,7 @@ class MagazineissueController extends Controller {
         $posts = DB::table('magazine')
                 ->select('magazine.*')
                 ->where('magazine_id', '=', $id)
-                ->get();
+                ->first();
         if (!(count($posts) > 0)) {
             Session::flash('error', 'There is no such article.');
             return redirect()->intended('/dashboard');
@@ -163,13 +167,14 @@ class MagazineissueController extends Controller {
 
         /* Right mgmt start */
         $rightId = 77;
-        $currentChannelId = $posts[0]->channel_id;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
         $channels = $this->rightObj->getAllowedChannels($rightId);
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
-            return redirect()->intended('/dashboard');
+            return redirect('/dashboard');
         /* Right mgmt end */
+         $ArticleArr=Article::where('magazine_id', $id)->get();
 
-        return view('magazineissue.magazineissueedite', compact('channels', 'posts', 'currentChannelId'));
+        return view('magazineissue.magazineissueedite', compact('channels', 'posts', 'currentChannelId','ArticleArr','id'));
     }
 
     /**
@@ -273,8 +278,100 @@ class MagazineissueController extends Controller {
             DB::table('magazine')
                     ->where('magazine_id', $d)
                     ->update($deleteAl);
+            
+            $deleteAl = [
+
+                'status' => $valid,
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+            DB::table('magazine_list')
+                    ->where('m_id', $d)
+                    ->update($deleteAl);        
+
         }
         return;
     }
+
+public function mgainsert(Request $request) {
+
+        if (!Session::has('users')) {
+            return 'Please login first.';
+        }
+
+        /* Right mgmt start */
+        $rightId = 13;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId)) {
+            return 'You are not authorized to access';
+        }
+        /* Right mgmt end */
+
+        $uid = Session::get('users')->id;
+        
+       if (isset($_POST['checkItem'])) {
+        $ArArr = $_POST['checkItem'];        
+        $MagissueArticle = Magazineissuearticle::whereIn('a_id', $ArArr)->get(); 
+         if (count($MagissueArticle) > 0){
+                foreach($MagissueArticle as $articleRow) {
+                    $MgArticleup = Magazineissuearticle::find($articleRow->id);
+                    $MgArticleup->m_f = '1';
+                    $MgArticleup->update();
+                }
+            }
+            else{
+                foreach($ArArr as $articleRow) {
+                    $MgArticle = new Magazineissuearticle();
+                    $MgArticle->m_id = $request->m_id;
+                    $MgArticle->a_id = $articleRow;
+                    $MgArticle->m_f = '1';
+                    $MgArticle->m_lw = '0';
+                    $MgArticle->m_eicn = '0';
+                    $MgArticle->status = '1';
+                    $MgArticle->save();
+                }
+            }
+        }
+       if (isset($_POST['m_lw'])) {
+            $mgalwarrd = Magazineissuearticle::where('a_id', $request->m_lw)->first();
+        if(count($mgalwarrd)> 0){
+            $MgArticleup = Magazineissuearticle::find($mgalwarrd->id);
+            $MgArticleup->m_lw = '1';
+            $MgArticleup->update();
+         }else{
+            $MgArticle = new Magazineissuearticle();
+            $MgArticle->m_id = $request->m_id;
+            $MgArticle->a_id = $request->m_lw;
+            $MgArticle->m_f = '0';
+            $MgArticle->m_lw = '1';
+            $MgArticle->m_eicn = '0';
+            $MgArticle->status = '1';
+            $MgArticle->save();
+
+            }
+        }
+        if (isset($_POST['m_eicn'])) {
+        $mgalwarr = Magazineissuearticle::where('a_id', $request->m_eicn)->first();
+        if(count($mgalwarr)> 0){
+            $MgArticleup = Magazineissuearticle::find($mgalwarr->id);
+            $MgArticleup->m_eicn = '1';
+            $MgArticleup->update();
+         }else{
+            $MgArticle = new Magazineissuearticle();
+            $MgArticle->m_id = $request->m_id;
+            $MgArticle->a_id = $request->m_eicn;
+            $MgArticle->m_f = '0';
+            $MgArticle->m_lw = '0';
+            $MgArticle->m_eicn = '1';
+            $MgArticle->status = '1';
+            $MgArticle->save();
+
+            }
+        }
+        return  'success' ;
+    }
+    
+
+
 
 }
