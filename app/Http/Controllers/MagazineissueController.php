@@ -328,6 +328,7 @@ public function mgainsert(Request $request) {
                     $MgArticle->m_lw = '0';
                     $MgArticle->m_eicn = '0';
                     $MgArticle->status = '1';
+                    $MgArticle->channel_id = $request->channel_id;
                     $MgArticle->save();
                 }
             }
@@ -346,6 +347,7 @@ public function mgainsert(Request $request) {
             $MgArticle->m_lw = '1';
             $MgArticle->m_eicn = '0';
             $MgArticle->status = '1';
+            $MgArticle->channel_id = $request->channel_id;
             $MgArticle->save();
 
             }
@@ -364,6 +366,7 @@ public function mgainsert(Request $request) {
             $MgArticle->m_lw = '0';
             $MgArticle->m_eicn = '1';
             $MgArticle->status = '1';
+            $MgArticle->channel_id = $request->channel_id;
             $MgArticle->save();
 
             }

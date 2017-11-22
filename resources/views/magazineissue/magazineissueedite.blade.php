@@ -128,6 +128,8 @@
     </header>
     <form class="form-horizontal method="post" id="artcilmg">
         <input type="hidden" name="m_id" value="{{$id}}" >
+        <input type="hidden" name="channel_id" value="{{$posts->channel_id}}" >
+        channel_id
          {{ csrf_field() }}
          <div class="container-fluid" id="msg">
                 <div class="form-legend" id="Notifications">Notifications</div>
