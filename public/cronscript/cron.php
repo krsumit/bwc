@@ -3177,17 +3177,17 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
                 $checkmagazineissueArticlelistExistResultSet = $this->conn2->query("select * from magazine_list where id=$magazineissueArticlelistId");
                 if ($checkmagazineissueArticlelistExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
-                    $magazineissueArticlelistUpdateStmt = $this->conn2->prepare("update magazine_list set m_id=?,a_id=?,m_f=?,m_lw=?,m_eicn=?,created_at=?,updated_at=? where id=?");
-                    $magazineissueArticlelistUpdateStmt->bind_param('iiiiissi', $magazineissueArticlelistRow['m_id'], $magazineissueArticlelistRow['a_id'], $magazineissueArticlelistRow['m_f'], $magazineissueArticlelistRow['m_lw'], $magazineissueArticlelistRow['m_eicn'], $magazineissueArticlelistRow['created_at'],$magazineissueArticlelistRow['updated_at'],$magazineissueArticlelistId);
+                    $magazineissueArticlelistUpdateStmt = $this->conn2->prepare("update magazine_list set m_id=?,a_id=?,m_f=?,m_lw=?,m_eicn=?,created_at=?,updated_at=?,status=? where id=?");
+                    $magazineissueArticlelistUpdateStmt->bind_param('iiiiissii', $magazineissueArticlelistRow['m_id'], $magazineissueArticlelistRow['a_id'], $magazineissueArticlelistRow['m_f'], $magazineissueArticlelistRow['m_lw'], $magazineissueArticlelistRow['m_eicn'], $magazineissueArticlelistRow['created_at'],$magazineissueArticlelistRow['updated_at'],$magazineissueArticlelistRow['status'],$magazineissueArticlelistId);
                     $magazineissueArticlelistUpdateStmt->execute();
                     if ($magazineissueArticlelistUpdateStmt->affected_rows)
                         $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
-                    // echo  $_SESSION['noofupd'];
+                      //$_SESSION['noofupd'].'sumit';
                 }else {
                     //echo 'sumit'; exit;
-                    $magazineissueArticlelistInsertStmt = $this->conn2->prepare("insert into magazine_list set id=?, m_id=?,a_id=?,m_f=?,m_lw=?,m_eicn=?,created_at=?,updated_at=?");
+                    $magazineissueArticlelistInsertStmt = $this->conn2->prepare("insert into magazine_list set id=?, m_id=?,a_id=?,m_f=?,m_lw=?,m_eicn=?,created_at=?,updated_at=?,status=?");
                     //echo $this->conn2->error; exit;
-                    $magazineissueArticlelistInsertStmt->bind_param('iiiiiiss', $magazineissueArticlelistId,$magazineissueArticlelistRow['m_id'], $magazineissueArticlelistRow['a_id'], $magazineissueArticlelistRow['m_f'], $magazineissueArticlelistRow['m_lw'], $magazineissueArticlelistRow['m_eicn'], $magazineissueArticlelistRow['created_at'],$magazineissueArticlelistRow['updated_at']);
+                    $magazineissueArticlelistInsertStmt->bind_param('iiiiiissi', $magazineissueArticlelistId,$magazineissueArticlelistRow['m_id'], $magazineissueArticlelistRow['a_id'], $magazineissueArticlelistRow['m_f'], $magazineissueArticlelistRow['m_lw'], $magazineissueArticlelistRow['m_eicn'], $magazineissueArticlelistRow['created_at'],$magazineissueArticlelistRow['updated_at'],$magazineissueArticlelistRow['status']);
                     $magazineissueArticlelistInsertStmt->execute();
                     if ($magazineissueArticlelistInsertStmt->affected_rows) {
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
