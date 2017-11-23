@@ -243,7 +243,7 @@
         });          
     function mginsertArticle() {
         var data = $('#artcilmg').serialize();  
-            alert(data);
+            //alert(data);
             var data = $('#artcilmg').serialize();  
             //alert('sumit');return false;
            $.ajax({
