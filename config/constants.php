@@ -45,7 +45,7 @@ return [
 'awsupload'=> 'upload/',     
 'debatefeatured'=>'debate/featuredimage/',
 'debateexpert'=>'debate/expertimage/',     
-'awbucket'=>'bwmedia',
+'awbucket'=>'static.businessworld.in',
 'awsbaseurl_backup'=>'http://d1s8mqgwixvb29.cloudfront.net/   http://bwcms.localhost/files/',
 'awsbaseurl'=>'http://d1s8mqgwixvb29.cloudfront.net/',     
 'recordperpage' => '20',
