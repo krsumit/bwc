@@ -20,7 +20,7 @@ return [
         'key'    => 'AKIAJP2II2APBMWFVR3Q',
         'secret' => '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',
     ],
-    'region' => 'ap-southeast-1',
+    'region' => 'ap-south-1',
     'version' => 'latest',
     'ua_append' => [
         'L5MOD/' . AwsServiceProvider::VERSION,
