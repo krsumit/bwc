@@ -47,7 +47,7 @@ return [
 'debateexpert'=>'debate/expertimage/',     
 'awbucket'=>'static.businessworld.in',
 'awsbaseurl_backup'=>'http://d1s8mqgwixvb29.cloudfront.net/   http://bwcms.localhost/files/',
-'awsbaseurl'=>'http://d1s8mqgwixvb29.cloudfront.net/',     
+'awsbaseurl'=>'http://static.businessworld.in/',     
 'recordperpage' => '20',
 'maxfilesize'=>'2',
 'maxfilesizevideo'=>'200',
