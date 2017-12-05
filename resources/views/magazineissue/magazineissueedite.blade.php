@@ -129,7 +129,7 @@
     <form class="form-horizontal method="post" id="artcilmg">
         <input type="hidden" name="m_id" value="{{$id}}" >
         <input type="hidden" name="channel_id" value="{{$posts->channel_id}}" >
-        channel_id
+        
          {{ csrf_field() }}
          <div class="container-fluid" id="msg">
                 <div class="form-legend" id="Notifications">Notifications</div>
@@ -217,7 +217,7 @@
             <div class="container-fluid">		
                 <div class="control-group row-fluid">
                     <div class="span12 span-inset">
-                         <button type="button" class="btn btn-success" onclick="mginsertArticle()">Copy</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                         <button type="button" class="btn btn-success" onclick="mginsertArticle()">Save</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
 			<!--<button type="button" class="btn btn-success">Save</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>-->							
                     </div>
 		</div>				
