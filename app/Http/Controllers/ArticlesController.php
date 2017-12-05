@@ -1432,7 +1432,7 @@ public function articlechannelinsert(Request $request) {
                     }else{
                         $article->canonical_url = $ChennalArr->channelurl.'/'. preg_replace('/([^a-zA-Z0-9_.])+/', '-',$title). '/'.$publish_date.'-'.$articleRow->article_id;
                         }
-                   
+                    $article->canonical_options = 1;
                     $article->social_title = $articleRow->social_title;
                     $article->social_summary = $articleRow->social_summary;
                     $article->video_Id = $articleRow->video_Id;
