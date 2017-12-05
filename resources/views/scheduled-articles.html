@@ -1,706 +1,590 @@
-<!DOCTYPE html>
-<html lang="en">
-   <head>
-       <meta charset="utf-8">
-       <title>Scheduled Articles</title>
-               <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
-        <link rel="shortcut icon" href="favicon.ico" />
-        <link rel="apple-touch-icon" href="iosicon.png" />
-<!--    DEVELOPMENT LESS -->
-<!--          <link rel="stylesheet/less" href="css/photon.less" media="all" />
-        <link rel="stylesheet/less" href="css/photon-responsive.less" media="all" /> -->
-<!--    PRODUCTION CSS -->
-        <link rel="stylesheet" href="css/css/photon.css" media="all" />
-<link rel="stylesheet" href="css/css/photon-pt2.css" media="all" />
+@extends('layouts/master')
 
-        <link rel="stylesheet" href="css/css/photon-responsive.css" media="all" />
+@section('title', 'Create New Quickbyte - BWCMS')
 
-<!--[if IE]>
-        <link rel="stylesheet" type="text/css" href="css/css_compiled/ie-only-min.css" />
-        
 
-<![endif]-->
-
-<!--[if lt IE 9]>
-        <link rel="stylesheet" type="text/css" href="css/css_compiled/ie8-only-min.css" />
-        <script type="text/javascript" src="js/plugins/excanvas.js"></script>
-        <script type="text/javascript" src="js/plugins/html5shiv.js"></script>
-        <script type="text/javascript" src="js/plugins/respond.min.js"></script>
-        <script type="text/javascript" src="js/plugins/fixFontIcons.js"></script>
-<![endif]-->
-
-       
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js"></script>
-
-<script type="text/javascript" src="js/bootstrap/bootstrap.min.js"></script>
-<script type="text/javascript" src="js/plugins/modernizr.custom.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.pnotify.min.js"></script>
-<script type="text/javascript" src="js/plugins/less-1.3.1.min.js"></script>        
-<script type="text/javascript" src="js/plugins/xbreadcrumbs.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.maskedinput-1.3.min.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.autotab-1.1b.js"></script>
-<script type="text/javascript" src="js/plugins/charCount.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.textareaCounter.js"></script>
-<script type="text/javascript" src="js/plugins/elrte.min.js"></script>
-<script type="text/javascript" src="js/plugins/elrte.en.js"></script>
-<script type="text/javascript" src="js/plugins/select2.js"></script>
-<script type="text/javascript" src="js/plugins/jquery-picklist.min.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.validate.min.js"></script>
-<script type="text/javascript" src="js/plugins/additional-methods.min.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.form.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.metadata.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.mockjax.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.uniform.min.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.tagsinput.min.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.rating.pack.js"></script>
-<script type="text/javascript" src="js/plugins/farbtastic.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.timeentry.min.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.jstree.js"></script>
-<script type="text/javascript" src="js/plugins/dataTables.bootstrap.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.mousewheel.min.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.mCustomScrollbar.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.flot.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.flot.stack.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.flot.pie.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.flot.resize.js"></script>
-<script type="text/javascript" src="js/plugins/raphael.2.1.0.min.js"></script>
-<script type="text/javascript" src="js/plugins/justgage.1.0.1.min.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.qrcode.min.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.clock.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.countdown.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.jqtweet.js"></script>
-<script type="text/javascript" src="js/plugins/jquery.cookie.js"></script>
-<script type="text/javascript" src="js/plugins/bootstrap-fileupload.min.js"></script>
-<script type="text/javascript" src="js/plugins/prettify/prettify.js"></script>
-<script type="text/javascript" src="js/plugins/bootstrapSwitch.js"></script>
-<script type="text/javascript" src="js/plugins/mfupload.js"></script>
-<script type="text/javascript" src="js/common.js"></script>
-   </head>
-
-   <body class="body-inner light-version">
-           
-    <div class="btn-toolbar btn-mobile-menus">
-        <button class="btn btn-main-menu"></button>
-        <button class="btn btn-user-menu"><i class="icon-logo"></i></button>
-    </div>
-
-  <div class="nav-fixed-left" style="visibility: hidden">
-        <ul class="nav nav-side-menu">
-            <li class="shadow-layer"></li>
-            <li>
-                <a href="dashboard.html" >
-                    <i class="icon-photon home"></i>
-                    <span class="nav-selection">Dashboard</span>
-                                    </a>
-            </li>
-            <li>
-                <a href="javascript:;" class="sub-nav-container">
-                    <i class="icon-photon document_alt_stroke"></i>
-                    <span class="nav-selection">Articles</span>
-                    <i class="icon-menu-arrow"></i>                </a>
-                <div class="sub-nav">
-                    <ul class="nav">
-                        <li>
-                            <a href="create-new-articles.html">Create New Articles</a>
-                        </li>
-						<li>
-                            <a href="new-articles.html">New Articles</a>
-                        </li>
-						<li>
-                            <a href="scheduled-articles.html">Scheduled Articles</a>
-                        </li>
-                        <li>
-                            <a href="published-articles.html">Published Article</a>
-                        </li>
-						<li>
-                            <a href="saved-articles.html">My Drafts</a>
-                        </li>
-						<li>
-                            <a href="feature-box-management.html">Feature Box Management</a>
-                        </li>
-						<li>
-                            <a href="campaign-management.html">Campaign Management</a>
-                        </li>
-                        <li>
-                            <a href="add-a-magazine-issue.html">Add A Magazine Issue</a>
-                        </li>
-                        <li>
-                            <a href="tips.html">Tips</a>
-                        </li>
-                        <li>
-                            <a href="#">Reports</a>
-                        </li>
-						<li>
-                            <a href="#">Help</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;" class="sub-nav-container">
-                    <i class="icon-photon comment_alt2_stroke"></i>
-                    <span class="nav-selection">Tips &amp; Quotes</span>
-                    <i class="icon-menu-arrow"></i>                </a>
-                <div class="sub-nav">
-                    <ul class="nav">
-                        <li>
-                            <a href="tips.html">Tips</a>
-                        </li>
-                        <li>
-                            <a href="tip-tag.html">Tags</a>
-						<li>
-                            <a href="quotes.html">Quotes</a>
-                        </li>
-                        <li>
-                            <a href="#">Reports</a>
-                        </li>
-						<li>
-                            <a href="#">Help</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-			<li>
-                <a href="javascript:;" class="sub-nav-container">
-                    <i class="icon-photon mic"></i>
-                    <span class="nav-selection">Debate</span>
-                    <i class="icon-menu-arrow"></i>                </a>
-                <div class="sub-nav">
-                    <ul class="nav">
-                        <li>
-                            <a href="published-debates.html">Published Debate</a>
-                        </li>
-                        <li>
-                            <a href="create-new-debate.html">Create New Debates</a>
-                        </li>
-						<li>
-                            <a href="new-comments-for-debate.html">Debate Comments</a>
-                        </li>
-                        <li>
-                            <a href="profanity-filter.html">Profanity Filter</a>
-                        </li>
-						<li>
-                            <a href="#">Reports</a>
-                        </li>
-						<li>
-                            <a href="#">Help</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-			   <li>
-			     <a href="javascript:;" class="sub-nav-container">
-                    <i class="icon-photon pen"></i>
-                    <span class="nav-selection">Columnist and Guest Author
-					</span>
-                         <i class="icon-menu-arrow"></i> </a>
-									<div class="sub-nav">
-                    <ul class="nav">
-                        <li>
-                            <a href="add-edit-columnist.html">Add/Edit Columnist</a>
-                        </li>
-						<li>
-                            <a href="add-new-guest-author.html">Add New Guest Author</a>
-                        </li>
-                        <li>
-                            <a href="#">Reports</a>
-                        </li>
-						<li>
-                            <a href="#">Help</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-			
-			 
-			<li>
-                <a href="javascript:;" class="sub-nav-container">
-                    <i class="icon-photon movie"></i>
-                    <span class="nav-selection">Events</span>
-                    <i class="icon-menu-arrow"></i>                </a>
-                <div class="sub-nav">
-                    <ul class="nav">
-                        <li>
-                            <a href="add-new-events.html">Add New Events</a>
-                        </li>
-                        <li>
-                            <a href="published-events.html">Published Events</a>
-                        </li>
-						<li>
-                            <a href="deleted-events.html">Deleted Events</a>
-                        </li>
-						<li>
-                            <a href="#">Reports</a>
-                        </li>
-						<li>
-                            <a href="#">Help</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;" class="sub-nav-container">
-                    <i class="icon-photon steering_wheel"></i>
-                    <span class="nav-selection">Quick Bytes</span>
-                    <i class="icon-menu-arrow"></i>                </a>
-                <div class="sub-nav">
-                    <ul class="nav">
-                        <li>
-                            <a href="create-new-quickbyte.html">Create New Quick Byte</a>
-                        </li>
-                        <li>
-                            <a href="published-quickbyte.html">Published Quick Bytes</a>
-                        </li>
-						<li>
-                            <a href="deleted-quickbyte.html">Deleted Quick Bytes</a>
-                        </li>
-						<li>
-                            <a href="#">Reports</a>
-                        </li>
-						<li>
-                            <a href="#">Help</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-			
-			<li>
-                <a href="javascript:;" class="sub-nav-container">
-                    <i class="icon-photon document_stroke"></i>
-                    <span class="nav-selection">Sponsored Post</span>
-                   <i class="icon-menu-arrow"></i>     </a>
-                 <div class="sub-nav">
-                 	<ul class="nav">
-                        <li>
-                        	<a href="create-new-sponsored-post.html">Create New Sponsored Post</a>
-                        </li>
-                        <li>
-                            <a href="published-sponsored-posts.html">Published Sponsored Posts</a>
-                        </li>
-						<li>
-                            <a href="deleted-sponsored-posts.html">Deleted Sponsored Posts</a>
-                        </li>
-						<li>
-                            <a href="#">Reports</a>
-                        </li>
-						<li>
-                            <a href="#">Help</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-			
-            <li>
-                <a href="javascript:;" class="sub-nav-container">
-                    <i class="icon-photon new_window"></i>
-                    <span class="nav-selection">Photos</span>
-                    <i class="icon-menu-arrow"></i>                </a>
-                <div class="sub-nav">
-                    <ul class="nav">
-                        <li>
-                            <a href="upload-new-album.html">Upload New Album</a>
-                        </li>
-                        <li>
-                            <a href="published-album.html">Published Album</a>
-                        </li>
-						<li>
-                            <a href="deleted-photos.html">Deleted Photos</a>
-                        </li>
-						<li>
-                            <a href="#">Reports</a>
-                        </li>
-						<li>
-                            <a href="#">Help</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;" class="sub-nav-container">
-                    <i class="icon-photon play"></i>
-                    <span class="nav-selection">Videos</span>
-                    <i class="icon-menu-arrow"></i>                </a>
-                <div class="sub-nav">
-                    <ul class="nav">
-                        <li>
-                            <a href="upload-new-Video.html">Upload New Video</a>
-                        </li>
-                        <li>
-                            <a href="published-Videos.html">Published Videos</a>
-                        </li>
-						<li>
-                            <a href="deleted-Videos.html">Deleted Videos</a>
-                        </li>
-						<li>
-                            <a href="featured-Videos.html">Featured Videos</a>
-                        </li>
-						<li>
-                            <a href="#">Reports</a>
-                        </li>
-						<li>
-                            <a href="#">Help</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-			<li>
-                <a href="javascript:;" class="sub-nav-container">
-                    <i class="icon-photon cog"></i>
-                    <span class="nav-selection">Site Management</span>
-                    <i class="icon-menu-arrow"></i>                </a>
-                <div class="sub-nav">
-                    <ul class="nav">
-                        <li>
-                            <a href="category-master.html">Category Master</a>
-                        </li>
-						<li>
-                            <a href="location-master.html">Location Master</a>
-                        </li>
-						<li>
-                            <a href="topic-master.html">Topic Master</a>
-                        </li>
-                        <li>
-                            <a href="tags.html">Tags Master</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <a href="javascript:;" class="sub-nav-container">
-                    <i class="icon-photon cog"></i>
-                    <span class="nav-selection">Rights Management</span>
-                    <i class="icon-menu-arrow"></i>                </a>
-                <div class="sub-nav">
-                    <ul class="nav">
-                        <li>
-                            <a href="cms-rights.html">CMS Rights</a>
-                        </li>
-						<li>
-                            <a href="#">Reports</a>
-                        </li>
-						<li>
-                            <a href="#">Help</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-			<li>
-                <a href="javascript:;" class="sub-nav-container">
-                    <i class="icon-photon info"></i>
-                    <span class="nav-selection">Help</span>
-                    <i class="icon-menu-arrow"></i>                </a>
-                <div class="sub-nav">
-                    <ul class="nav">
-                        <li>
-                            <a href="#">FAQ</a>
-                        </li>
-						<li>
-                            <a href="#">Sitemap</a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-           
-           
-         
-         
-            <li class="nav-logout">
-                <a href="index.html">
-                    <i class="icon-photon key_stroke"></i><span class="nav-selection">Logout</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-
-       
+@section('content')
+<?php
+//print_r($p1);exit;
+?>
 <div class="panel">
     <div class="panel-content filler">
         <div class="panel-logo"></div>
         <div class="panel-header">
-            <h1><small>Scheduled Articles</small></h1>
-          
+            <h1><small>Create New QuickByte</small></h1>
+
         </div>
-        <div class="panel-search container-fluid">
-            <form class="form-horizontal" action="javascript:;">
-                <input id="panelSearch" placeholder="Search" type="text" name="panelSearch">
-                <button class="btn btn-search"></button>
-                <script>
-                    $().ready(function(){
-                        var searchTags = [
-                            "Dashboard",
-                            "Form Elements",
-                            "Graphs and Statistics",
-                            "Typography",
-                            "Grid",
-                            "Tables",
-                            "Maps",
-                            "Sidebar Widgets",
-                            "Error Pages",
-                            "Help",
-                            "Input Fields",
-                            "Masked Input Fields",
-                            "Autotabs",
-                            "Text Areas",
-                            "Select Menus",
-                            "Other Form Elements",
-                            "Form Validation",
-                            "UI Elements",
-                            "Graphs",
-                            "Statistical Elements",
-                            "400 Bad Request",
-                            "401 Unauthorized",
-                            "403 Forbidden",
-                            "404 Page Not Found",
-                            "500 Internal Server Error",
-                            "503 Service Unavailable"
-                        ];
-                        $( "#panelSearch" ).autocomplete({
-                            source: searchTags
-                        });
-                    });            
-                </script>
-            </form>
+
+        <div class="panel-header">
+ <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
         </div>
-		
-							<label class="radio">
-                                    <input type="radio" name="optionsRadios" class="uniformRadio" value="radio1">
-										Search by Article Title
-                            </label>
-							<label class="radio">
-                                    <input type="radio" name="optionsRadios" class="uniformRadio" value="radio1">
-                                  	 	Search by Article ID
-                            </label>
-							<label class="radio">
-                                    <input type="radio" name="optionsRadios" class="uniformRadio" value="radio1">
-                                  	 	Search by Reporter Name
-                            </label>
-								
-								 <script>
-                        $().ready(function(){
-                            $(".uniformRadio").uniform({
-                                radioClass: 'uniformRadio'
-                            });
-                            
-                        });            
-                    </script>
-					<br><br>
-		<div class="panel-header">
-            <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
-        </div> 
-                    <script type="text/javascript">
-        $(function () {
-            $("#jstree").jstree({ 
-                "json_data" : {
-                    "data" : [
-                                                {
-                            "data" : { 
-                                "title" : "Scheduled Articles", 
-                                "attr" : { "href" : "#Basic_Non-responsive_Table" } 
+
+        <script type="text/javascript">
+            $(function () {
+                $("#jstree").jstree({
+                    "json_data": {
+                        "data": [
+                            {
+                                "data": {
+                                    "title": "Channel",
+                                    "attr": {"href": "#Channel"}
+                                }
+                            },
+                            {
+                                "data": {
+                                    "title": "Author",
+                                    "attr": {"href": "#Author"}
+                                }
+                            },
+                            {
+                                "data": {
+                                    "title": "Quick Byte Feature",
+                                    "attr": {"href": "#qb-feature"}
+                                }
+                            },
+                            {
+                                "data": {
+                                    "title": "Tags",
+                                    "attr": {"href": "#tags"}
+                                }
+                            },
+                            {
+                                "data": {
+                                    "title": "Topics",
+                                    "attr": {"href": "#topics"}
+                                }
+                            },
+                             {
+                            "data" : {
+                            "title" : "Assign This QB To A Campaign",
+                                    "attr" : { "href" : "#assign-article-to-a-campaign" }
                             }
-                        },
-                                 
-                                            ]
-                },
-                "plugins" : [ "themes", "json_data", "ui" ]
-            })
-            .bind("click.jstree", function (event) {
-                var node = $(event.target).closest("li");
-                document.location.href = node.find('a').attr("href");
-                return false;
-            })
-            .delegate("a", "click", function (event, data) { event.preventDefault(); });
-        });
-    </script>
+                            },
+                            {
+                                "data": {
+                                    "title": "Categories",
+                                    "attr": {"href": "#categories"}
+                                }
+                            }
+                        ]
+                    },
+                    "plugins": ["themes", "json_data", "ui"]
+                })
+                        .bind("click.jstree", function (event) {
+                            var node = $(event.target).closest("li");
+                            document.location.href = node.find('a').attr("href");
+                            return false;
+                        })
+                        .delegate("a", "click", function (event, data) {
+                            event.preventDefault();
+                        });
+            });
+        </script>
         <div class="sidebarMenuHolder">
-        <div class="JStree">
-            <div class="Jstree_shadow_top"></div>
-            <div id="jstree"></div>
-            <div class="Jstree_shadow_bottom"></div>
-        </div>
-    </div>    </div>
+            <div class="JStree">
+                <div class="Jstree_shadow_top"></div>
+                <div id="jstree"></div>
+                <div class="Jstree_shadow_bottom"></div>
+            </div>
+        </div>    </div>
     <div class="panel-slider">
         <div class="panel-slider-center">
             <div class="panel-slider-arrow"></div>
         </div>
     </div>
 </div>
-       <div class="main-content">
-           <div class="breadcrumb-container">
-    <ul class="xbreadcrumbs">
-        <li>
-            <a href="dashboard.html">
-                <i class="icon-photon home"></i>
-            </a>
-        </li>
-                <li class="current">
-            <a href="javascript:;">Scheduled Articles</a>
-        </li>
-    </ul>
-</div>           <header>
-               <i class="icon-big-notepad"></i>
-               <h2><small>Scheduled Articles</small></h2>
-           </header>
-           <form class="form-horizontal">
-            
-			<div class="container-fluid">
+<div class="main-content">
+    <div class="breadcrumb-container">
+        <ul class="xbreadcrumbs">
+            <li>
+                <a href="/dashboard">
+                    <i class="icon-photon home"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#">QuickByte &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                <ul class="breadcrumb-sub-nav">
+                    <li>
+                        <a href="create-new-quickbyte.html">Create New QuickByte</a>
+                    </li>
+                    <li>
+                        <a href="published-quickbyte.html">Published QuickByte</a>
+                    </li>
+                    <li>
+                        <a href="deleted-quickbyte.html">Deleted QuickByte</a>
+                    </li>
+                    <li>
+                        <a href="#">QuickByte for Footer</a>
+                    </li>
+                    <li>
+                        <a href="#">Reports</a>
+                    </li>
+                    <li>
+                        <a href="#">Help</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="current">
+                <a href="javascript:;">Create New QuickByte</a>
+            </li>
+        </ul>
+    </div>            <header>
+        <i class="icon-big-notepad"></i>
+        <h2><small>New QuickByte</small></h2>
+    </header>
+    <!--            <form class="form-horizontal" id="fileupload" action="" method="POST" enctype="multipart/form-data">-->
+    {!! Form::open(array('url'=>'quickbyte/','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
+    {!! csrf_field() !!}    
 
-                        <div class="form-legend" id="Notifications">Notifications</div>
+    <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
-                        <!--Notifications begin-->
-                        <div class="control-group row-fluid">
-                            <div class="span12 span-inset">
-                                <div class="alert alert-success alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Success Notification</strong>
-                                    <span>Your data has been successfully modified.</span>
-                                </div>
-                                <div class="alert alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Alert Notification</strong>
-                                    <span>No result found.</span>
-                                </div>
-                                <div class="alert alert-error alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Error Notification</strong>
-                                    <span>Please select a valid search criteria.</span>
-                                </div>
-								<div class="alert alert-error alert-block">
-                                    <i class="icon-alert icon-alert-info"></i>
-                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                                    <strong>This is Error Notification</strong>
-                                    <span>Please enter a valid email id.</span>
-                                </div>
-                            </div>
-                        </div>
-                        <!--Notifications end-->
+             <div class="form-legend" id="Notifications">Notifications</div>
 
+            <!--Notifications begin-->
+            <div class="control-group row-fluid" >
+                <div class="span12 span-inset">
+                    @if (Session::has('message'))
+                    <div class="alert alert-success alert-block" style="">
+                        <i class="icon-alert icon-alert-info"></i>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>This is Success Notification</strong>
+                        <span>{{ Session::get('message') }}</span>
+                    </div>
+                    @endif
+
+                    @if (Session::has('error'))
+                    <div class="alert alert-error alert-block">
+                        <i class="icon-alert icon-alert-info"></i>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>This is Error Notification</strong>
+                        <span>{{ Session::get('error') }}</span>
+                    </div>
+                    @endif
                 </div>
-			
-               <div class="container-fluid">
+            </div>
+            <!--Notifications end-->
 
-                       <!--Sortable Non-responsive Table begin-->
-                       <div class="row-fluid">
-                           <div class="span12">
-                               <table class="table table-striped" id="tableSortable">
-                                   <thead>
-                                       <tr>
-                                           <th>Article ID</th>
-                                           <th>Title</th>
-                                           <th>Reporter Name</th>
-                                           <th>Date, Time</th>
-                                           <th><input type="checkbox" class="uniformCheckbox" value="checkbox1"></th>
-									   </tr>
-                                   </thead>
-                                   <tbody>
-                                       <tr class="gradeX">
-                                           <td><a href="create-new-articles.html">234567890987654</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Scheduled by: Syed Wahid Bukhari."><i class="icon-photon info-circle"></i></a></td>
-                                           <td><a href="create-new-articles.html">English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay</a>
-                                           </td>
-                                           <td><a href="create-new-articles.html">Brigadier CHITRANJAN SAWANT,VSM</a></td>
-                                           <td class="center">
-										   		<a href="create-new-articles.html">11/03/2013</a>
-												<a href="create-new-articles.html">12:13 pm</a>
-										   </td>
-                                           <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
-                                       </tr>
-                                       <tr class="gradeC">
-                                          <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
-                                           <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
-                                           </td>
-                                           <td> Brigadier CHITRANJAN SAWANT,VSM</td>
-                                           <td class="center">11/03/2013</td>
-                                           <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
-                                       </tr>
-                                       <tr class="gradeA">
-                                           <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
-                                           <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
-                                           </td>
-                                           <td> Brigadier CHITRANJAN SAWANT,VSM</td>
-                                           <td class="center">11/03/2013</td>
-                                           <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
-                                       </tr>
-                                       <tr class="gradeA">
-                                           <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
-                                           <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
-                                           </td>
-                                           <td> Brigadier CHITRANJAN SAWANT,VSM</td>
-                                           <td class="center">11/03/2013</td>
-                                           <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
-                                       </tr>
-                                       <tr class="gradeA">
-                                           <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
-                                           <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
-                                           </td>
-                                           <td> Brigadier CHITRANJAN SAWANT,VSM</td>
-                                           <td class="center">11/03/2013</td>
-                                           <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
-                                       </tr>
-                                       <tr class="gradeA">
-                                           <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
-                                           <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
-                                           </td>
-                                           <td> Brigadier CHITRANJAN SAWANT,VSM</td>
-                                           <td class="center">11/03/2013</td>
-                                           <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
-                                       </tr>
-                                       <tr class="gradeA">
-                                           <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
-                                           <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
-                                           </td>
-                                           <td> Brigadier CHITRANJAN SAWANT,VSM</td>
-                                           <td class="center">11/03/2013</td>
-                                           <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
-                                       </tr>
-                                       <tr class="gradeA">
-                                           <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
-                                           <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
-                                           </td>
-                                           <td> Brigadier CHITRANJAN SAWANT,VSM</td>
-                                           <td class="center">11/03/2013</td>
-                                           <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
-                                       </tr>
-                                       <tr class="gradeA">
-                                           <td>234567890987654 <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Submitted on 14 December 2013."><i class="icon-photon info-circle"></i></a></td>
-                                           <td>English poetry is receiving lesser attention these days: Aju Mukhopadhyay English poetry is receiving lesser attention these days: Aju Mukhopadhyay
-                                           </td>
-                                           <td> Brigadier CHITRANJAN SAWANT,VSM</td>
-                                           <td class="center">11/03/2013</td>
-                                           <td class="center"> <input type="checkbox" class="uniformCheckbox" value="checkbox1"></td>
-                                       </tr>
-                                   </tbody>
-                               </table>
-                           </div>
-                       </div>
-                       <!--Sortable Non-responsive Table end-->
+        </div>
+    <div class="container-fluid">
+
+        <div class="form-legend" id="Channel">Channel</div>
+
+        <!--Select Box with Filter Search begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="selectBoxFilter">Channel</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="channel"  id="channel" class="formattedelement">
+                        @foreach($channels as $channel)
+                        <option value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <script>
+                $().ready(function () {
+                    $("#channel").select2();
+
+                    $('#channel').change(function () {
+                        
+                          $.get("{{ url('article/campaign')}}",
+                                { option: $(this).attr("value") },
+                                        function(data) {
+                                        var Box = $('#campaign_id');
+                                                Box.empty();
+                                                Box.append("<option value=''>Please Select</option>");
+                                                $.each(data, function(index, element) {
+                                                Box.append("<option value='" + element + "'>" + index + "</option>");
+                                                });
+                                                $("#campaign_id").select2();
+                             });
+                                        
+                        
+                        $.get("{{ url('article/dropdown1')}}",
+                                {option: $(this).attr("value") + '&level='},
+                        function (data) {
+                            var Box = $('#category1');
+                            Box.empty();
+                            Box.append("<option value=''>Please Select</option>");
+                            $.each(data, function (index, element) {
+                                Box.append("<option value='" + element + "'>" + index + "</option>");
+                            });
+                            $("#category1").select2();
+                            $('#selectBoxFilter3').html("<option value=''>Please Select</option>");
+                            $("#selectBoxFilter3").select2();
+                            $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
+                            $('#selectBoxFilter4').select2();
+                            $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                            $('#selectBoxFilter5').select2();
+                        });
+                    });
+                });
+            </script>
+        </div>
+
+        <!--Select Box with Filter Search end-->					
+    </div>
+
+    
 
 
-                   <script>
-                       $(document).ready(function() {
-                           $('#tableSortable, #tableSortableRes, #tableSortableResMed').dataTable( {
-                               "sPaginationType": "bootstrap",
-                               "fnInitComplete": function(){
-                                   $(".dataTables_wrapper select").select2({
-                                       dropdownCssClass: 'noSearch'
-                                   });
-                               }
-                           });
-                           //                            $("#simpleSelectBox").select2({
-                           //                                dropdownCssClass: 'noSearch'
-                           //                            }); 
-                       });
-                   </script>
-               </div><!-- end container -->
-<div class="control-group row-fluid">
-                            <div class="span12 span-inset">
-<button type="button" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>							
-<button type="button" class="btn btn-success">Publish</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
-</div></div>
-       </form>
-   </div>
-        </body>
-</html>
+    <div class="container-fluid">  
+        <div class="form-legend" id="qb-feature">Quick Byte Feature 
+        </div>
+        
+        
+
+        <!--Drag And Drop Upload begin-->
+        <div id="Drag_And_Drop_Upload" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="inputField">
+                    Upload Photos<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Here You can add multiple photos by Drag and Drop or Simply By clicking and selecting  photos (Size: {{config('constants.dimension_qb')}}) (File Size <= {{config('constants.maxfilesize').' '.config('constants.filesizein')}}  )."><i class="icon-photon info-circle"></i></a>
+                </label>
+            </div>
+            <div class="span9 row-fluid" >
+
+                <div class=" fileupload-buttonbar">
+                    <div class="col-lg-7">
+                        <!-- The fileinput-button span is used to style the file input field as button -->
+                        <span class="btn btn-success fileinput-button">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>Add files...</span>
+                            <input type="file" name="files[]" multiple>
+                        </span>
+                        <button type="submit" class="btn btn-primary start">
+                            <i class="glyphicon glyphicon-upload"></i>
+                            <span>Start upload</span>
+                        </button>
+                        <button type="reset" class="btn btn-warning cancel">
+                            <i class="glyphicon glyphicon-ban-circle"></i>
+                            <span>Cancel upload</span>
+                        </button>
+                        <button type="button" class="btn btn-danger delete">
+                            <i class="glyphicon glyphicon-trash"></i>
+                            <span>Delete</span>
+                        </button>
+                        <input type="checkbox" class="toggle">
+                        <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_qb')}}')">Need to crop images? Click here</a>
+                        <!-- The global file processing state -->
+                        <span class="fileupload-process"></span>
+                    </div>
+                    <!-- The global progress state -->
+                    <div class="col-lg-5 fileupload-progress fade">
+                        <!-- The global progress bar -->
+                        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                        </div>
+                        <!-- The extended global progress state -->
+                        <div class="progress-extended">&nbsp;</div>
+                    </div>
+                </div>
+                <!-- The table listing the files available for upload/download -->
+                <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+                <input type="text" style="height: 0;visibility: hidden;width: 0;" id="uploadedImages" name="uploadedImages">
+            </div>
+
+        </div>
+        
+
+        <!-- descruiption divs can be multiple so place them here-->
+        <div id="des_area">
+            <div  class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label">Description 1</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <textarea  rows="2" class=""></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div  class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label">Description2</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <textarea  rows="2" class=""></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function (e) {
+                $("#des_area").hide();
+                $("#add_des").click(function (e) {
+                    $("#des_area").show();
+                });
+            });
+        </script>
+
+    </div>
+
+    <div class="container-fluid">
+        <div class="control-group row-fluid">
+            <div class="span12 span-inset">
+
+                <label class="checkbox" >
+                    <input type="checkbox" class="uniformCheckbox" value="checkbox1" name="is_sponsored">
+                    <a href="#" target="_blank">This Is  Sponsored</a>
+                </label>
+                <script>
+                    $().ready(function () {
+                        $(".uniformCheckbox").uniform();
+                    });
+                </script>
+
+            </div>
+        </div>
+
+        <div class="control-group row-fluid" id="submitsection">
+            <div class="span12 span-inset">
+                <button value="P" name="status" class="btn btn-warning" type="submit">Publish</button>
+                <img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>	
+                <!--                                
+                                               <button type="button" class="btn btn-success">Publish</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                <button type="button" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>-->
+
+            </div>
+        </div>
+    </div>
+   
+
+
+    {!! Form::close() !!}
+</div>
+
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade">
+    <td>
+    <span class="preview"></span>
+    </td>
+    <td>
+    <p class="name">{%=file.name%}</p>
+    <strong class="error text-danger"></strong>
+    </td>
+    <td>
+    <p class="size">Processing...</p>
+    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-bar progress-bar-success" style="width:0%;"></div></div>
+    </td>
+    <td>
+    {% if (!i && !o.options.autoUpload) { %}
+    <button class="btn btn-primary start" disabled>
+    <i class="glyphicon glyphicon-upload"></i>
+    <span>Start</span>
+    </button>
+    {% } %}
+    {% if (!i) { %}
+    <button class="btn btn-warning cancel">
+    <i class="glyphicon glyphicon-ban-circle"></i>
+    <span>Cancel</span>
+    </button>
+    {% } %}
+    </td>
+    </tr>
+    {% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+    {% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade">
+    <td colspan="4">            
+    <table width="100%">
+    <tr>
+
+    <td>
+    <span class="preview">
+    {% if (file.thumbnailUrl) { %}
+    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" data-gallery><img src="{%=file.thumbnailUrl%}"></a>
+    {% } %}
+    </span>
+    </td>
+    <td>
+    <p class="name">
+    {% if (file.url) { %}
+    <a href="{%=file.url%}" title="{%=file.name%}" download="{%=file.name%}" {%=file.thumbnailUrl?'data-gallery':''%}>{%=file.name%}</a>
+    {% } else { %}
+    <span>{%=file.name%}</span>
+    {% } %}
+    </p>
+    {% if (file.error) { %}
+    <div><span class="label label-danger">Error</span> {%=file.error%}</div>
+    {% } %}
+    </td>
+    <td>
+    <span class="size">{%=o.formatFileSize(file.size)%}</span>
+    </td>
+    <td>
+    {% if (file.deleteUrl) { %}
+    <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+    <i class="glyphicon glyphicon-trash"></i>
+    <span>Delete</span>
+    </button>
+    <input type="checkbox" name="delete" value="1" class="toggle">
+    {% } else { %}
+    <button class="btn btn-warning cancel">
+    <i class="glyphicon glyphicon-ban-circle"></i>
+    <span>Cancel</span>
+    </button>
+    {% } %}
+    </td>
+    </tr>   
+    <tr>
+    <td colspan="1">Title</td>
+    <td colspan="3"><input type="text" name="imagetitle[{%=file.name%}]"/></td>    
+    </tr>
+
+    <tr>
+    <td colspan="1">Description</td>
+    <td colspan="3"><textarea name="imagedesc[{%=file.name%}]"></textarea></td>    
+    </tr>
+    <tr>
+    <td colspan="1">Photograph By</td>
+    <td colspan="3"><input type="text" name="photographby[{%=file.name%}]"/></textarea></td>    
+    </tr>
+
+    </table>   
+    </td>           
+
+    </tr>
+
+
+
+
+
+
+
+    {% } %}
+</script>
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
+<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
+<!--<script src="http:js/vendor/jquery.ui.widget.js"></script>-->
+<!-- The Templates plugin is included to render the upload/download listings -->
+<script src="http://blueimp.github.io/JavaScript-Templates/js/tmpl.min.js"></script>
+<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
+<script src="http://blueimp.github.io/JavaScript-Load-Image/js/load-image.all.min.js"></script>
+<!-- The Canvas to Blob plugin is included for image resizing functionality -->
+<script src="http://blueimp.github.io/JavaScript-Canvas-to-Blob/js/canvas-to-blob.min.js"></script>
+<!-- Bootstrap JS is not required, but included for the responsive demo navigation -->
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!-- blueimp Gallery script -->
+<script src="http://blueimp.github.io/Gallery/js/jquery.blueimp-gallery.min.js"></script>
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+<!-- <script type="text/javascript" src="{{ elixir('output/fileuploadJS.js') }}"></script> -->
+<script type="text/javascript" src="{{ asset('js/jquery.iframe-transport.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-process.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-image.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-audio.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-video.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-validate.js') }}"></script>
+<script type="text/javascript" src="{{ asset('js/jquery.fileupload-ui.js') }}"></script>
+<script>
+                    $(document).ready(function () {
+                        $('#fileupload').fileupload({
+                            // Uncomment the following to send cross-domain cookies:
+                            //xhrFields: {withCredentials: true},
+                            url: '<?php echo url('quickbyte/image/upload') ?>',
+                            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+                            maxFileSize: 2000000
+                        });
+                    });
+
+
+
+                    $('#fileupload').bind('fileuploaddone', function (e, data) {
+                        //console.log(e);
+                        var dataa = JSON.parse(data.jqXHR.responseText);
+                        //console.log(dataa['files']['0']['name']);
+                        $.each(dataa['files'], function (index, element) {
+                            //console.log(element.name);
+                            if ($('#uploadedImages').val().trim())        // validation ends here           
+                                $('#uploadedImages').val($('#uploadedImages').val() + ',' + element.name);
+                            else
+                                $('#uploadedImages').val(element.name);
+                        });
+
+                    });
+                    $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
+                        // console.log(data);
+                        var file = getArg(data.url, 'file');
+                        var images = $('#uploadedImages').val().split(',');
+                        images.splice(images.indexOf(file), 1);
+                        $('#uploadedImages').val(images.join());
+                        //$('#imagesname').val($('#imagesname').val().replace(','+));
+
+                    });
+
+
+                    function getArg(url, name) {
+                        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
+                        if (results == null) {
+                            return null;
+                        }
+                        else {
+                            return results[1] || 0;
+                        }
+                    }
+
+
+
+// Validation start hee
+
+                    $("#fileupload").validate({
+                        errorElement: "span",
+                        errorClass: "error",
+                        //$("#pageSubmit").onclick: true,
+                        onclick: true,
+                        invalidHandler: function (event, validator) {
+                            $('#submitsection').show();
+                            for (var i in validator.errorMap) {
+
+                                if ($('#' + i).hasClass('formattedelement')) {
+                                    $('#' + i).siblings('.formattedelement').addClass('error');
+
+                                }
+
+                            }
+                        },
+                        rules: {
+                            "req": {
+                                required: true
+                            },
+                            "channel": {
+                                required: true
+                            },
+                            "author_type": {
+                                required: true,
+                            },
+                            "title": {
+                                required: true
+                            },
+                            "featuredesc": {
+                                required: true
+                            },
+                            "uploadedImages": {
+                                required: true
+                            }
+                        }
+                    });
+                    
+                    $('#submitsection button').click(function(){
+                        $('#submitsection').hide();
+                     });  
+                     
+                    $('select.formattedelement').change(function () {
+                        if ($(this).val().trim() != '')
+                            $(this).siblings('.formattedelement').removeClass('error');
+                        $(this).siblings('span.error').remove();
+                    });
+
+                    // Validation ends here    
+
+</script>
+@stop
+

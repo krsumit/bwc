@@ -74,6 +74,7 @@ Route::get('child', function () {
 Route::get('article/create', ['middleware' => 'auth',   'uses' => 'ArticlesController@create']);
 Route::get('article/list/{option}', ['middleware' => 'auth',   'uses' => 'ArticlesController@index']);
 Route::get('article/trending', ['middleware' => 'auth',   'uses' => 'ArticlesController@trending']);
+
 Route::get('article/magazinearticlelist', ['middleware' => 'auth',   'uses' => 'ArticlesController@MagazineArticlelist']);
 
 Route::get('article/list/channelarticles/{option}', ['middleware' => 'auth',   'uses' => 'ArticlesController@channelarticles']);
@@ -96,6 +97,28 @@ Route::get('profile', ['middleware' => 'auth',   'uses' => 'ArticlesController@c
 /*
  *  Delete Image from Create Article Form - Ajax Request
  */
+
+/*
+padcast  urls
+ */
+
+Route::get('padcast/create', ['middleware' => 'auth',   'uses' => 'PadcastController@create']);
+Route::post('padcast/store', ['middleware' => 'auth',   'uses' => 'PadcastController@store']);
+Route::get('podcast/uloadlist', ['middleware' => 'auth',   'uses' => 'PadcastController@podcastalbumlist']);
+//Route::get('padcast/edit/{id}',['middleware' => 'auth',   'uses' =>'PadcastController@edit']);
+Route::post('padcast/update', ['middleware' => 'auth',   'uses' => 'PadcastController@update']);
+Route::get('podcast/edit','PadcastController@edit');
+Route::post('podcast/storeaudio','PadcastController@storeaudio');
+/*
+ *  Delete podcast using ajax
+ */
+Route::match(['get', 'post'], 'podcast/delete', ['as' => 'podcast/delete', 'uses' => 'PadcastController@destroy']);
+
+/*
+ *  isFeature  podcast using ajax
+ */
+Route::match(['get', 'post'], 'podcast/isfeature', ['as' => 'podcast/isfeature', 'uses' => 'PadcastController@isfeature']);
+/*
 
 /*
 Topic  urls

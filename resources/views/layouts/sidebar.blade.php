@@ -250,6 +250,12 @@
                             <a href="/quickbyte/list/deleted">Deleted Quick Bytes</a>
                         </li>
                          @endif
+                        @if(in_array('25',Session::get('user_rights')))			
+                        <li>
+                            <a href="/padcast/create">Padcast</a>
+                        </li>
+                         @endif
+                         
 <!--                         <li>
                              <a href="#">Reports</a>
                          </li>
