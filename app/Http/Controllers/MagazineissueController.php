@@ -173,7 +173,7 @@ class MagazineissueController extends Controller {
             return redirect('/dashboard');
         /* Right mgmt end */
          $ArticleArr=Article::where('magazine_id', $id)->get();
-
+         
         return view('magazineissue.magazineissueedite', compact('channels', 'posts', 'currentChannelId','ArticleArr','id'));
     }
 
