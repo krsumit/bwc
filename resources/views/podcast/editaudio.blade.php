@@ -1,13 +1,14 @@
 @extends('layouts/master')
 
-@section('title', 'edit Podcast - BWCMS')
+@section('title', 'Edit audio - BWCMS')
+
 
 @section('content')
 <div class="panel">
     <div class="panel-content filler">
         <div class="panel-logo"></div>
         <div class="panel-header">
-            <h1><small>Add Podcast Album</small></h1>
+            <h1><small>Edit Podcast Album Audio</small></h1>
         </div>
         <div class="panel-header">
             <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
@@ -72,10 +73,10 @@
                 </a>
             </li>
             <li>
-                <a href="#">Album &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                <a href="#">Audio &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>
                 <ul class="breadcrumb-sub-nav">
                     <li>
-                        <a href="#">Add Album</a>
+                        <a href="#">Edit Album</a>
                     </li>
                 </ul>
              </li>       
@@ -83,12 +84,12 @@
     </div>            
     <header>
         <i class="icon-big-notepad"></i>
-        <h2><small>Album ID: 45345</small></h2>
+        <h2><small>Audio ID: {{$postsArr->id}}</small></h2>
     </header>
-    <form class="form-horizontal" id="fileupload" action="/padcast/update/" method="POST" enctype="multipart/form-data">
+   <form class="form-horizontal" id="fileupload" action="/padcast/updateaudio/" method="POST" enctype="multipart/form-data">
     {!! csrf_field() !!} 
     <input type="hidden" name="id" value="{{$postsArr->id}}">
-    <input type="hidden" name="album_photo" value="{{$postsArr->album_photo}}">
+    <input type="hidden" name="album_photo" value="{{$postsArr->audio_name}}">
         <div class="container-fluid">
             <div class="form-legend" id="Notifications">Notifications</div>
             <!--Notifications begin-->
@@ -128,7 +129,7 @@
                     <div class="controls">
                        <select name="channel"  id="channel" class="formattedelement">
                         @foreach($channels as $channel)
-                        <option value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                        <option @if($channel->channel_id==$postsArr->channel_id) selected @endif; value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
                         @endforeach
                     </select>
                     </div>
@@ -145,33 +146,33 @@
             <div class="form-legend" id="add-album">Add Album </div>
 		<div id="Photo-feature"  class="control-group row-fluid">
                     <div class="span3">
-                        <label class="control-label">Album Name </label>
+                        <label class="control-label">Audio Title </label>
                     </div>
                     <div class="span9">
                         <div class="controls">
-                           <input type="text" name="album_name" id="album_name" value="{{$postsArr->album_name}}">
+                           <input type="text" name="title" id="title" value="{{$postsArr->title}}">
                         </div>
                     </div>
                 </div>
 		<div id="Text_Area_Resizable" class="control-group row-fluid">
                     <div class="span3">
-                        <label class="control-label">Album Description</label>
+                        <label class="control-label">Audio Description</label>
                     </div>
                     <div class="span9">
                         <div class="controls">
-                            <textarea  rows="4" class="" name ="album_description">{{$postsArr->album_description}}</textarea>
+                            <textarea  rows="4" class="" name ="description">{{$postsArr->description}}</textarea>
                         </div>
                     </div>
                 </div>
                 <div class="control-group row-fluid">
                     <div class="span3">
-                        <label class="control-label">Upload Photo</label>
+                        <label class="control-label">Upload Audio</label>
                     </div>
                     <div class="span9">
                         <div class="fileupload fileupload-new" data-provides="fileupload">
                             <div class="input-append">
                                 <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> 
-                                    <span class="fileupload-preview">Upload Photo </span>
+                                    <span class="fileupload-preview">Audio file </span>
                                 </div>
                                 <span class="btn btn-file" style="margin-bottom:0px;">
                                         <span class="fileupload-new">Browse</span>
@@ -179,8 +180,8 @@
                                         <input type="file"  name ="file" value=""/>
                                 </span>
                                 <a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                 @if(isset($postsArr->album_photo))<img src="{{config('constants.awsbaseurl').config('constants.awpodcastimagethumbtdir').$postsArr->album_photo}}" width="100" height="100" style="padding-left: 5px;" />@endif
-                        <input type="hidden" name="album_photo" value="@if(isset($postsArr->album_photo)){{$postsArr->album_photo}}@endif"/>
+                                 @if(isset($postsArr->audio_name))<img src="{{config('constants.awsbaseurl').config('constants.awpodcastimagethumbtdir').$postsArr->audio_name}}" width="100" height="100" style="padding-left: 5px;" />@endif
+                        <input type="hidden" name="audio_name" value="@if(isset($postsArr->audio_name)){{$postsArr->audio_name}}@endif"/>
                         <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_debate_expert')}}')">&nbsp;Need to crop images? Click here</a>
                             </div>
                         </div>
@@ -277,8 +278,7 @@
         </div>
     			
     </form>    
-       
-        
 </div>
-
 @stop
+
+

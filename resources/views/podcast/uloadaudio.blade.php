@@ -287,6 +287,98 @@
 
 
     {!! Form::close() !!}
+    <!--end container-->				
+	<div class="container-fluid">
+            <div class="form-legend">Album List</div>
+             <!--Sortable Responsive Media Table begin-->
+            <div class="row-fluid">
+		<div class="span12">
+                    <table class="table table-striped" id="tableSortable">
+			<thead class="cf sorthead">
+                            <tr>
+                              
+                               <th>Name</th>
+                               <th>Date</th>
+                               
+                               
+                               <th><input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectall"></th>
+                            </tr>
+			</thead>
+                        <tbody>
+                            @foreach($postsArr as $posts)
+                                <tr  class="gradeX"  id="rowCur{{$posts->id}}">
+                                   <td><a href="/podcast/audioedit?id={{ $posts->id }}">{{ $posts->title }}</a></td>
+                                    <td >{{ $posts->updated_at }}</td>         
+                                   <td><input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="{{ $posts->id }}"></td>
+                               </tr>
+                              @endforeach  
+                              <script>
+                        $(document).ready(function () {
+
+                            $('#selectall').click(function () {
+                                if ($(this).is(':checked')) {
+                                    $('input[name="checkItem[]"]').each(function () {
+                                        $(this).attr('checked', 'checked');
+                                    });
+                                } else {
+                                    $('input[name="checkItem[]"]').each(function () {
+                                        $(this).removeAttr('checked');
+                                    });
+                                }
+                            });
+                        });
+
+                        function deletePodcast() {
+                                var ids = '';
+                                var checkedVals = $('input[name="checkItem[]"]:checkbox:checked').map(function () {
+                                    //var row = 'rowCur' + this.value;
+                                    //$("#" + row).hide();
+                                    return this.value;
+                                }).get();
+                                if (checkedVals.length > 0) {
+                                    var ids = checkedVals.join(",");
+                                    //alert(ids);return false;
+                                    $.get("{{ url('/podcast/audiodelete/?channel=').$currentChannelId}}",
+                                            {option: ids},
+                                    function (data) {
+                                        if (data.trim() == 'success') {
+                                            $.each(checkedVals, function (i, e) {
+                                                var row = 'rowCur' + e;
+                                                $("#" + row).hide();
+                                            });
+                                            $('#notificationdiv').show();
+                                            $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
+                                        <i class="icon-alert icon-alert-info"></i><button type="button" class="close" data-dismiss="alert">\n\
+                                        &times;</button><strong>This is Success Notification</strong>\n\
+                                        <span></span>Selected records dumped.</div>');
+                                        } else {
+                                            alert(data);
+                                        }
+                                        //alert(1);
+                                    });
+                                } else {
+                                    alert('Please select at least one recordt.');
+                                }
+                            }
+
+                        
+                    </script>
+                       </tbody>
+                    </table>
+                </div>
+            </div>
+            <!--Sortable Responsive Media Table end-->
+					
+            <div class="control-group row-fluid">
+                <div class="span12 span-inset">
+                    <button type="button" class="btn btn-danger" onclick="deletePodcast()">Dump</button>
+                    <img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                    
+                    
+                </div>
+               
+            </div>
+        </div>
     </div>
 
 <!-- The template to display files available for upload -->
@@ -432,8 +524,8 @@
                             // Uncomment the following to send cross-domain cookies:
                             //xhrFields: {withCredentials: true},
                             url: '<?php echo url('quickbyte/image/upload') ?>',
-                            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-                            maxFileSize: 2000000
+                            acceptFileTypes: /(\.|\/)(gif|jpe?g|png|mp3|mp4)$/i,
+                            maxFileSize: 20000000
                         });
                     });
 
@@ -560,23 +652,23 @@
                         
                            
                         $("button").live("click", function(){
-                            //alert('sumit');
-                            //return false;
-                            if ($('input[name=addtags]').val().trim().length == 0) {
+
+                            var taglist=$(this).parents('table').find('input[name^="Taglist"]'); //.attr('name');
+
+                            var addtag=$(this).parents('table').find('input[name^="addtags"]');//.attr('name');
+                            //alert($(addtag).val());
+                            if ($(addtag).val().trim().length == 0) {
                                 alert('Please enter tage');
                                 return false;
                             }
                             $.ajax({
                                 type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
                                 url: '/article/addTag', // the url where we want to POST
-                                data: {tag: $('input[name=addtags]').val()},
+                                data: {tag: $(addtag).val()},
                                 dataType: 'json', // what type of data do we expect back from the server
                                 encode: true,
                                 beforeSend: function (data) {
                                     //alert(1);
-
-                                    
-
                                     $('#attachTag').hide();
                                     $('#attachTag').siblings('img').show();
                                 },
@@ -588,11 +680,10 @@
 
                                     $.each(data, function (key, val) {
 
-                                        $('input[id^="Taglist"]').tokenInput("add", val);
+                                        $(taglist).tokenInput("add", val);
                                     });
-                                    $('input[name=addtags]').val('');
+                                    $(addtag).val('');
                                     // alert('Tag Saved');
-
                                 },
                                 headers: {
                                     'X-CSRF-TOKEN': token.val()

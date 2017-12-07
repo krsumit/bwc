@@ -175,6 +175,36 @@ public function destroy() {
         }
         return 'success';
     }
+public function audiodelete() {
+
+        if (!Session::has('users')) {
+            return 'Please login first.';
+        }
+
+        /* Right mgmt start */
+        $rightId = 13;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        //if (!$this->rightObj->checkRights($currentChannelId, $rightId)) {
+            //return 'You are not authorized to access';
+        //}
+        /* Right mgmt end */
+
+
+        if (isset($_GET['option'])) {
+            $id = $_GET['option'];
+        }
+        //fwrite($asd, " Del Ids: ".$id." \n\n");
+        $delArr = explode(',', $id);
+        
+        foreach ($delArr as $d) {
+            $deleteAl = Podcastaudiolist::find($d);
+                $deleteAl->status = '0';
+                $deleteAl->save();
+        }
+        return 'success';
+    }
+
 public function isfeature() {
 
         if (!Session::has('users')) {
@@ -228,8 +258,8 @@ public function isfeature() {
          //print_r($request->all());
         // Add Arr Data to Podcast album Table //
         $channels = $this->rightObj->getAllowedChannels($rightId);
-        
-        return view('podcast.uloadaudio', compact('currentChannelId','channels','idalbum'));
+        $postsArr = Podcastaudiolist::where('p_a_id', $idalbum)->where('status', 1)->get();
+        return view('podcast.uloadaudio', compact('currentChannelId','channels','idalbum','postsArr'));
         
     }
 
@@ -265,9 +295,40 @@ public function isfeature() {
         
     }
 
+/**
+     * Store a edit audio  resource in storage.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function audioedit(Request $request) {
+        if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
+         if (isset($_GET['id'])) {
+            $id = $_GET['id'];
+        }
+
+        $postsArr = Podcastaudiolist::where('id', $id)->where('status', 1)->first();
+        /* Right mgmt start */
+        $rightId = 23;
+        $currentChannelId = $request->channel;
+        //if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+          //  return redirect('/dashboard');
+        /* Right mgmt end */
+        $uid = $request->user()->id; 
+        $tags = json_encode(DB::table('tags')
+                        ->select('tags_id as id', 'tag as name')
+                        ->whereIn('tags_id', explode(',', $postsArr->tags))->get());
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        
+        return view('podcast.editaudio', compact('channels','postsArr','currentChannelId','tags'));
+        
+    }
+
 
 /**
-     * Store a edit  resource in storage.
+     * Store a update  resource in storage.
      *
      * @param  Request  $request
      * @return Response
@@ -289,6 +350,7 @@ public function isfeature() {
           //  return redirect('/dashboard');
         /* Right mgmt end */
         $uid = $request->user()->id; 
+        
          $imageurl = '';
         $fileTran = new FileTransfer();
         
@@ -347,13 +409,15 @@ public function isfeature() {
             return redirect('/dashboard');
         /* Right mgmt end */
 
-
+        
         
         $uid = $request->user()->id;
         $images = explode(',', $request->uploadedImages);
         $fileTran = new FileTransfer();
         foreach ($images as $image) {
-            if (isset($request->photographby[$image])) {
+               
+            if (isset($request->imagetitle[$image])) {
+                
                 $source_thumb = $_SERVER['DOCUMENT_ROOT'] . '/files/thumbnail/' . $image;
                 $source = '';
                 $dest = config('constants.awpodcastaudiodir');
@@ -363,10 +427,11 @@ public function isfeature() {
                     unlink($_SERVER['DOCUMENT_ROOT'] . '/files/' . $image);
                 if (is_file($source_thumb))
                     unlink($source_thumb);
+                 
                 $PodcastaudioEntry = new Podcastaudiolist();
                 $PodcastaudioEntry->title = $request->imagetitle[$image];
                 $PodcastaudioEntry->description = $request->imagedesc[$image];
-                $PodcastaudioEntry->tags = $request->photographby[$image];
+                echo $PodcastaudioEntry->tags = $request->Taglist[$image];
                 $PodcastaudioEntry->audio_name = $image;
                 $PodcastaudioEntry->channel_id = $request->channel;
                 $PodcastaudioEntry->p_a_id = $request->idalbum;
@@ -375,13 +440,64 @@ public function isfeature() {
             }
         }
 
-        //If has been Saved by Editor
-
         if ($request->status == 'P') {
             Session::flash('message', 'Your Quickbte has been Published successfully.');
-            return redirect('/quickbyte/list/published?channel=' . $request->channel);
+            return redirect('/padcast/create?channel=' . $request->channel);
         }
 
+    }
+
+    /**
+     * Store a update audio resource in storage.
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function updateaudio(Request $request) {
+        if (!Session::has('users')) {
+            return redirect()->intended('/auth/login');
+        }
+         if (isset($_POST['id'])) {
+            $id = $_POST['id'];
+        }
+
+      
+        
+        /* Right mgmt start */
+        $rightId = 23;
+        $currentChannelId = $request->channel;
+        //if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+          //  return redirect('/dashboard');
+        /* Right mgmt end */
+        $uid = $request->user()->id; 
+        
+         $imageurl = '';
+        $fileTran = new FileTransfer();
+        
+        if ($request->file('file')) {  //echo 'test';exit;
+           $file = $request->file('file');
+            $filename = str_random(6) . '_' . $request->file('file')->getClientOriginalName();
+            $fileTran->uploadFile($file, config('constants.awvideo'), $filename,false); 
+            
+            $imageurl = $filename;
+        }
+        $Podcastaudiolist = Podcastaudiolist::find($id);
+        $Podcastaudiolist->channel_id = $request->channel;
+        $Podcastaudiolist->title = $request->title;
+        $Podcastaudiolist->description = $request->description;
+        $Podcastaudiolist->tags = $request->Taglist;
+        if($imageurl !=''){
+        $Podcastaudiolist->audio_name = $imageurl;
+        }else{
+        
+        $Podcastaudiolist->audio_name = $request->album_photo;
+        }
+        $Podcastaudiolist->status = 1;
+        $Podcastaudiolist->save();
+       
+        Session::flash('message', 'Your Podcast has been Update successfully.');
+        return redirect('/padcast/create?channel=' . $request->channel);
+        
     }
 
     

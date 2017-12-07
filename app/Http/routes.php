@@ -109,6 +109,10 @@ Route::get('podcast/uloadlist', ['middleware' => 'auth',   'uses' => 'PadcastCon
 Route::post('padcast/update', ['middleware' => 'auth',   'uses' => 'PadcastController@update']);
 Route::get('podcast/edit','PadcastController@edit');
 Route::post('podcast/storeaudio','PadcastController@storeaudio');
+//Route::post('quickbyte/sort/{id}','QuickBytesController@sortImage');
+Route::get('podcast/audioedit','PadcastController@audioedit');
+Route::post('padcast/updateaudio', ['middleware' => 'auth',   'uses' => 'PadcastController@updateaudio']);
+Route::match(['get', 'post'], 'podcast/audiodelete', ['as' => 'podcast/audiodelete', 'uses' => 'PadcastController@audiodelete']);
 /*
  *  Delete podcast using ajax
  */

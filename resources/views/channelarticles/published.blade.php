@@ -47,7 +47,7 @@
 
                         if ($(this).attr("value").trim().length != 0) {
 
-                            window.location = '{{url("article/list/channelarticles/published")}}' + '?channel=' + $(this).attr("value").trim()+'&channelto='+ $("#channel_sel2").val();
+                            window.location = '{{url("article/list/channelarticles/published")}}' + '?channelf=' + $(this).attr("value").trim()+'&channel='+ $("#channel_sel2").val();
                         }
 
                         else if ($(this).attr("value") == "none") {
@@ -63,9 +63,10 @@
                 $("#channel_sel2").change(function () {
                     //alert(2);return false;
                     $(this).find("option:selected").each(function () {
-
+                        
                         if ($(this).attr("value").trim().length != 0) {
-                             window.location = '{{url("article/list/channelarticles/published")}}' +'?channel='+ $("#channel_sel1").val()+ '&channelto=' + $(this).attr("value").trim();
+                                
+                             window.location = '{{url("article/list/channelarticles/published")}}' +'?channelf='+ $("#channel_sel1").val()+ '&channel=' + $(this).attr("value").trim();
                             //alert($(this).attr("value").trim());
                             //var channelid = $(this).attr("value").trim();
                             //$.ajax({
@@ -176,8 +177,11 @@
                     <div class="span9">
                         <div class="controls">
                             <select name="channel_sel" id="channel_sel1" >
+                                
                                 @foreach($ChennalArr as $channelf)
-                                <option @if($channelf->channel_id==$idchannel) disabled="disabled" @elseif($channelf->channel_id==$idchannelf) selected="selected" @endif  value="{{ $channelf->channel_id }}">{{ $channelf->channel }}</option>
+                               
+                                <option @if($channelf->channel_id==$currentChannelId) disabled="disabled" @elseif($channelf->channel_id==$idchannelf) selected="selected" @endif  value="{{ $channelf->channel_id }}">{{ $channelf->channel }}</option>
+                                
                                 @endforeach
                             </select>
                         </div>
@@ -194,9 +198,9 @@
                                 <option value='0' > select channel</option>
                                 @foreach($channels as $channel)
                                 @if($idchannelf !='')
-                                <option @if($channel->channel_id==$idchannelf) disabled="disabled" @elseif($channel->channel_id==$idchannel) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                                <option @if($channel->channel_id==$idchannelf) disabled="disabled" @elseif($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
                                 @else
-                                <option @if($channel->channel_id==$currentChannelId) disabled="disabled" @elseif($channel->channel_id==$idchannel) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                                <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
                                 @endif
                                 @endforeach
                             </select>

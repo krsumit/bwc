@@ -273,10 +273,23 @@ public function channelarticles($option) {
        
         //echo 'test'; exit;
         /* Right mgmt start */
-        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+       if(isset($_GET['channelf'])){
+         $channelf = $_GET['channelf'];
+        }else{
+            $channelf = 1;
+        }
+        if(isset($_GET['channel'])){
+         $currentChannelId = $_GET['channel'];
+         
+        }else{
+         $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+         
+        }
         $channels = $this->rightObj->getAllowedChannels($rightId);
+
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
+        
         /* Right mgmt end */
 
         $editor = '';
@@ -297,7 +310,7 @@ public function channelarticles($option) {
                 $q->orderBy('articles.publish_time', 'desc');
                 
             
-            $q->where('articles.channel_id', $currentChannelId)
+            $q->where('articles.channel_id', $channelf)
                     ->where('status', 'p');
             if (isset($_GET['searchin'])) {
                 if ($_GET['searchin'] == 'title') {
@@ -318,19 +331,15 @@ public function channelarticles($option) {
                     ->select('users.name', 'articles.article_id')
                     ->where('status', 'p')
                     ->get();
-        if(isset($_GET['channelto'])){
-        $idchannel = $_GET['channelto'];
+        if(isset($_GET['channelf'])){
+        $idchannelf = $_GET['channelf'];
          }else{
-            $idchannel = '';
+            $idchannelf = '';
             }
-        if(isset($_GET['channelto'])){
-         $idchannelf = $_GET['channel'];
-        }else{
-        $idchannelf ='';
-        }
+       
         //echo $currentChannelId; exit;
         //print_r($channels); exit;
-        return view('channelarticles.' . $option, compact('articles', 'editor', 'channels', 'currentChannelId','idchannel','idchannelf','ChennalArr'));
+        return view('channelarticles.' . $option, compact('articles', 'editor', 'channels', 'currentChannelId','idchannelf','ChennalArr'));
     }
 
 
