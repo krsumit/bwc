@@ -504,7 +504,7 @@
             <div class="span12 span-inset">
 
                 <label class="checkbox" >
-                    <input type="checkbox" name="for_automated_news_video" class="uniformCheckbox" value="{{$video->for_automated_news_video}}"  @if($video->for_automated_news_video == '1') checked="checked" @endif >
+                    <input type="checkbox" name="for_automated_news_video" class="uniformCheckbox" value="1"  @if($video->for_automated_news_video == '1') checked="checked" @endif >
                     <a href="#" target="_blank">Automated News Video</a>
                 </label>
                 <script>
