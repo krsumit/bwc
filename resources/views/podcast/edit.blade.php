@@ -122,7 +122,7 @@
             <!--Select Box with Filter Search begin-->
             <div  class="control-group row-fluid">
                 <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Channel</label>
+                    <label class="control-label" for="selectBoxFilter">Album Title</label>
                 </div>
 		<div class="span9">
                     <div class="controls">

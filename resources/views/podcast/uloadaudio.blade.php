@@ -82,7 +82,7 @@
 </div>            
 <header>
     <i class="icon-big-notepad"></i>
-    <h2><small>Album ID: 45345</small></h2>
+    <h2><small>Album ID: {{$idalbum}}</small></h2>
 </header>
 {!! Form::open(array('url'=>'podcast/storeaudio/','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
     {!! csrf_field() !!}    
@@ -118,20 +118,19 @@
         </div>
     <div class="container-fluid">
 
-        <div class="form-legend" id="Channel">Channel</div>
+        <div class="form-legend" id="Channel">Album Title</div>
 
         <!--Select Box with Filter Search begin-->
         <div  class="control-group row-fluid">
             <div class="span3">
-                <label class="control-label" for="selectBoxFilter">Channel</label>
+                <label class="control-label" for="selectBoxFilter">Album Title</label>
             </div>
             <div class="span9">
                 <div class="controls">
-                    <select name="channel"  id="channel" class="formattedelement">
-                        @foreach($channels as $channel)
-                        <option value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
-                        @endforeach
+                    <select name="channel"  id="channel" class="formattedelement" disabled>
+                       <option> {{$PodcastArr->album_name}} </option>
                     </select>
+                    
                 </div>
             </div>
             <script>
@@ -293,7 +292,7 @@
              <!--Sortable Responsive Media Table begin-->
             <div class="row-fluid">
 		<div class="span12">
-                    <table class="table table-striped" id="tableSortable">
+                    <table class="table table-striped table-responsive" id="tableSortableResMed">
 			<thead class="cf sorthead">
                             <tr>
                               
@@ -306,7 +305,7 @@
 			</thead>
                         <tbody>
                             @foreach($postsArr as $posts)
-                                <tr  class="gradeX"  id="rowCur{{$posts->id}}">
+                                <tr  class="gradeX"  id="row_{{$posts->id}}">
                                    <td><a href="/podcast/audioedit?id={{ $posts->id }}">{{ $posts->title }}</a></td>
                                     <td >{{ $posts->updated_at }}</td>         
                                    <td><input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="{{ $posts->id }}"></td>
@@ -697,4 +696,28 @@
                         
                     });
                 </script>
+<script>
+//alert(1);
+  var token = $('input[name=_token]');
+  $("#tableSortableResMed tbody").sortable({
+      appendTo: "parent",
+      helper: "clone",
+      update: function (event, ui) {
+      
+        var data = $(this).sortable('serialize');
+        //alert(data);    
+        // POST to server using $.post or $.ajax
+                $.ajax({
+                    data: data,
+                    type: 'POST',
+                    url: '{{ url("/podcast/sort/".$idalbum)}}',
+                    headers: {
+                                'X-CSRF-TOKEN': token.val()
+                             }
+                });
+        
+    }
+  }).disableSelection();
+
+</script>
 @stop

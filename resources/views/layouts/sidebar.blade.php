@@ -372,6 +372,26 @@
                 </div>
             </li>
             @endif
+
+            @if(count(array_diff(array('97','98'), Session::get('user_rights'))) != count(array('97','98')))	 	
+          <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon play"></i>
+                    <span class="nav-selection">Podcast</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        @if(in_array('98',Session::get('user_rights')))
+                        <li>
+                            <a href="/padcast/create">Podcast Create album</a>
+                        </li>
+                        @endif
+                       
+                    </ul>
+                </div>
+            </li>
+            @endif     
+            
             
             @if(count(array_diff(array('68','69','70','75','85'), Session::get('user_rights'))) != count(array('68','69','70','75','85')))	 	
             <li>

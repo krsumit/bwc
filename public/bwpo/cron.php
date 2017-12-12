@@ -2266,7 +2266,7 @@ class Cron {
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' mastervideo(s) inserted and ' . $_SESSION['noofupd'] . ' mastervideo(s) updated.</h5>';
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' bwpomastervideo(s) inserted and ' . $_SESSION['noofupd'] . ' bwpomastervideo(s) updated.</h5>';
     }
 
     function callVideoRelatedContent($id) {
@@ -2348,7 +2348,7 @@ class Cron {
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' campaing(s) inserted and ' . $_SESSION['noofupd'] . ' campaing(s) updated.</h5>';
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' bwpocampaing(s) inserted and ' . $_SESSION['noofupd'] . ' bwpocampaing(s) updated.</h5>';
     }
 
 //campain module end here 

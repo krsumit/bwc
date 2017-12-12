@@ -118,30 +118,7 @@
             </div>
             <!--Notifications end-->
         </div>
-        <div class="container-fluid">
-            <div class="form-legend" id="Channel">Channel</div>
-            <!--Select Box with Filter Search begin-->
-            <div  class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Channel</label>
-                </div>
-		<div class="span9">
-                    <div class="controls">
-                       <select name="channel"  id="channel" class="formattedelement">
-                        @foreach($channels as $channel)
-                        <option @if($channel->channel_id==$postsArr->channel_id) selected @endif; value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
-                        @endforeach
-                    </select>
-                    </div>
-                </div>
-                <script>
-                    $().ready(function(){
-                        $("#channel").select2();
-                    });
-                </script>
-            </div>
-            <!--Select Box with Filter Search end-->					
-        </div>  
+        
         <div class="container-fluid">  
             <div class="form-legend" id="add-album">Add Album </div>
 		<div id="Photo-feature"  class="control-group row-fluid">
@@ -180,7 +157,7 @@
                                         <input type="file"  name ="file" value=""/>
                                 </span>
                                 <a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                 @if(isset($postsArr->audio_name))<img src="{{config('constants.awsbaseurl').config('constants.awpodcastimagethumbtdir').$postsArr->audio_name}}" width="100" height="100" style="padding-left: 5px;" />@endif
+                                 @if(isset($postsArr->audio_name))<img src="http://static.businessworld.in/static/images/video.png">@endif
                         <input type="hidden" name="audio_name" value="@if(isset($postsArr->audio_name)){{$postsArr->audio_name}}@endif"/>
                         <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_debate_expert')}}')">&nbsp;Need to crop images? Click here</a>
                             </div>

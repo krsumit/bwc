@@ -35,16 +35,6 @@ class PadcastController extends Controller {
         $this->rightObj = new Right();
     }
 
-    
-    
-
-    
-
-
-
-
-
-    
 
     public function getRights($uid, $parentId = 0) {
         //DB::enableQueryLog();
@@ -94,7 +84,8 @@ class PadcastController extends Controller {
 
         /* Right mgmt start */
         $rightId = 23;
-        $currentChannelId = $request->channel;
+        
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
@@ -131,7 +122,6 @@ class PadcastController extends Controller {
 
 
         $podcast = new Podcast();
-        
         $podcast->channel_id = $request->channel;
         $podcast->author_id = 1;
         $podcast->album_name = $request->album_name;
@@ -140,7 +130,6 @@ class PadcastController extends Controller {
         $podcast->album_photo = $imageurl;
         $podcast->status = 1;
         $podcast->save();
-       
         Session::flash('message', 'Your Podcast has been Published successfully.');
         return redirect('/padcast/create?channel=' . $request->channel);
         //return 'sumit save';
@@ -169,9 +158,17 @@ public function destroy() {
         $delArr = explode(',', $id);
         
         foreach ($delArr as $d) {
+            $valid = '0';
             $deleteAl = Podcast::find($d);
                 $deleteAl->status = '0';
-                $deleteAl->save();
+                $deleteAl->save();   
+            $deleteAl = [
+                'status' => $valid,
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+            DB::table('podcast_album_list')
+                    ->where('p_a_id', $d)
+                    ->update($deleteAl);      
         }
         return 'success';
     }
@@ -189,14 +186,11 @@ public function audiodelete() {
             //return 'You are not authorized to access';
         //}
         /* Right mgmt end */
-
-
         if (isset($_GET['option'])) {
             $id = $_GET['option'];
         }
         //fwrite($asd, " Del Ids: ".$id." \n\n");
         $delArr = explode(',', $id);
-        
         foreach ($delArr as $d) {
             $deleteAl = Podcastaudiolist::find($d);
                 $deleteAl->status = '0';
@@ -245,10 +239,10 @@ public function isfeature() {
         }
 
         /* Right mgmt start */
-        $rightId = 23;
-        $currentChannelId = $request->channel;
-        //if (!$this->rightObj->checkRights($currentChannelId, $rightId))
-            //return redirect('/dashboard');
+        $rightId = 2;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
         /* Right mgmt end */
         $uid = $request->user()->id; 
         if (isset($_GET['id'])) {
@@ -257,9 +251,10 @@ public function isfeature() {
          //echo '<pre>';
          //print_r($request->all());
         // Add Arr Data to Podcast album Table //
+        $PodcastArr = Podcast::where('id', $idalbum)->where('status', 1)->first();
         $channels = $this->rightObj->getAllowedChannels($rightId);
-        $postsArr = Podcastaudiolist::where('p_a_id', $idalbum)->where('status', 1)->get();
-        return view('podcast.uloadaudio', compact('currentChannelId','channels','idalbum','postsArr'));
+        $postsArr = Podcastaudiolist::where('p_a_id', $idalbum)->where('status', 1)->orderBy('sequence')->get();
+        return view('podcast.uloadaudio', compact('currentChannelId','channels','idalbum','postsArr','PodcastArr'));
         
     }
 
@@ -281,9 +276,10 @@ public function isfeature() {
         //$quickbyte = QuickByte::find($id);
         /* Right mgmt start */
         $rightId = 23;
-        $currentChannelId = $request->channel;
-        //if (!$this->rightObj->checkRights($currentChannelId, $rightId))
-          //  return redirect('/dashboard');
+       $rightId = 2;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+          return redirect('/dashboard');
         /* Right mgmt end */
         $uid = $request->user()->id; 
         $tags = json_encode(DB::table('tags')
@@ -312,9 +308,10 @@ public function isfeature() {
         $postsArr = Podcastaudiolist::where('id', $id)->where('status', 1)->first();
         /* Right mgmt start */
         $rightId = 23;
-        $currentChannelId = $request->channel;
-        //if (!$this->rightObj->checkRights($currentChannelId, $rightId))
-          //  return redirect('/dashboard');
+        $rightId = 2;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
         /* Right mgmt end */
         $uid = $request->user()->id; 
         $tags = json_encode(DB::table('tags')
@@ -431,7 +428,7 @@ public function isfeature() {
                 $PodcastaudioEntry = new Podcastaudiolist();
                 $PodcastaudioEntry->title = $request->imagetitle[$image];
                 $PodcastaudioEntry->description = $request->imagedesc[$image];
-                echo $PodcastaudioEntry->tags = $request->Taglist[$image];
+                $PodcastaudioEntry->tags = $request->Taglist[$image];
                 $PodcastaudioEntry->audio_name = $image;
                 $PodcastaudioEntry->channel_id = $request->channel;
                 $PodcastaudioEntry->p_a_id = $request->idalbum;
@@ -498,6 +495,20 @@ public function isfeature() {
         Session::flash('message', 'Your Podcast has been Update successfully.');
         return redirect('/padcast/create?channel=' . $request->channel);
         
+    }
+
+public function sortAudio($id, Request $request) {
+
+        foreach ($request->row as $k => $itm) {
+            $albumeAudio = Podcastaudiolist::find($itm);
+            $albumeAudio->sequence = $k + 1;
+            $albumeAudio->updated_at = date('Y-m-d H:i:s');
+            $albumeAudio->save();
+        }
+
+        DB::table('podcast_album')
+                ->where('id', $id)
+                ->update(['updated_at' => date('Y:m:d H:i:s')]);
     }
 
     

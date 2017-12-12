@@ -293,7 +293,7 @@
                         <tbody>
                             @foreach($postsArr as $posts)
                                 <tr  class="gradeX"  id="rowCur{{$posts->id}}">
-                                   <td style="width:160px;"><img src="http://www.PROJECTONE.com/upload/cjoriginalphoto/1337154571426.JPG" alt="user" style="width:70%;" /></td> 
+                                   <td style="width:160px;"><img src="{{config('constants.awsbaseurl').config('constants.awpodcastimagethumbtdir').$posts->album_photo}}" width="70%"/></td> 
                                   
                                    <td><a href="/podcast/uloadlist?id={{ $posts->id }}">{{ $posts->album_name }}</a></td>
                                     <td >{{ $posts->updated_at }}</td>
