@@ -120,8 +120,10 @@ class Cron {
                 $this->migrateNewsletterSubscriber();
             case 'trending':
                 $this->migrateNewsTrending();
-         case 'Magazineissuearticlelist':
-            $this->MagazineissueArticlelist();    
+            case 'Magazineissuearticlelist':
+                $this->MagazineissueArticlelist();
+            case 'podcast':
+                $this->Podcast();    
             
         endswitch;
 
@@ -3205,6 +3207,112 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
 
 
 //MagazineissueArticlelist module end here
+
+//Podcast module start here 
+    function podcast() {
+        //echo 'sumit';exit;
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='podcast' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
+
+        $PodcastResults = $this->conn->query("SELECT * FROM podcast_album where channel_id=1 $condition");
+        //echo $PodcastResults->num_rows; exit;
+        if ($PodcastResults->num_rows > 0) {
+
+            while ($podcastRow = $PodcastResults->fetch_assoc()) {
+                //print_r($podcastRow); exit;
+                $podcastId = $podcastRow['id'];
+                $checkpodcastExistResultSet = $this->conn2->query("select * from podcast_album where id=$podcastId");
+                if ($checkpodcastExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
+                    
+                    $podcastUpdateStmt = $this->conn2->prepare("update podcast_album set author_id=?,album_name=?,album_description=?,album_photo=?,tags=?,isf=?,created_at=?,updated_at=?,status=? where id=?");
+                    $podcastUpdateStmt->bind_param('issssissii', $podcastRow['author_id'], $podcastRow['album_name'], $podcastRow['album_description'], $podcastRow['album_photo'], $podcastRow['tags'], $podcastRow['isf'], $podcastRow['created_at'],$podcastRow['updated_at'],$podcastRow['status'],$podcastId);
+                    $podcastUpdateStmt->execute();
+                    if ($podcastUpdateStmt->affected_rows)
+                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                      //$_SESSION['noofupd'].'sumit';
+                }else {
+                    //echo 'sumit'; exit;
+                    $podcastInsertStmt = $this->conn2->prepare("insert into podcast_album set id=?, author_id=?,album_name=?,album_description=?,album_photo=?,tags=?,isf=?,created_at=?,updated_at=?,status=?");
+                    //echo $this->conn2->error; exit;
+                    $podcastInsertStmt->bind_param('iissssissi',$podcastRow['id'],$podcastRow['author_id'], $podcastRow['album_name'], $podcastRow['album_description'], $podcastRow['album_photo'], $podcastRow['tags'], $podcastRow['isf'], $podcastRow['created_at'],$podcastRow['updated_at'],$podcastRow['status']);
+                    $podcastInsertStmt->execute();
+                    if ($podcastInsertStmt->affected_rows) {
+                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                    }
+                }
+            }
+        }
+
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='poscast',start_time=?,end_time=?");
+        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecronstmt->execute();
+        $updatecronstmt->close();
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' podcast(s) inserted and ' . $_SESSION['noofupd'] . ' podcast(s) updated.</h5>';
+    }
+
+
+//podcast module end here
+
+//podcastAudioList module start here 
+    function podcastAudioList() {
+        //echo 'sumit';exit;
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='podcastaudio' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
+
+        $PodcastaudiolistResults = $this->conn->query("SELECT * FROM podcast_album_list where channel_id=1 $condition");
+        //echo $PodcastaudiolistResults->num_rows; exit;
+        if ($PodcastaudiolistResults->num_rows > 0) {
+
+            while ($PodcastaudiolistRow = $PodcastaudiolistResults->fetch_assoc()) {
+                //print_r($podcastRow); exit;
+                $PodcastaudiolistId = $podcastRow['id'];
+                $checkPodcastaudiolistExistResultSet = $this->conn2->query("select * from podcast_album_list where id=$PodcastaudiolistId");
+                if ($checkPodcastaudiolistExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
+                    
+                    $PodcastaudiolistUpdateStmt = $this->conn2->prepare("update podcast_album_list set p_a_id=?,title=?,description=?,audio_name=?,tags=?,sequence=?,created_at=?,updated_at=?,status=? where id=?");
+                    $PodcastaudiolistUpdateStmt->bind_param('isssssssii', $PodcastaudiolistRow['p_a_id'], $PodcastaudiolistRow['title'], $PodcastaudiolistRow['description'], $PodcastaudiolistRow['audio_name'], $PodcastaudiolistRow['tags'], $PodcastaudiolistRow['sequence'], $PodcastaudiolistRow['created_at'],$PodcastaudiolistRow['updated_at'],$PodcastaudiolistRow['status'],$PodcastaudiolistId);
+                    $PodcastaudiolistUpdateStmt->execute();
+                    if ($PodcastaudiolistUpdateStmt->affected_rows)
+                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                      //$_SESSION['noofupd'].'sumit';
+                }else {
+                    //echo 'sumit'; exit;
+                    $PodcastaudiolistInsertStmt = $this->conn2->prepare("insert into podcast_album_list set id=?, p_a_id=?,title=?,description=?,audio_name=?,tags=?,sequence=?,created_at=?,updated_at=?,status=?");
+                    //echo $this->conn2->error; exit;
+                    $PodcastaudiolistInsertStmt->bind_param('iisssssssi',$PodcastaudiolistRow['id'],$PodcastaudiolistRow['p_a_id'], $PodcastaudiolistRow['title'], $PodcastaudiolistRow['description'], $PodcastaudiolistRow['audio_name'], $PodcastaudiolistRow['tags'], $PodcastaudiolistRow['sequence'], $PodcastaudiolistRow['created_at'],$PodcastaudiolistRow['updated_at'],$PodcastaudiolistRow['status']);
+                    $PodcastaudiolistInsertStmt->execute();
+                    if ($PodcastaudiolistInsertStmt->affected_rows) {
+                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                    }
+                }
+            }
+        }
+
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='podcastaudio',start_time=?,end_time=?");
+        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecronstmt->execute();
+        $updatecronstmt->close();
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' podcastaudio(s) inserted and ' . $_SESSION['noofupd'] . ' podcastaudio(s) updated.</h5>';
+    }
+
+
+//podcastAudioList module end here
 
     function migrateMasterNewsLetter() {
 
