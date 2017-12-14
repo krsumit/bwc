@@ -3282,7 +3282,7 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
 
             while ($PodcastaudiolistRow = $PodcastaudiolistResults->fetch_assoc()) {
                 //print_r($podcastRow); exit;
-                $PodcastaudiolistId = $podcastRow['id'];
+                $PodcastaudiolistId = $PodcastaudiolistRow['id'];
                 $checkPodcastaudiolistExistResultSet = $this->conn2->query("select * from podcast_album_list where id=$PodcastaudiolistId");
                 if ($checkPodcastaudiolistExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     
