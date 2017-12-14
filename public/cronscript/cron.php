@@ -124,7 +124,7 @@ class Cron {
                 $this->MagazineissueArticlelist();
             case 'podcast':
                 $this->Podcast(); 
-            case 'podcastAudioList':
+            case 'PodcastAudioList':
                 $this->podcastAudioList();    
             
         endswitch;
