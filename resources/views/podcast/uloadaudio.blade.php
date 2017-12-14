@@ -87,6 +87,7 @@
 {!! Form::open(array('url'=>'podcast/storeaudio/','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
     {!! csrf_field() !!}    
 <input type="hidden" name="idalbum" value="{{$idalbum}}">
+<input type="hidden" name="channel" value="{{$PodcastArr->channel_id}}">
     <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
              <div class="form-legend" id="Notifications">Notifications</div>
@@ -127,7 +128,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <select name="channel"  id="channel" class="formattedelement" disabled>
+                    <select   id="channel" class="formattedelement" disabled>
                        <option> {{$PodcastArr->album_name}} </option>
                     </select>
                     

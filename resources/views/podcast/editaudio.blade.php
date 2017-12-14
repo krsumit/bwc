@@ -89,6 +89,7 @@
    <form class="form-horizontal" id="fileupload" action="/padcast/updateaudio/" method="POST" enctype="multipart/form-data">
     {!! csrf_field() !!} 
     <input type="hidden" name="id" value="{{$postsArr->id}}">
+    <input type="hidden" name="channel" value="{{$postsArr->channel_id}}">
     <input type="hidden" name="album_photo" value="{{$postsArr->audio_name}}">
         <div class="container-fluid">
             <div class="form-legend" id="Notifications">Notifications</div>

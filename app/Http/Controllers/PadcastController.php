@@ -342,9 +342,9 @@ public function isfeature() {
         
         /* Right mgmt start */
         $rightId = 23;
-        $currentChannelId = $request->channel;
-        //if (!$this->rightObj->checkRights($currentChannelId, $rightId))
-          //  return redirect('/dashboard');
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
         /* Right mgmt end */
         $uid = $request->user()->id; 
         
@@ -401,7 +401,7 @@ public function isfeature() {
 
         /* Right mgmt start */
         $rightId = 23;
-        $currentChannelId = $request->channel;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
@@ -437,10 +437,10 @@ public function isfeature() {
             }
         }
 
-        if ($request->status == 'P') {
-            Session::flash('message', 'Your Quickbte has been Published successfully.');
-            return redirect('/padcast/create?channel=' . $request->channel);
-        }
+       
+        Session::flash('message', 'Your Quickbte has been Published successfully.');
+        return redirect('/padcast/create?channel=' . $request->channel);
+        
 
     }
 
@@ -462,9 +462,9 @@ public function isfeature() {
         
         /* Right mgmt start */
         $rightId = 23;
-        $currentChannelId = $request->channel;
-        //if (!$this->rightObj->checkRights($currentChannelId, $rightId))
-          //  return redirect('/dashboard');
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
         /* Right mgmt end */
         $uid = $request->user()->id; 
         

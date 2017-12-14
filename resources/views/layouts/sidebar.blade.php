@@ -373,7 +373,7 @@
             </li>
             @endif
 
-            @if(count(array_diff(array('97','98'), Session::get('user_rights'))) != count(array('97','98')))	 	
+            @if(count(array_diff(array('98','99'), Session::get('user_rights'))) != count(array('98','99')))	 	
           <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon play"></i>
@@ -381,7 +381,7 @@
                     <i class="icon-menu-arrow"></i>                </a>
                 <div class="sub-nav">
                     <ul class="nav">
-                        @if(in_array('98',Session::get('user_rights')))
+                        @if(in_array('99',Session::get('user_rights')))
                         <li>
                             <a href="/padcast/create">Podcast Create album</a>
                         </li>
