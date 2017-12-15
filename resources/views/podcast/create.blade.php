@@ -87,13 +87,14 @@
     </header>
     <form class="form-horizontal" id="fileupload" action="/padcast/store/" method="POST" enctype="multipart/form-data">
     {!! csrf_field() !!} 
-        <div class="container-fluid">
-            <div class="form-legend" id="Notifications">Notifications</div>
+        <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
+
+             <div class="form-legend" id="Notifications">Notifications</div>
+
             <!--Notifications begin-->
-            <div class="control-group row-fluid">
+            <div class="control-group row-fluid" >
                 <div class="span12 span-inset">
-                    
-                   @if (Session::has('message'))
+                    @if (Session::has('message'))
                     <div class="alert alert-success alert-block" style="">
                         <i class="icon-alert icon-alert-info"></i>
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -109,11 +110,11 @@
                         <strong>This is Error Notification</strong>
                         <span>{{ Session::get('error') }}</span>
                     </div>
-                    @endif 
-                    
+                    @endif
                 </div>
             </div>
             <!--Notifications end-->
+
         </div>
         <div class="container-fluid">
             <div class="form-legend" id="Channel">Channel</div>
@@ -298,7 +299,7 @@
                                    <td><a href="/podcast/uloadlist?id={{ $posts->id }}">{{ $posts->album_name }}</a></td>
                                     <td >{{ $posts->updated_at }}</td>
                                     <td>
-                                       <input name="isf" class="uniformRadio" value="{{ $posts->id }}" type="radio">
+                                       <input name="isf" class="uniformRadio" value="{{$posts->id }}" type="radio"  @if($posts->isf == '1') checked="checked" @endif >
                                    </td>
                                    <td> <a href="/podcast/edit?editid={{ $posts->id }}"><button type="button" class="btn btn-success">Edit</button> </a></td>
                                    <td><input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="{{ $posts->id }}"></td>

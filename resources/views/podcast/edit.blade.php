@@ -89,13 +89,14 @@
     {!! csrf_field() !!} 
     <input type="hidden" name="id" value="{{$postsArr->id}}">
     <input type="hidden" name="album_photo" value="{{$postsArr->album_photo}}">
-        <div class="container-fluid">
-            <div class="form-legend" id="Notifications">Notifications</div>
+        <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
+
+             <div class="form-legend" id="Notifications">Notifications</div>
+
             <!--Notifications begin-->
-            <div class="control-group row-fluid">
+            <div class="control-group row-fluid" >
                 <div class="span12 span-inset">
-                    
-                   @if (Session::has('message'))
+                    @if (Session::has('message'))
                     <div class="alert alert-success alert-block" style="">
                         <i class="icon-alert icon-alert-info"></i>
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
@@ -111,11 +112,11 @@
                         <strong>This is Error Notification</strong>
                         <span>{{ Session::get('error') }}</span>
                     </div>
-                    @endif 
-                    
+                    @endif
                 </div>
             </div>
             <!--Notifications end-->
+
         </div>
         <div class="container-fluid">
             <div class="form-legend" id="Channel">Channel</div>
