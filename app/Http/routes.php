@@ -78,7 +78,7 @@ Route::get('article/trending', ['middleware' => 'auth',   'uses' => 'ArticlesCon
 Route::get('article/magazinearticlelist', ['middleware' => 'auth',   'uses' => 'ArticlesController@MagazineArticlelist']);
 
 Route::get('article/list/channelarticles/{option}', ['middleware' => 'auth',   'uses' => 'ArticlesController@channelarticles']);
-//Route::get('article/list/channelarticles/{option}',['middleware' => 'auth', 'uses' => 'ArticlesController@index','as' => 'search']);
+
 
 
 
@@ -237,9 +237,7 @@ Route::get('article/dropdown1', function(){
     $iarrVals = explode('&',$input);
     $secondArr = explode('=',$iarrVals[1]);
     $type = $secondArr[1];
-    //$type = Input::get('level');
-    //$l = fopen('/home/sudipta/check.log','a+');
-    //fwrite($l,"\n Option".$input." L:".$type);
+    
 
     $key_id = "";
 
@@ -597,7 +595,8 @@ Route::match(['get', 'post'], '/video/publish', ['as' => '/video/publish', 'uses
 Route::get('video/{id}','VideoController@show');
 Route::post('video/image/upload', ['middleware' => 'auth',   'uses' => 'VideoController@imageUpload' ]);
 Route::get('video/image/upload','VideoController@imageUpload');
-
+Route::get('video/list/channelvideo',['middleware' => 'auth', 'uses' => 'VideoController@channelvideo']);
+Route::match(['get', 'post'], '/video/videocopyotherchannelstore', ['as' => '/video/videocopyotherchannelstore', 'uses' => 'VideoController@channelvideostore']);
 /*Video routs end here */
 
 /* Newsletter start here*/

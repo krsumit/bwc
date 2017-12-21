@@ -489,5 +489,126 @@ class VideoController extends Controller
           return response()->json($rst);
     }
 
+public function channelvideo()
+    {
+        if(!Session::has('users')){
+            return redirect()->intended('/auth/login');
+        }
+        $rightId=62;
+        $uid = Session::get('users')->id;
+        $rightLabel = "";
+        $rightId = '';
+        /* Right mgmt start */
+       if(isset($_GET['channelf'])){
+         $channelf = $_GET['channelf'];
+        }else{
+            $channelf = 1;
+        }
+        if(isset($_GET['channel'])){
+         $currentChannelId = $_GET['channel'];
+         
+        }else{
+         $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+         
+        }
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
+        
+        /* Right mgmt end */
+                
+      if(isset($_GET['channelf'])){
+        $idchannelf = $_GET['channelf'];
+         }else{
+            $idchannelf = '';
+            }
+        
+        $q = MasterVideo::where('video_status',1)
+                ->select('id','video_title','updated_at','video_thumb_name');
+            if (isset($_GET['searchin'])) {
+                if ($_GET['searchin'] == 'title') {
+                    $q->where('video_title', 'like', '%' . trim($_GET['keyword']) . '%');
+                }
+                if (@$_GET['searchin'] == 'id') {
+                    $q->where('id', trim($_GET['keyword']));
+                }
+            }           
+       $videos=$q->where('channel_id','=',$channelf)->orderBy('id','desc')->paginate(config('constants.recordperpage'));
+        $ChennalArr = DB::table('channels')->get();
+       return view('channelvideo.published', compact('videos','channels','currentChannelId','ChennalArr','idchannelf','ChennalArr'));
+
+    }
+    
+    public function channelvideostore(Request $request)
+    { 
+        $rightId=65;
+      //  print_r($_POST);
+        $currentChannelId=$request->channel;
+        //if(!$this->rightObj->checkRights($currentChannelId,$rightId)){
+            //return redirect('/dashboard');
+        //}
+        /* Right mgmt end */
+         // print_r($request->all()); 
+         // exit;
+        //echo 'test'; exit;
+        $uid = $request->user()->id;
+        if (isset($_POST['checkItem'])) {
+            $ArArr = $_POST['checkItem'];
+            $channel_selfm = $_POST['channel_selfm'];
+            $channel_sel = $_POST['channel_sel'];
+            //print_r($ArArr);
+            $ChennalArr = DB::table('channels')->where('channel_id', '=', $channel_sel)->first();
+            $ChennalArr->channelurl;
+            //DB::enableQueryLog();
+            $VideosArr=MasterVideo::whereIn('id', $ArArr)->where('channel_id', '=', $channel_sel)->get();
+            //dd(DB::getQueryLog());
+            foreach($VideosArr as $videoRow) {
+                $video = new MasterVideo();
+                // Add Arr Data to Album Table //
+                $video->channel_id = $channel_selfm;
+                $video->video_title = $videoRow->video_title;
+                $video->video_summary = $videoRow->video_summary;
+                $video->video_type=$videoRow->video_type;
+                $video->video_thumb_name = $videoRow->video_thumb_name;
+                if($request->for_automated_news_video !=''){
+                $video->for_automated_news_video=$videoRow->for_automated_news_video;
+                }else{
+                    $video->for_automated_news_video = '0';
+                }
+                $video->video_name = $videoRow->video_name;
+                $video->copyvideo_id = $videoRow->id;
+                $video->video_status = $videoRow->video_status;
+                $video->campaign_id = $videoRow->campaign;              
+                $video->save();
+                $id = $video->id;
+                $oldid= $videoRow->id;
+                //Video Tags - Save
+                $videoTAg=VideoTag::where('video_id', $oldid)->get();
+                //print_r($channelAtg);
+        
+                if (count($videoTAg) > 0){
+                 foreach($videoTAg as $tagRow) { 
+                        $video_tags = new VideoTag();
+                        $video_tags->video_id = $id;
+                        $video_tags->tags_id = $tagRow['tags_id'];   
+                        $video_tags->save();
+                    }
+                }
+ 
+                //video Category - Save
+                $CategoryArr = DB::table('category')->where('channel_id', '=', $channel_selfm)->first(); 
+                $video_category = new VideoCategory();
+                $video_category->video_id = $id;
+                $video_category->category_id = $CategoryArr->category_id;
+                $video_category->level = 1;
+                $video_category->save();
+            }
+      
+        
+        }
+        return 'success';
+    }
+
 }
 

@@ -1401,7 +1401,7 @@ public function articlechannelinsert(Request $request) {
         $ArArr = $_POST['checkItem'];
          $channel_selfm = $_POST['channel_selfm'];
          $channel_sel = $_POST['channel_sel'];
-         print_r($ArArr);
+         //print_r($ArArr);
          $ChennalArr = DB::table('channels')->where('channel_id', '=', $channel_sel)->first();
          $ChennalArr->channelurl;
          //print_r($ChennalArr);
@@ -1460,7 +1460,7 @@ public function articlechannelinsert(Request $request) {
                     $article->save();
                     $oldid= $articleRow->article_id;
                     //Get Article_id
-                    echo $id = $article->article_id;
+                     $id = $article->article_id;
                    
         //DB::enableQueryLog();
         $channelAth=ArticleAuthor::where('article_id', $oldid)->get();
@@ -1557,7 +1557,7 @@ public function articlechannelinsert(Request $request) {
                 $articleImage->created_at = $phoRow['created_at'];
                 $articleImage->updated_at = $phoRow['updated_at'];
                 $articleImage->save();
-                echo 'sumitsdsdsfsd---';
+                //echo 'sumitsdsdsfsd---';
             }
            }
         //return redirect('/article/list/new?channel=' . $channel_selfm);
