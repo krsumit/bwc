@@ -334,7 +334,7 @@
                 </div>
             </li>
             @endif
-            @if(count(array_diff(array('62','63','64','65'), Session::get('user_rights'))) != count(array('62','63','64','65')))	 	
+            @if(count(array_diff(array('62','63','64','65','100'), Session::get('user_rights'))) != count(array('62','63','64','65','100')))	 	
           <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon play"></i>
@@ -350,6 +350,11 @@
                         @if(in_array('62',Session::get('user_rights')))
                         <li>
                             <a href="/video/list">Published Videos</a>
+                        </li>
+                        @endif
+                        @if(in_array('100',Session::get('user_rights')))
+                        <li>
+                            <a href="/video/list/channelvideo?">Channel Videos</a>
                         </li>
                         @endif
                         @if(in_array('63',Session::get('user_rights')))
@@ -376,7 +381,7 @@
             @if(count(array_diff(array('98','99'), Session::get('user_rights'))) != count(array('98','99')))	 	
           <li>
                 <a href="javascript:;" class="sub-nav-container">
-                    <i class="icon-photon play"></i>
+                    <i class="icon-photon mic"></i>
                     <span class="nav-selection">Podcast</span>
                     <i class="icon-menu-arrow"></i>                </a>
                 <div class="sub-nav">
