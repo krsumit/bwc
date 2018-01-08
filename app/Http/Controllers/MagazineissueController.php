@@ -154,11 +154,20 @@ class MagazineissueController extends Controller {
         if (isset($_GET['id'])) {
             $id = $_GET['id'];
         }
-
+        if (isset($_GET['channel'])) {
+            $channel = $_GET['channel'];
+        }
+         if($channel =='1'){
         $posts = DB::table('magazine')
                 ->select('magazine.*')
                 ->where('magazine_id', '=', $id)
                 ->first();
+         }else{
+        $posts = DB::table('magazine')
+                ->select('magazine.*')
+                ->where('magazine_id', '=', $id)
+                ->get();
+         }
         if (!(count($posts) > 0)) {
             Session::flash('error', 'There is no such article.');
             return redirect()->intended('/dashboard');
@@ -174,7 +183,11 @@ class MagazineissueController extends Controller {
         /* Right mgmt end */
          $ArticleArr=Article::where('magazine_id', $id)->get();
          
+         if($channel =='1'){
         return view('magazineissue.magazineissueedite', compact('channels', 'posts', 'currentChannelId','ArticleArr','id'));
+         }else{
+             return view('magazineissue.magazineissueediteall', compact('channels', 'posts', 'currentChannelId'));
+         }
     }
 
     /**
