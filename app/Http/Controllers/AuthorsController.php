@@ -459,7 +459,7 @@ class AuthorsController extends Controller {
             //fwrite($asd, " Delete Id : ".$d." \n\n");
             $valid = '0';
             $deleteAl = [
-
+                'updated_at'=> date('Y:m:d H:i:s'),
                 'valid' => $valid
             ];
             DB::table('authors')
