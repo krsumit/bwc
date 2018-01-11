@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Aws\Laravel\AwsFacade as AWS;
 use App\Classes\FileTransfer;
 use Aws\Laravel\AwsServiceProvider;
+use App\ArticleAuthor;
 
 class AuthorsController extends Controller {
 
@@ -455,18 +456,31 @@ class AuthorsController extends Controller {
         //fwrite($asd, " Del Ids: ".$id." \n\n");
         $delArr = explode(',', $id);
         //fwrite($asd, " Del Arr Count: ".count($delArr)." \n\n");
+        $errorArray=array();
         foreach ($delArr as $d) {
             //fwrite($asd, " Delete Id : ".$d." \n\n");
             $valid = '0';
-            $deleteAl = [
+            $noOfArticles=ArticleAuthor::where('author_id',$d)->count();
+            if($noOfArticles==0){
+                $deleteAl = [
                 'updated_at'=> date('Y:m:d H:i:s'),
                 'valid' => $valid
-            ];
-            DB::table('authors')
+                ];
+                DB::table('authors')
                     ->where('author_id', $d)
                     ->update($deleteAl);
+                
+            }else{
+                $author=Author::find($d);
+                $errorArray['author_id'][]=$d;
+                $errorArray['author_detail'][]=$author->name.'('.$author->email.')';      
+            }
         }
-        return;
+        if(count($errorArray)>0)
+            return json_encode($errorArray);
+        else
+            return 'success';
+            
     }
 
     public function changeStatus() {

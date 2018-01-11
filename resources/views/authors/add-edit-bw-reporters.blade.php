@@ -127,7 +127,7 @@
        <input id="is_columnist" class="uniformRadio" type="hidden" value="0" name="is_columnist" style="opacity: 0;">
        <input id="photo" class="uniformRadio" type="hidden" value="" name="photoset" style="opacity: 0;">
         <input id="isertedbyauthordata" class="uniformRadio" type="hidden" value="isertedbybwreportersdata" name="isertedbybwreportersdata" style="opacity: 0;">
-        <div class="container-fluid">
+        <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
             <div class="form-legend" id="Notifications">Notifications</div>
 

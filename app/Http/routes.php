@@ -393,6 +393,11 @@ Route::match(['get', 'post'], 'category/add', ['as' => 'category/add', 'uses' =>
 
 Route::match(['get', 'post'], 'mastercategory/delete', ['as' => 'mastercategory/delete', 'uses' => 'categoryController@destroy']);
 
+
+Route::get('category/edit/{id}',['middleware' => 'auth',   'uses' => 'categoryController@show']);
+Route::post('category/update', ['middleware' => 'auth',   'uses' => 'categoryController@update']);
+
+
 Route::match(['get', 'post'], 'sub-category-master/add/', ['as' => 'sub-category-master/add/', 'uses' => 'categoryController@subcategoryindex']);
 Route::match(['get', 'post'], 'secondcategory/delete', ['as' => 'secondcategory/delete', 'uses' => 'categoryController@destroysecond']);
 Route::match(['get', 'post'], 'sub-category_second_master/add/', ['as' => 'sub-category_second_master/add/', 'uses' => 'categoryController@subcategorythirdindex']);

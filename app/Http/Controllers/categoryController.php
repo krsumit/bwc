@@ -262,7 +262,34 @@ public function subcategoryindex()
      */
     public function show($id)
     {
-        //
+        $table='';
+        switch ($_GET['level']):
+            case '1':
+                $table='category';
+                break;
+            case '2':
+                $table='category_two';
+                break;
+            case '3':
+                $table='category_three';
+                break;
+            case '4':
+                $table='category_four';
+                break;
+        endswitch;
+        $field=$table.'_id';
+        $level=$_GET['level'];
+        $category=DB::table($table)->where($field, '=',$id)->first();
+        $referer='';
+        if(isset($_SERVER['HTTP_REFERER']))
+            $referer=$_SERVER['HTTP_REFERER'];
+        else{
+            Session::flash('message', 'Please go through proper link.');
+            return Redirect::to('category/add-master-category');
+        }    
+        //dd($category);
+        return view('categorymaster.category-edit', compact('category','level','field','referer'));
+        //echo $table; exit;
     }
 
     /**
@@ -295,9 +322,34 @@ public function subcategoryindex()
      * @param  int  $id
      * @return Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+         switch ($request->level):
+            case '1':
+                $table='category';
+                break;
+            case '2':
+                $table='category_two';
+                break;
+            case '3':
+                $table='category_three';
+                break;
+            case '4':
+                $table='category_four';
+                break;
+        endswitch; 
+         $field=$table.'_id';
+         $up_data= [
+			'name' => $request->name,
+                        'updated_at'=>date('Y-m-d H:i:s')
+                    ];
+         //dd($request->all());
+         DB::table($table)
+            ->where($field,$request->category_id)
+            ->update($up_data);
+         
+        Session::flash('message', 'Category updated successfully. It will appear on website shortly.');
+            return redirect($request->category_referer);
     }
 
     /**

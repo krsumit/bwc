@@ -167,6 +167,7 @@
                                            <th>Sub Category</th>
                                            <th>Added By</th>
                                            <th>Added On</th>
+                                           <th>Action</th>
                                            <th><input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectall"></th>
 									   </tr>
                                    </thead>
@@ -177,6 +178,7 @@
                                            <td><a href="/sub-category_third_master/add/?name={{$a->name}}&id={{$a->category_three_id}}">{{$a->name}}</a></td>
                                            <td>{{$a->userssname}}</td>
                                            <td>{{$a->created_at}}</td>
+                                           <td><a href="/category/edit/{{$a->category_three_id}}?level=3">Edit</a></td>
                                           <td><input type="checkbox" class="uniformCheckbox" value="{{$a->category_three_id}}" name="checkItem[]"></td>
                                        </tr>
                                        @endforeach
