@@ -69,9 +69,9 @@
                     <div class="span9">
                         <div class="controls">
                             <input type="text" name="name" id="add_mastercategory" value="{{$category->name}}" class="required number valid"><span for="add tags" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
-                            <input type="hidden1" name="category_id" value="{{$category->$field}}">
-                            <input type="hidden1" name="level" value="{{$level}}"> 
-                            <input type="hidden1" name="category_referer" value="{{$referer}}"> 
+                            <input type="hidden" name="category_id" value="{{$category->$field}}">
+                            <input type="hidden" name="level" value="{{$level}}"> 
+                            <input type="hidden" name="category_referer" value="{{$referer}}"> 
 
                             
                         </div>
