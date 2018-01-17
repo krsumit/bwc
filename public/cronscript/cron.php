@@ -84,6 +84,9 @@ class Cron {
             case 'topics' :
                 $this->migrateTopics();
                 break;
+            case 'generatetopics' :
+                $this->generateTopics();
+                break;
             case 'newstype':
                 $this->migrateNewsType();
                 break;
@@ -938,6 +941,7 @@ class Cron {
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' topic category(ies) inserted,   ' . $_SESSION['noofupd'] . ' topic category(ies) updated and ' . $_SESSION['noofdel'] . ' topic category(ies) deleted.</h5>';
     }
 
+     
     function migrateCategory() {
         //echo 'test'; exit;
         $_SESSION['noofins'] = 0;
@@ -1385,7 +1389,86 @@ class Cron {
 
       }
      */
-
+      function generateTopics(){
+          $_SESSION['noofins'] = 0;
+          $_SESSION['noofupd'] = 0;
+          $articles_topic=array();
+          $conStartTime = date('Y-m-d H:i:s');
+          $cronresult = $this->conn->query("select start_time from cron_log where section_name='generatetopics' order by  start_time desc limit 0,1") or die($this->conn->error);
+           if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+          }
+        
+           $results = $this->conn->query("SELECT id,topic FROM topics where valid='1'");
+           $articleResults = $this->conn->query("SELECT article_id,description  FROM articles where  status='P'  $condition");
+           $articles=array();
+           
+           if ($articleResults->num_rows > 0) {
+               while($article=$articleResults->fetch_assoc()){
+                    $articles[$article['article_id']]=$article['description'];
+                }
+               while ($row = $results->fetch_assoc()) {
+                   $allArticles=$articles;
+                   $pattern = '/\b('.$row['topic'].')\b/';
+                   foreach($allArticles as $key => $value){
+                       $ret = preg_match($pattern.'i', strip_tags($value), $matches, PREG_OFFSET_CAPTURE);
+                       if($ret == 1){
+                           $articles_topic[$key][]=$row['id'];
+                       }
+                   }
+                   
+               }
+           }
+           
+           foreach($allArticles as $key => $value){
+               
+               if(isset($articles_topic[$key])){
+                   $current_topics=$articles_topic[$key];                   
+                   $existingTopicsResults = $this->conn->query("select group_concat(topic_id) as topic_ids from article_topics where article_id=$key");
+                   $existingTopicsRow=$existingTopicsResults->fetch_assoc();
+                   $existing_topics=$existingTopicsRow['topic_ids'];
+                   if($existing_topics){
+                       $existing_topics=explode(',', $existingTopicsRow['topic_ids']);
+                   }
+                   else {
+                       $existing_topics=array();
+                   }
+                   
+                   $newTopics=array_diff($current_topics,$existing_topics);
+                   $topics=array_unique($newTopics);
+                   //print_r($topics); exit;
+                   foreach($topics as $topic_id){
+                        $articleTopicStmt = $this->conn->prepare("insert into  article_topics set article_id=?,topic_id=?,created_at=?,updated_at=?");
+                        $cdate=date('Y-m-d H:i:s');
+                        $articleTopicStmt->bind_param('iiss',$key,$topic_id,$cdate,$cdate);
+                        $articleTopicStmt->execute();
+                   }
+                   
+                   if(count($topics)){
+                       $updateArticle=$this->conn->query("update articles set updated_at='".date('Y-m-d H:i:s')."' where article_id=$key"); 
+                      $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                   }
+                   $alltopicsIds=implode(',',$current_topics);
+                   $this->conn->query("delete from article_topics where topic_id not in($alltopicsIds)");
+                   
+                   
+               }else{
+                   $delStmt = $this->conn->prepare("delete from article_topics where article_id=?");
+                   $delStmt->bind_param('i', $key);
+                   $delStmt->execute();
+               }
+               
+           }
+           
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='generatetopics',start_time=?,end_time=?");
+        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecronstmt->execute();
+        $updatecronstmt->close();
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' topic(s) inserted and ' . $_SESSION['noofupd'] . ' newstype(s) updated.</h5>';
+           
+    }
     function migrateTopics() {
         $this->migrateTopicCategory();
         $_SESSION['noofins'] = 0;
