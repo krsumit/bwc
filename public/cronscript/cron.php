@@ -1450,7 +1450,7 @@ class Cron {
                       $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                    }
                    $alltopicsIds=implode(',',$current_topics);
-                   $this->conn->query("delete from article_topics where topic_id not in($alltopicsIds)");
+                   $this->conn->query("delete from article_topics where article_id=$key and topic_id not in($alltopicsIds)");
                    
                    
                }else{
