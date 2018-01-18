@@ -180,7 +180,7 @@
                             },
                             {
                             "data" : {
-                            "title" : "Topics And Location",
+                            "title" : "Location",
                                     "attr" : { "href" : "#topics-location" }
                             }
                             },
@@ -879,9 +879,9 @@
 
     <div class="container-fluid">
 
-        <div class="form-legend" id="topics-location">Topics And Location</div>
+        <div class="form-legend" id="topics-location">Location</div>
         <!--Topics begin-->
-        <div  class="control-group row-fluid">
+        <div  class="control-group row-fluid" style="display:none;">
             <div class="span3">
                 <label class="control-label" for="Ltopics" style="width:100%;">Topics</label>
                 <button type="button" name="genTopic" id="genTopic" class="btn btn-mini btn-inverse" style="margin-left:15px; display:block;">Generate Topics</button>

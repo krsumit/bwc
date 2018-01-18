@@ -1466,7 +1466,7 @@ class Cron {
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' topic(s) inserted and ' . $_SESSION['noofupd'] . ' newstype(s) updated.</h5>';
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' topic(s) inserted and ' . $_SESSION['noofupd'] . ' topic(s) updated.</h5>';
            
     }
     function migrateTopics() {

@@ -268,7 +268,7 @@
                     },
                     {
                     "data" : {
-                    "title" : "Topics And Location",
+                    "title" : "Location",
                             "attr" : { "href" : "#topics-location" }
                     }
                     },
@@ -1042,9 +1042,9 @@
     
     <div class="container-fluid">
 
-        <div class="form-legend" id="topics-location">Topics And Location</div>
+        <div class="form-legend" id="topics-location">Location</div>
         <!--Topics begin-->
-        <div  class="control-group row-fluid">
+        <div  class="control-group row-fluid" style="display: none;">
             <div class="span3">
                 <label class="control-label" for="dualMulti" style="width:100%;">Topics</label>
                 <button type="button" name="genTopic" id="genTopic" class="btn btn-mini btn-inverse" style="margin-left:15px; display:block;">Generate Topics</button>
@@ -1131,7 +1131,7 @@
                 });
                         //$("#Ltopics").pickList();
                         //$("#Ltopics").select2();
-                        $('#genTopic').trigger('click');
+                       // $('#genTopic').trigger('click');
                 });</script>
             <div class="span12 span-inset">
                 <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;">
