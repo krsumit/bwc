@@ -2287,6 +2287,7 @@ $(':radio[id=embedcodevideo]').change(function() {
             minDate: 0,
             dateFormat: "yy-mm-dd"
         });
+        
 //                            $("#datepickerInline").datepicker();
 //                            $("#datepickerMulti").datepicker({
 //                            numberOfMonths: 3,
@@ -2299,7 +2300,33 @@ $(':radio[id=embedcodevideo]').change(function() {
                     });</script>
     </div>
     @endif
-    
+    @if(in_array('12',Session::get('user_rights')))
+
+    <div class="container-fluid">
+
+        <div class="form-legend" id="schedule-for-upload">Change Article Date Time </div>
+
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="datepicker">
+                    Date Time<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Click to choose date."><i class="icon-photon info-circle"></i></a>
+                </label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <input type="text" name="publish_date_time" id="datepickerp" class="span3" />
+                </div>
+            </div>
+        </div>
+         <script>
+         $("#datepickerp").datepicker({
+            minDate: 0,
+            dateFormat: "yy-mm-dd"
+        });
+      </script>  
+    </div>
+
+    @endif
 
     <div class="container-fluid">
 
