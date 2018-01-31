@@ -705,8 +705,10 @@ public function channelarticles($option) {
         } elseif ($request->videoCode != '') {
             $article->video_type = 'embededvideocode';
         }
-
-
+        if ($request->publish_date_time_change != ''){
+                $article->publish_date = date("Y-m-d", strtotime($request->publish_date_time_change));
+                $article->publish_time = date('H:i:s');
+            }
         $article->video_Id = $request->video_Id;
         $article->canonical_options = $request->canonical_options;
         $article->canonical_url = $request->canonical_url;

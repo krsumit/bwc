@@ -2300,7 +2300,7 @@ $(':radio[id=embedcodevideo]').change(function() {
                     });</script>
     </div>
     @endif
-    @if(in_array('12',Session::get('user_rights')))
+    @if(in_array('101',Session::get('user_rights')))
 
     <div class="container-fluid">
 
@@ -2314,16 +2314,21 @@ $(':radio[id=embedcodevideo]').change(function() {
             </div>
             <div class="span9">
                 <div class="controls">
-                    <input type="text" name="publish_date_time" id="datepickerp" class="span3" />
+                    <input type="text" name="publish_date_time_change" id="datepickerp" class="span3" />
                 </div>
             </div>
         </div>
-         <script>
-         $("#datepickerp").datepicker({
-            minDate: 0,
-            dateFormat: "yy-mm-dd"
-        });
-      </script>  
+        <script>
+                $(function () {
+                    $("#datepickerp").datepicker();
+                    $("#datepickerInline").datepicker();
+                    $("#datepickerMulti").datepicker({
+                        numberOfMonths: 3,
+                        showButtonPanel: true
+                    });
+                    $('#timeEntry').timeEntry().change();
+                });
+            </script>  
     </div>
 
     @endif
