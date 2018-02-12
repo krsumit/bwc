@@ -2304,12 +2304,12 @@ $(':radio[id=embedcodevideo]').change(function() {
 
     <div class="container-fluid">
 
-        <div class="form-legend" id="schedule-for-upload">Change Article Date Time </div>
+        <div class="form-legend" id="schedule-for-upload">Change Article Date  </div>
 
         <div  class="control-group row-fluid">
             <div class="span3">
                 <label class="control-label" for="datepicker">
-                    Date Time<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Click to choose date."><i class="icon-photon info-circle"></i></a>
+                    Date <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Click to choose date."><i class="icon-photon info-circle"></i></a>
                 </label>
             </div>
             <div class="span9">
@@ -2320,7 +2320,9 @@ $(':radio[id=embedcodevideo]').change(function() {
         </div>
         <script>
                 $(function () {
-                    $("#datepickerp").datepicker();
+                    $("#datepickerp").datepicker({
+                        maxDate: 0
+                    });
                     $("#datepickerInline").datepicker();
                     $("#datepickerMulti").datepicker({
                         numberOfMonths: 3,
