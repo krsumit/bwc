@@ -72,7 +72,7 @@
                 $("#channel_sel").change(function () {
                     //alert(1);return false;
                     $(this).find("option:selected").each(function () {
-                            //alert($(this).attr("value"));return false;
+                            alert($(this).attr("value"));
                         if ($(this).attr("value") == '4') {
 
                            $("#ch-reporter" ).show();

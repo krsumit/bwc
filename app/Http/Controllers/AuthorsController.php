@@ -366,6 +366,7 @@ class AuthorsController extends Controller {
                       } */
                 }
                 //echo 'e'; exit;
+                $author_type_id = $request->author_type;
                 $author->name = $request->name;
                 $author->author_type_id = $request->author_type;
                 $author->bio = $request->bio;
