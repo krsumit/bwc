@@ -313,15 +313,15 @@ class AuthorsController extends Controller {
             $author->valid = $valid;
 
             $author->update();
-            if ($request->isertedbybwreportersdata == 'isertedbybwreportersdata') {
+            if ($author_type_id == '2') {
                 Session::flash('message', 'Your data has been successfully modify.');
-                return Redirect::to('bwreporters/add-edit-bw-reporters');
-            } else if ($request->isertedbyguestauthordata == 'isertedbyguestauthordata') {
+                return Redirect::to('author/authorshowlist/2');
+            } else if ($author_type_id == '3') {
                 Session::flash('message', 'Your data has been successfully modify.');
-                return Redirect::to('guestauthor/add-edit-gustauthor');
-            } else if ($request->isertedbyauthordata == 'isertedbyauthordata') {
+                return Redirect::to('author/authorshowlist/3');
+            } else if ($author_type_id == '4') {
                 Session::flash('message', 'Your data has been successfully modify.');
-                return Redirect::to('article/add-edit-author');
+                return Redirect::to('author/authorshowlist/4');
             }
         } else {
 
@@ -403,30 +403,22 @@ class AuthorsController extends Controller {
 
                 $author->save();
 
-                if ($request->isertedbybwreportersdata == 'isertedbybwreportersdata') {
+                if ($author_type_id == '2') {
                     Session::flash('message', 'Your data has been successfully modify.');
-                    return Redirect::to('bwreporters/add-edit-bw-reporters');
-                } else if ($request->isertedbyguestauthordata == 'isertedbyguestauthordata') {
+                    return Redirect::to('author/authorshowlist/2');
+                } else if ($author_type_id == '2') {
                     Session::flash('message', 'Your data has been successfully modify.');
-                    return Redirect::to('guestauthor/add-edit-gustauthor');
-                } else if ($request->isertedbyauthordata == 'isertedbyauthordata') {
+                    return Redirect::to('author/authorshowlist/3');
+                } else if ($author_type_id == '4') {
                     Session::flash('message', 'Your data has been successfully modify.');
-                    return Redirect::to('article/add-edit-author');
+                    return Redirect::to('author/authorshowlist/4');
                 }
                 $arr = array('status' => 'success');
             } else {
-                if ($request->isertedbybwreportersdata == 'isertedbybwreportersdata'):
+               
                     Session::flash('message', 'Email already registred.');
-                    return Redirect::to('bwreporters/add-edit-bw-reporters');
-                endif;
-                if ($request->isertedbyguestauthordata == 'isertedbyguestauthordata'):
-                    Session::flash('message', 'Email already registred.');
-                    return Redirect::to('guestauthor/add-edit-gustauthor');
-                endif;
-                if ($request->isertedbyauthordata == 'isertedbyauthordata'):
-                    Session::flash('allready', 'Email already registred.');
-                    return Redirect::to('article/add-edit-author');
-                endif;
+                    return Redirect::to('article/add-author');
+                
                 $arr = array('status' => 'error', 'msg' => 'Email already registred');
             }
 
