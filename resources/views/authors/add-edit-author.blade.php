@@ -44,12 +44,12 @@
 
         <script>
              $().ready(function () {
-                 var space = {{@$editAuthor->author_type_id}} ;
+                 var space = '{{@$editAuthor->author_type_id}}' ;
                  //alert(space);
                  if(space == '4' )
                     {
                        $("#ch-reporter" ).show();
-                    }else{
+                    }else {
                                    
                  $("#ch-reporter" ).hide();
              }
@@ -72,7 +72,7 @@
                 $("#channel_sel").change(function () {
                     //alert(1);return false;
                     $(this).find("option:selected").each(function () {
-                            alert($(this).attr("value"));
+                            //alert($(this).attr("value"));
                         if ($(this).attr("value") == '4') {
 
                            $("#ch-reporter" ).show();
