@@ -174,19 +174,24 @@
                 <div class="sub-nav">
                     <ul class="nav">
                         
-                        @if(in_array('2',Session::get('user_rights')))	
+                        @if(in_array('102',Session::get('user_rights')))	
                         <li>
-                            <a href="/article/add-edit-author">Add/Edit Columnist</a>
+                            <a href="/article/add-author/">Add Author</a>
+                        </li>
+                        @endif
+                        @if(in_array('9',Session::get('user_rights')))	
+                        <li>
+                            <a href="/author/authorshowlist/4">Columnist</a>
                         </li>
                         @endif
                          @if(in_array('44',Session::get('user_rights')))	
                         <li>
-                            <a href="/guestauthor/add-edit-gustauthor">Add/Edit Guest Author</a>
+                            <a href="/author/authorshowlist/3"> Guest Author</a>
                         </li>
                         @endif
                          @if(in_array('45',Session::get('user_rights')))	
                         <li>
-                            <a href="/bwreporters/add-edit-bw-reporters">Add/Edit Reporters</a>
+                            <a href="/author/authorshowlist/2">Reporters</a>
                         </li>
                         @endif
 <!--                        <li>

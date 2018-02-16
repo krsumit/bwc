@@ -30,19 +30,45 @@ class AuthorsController extends Controller {
 
     public function index() {
         //echo '$queryed' ;exit;
-
+        $id ='';
         /* Right mgmt start */
         $rightId = 9;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
+         
+        $editAuthor = Author::where('author_id', $id)
+                ->select('authors.*')
+                ->first();
+        $columns = DB::table('columns')
+                ->select('columns.*')
+                ->get();
 
+        return view('authors.add-edit-author', compact('columns','editAuthor'));
+    }
 
+    /**
+     * Show the form for authorlisting 
+     *
+     * @return show
+     */
+    public function authorshowlisting($id) {
+
+        /* Right mgmt start */
+        $rightId = 44;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
+        /* Right mgmt end */
+         if (isset($_GET['id'])) {
+            $id = $_GET['id'];
+         }
+        //echo $queryed ;exit;
         if (isset($_GET['keyword'])) {
             $queryed = $_GET['keyword'];
             $posts = DB::table('authors')
                     ->select('authors.*', 'authors.name')
-                    ->where('authors.author_type_id', '=', '4')
+                    ->where('authors.author_type_id', '=', $id)
+                    ->where('authors.valid', '=', '1')
                     ->where('authors.name', 'LIKE', '%' . $queryed . '%')
                     ->orderBy('updated_at', 'desc')
                     ->paginate(10);
@@ -50,7 +76,7 @@ class AuthorsController extends Controller {
             $queryed = $_GET['keywordemail'];
             $posts = DB::table('authors')
                     ->select('authors.*', 'authors.email')
-                    ->where('authors.author_type_id', '=', '4')
+                    ->where('authors.author_type_id', '=', $id)
                     ->where('authors.valid', '=', '1')
                     ->where('authors.email', 'LIKE', '%' . $queryed . '%')
                     ->orderBy('updated_at', 'desc')
@@ -58,23 +84,17 @@ class AuthorsController extends Controller {
         } else {
             $posts = DB::table('authors')
                     ->select('authors.*', 'authors.author_type_id')
-                    ->where('authors.author_type_id', '=', '4')
+                    ->where('authors.author_type_id', '=', $id)
                     ->where('authors.valid', '=', '1')
                     ->orderBy('updated_at', 'desc')
                     ->paginate(10);
         }
-        $columns = DB::table('columns')
-                ->select('columns.*')
-                ->get();
 
-        return view('authors.add-edit-author', compact('posts', 'columns'));
+
+        return view('authors.authorshowlist', compact('posts'));
     }
-
-    /**
-     * Show the form for guestauthor 
-     *
-     * @return show
-     */
+    
+    
     public function gustauthor() {
 
         /* Right mgmt start */
@@ -200,7 +220,7 @@ class AuthorsController extends Controller {
     public function store(Request $request) {
 
         //Save Request Tuple in Table - Validate First
-        // print_r($request->all());exit;
+         //print_r($request->all());exit;
         // Validation //
 
 
@@ -262,15 +282,21 @@ class AuthorsController extends Controller {
 
             //If columnd_id is not NULL then is_columnist is Set
             $isCol = 0;
+            if($author_type_id =='4'){
             if ($request->column_id > 0) {
                 $isCol = '1';
+            }
+            
             } else {
                 $isCol = 0;
             }
             $is_columnist = $isCol;
+            if($author_type_id =='4'){
             if (!empty($request->column_id)) {
                 $column_id = $request->column_id;
-            } else {
+            } 
+            }
+            else {
                 $column_id = '0';
             }
             $valid = '1';
@@ -356,14 +382,21 @@ class AuthorsController extends Controller {
 
                 //If columnd_id is not NULL then is_columnist is Set
                 $isCol = 0;
+                if($author_type_id =='4'){
                 if ($request->column_id > 0) {
                     $isCol = '1';
-                } else {
+                }
+                }else {
                     $isCol = 0;
                 }
                 $author->is_columnist = $isCol;
+                if($author_type_id =='4'){
                 if (!empty($request->column_id)) {
                     $author->column_id = $request->column_id;
+                }
+                } 
+                else {
+                $author->column_id = 0;
                 }
                 $author->valid = '1';
 
@@ -416,7 +449,7 @@ class AuthorsController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function edit() {
+    public function edit($id) {
         //
         //$asd = fopen("/home/sudipta/log.log", 'a+');
         if (isset($_GET['option'])) {
@@ -425,10 +458,16 @@ class AuthorsController extends Controller {
         //fwrite($asd, " EDIT ID Passed ::" .$id  . "\n\n");
         $editAuthor = Author::where('author_id', $id)
                 ->select('authors.*')
+                ->first();
+        
+        //print_r($editAuthor);exit;
+        
+        $columns = DB::table('columns')
+                ->select('columns.*')
                 ->get();
         //print_r($editAuthor);exit;
-
-        echo json_encode(array($editAuthor));
+        return view('authors.add-edit-author', compact('editAuthor', 'columns'));
+        //echo json_encode(array($editAuthor));
     }
 
     /**

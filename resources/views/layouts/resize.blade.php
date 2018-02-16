@@ -25,8 +25,8 @@
         background-color: #f8f8f8;
         background-size: cover;
         border: 1px solid #ccc;
-        width: {{$sizeArray[0]}}px;
-        height: {{$sizeArray[1]}}px;
+        width: {{$sizeArray[0]}} px;
+        height: {{$sizeArray[1]}} px;
         margin:10px auto;
       }
       

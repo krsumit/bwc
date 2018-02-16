@@ -147,7 +147,7 @@
         </div>
     </div>
 </div>
-<form class="form-horizontal method="post" id="artcilechannelin">
+<form class="form-horizontal" method="post" id="artcilechannelin">
 <div class="main-content">
     <div class="breadcrumb-container">
         <ul class="xbreadcrumbs">

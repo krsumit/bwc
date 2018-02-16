@@ -126,7 +126,7 @@
         <i class="icon-big-notepad"></i>
         <h2><small>Magazine Articles</small></h2>        
     </header>
-    <form class="form-horizontal method="post" id="artcilmg">
+    <form class="form-horizontal" method="post" id="artcilmg">
         <input type="hidden" name="m_id" value="{{$id}}" >
         <input type="hidden" name="channel_id" value="{{$posts->channel_id}}" >
         

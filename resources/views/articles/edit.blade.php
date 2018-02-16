@@ -2325,8 +2325,8 @@ $(':radio[id=embedcodevideo]').change(function() {
                     });
                     $("#datepickerInline").datepicker();
                     $("#datepickerMulti").datepicker({
-                        numberOfMonths: 3,
-                        showButtonPanel: true
+			maxDate: 0
+                        
                     });
                     $('#timeEntry').timeEntry().change();
                 });

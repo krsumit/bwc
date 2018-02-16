@@ -7,9 +7,9 @@
     <div class="panel-content filler">
         <div class="panel-logo"></div>
         <div class="panel-header">
-            <h1><small>Add Columnist</small></h1>
+            <h1><small>Add Author</small></h1>
         </div>
-        <div class="panel-search container-fluid">
+        <!--<div class="panel-search container-fluid">
             <div id="searchnameby">
             <form class="form-horizontal" method="get" action="">
                     <input id="panelSearch" required  placeholder="Search" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">
@@ -38,12 +38,21 @@
                 <input type="radio" id="seacrchemail" @if(isset($_GET['keywordemail'])) @if($_GET['keywordemail']!='') checked @endif @endif required name="searchin" class="uniformRadio" value="article_id">
                Search by Email ID
             </label>
-        </div>
+        </div>-->
 
        
 
         <script>
              $().ready(function () {
+                 var space = {{@$editAuthor->author_type_id}} ;
+                 //alert(space);
+                 if(space == '4' )
+                    {
+                       $("#ch-reporter" ).show();
+                    }else{
+                                   
+                 $("#ch-reporter" ).hide();
+             }
                 $("#searchemailby" ).hide();
                 $("#seacrchname" ).click(function() {
                     $("#searchnameby" ).show();
@@ -58,8 +67,42 @@
                 $(".uniformRadio").uniform({
                     radioClass: 'uniformRadio'
                 });
+                
+                
+                $("#channel_sel").change(function () {
+                    //alert(1);return false;
+                    $(this).find("option:selected").each(function () {
+                            //alert($(this).attr("value"));return false;
+                        if ($(this).attr("value") == '4') {
+
+                           $("#ch-reporter" ).show();
+                        }
+
+                        else if ($(this).attr("value") == '2') {
+
+                            $("#ch-reporter").hide();
+
+                        }
+                        else if ($(this).attr("value") == '3') {
+
+                            $("#ch-reporter").hide();
+
+                        }
+                        else{
+                            if(space == 4 ){
+                                $("#ch-reporter" ).show();
+                            }
+                            
+                        }
+
+                    });
+
+                });
+                
+                
 
             });
+             
         </script>
         <br><br>
         <div class="panel-header">
@@ -67,19 +110,7 @@
         </div> 
         <script type="text/javascript">
             $(function () {
-                $("#jstree").jstree({
-                    "json_data": {
-                        "data": [
-                            {
-                                "data": {
-                                    "title": "Add A New Columnist",
-                                    "attr": {"href": "#new"}
-                                }
-                            },
-                        ]
-                    },
-                    "plugins": ["themes", "json_data", "ui"]
-                })
+               
                         .bind("click.jstree", function (event) {
                             var node = $(event.target).closest("li");
                             document.location.href = node.find('a').attr("href");
@@ -112,19 +143,19 @@
                 </a>
             </li>
             <li class="current">
-                <a href="javascript:;">Add Columnist</a>
+                <a href="javascript:;">Add Author</a>
             </li>
         </ul>
     </div>           <header>
         <i class="icon-big-notepad"></i>
-        <h2><small>Add Columnist</small></h2>
+        <h2><small>Add Author</small></h2>
 
     </header>
     <form class="form-horizontal" onsubmit="return validateAuthorData()" method="POST" enctype= "multipart/form-data" action="/article/addAuthor">
        {!! csrf_field() !!}
-       <input id="author_type" class="uniformRadio" type="hidden" value="4" name="author_type" style="opacity: 0;">
-       <input id="is_columnist" class="uniformRadio" type="hidden" value="1" name="is_columnist" style="opacity: 0;">
-       <input id="photo" class="uniformRadio" type="hidden" value="" name="photoset" style="opacity: 0;">
+       <!--<input id="author_type" class="uniformRadio" type="hidden" value="4" name="author_type" style="opacity: 0;">
+       <input id="is_columnist" class="uniformRadio" type="hidden" value="1" name="is_columnist" style="opacity: 0;">-->
+       <input id="photo" class="uniformRadio" type="hidden" value="@if(@$editAuthor->photo !='') {{@$editAuthor->photo}} @endif " name="photoset" style="opacity: 0;">
         <input id="isertedbyauthordata" class="uniformRadio" type="hidden" value="isertedbyauthordata" name="isertedbyauthordata" style="opacity: 0;">
         <div class="container-fluid">
 
@@ -157,8 +188,29 @@
         </div>
 
         <div class="container-fluid">
-            <div class="form-legend" id="new">Add A New Columnist
+            <div class="form-legend" id="new">Add A New Author
 
+            </div>
+            <!--Select Box with Filter Search begin-->
+            <div  class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="channel_sel">Author Type</label>
+                </div>
+                <div class="span9">
+                    
+                    <div class="controls">
+                        <select name="author_type" id="channel_sel" class="required channel_sel formattedelement">
+                            <option  @if(@$editAuthor->author_type_id==3) selected="selected" @endif value="3">Gust Author</option>
+                             <option @if(@$editAuthor->author_type_id==4) selected="selected" @endif value="4">Columnist</option>
+                             <option @if(@$editAuthor->author_type_id==2) selected="selected" @endif value="2">BW Reporters</option>
+                        </select>
+
+                    </div>
+                </div>
+                <script>
+                    $().ready(function () {
+                        $("#channel_sel").select2();
+                    });</script>
             </div>
 
             <div class="control-group row-fluid">
@@ -167,7 +219,7 @@
                 </div>
                 <div class="span9">
                     <div class="controls">
-                        <input  name="name" type="text" id="name">
+                        <input  name="name" type="text" id="name" value="@if(@$editAuthor->name !='') {{@$editAuthor->name}} @endif" >
                     </div>
                 </div>
             </div>
@@ -177,7 +229,7 @@
                 </div>
                 <div class="span9">
                     <div class="controls">
-                        <textarea rows="4" class="no-resize" name="bio" id="bio"></textarea>
+                        <textarea rows="4" class="no-resize" name="bio" id="bio">@if(@$editAuthor->bio !='') {{@$editAuthor->bio}} @endif</textarea>
                     </div>
                 </div>
             </div>
@@ -187,7 +239,7 @@
                 </div>
                 <div class="span9">
                     <div class="controls">
-                        <input  name="email" type="email" id="email">
+                        <input  name="email" type="email" id="email" value="@if(@$editAuthor->email !='') {{@$editAuthor->email}} @endif " >
                     </div>
                 </div>
             </div>
@@ -197,7 +249,7 @@
                 </div>
                 <div class="span9">
                     <div class="controls">
-                        <input  name="mobile" type="text" id="mobile">
+                        <input  name="mobile" type="text" id="mobile" value="@if(@$editAuthor->mobile !='') {{@$editAuthor->mobile}} @endif ">
                     </div>
                 </div>
             </div>
@@ -220,16 +272,17 @@
                 </div>
                 <div class="span9">
                     <div class="controls">
-                        <input id="twitter" name="twitter" type="text">
+                        <input id="twitter" name="twitter" type="text" value="@if(@$editAuthor->twitter !='') {{@$editAuthor->twitter}} @endif ">
                     </div>
                 </div>
             </div>
-
-            <div  class="control-group row-fluid" id="ch-reporter">
+           
+            <div  class="control-group row-fluid"  id="ch-reporter" >
+               
                 <div class="span3">
                     <label class="control-label" for="selectBoxFilter">Choose Column</label>
                 </div>
-                <div class="span9">
+                <div class="span9" >
                     <div class="controls">
                         <select name="column_id" >
                             <option selected="" value="">-Select columns-</option>
@@ -240,12 +293,16 @@
                         </select>
                     </div>
                 </div>
+                
                 <script>
                     $().ready(function () {
                         $("#selectBoxFilter221").select2();
                     });
                 </script>                            
             </div>
+          
+           
+            
             <input type="hidden" id="qid" name="qid" value="">
             <div class="control-group row-fluid">
                 <div class="span12 span-inset">
@@ -257,46 +314,7 @@
         </div>
 
 
-        <div class="container-fluid">
 
-
-            <!--Sortable Responsive Media Table begin-->
-            <div class="row-fluid">
-                <div class="span12">
-                    <table class="table table-striped table-responsive" id="tableSortableResMed">
-                        <thead class="cf sorthead">
-                            <tr>
-                                <th>Image</th>
-                                <th>Name</th>
-                                <th>Email-ID</th>
-                                <th>Mobile</th>
-                                <th><input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectall"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                             @foreach($posts as $a)
-                            <tr class="gradeX" id="rowCur{{$a->author_id}}">
-                                <td style="width:160px;"><img src="{{ config('constants.awsbaseurl').config('constants.awauthordir').$a->photo}}" alt="Author image" style="width:70%;" /></td>
-                                <td ><a href="#"onclick="getEditcolumnist({{$a->author_id}})">{{$a->name}}</a></td>
-                                <td >{{$a->email}}</td>
-                                <td  class="center">{{$a->mobile}}</td>
-                                <td  class="center"><input type="checkbox" class="uniformCheckbox" value="{{$a->author_id}}" name="checkItem[]"></td>
-                            </tr>
-                            @endforeach
-                            
-
-                        </tbody>
-                    </table>
-
-                </div>
-            </div>
-            <div class="dataTables_paginate paging_bootstrap pagination">
-                    
-                 {!! $posts->appends(Input::get())->render() !!}
-                </div>
-            <!--Sortable Responsive Media Table end-->
-                    
-        </div><!-- end container -->
        
         <script>
             $(document).ready(function () {
@@ -356,11 +374,7 @@
                     
         </script>
 
-        <div class="control-group row-fluid">
-            <div class="span12 span-inset">
-                <button type="button" onclick="deleteAuthor()" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>							
-
-            </div></div>
+        
     </form>
 </div>
 <script>

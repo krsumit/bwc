@@ -378,7 +378,7 @@ Route::post('article/addAuthor1', function(){
  */
 Route::match(['get', 'post'], 'article/addAuthor', ['as' => 'article/addAuthor', 'uses' => 'AuthorsController@store']);
 
-Route::match(['get', 'post'], 'article/add-edit-author', ['as' => 'article/add-edit-author', 'uses' => 'AuthorsController@index']);
+Route::match(['get', 'post'], 'article/add-author', ['as' => 'article/add-author', 'uses' => 'AuthorsController@index']);
 Route::match(['get', 'post'], 'columnist/edit', ['as' => 'columnist/edit', 'uses' => 'AuthorsController@edit']);
 
 Route::match(['get', 'post'], 'guestauthor/add-edit-gustauthor', ['as' => 'guestauthor/add-edit-gustauthor', 'uses' => 'AuthorsController@gustauthor']);
@@ -386,6 +386,8 @@ Route::match(['get', 'post'], 'bwreporters/add-edit-bw-reporters', ['as' => 'bwr
 Route::match(['get', 'post'], 'author/delete', ['as' => 'author/delete', 'uses' => 'AuthorsController@destroy']);
 
 Route::match(['get'], 'author/changestatus', ['as' => 'author/changestatus', 'uses' => 'AuthorsController@changeStatus']);
+Route::match(['get'], 'author/authorshowlist/{id}', ['uses' => 'AuthorsController@authorshowlisting']);
+Route::get('article/add-author/{id}',['middleware' => 'auth',   'uses' => 'AuthorsController@edit']);
 /*
  *  Adds category from Createcategory to category Table 
  */
