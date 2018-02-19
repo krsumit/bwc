@@ -303,7 +303,7 @@
           
            
             
-            <input type="hidden" id="qid" name="qid" value="">
+            <input type="hidden" id="qid" name="qid" value="{{@$editAuthor->author_id}}">
             <div class="control-group row-fluid">
                 <div class="span12 span-inset">
                     <button class="btn btn-warning pull-right" type="submit" style="display:block;">Add</button>
