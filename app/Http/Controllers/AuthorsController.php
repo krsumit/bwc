@@ -220,7 +220,7 @@ class AuthorsController extends Controller {
     public function store(Request $request) {
 
         //Save Request Tuple in Table - Validate First
-         //print_r($request->all());exit;
+        // print_r($request->all());exit;
         // Validation //
 
 
@@ -329,7 +329,7 @@ class AuthorsController extends Controller {
 
             if ($author->where('email', trim($request->email))->count() == 0) {
 
-
+                 //print_r($request->all());exit;
                 //$image = new Image;
                 // upload the image //
                 //$f = sizeof($_FILES);
@@ -406,7 +406,7 @@ class AuthorsController extends Controller {
                 if ($author_type_id == '2') {
                     Session::flash('message', 'Your data has been successfully modify.');
                     return Redirect::to('author/authorshowlist/2');
-                } else if ($author_type_id == '2') {
+                } else if ($author_type_id == '3') {
                     Session::flash('message', 'Your data has been successfully modify.');
                     return Redirect::to('author/authorshowlist/3');
                 } else if ($author_type_id == '4') {

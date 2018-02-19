@@ -155,6 +155,7 @@
        {!! csrf_field() !!}
        <!--<input id="author_type" class="uniformRadio" type="hidden" value="4" name="author_type" style="opacity: 0;">
        <input id="is_columnist" class="uniformRadio" type="hidden" value="1" name="is_columnist" style="opacity: 0;">-->
+        <input type="hidden" id="qid" name="qid" value="@if(@$editAuthor->author_id !='') {{@$editAuthor->author_id}} @endif">
        <input id="photo" class="uniformRadio" type="hidden" value="@if(@$editAuthor->photo !='') {{@$editAuthor->photo}} @endif " name="photoset" style="opacity: 0;">
         <input id="isertedbyauthordata" class="uniformRadio" type="hidden" value="isertedbyauthordata" name="isertedbyauthordata" style="opacity: 0;">
         <div class="container-fluid">
@@ -200,7 +201,7 @@
                     
                     <div class="controls">
                         <select name="author_type" id="channel_sel" class="required channel_sel formattedelement">
-                            <option  @if(@$editAuthor->author_type_id==3) selected="selected" @endif value="3">Gust Author</option>
+                            <option  @if(@$editAuthor->author_type_id==3) selected="selected" @endif value="3">Guest Author</option>
                              <option @if(@$editAuthor->author_type_id==4) selected="selected" @endif value="4">Columnist</option>
                              <option @if(@$editAuthor->author_type_id==2) selected="selected" @endif value="2">BW Reporters</option>
                         </select>
@@ -303,7 +304,7 @@
           
            
             
-            <input type="hidden" id="qid" name="qid" value="{{@$editAuthor->author_id}}">
+           
             <div class="control-group row-fluid">
                 <div class="span12 span-inset">
                     <button class="btn btn-warning pull-right" type="submit" style="display:block;">Add</button>
