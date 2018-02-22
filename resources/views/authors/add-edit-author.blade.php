@@ -155,8 +155,8 @@
        {!! csrf_field() !!}
        <!--<input id="author_type" class="uniformRadio" type="hidden" value="4" name="author_type" style="opacity: 0;">
        <input id="is_columnist" class="uniformRadio" type="hidden" value="1" name="is_columnist" style="opacity: 0;">-->
-        <input type="hidden" id="qid" name="qid" value="@if(@$editAuthor->author_id !='') {{@$editAuthor->author_id}} @endif">
-       <input id="photo" class="uniformRadio" type="hidden" value="@if(@$editAuthor->photo !='') {{@$editAuthor->photo}} @endif " name="photoset" style="opacity: 0;">
+        <input type="hidden" id="qid" name="qid" value="@if(@$editAuthor->author_id !=''){{@$editAuthor->author_id}}@endif">
+       <input id="photo" class="uniformRadio" type="hidden" value="@if(@$editAuthor->photo !=''){{@$editAuthor->photo}}@endif" name="photoset" style="opacity: 0;">
         <input id="isertedbyauthordata" class="uniformRadio" type="hidden" value="isertedbyauthordata" name="isertedbyauthordata" style="opacity: 0;">
         <div class="container-fluid">
 
@@ -220,7 +220,7 @@
                 </div>
                 <div class="span9">
                     <div class="controls">
-                        <input  name="name" type="text" id="name" value="@if(@$editAuthor->name !='') {{@$editAuthor->name}} @endif" >
+                        <input  name="name" type="text" id="name" value="@if(@$editAuthor->name !=''){{@$editAuthor->name}} @endif" >
                     </div>
                 </div>
             </div>
@@ -240,7 +240,7 @@
                 </div>
                 <div class="span9">
                     <div class="controls">
-                        <input  name="email" type="email" id="email" value="@if(@$editAuthor->email !='') {{@$editAuthor->email}} @endif " >
+                        <input  name="email" type="email" id="email" value="@if(@$editAuthor->email !=''){{@$editAuthor->email}}@endif" >
                     </div>
                 </div>
             </div>
@@ -250,7 +250,7 @@
                 </div>
                 <div class="span9">
                     <div class="controls">
-                        <input  name="mobile" type="text" id="mobile" value="@if(@$editAuthor->mobile !='') {{@$editAuthor->mobile}} @endif ">
+                        <input  name="mobile" type="text" id="mobile" value="@if(@$editAuthor->mobile !=''){{@$editAuthor->mobile}}@endif">
                     </div>
                 </div>
             </div>
@@ -273,7 +273,7 @@
                 </div>
                 <div class="span9">
                     <div class="controls">
-                        <input id="twitter" name="twitter" type="text" value="@if(@$editAuthor->twitter !='') {{@$editAuthor->twitter}} @endif ">
+                        <input id="twitter" name="twitter" type="text" value="@if(@$editAuthor->twitter !=''){{@$editAuthor->twitter}}@endif">
                     </div>
                 </div>
             </div>
