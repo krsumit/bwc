@@ -8,6 +8,7 @@ class Cron {
     var $keyarray;
     var $categoryMapping;
     var $channelId;
+    var $url;
 
     function __construct() {
         $this->conn = new mysqli(HOST, USER, PASS, DATABASE) or die($this->conn->connect_errno);
@@ -15,6 +16,7 @@ class Cron {
         $this->conn2 = new mysqli(LHOST, LUSER, LPASS, LDATABASE) or die($this->conn2->connect_errro);
         mysqli_set_charset($this->conn2, "utf8");
         $this->channelId = 1;
+        $this->url='http://businessworld.in/';
     }
 
     function migrateData($section) {
@@ -121,14 +123,23 @@ class Cron {
                 break;
             case 'subscriber':
                 $this->migrateNewsletterSubscriber();
+                break;
             case 'trending':
                 $this->migrateNewsTrending();
+                break;
             case 'Magazineissuearticlelist':
                 $this->MagazineissueArticlelist();
+                break;
             case 'podcast':
-                $this->Podcast(); 
+                $this->Podcast();
+                break;
             case 'PodcastAudioList':
-                $this->podcastAudioList();    
+                $this->podcastAudioList();
+                break;
+            case 'izooto':
+                $this->izootoContentPush();
+                break;
+            
             
         endswitch;
 
@@ -3548,6 +3559,70 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
         $updatecronstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' subscriber(s) inserted and ' . $_SESSION['noofupd'] . ' subscriber(s) updated.</h5>';
     }
+
+    function izootoContentPush() {        
+         $cronresult = $this->conn->query("select start_time from cron_log where section_name='article' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        $data=array();
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            $condition = " and  (concat(publish_date,' ',publish_time) >='$cronLastExecutionTime')";
+        }
+        $articleResults = $this->conn->query("SELECT *  FROM articles where  channel_id='1' and status='P' and (important='1' or web_exclusive='1')  $condition"); 
+        while ($articleRow = $articleResults->fetch_assoc()){
+                $row['title']=$articleRow['title'];
+                $row['message']=$articleRow['summary'];
+                $row['landing_url']=$url= $this->url.'article/'.preg_replace('/([^a-zA-Z0-9_.])+/', '-',$articleRow['title']).'/'.$articleRow['publish_date'].'-'.$articleRow['article_id'];
+                $data[]=$row;
+        }
+        
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='quickbyte' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            $condition = " and  (created_at>='$cronLastExecutionTime')";
+        }
+        
+        $quickBytesResults = $this->conn->query("SELECT *  FROM quickbyte where channel_id='1' and status='P' $condition");
+        
+        if ($quickBytesResults->num_rows > 0) {
+            while ($quickBytesRow = $quickBytesResults->fetch_assoc()) {
+                $row['title']=$quickBytesRow['title'];
+                $row['message']=$quickBytesRow['description'];
+                $row['landing_url']=$url= $this->url.'quickbytes/'.preg_replace('/([^a-zA-Z0-9_.])+/', '-',$quickBytesRow['title']).'/'.$quickBytesRow['add_date'].'-'.$quickBytesRow['id'];
+                $data[]=$row;
+                
+            }
+        }
+        foreach($data as $dt){
+             $dataToPush = array(
+            "title" => $dt['title'],
+            "message" =>$dt['message'],
+            "icon_url" => "http://static.businessworld.in/static/images/BW-logo-200X200_new.jpg",
+            "landing_url" =>$dt['landing_url'],
+            "actions" => array(array("text" => "Read Detail", "url" =>$dt['landing_url'])),
+            "utm_source" => "izooto",
+            "utm_medium" => "push-notification",
+            "utm_campaign" => "promotion",
+            "ttl" => 86400,
+            "target" => array("type" => "all"));
+         $json_data=json_encode($dataToPush);
+        $ch = curl_init('https://apis.izooto.com/v1/notifications');
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Authentication-Token:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1MTg0MjUzMzcsImp0aSI6InczYUZaOGdIdTQiLCJpc3MiOiJ3d3cuaXpvb3RvLmNvbSIsIm5iZiI6MTUxODQyNTMzNywiZXhwIjoxNTQ5OTYxMzM3LCJkYXRhIjp7InVpZCI6Ijc2MjQiLCJzaWQiOiI4NDI3In19.oiBZLiuTpkSxxxhThKg8eEuvfoax8lcOjFtob707i-Q',
+            'Content-Length: ' . strlen($json_data))
+        );
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $json_data );
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        }                
+    }
+    
+  
 
 }
 
