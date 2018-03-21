@@ -543,7 +543,7 @@ public function channelvideo()
     public function channelvideostore(Request $request)
     { 
         $rightId=65;
-      //  print_r($_POST);
+        //print_r($_POST);
         $currentChannelId=$request->channel;
         //if(!$this->rightObj->checkRights($currentChannelId,$rightId)){
             //return redirect('/dashboard');
@@ -579,7 +579,11 @@ public function channelvideo()
                 $video->video_name = $videoRow->video_name;
                 $video->copyvideo_id = $videoRow->id;
                 $video->video_status = $videoRow->video_status;
-                $video->campaign_id = $videoRow->campaign;              
+                if($videoRow->campaign !=''){
+                $video->campaign_id = $videoRow->campaign; 
+                }else{
+                $video->campaign_id = '0';
+                }             
                 $video->save();
                 $id = $video->id;
                 $oldid= $videoRow->id;

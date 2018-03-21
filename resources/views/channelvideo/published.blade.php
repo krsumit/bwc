@@ -301,7 +301,7 @@
             });
             function copyVideo() {
                     var data = $('#videocopyotherchannel').serialize();  
-                        alert(data);
+                        //alert(data);
                         
                        $.ajax({
                             url : "/video/videocopyotherchannelstore", // the endpoint

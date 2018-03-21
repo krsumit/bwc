@@ -30,9 +30,7 @@ class Cron {
             case 'event':
                 $this->migrateEvent();
                 break;
-            case 'articleviewcount':
-                $this->Articleviewcount();
-                break;
+            
             
            
             case 'photoshoot':
