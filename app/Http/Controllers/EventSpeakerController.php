@@ -12,6 +12,7 @@ use App\Event;
 use App\SpeakerTag;
 use App\Speaker;
 use App\SpeakerDetails;
+use App\ActivityLog;
 use Session;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -65,6 +66,7 @@ class EventSpeakerController extends Controller {
     }
 
     public function store(Request $request) {
+       
          $rightId = 104;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
@@ -88,7 +90,6 @@ class EventSpeakerController extends Controller {
         
         $activityLog=new ActivityLog();
         $filename = '';
-        
         if ($request->file('speaker_image')) { // echo 'test';exit;
             $filename = str_random(6) . '_' . $request->file('speaker_image')->getClientOriginalName();
             $fileTran = new FileTransfer();
