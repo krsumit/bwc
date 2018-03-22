@@ -14,9 +14,39 @@
         <div class="panel-search container-fluid">
             <form class="form-horizontal" method="get" action="">
                 <input type="hidden" name="channel" value="{{$currentChannelId}}"/>
-                <input id="panelSearch" required  placeholder="Search" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">
+                <div class="controls">
+                    Keyword
+                    <input id="panelSearch" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">       </div>
+                <div class="controls">
+                    Country
+                    <select name="country" id="selectBoxFilter6">
+                        <option  value="">Please Select</option>
+                        @foreach($country as $countrye)
+                        <option @if(isset($get->country)) @if($get->country == $countrye->country_id) selected="selected" @endif @endif value="{{ $countrye->country_id }}">{{ $countrye->name }}</option>
+                        @endforeach	                                        
+                    </select>
+                </div>
+                <div class="controls" id="tabState">
+                    State
+                    <select name="state" id="selectBoxFilter7">
+                        <option value="">Please Select</option>
+                        @foreach($states as $state)
+                        <option @if(isset($get->state)) @if($get->state==$state->state_id) selected="selected" @endif @endif value="{{ $state->state_id}}">{{ $state->name }}</option>		
+                        @endforeach
+                    </select>
+                </div>
+                <div class="controls">
+                    Start Date
+                    <input type="text" id="datepicker" class="span3" name="startdate" value="@if(isset($get->startdate)){{$get->startdate}} @endif"/>
+                </div>
+                <div class="controls">
+                    End Date
+                    <input type="text" id="datepicker2" class="span3" name="enddate" value="@if(isset($get->enddate)){{$get->enddate}} @endif"/>
+                </div>
 
-                <button class="btn btn-search" type="submit"></button>
+
+                 <button type="submit" class="btn btn-info">Search</button>
+                <!--                <button class="btn btn-search" type="submit"></button>-->
                 @if(isset($_GET['keyword'])) 
                 <a href="/event/published"><button class="btn btn-default" type="button">Reset</button></a>
                 @endif
@@ -28,42 +58,45 @@
     <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
         </div> 
         <script type="text/javascript">
-            $(function () {
-            $("#jstree").jstree({
-            "json_data": {
-            "data": [
-            {
-            "data": {
-            "title": "Sort By",
-                    "attr": {"href": "#Simple_Select_Box_with_Filter_Search"}
-            }
-            },
-            {
-            "data": {
-            "title": "Published Events",
-                    "attr": {"href": "#tableSortable_wrapper"}
-            }
-            },
-            ]
-            },
-                    "plugins": ["themes", "json_data", "ui"]
-            })
-                    .bind("click.jstree", function (event) {
-                    var node = $(event.target).closest("li");
-                            document.location.href = node.find('a').attr("href");
-                            return false;
-                    })
-                    .delegate("a", "click", function (event, data) {
-                    event.preventDefault();
-                    });
-            });        </script>
-        <div class="sidebarMenuHolder">
-            <div class="JStree">
-                <div class="Jstree_shadow_top"></div>
-                <div id="jstree"></div>
-                <div class="Jstree_shadow_bottom"></div>
-            </div>
-        </div>    </div>
+//            $(function () {
+//            $("#jstree").jstree({
+//            "json_data": {
+//            "data": [
+//            {
+//            "data": {
+//            "title": "Search",
+//                    "attr": {"href": "#Simple_Select_Box_with_Filter_Search"}
+//            }
+//            },
+//            {
+//            "data": {
+//            "title": "Published Events",
+//                    "attr": {"href": "#tableSortable_wrapper"}
+//            }
+//            },
+//            ]
+//            },
+//                    "plugins": ["themes", "json_data", "ui"]
+//            })
+//                    .bind("click.jstree", function (event) {
+//                    var node = $(event.target).closest("li");
+//                            document.location.href = node.find('a').attr("href");
+//                            return false;
+//                    })
+//                    .delegate("a", "click", function (event, data) {
+//                    event.preventDefault();
+//                    });
+//            });        
+//                
+        </script>
+        <!--        <div class="sidebarMenuHolder">
+                    <div class="JStree">
+                        <div class="Jstree_shadow_top"></div>
+                        <div id="jstree"></div>
+                        <div class="Jstree_shadow_bottom"></div>
+                    </div>
+                </div>    -->
+    </div>
     <div class="panel-slider">
         <div class="panel-slider-center">
             <div class="panel-slider-arrow"></div>
@@ -108,24 +141,25 @@
                     </div>
                 </div>
                 <script>
-                            $().ready(function () {
-                    $("#channel_sel").select2();
-                    $("#channel_sel").change(function () {
-                    $(this).find("option:selected").each(function () {
+                    $().ready(function () {
+                        $("#channel_sel").select2();
+                        $("#channel_sel").change(function () {
+                            $(this).find("option:selected").each(function () {
 
-                    if ($(this).attr("value").trim().length != 0) {
+                                if ($(this).attr("value").trim().length != 0) {
 
-                    window.location = '{{url("event/published")}}' + '?channel=' + $(this).attr("value").trim();
-                    }
+                                    window.location = '{{url("event/published")}}' + '?channel=' + $(this).attr("value").trim();
+                                }
 
-                    else if ($(this).attr("value") == "none") {
+                                else if ($(this).attr("value") == "none") {
 
-                    $("#quote_list").hide();
-                    }
+                                    $("#quote_list").hide();
+                                }
 
+                            });
+                        });
                     });
-                    });
-                    });                </script>
+                </script>
             </div>
 
             <!--Select Box with Filter Search end-->
@@ -162,121 +196,44 @@
             <!--Notifications end-->
 
         </div>
+            <script>
+                $(function () {
 
-        <div class="container-fluid">
-
-            <div class="form-legend">Sort By</div>
-
-            <!--Select Box with Filter Search begin-->
-            <div id="Simple_Select_Box_with_Filter_Search" class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Sort By Region</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <select name="country" id="selectBoxFilter6">
-                            <option  value="">Please Select</option>
-                            @foreach($country as $countrye)
-                            <option value="{{ $countrye->country_id }}">{{ $countrye->name }}</option>
-                            @endforeach	                                        
-                        </select>
-                    </div>
-                </div>
-                <script>
-                            $().ready(function () {
                     $("#selectBoxFilter").select2();
+
+                    $("#selectBoxFilter6").select2();
+                    $("#selectBoxFilter6").change(function () {
+                        $(this).find("option:selected").each(function () {
+                            if ($(this).attr("value") == "1") {
+                                $("#selectBoxFilter7").select2();
+                                $("#tabState").show();
+                            } else {
+                                $("#selectBoxFilter7").select2();
+                                $("#tabState").hide();
+                            }
+
+                        });
+                    }).change();
+
+
+                    $("#datepicker").datepicker();
+                    $("#datepickerInline").datepicker();
+                    $("#datepickerMulti").datepicker({
+                        numberOfMonths: 3,
+                        showButtonPanel: true
                     });
-                    });                </script>
-            </div>
-            <!--Select Box with Filter Search end-->
-            <!--Select Box with Filter Search begin-->
-            <div id="tabState">
-                <div id="Simple_Select_Box_with_Filter_Search" class="control-group row-fluid">
-                    <div class="span3">
-                        <label class="control-label" for="selectBoxFilter">Sort By Type</label>
-                    </div>
-                    <div class="span9">
-                        <div class="controls">
-                            <select name="state" id="selectBoxFilter7">
-                                <option value="">Please Select</option>
-                                @foreach($states as $state)
-                                <option value="{{ $state->state_id}}">{{ $state->name }}</option>		
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>  
-            </div>
-            <!--Select Box with Filter Search end-->
+                    $('#timeEntry').timeEntry().change();
 
-            <script>
-                        $(document).ready(function () {
-                $("#selectBoxFilter6").select2();
-                        $("#selectBoxFilter6").change(function () {
-                $(this).find("option:selected").each(function () {
-                if ($(this).attr("value") == "1") {
-                $("#tabState").show();
-                } else {
-                $("#selectBoxFilter7").select2();
-                        $("#tabState").hide();
-                }
 
+                    $("#datepicker2").datepicker();
+                    $("#datepickerInline").datepicker();
+                    $("#datepickerMulti").datepicker({
+                        numberOfMonths: 3,
+                        showButtonPanel: true
+                    });
+                    $('#timeEntry').timeEntry().change();
                 });
-                }).change();
-                });            </script>
-
-            <!--Select Box with Filter Search begin-->
-            <div id="Simple_Select_Box_with_Filter_Search" class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="datepicker">
-                        Start Date
-                    </label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input type="text" id="datepicker" class="span3" name="startdate"/>
-                    </div>
-                </div>
-
-            </div>
-            <script>
-                        $(function () {
-                        $("#datepicker").datepicker();
-                                $("#datepickerInline").datepicker();
-                                $("#datepickerMulti").datepicker({
-                        numberOfMonths: 3,
-                                showButtonPanel: true
-                        });
-                                $('#timeEntry').timeEntry().change();
-                        });            </script> 
-            <div id="Simple_Select_Box_with_Filter_Search" class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="datepicker">
-                        End Date
-                    </label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input type="text" id="datepicker2" class="span3" name="enddate"/>
-                    </div>
-                </div>
-            </div>
-            <script>
-                        $(function () {
-                        $("#datepicker2").datepicker();
-                                $("#datepickerInline").datepicker();
-                                $("#datepickerMulti").datepicker({
-                        numberOfMonths: 3,
-                                showButtonPanel: true
-                        });
-                                $('#timeEntry').timeEntry().change();
-                        });            </script> 
-
-            <div class="span12 span-inset">
-                <button type="submit" class="btn btn-info">Search</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
-            </div>
-        </div>
-
+            </script> 
         <div class="container-fluid">
 
             <!--Sortable Non-responsive Table begin-->
@@ -309,7 +266,10 @@
 
                                             <li class="divider"></li>
                                             <li><a href="/event/manage-speaker/{{$a->event_id}}">Speaker</a></li>
-
+                                             <li class="divider"></li>
+                                            <li><a href="/event/import/{{$a->event_id}}">Import CSV</a></li>
+                                             <li class="divider"></li>
+                                           
                                         </ul>
                                     </div>
                                 </td>
@@ -328,59 +288,59 @@
                 {!! $posts->appends(Input::get())->render() !!}
             </div>
             <script>
-                        $(document).ready(function () {
-                $('#tableSortable').dataTable({
-                bInfo: false,
+                $(document).ready(function () {
+                    $('#tableSortable').dataTable({
+                        bInfo: false,
                         bPaginate: false,
                         "aaSorting": [],
                         "aoColumnDefs": [{"bSortable": false, "aTargets": [4]}],
                         "fnInitComplete": function () {
-                        $(".dataTables_wrapper select").select2({
-                        dropdownCssClass: 'noSearch'
-                        });
+                            $(".dataTables_wrapper select").select2({
+                                dropdownCssClass: 'noSearch'
+                            });
                         }
-                });
-                        //                            $("#simpleSelectBox").select2({
-                        //                                dropdownCssClass: 'noSearch'
-                        //                            }); 
+                    });
+                    //                            $("#simpleSelectBox").select2({
+                    //                                dropdownCssClass: 'noSearch'
+                    //                            }); 
 
 
-                        $('#selectall').click(function () {
-                if ($(this).is(':checked')) {
-                $('input[name="checkItem[]"]').each(function () {
-                $(this).attr('checked', 'checked');
+                    $('#selectall').click(function () {
+                        if ($(this).is(':checked')) {
+                            $('input[name="checkItem[]"]').each(function () {
+                                $(this).attr('checked', 'checked');
+                            });
+                        } else {
+                            $('input[name="checkItem[]"]').each(function () {
+                                $(this).removeAttr('checked');
+                            });
+                        }
+                    });
                 });
-                } else {
-                $('input[name="checkItem[]"]').each(function () {
-                $(this).removeAttr('checked');
-                });
-                }
-                });
-                });
-                        function deleteAuthor() {
-                        var ids = '';
-                                var checkedVals = $('input[name="checkItem[]"]:checkbox:checked').map(function () {
+                function deleteAuthor() {
+                    var ids = '';
+                    var checkedVals = $('input[name="checkItem[]"]:checkbox:checked').map(function () {
                         var row = 'rowCur' + this.value;
-                                return this.value;
-                        }).get();
-                                // alert(2);
-                                var ids = checkedVals.join(",");
-                                //alert(ids);return false;
-                                $.get("{{ url('/event/delete?channel=').$currentChannelId}}",
-                                {option: ids},
-                                        function (data) {
-                                        $.each(checkedVals, function (i, e) {
-                                        var row = 'rowCur' + e;
-                                                $("#" + row).remove();
-                                        });
-                                                $('#notificationdiv').show();
-                                                $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
+                        return this.value;
+                    }).get();
+                    // alert(2);
+                    var ids = checkedVals.join(",");
+                    //alert(ids);return false;
+                    $.get("{{ url('/event/delete?channel=').$currentChannelId}}",
+                            {option: ids},
+                    function (data) {
+                        $.each(checkedVals, function (i, e) {
+                            var row = 'rowCur' + e;
+                            $("#" + row).remove();
+                        });
+                        $('#notificationdiv').show();
+                        $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
                                 <i class="icon-alert icon-alert-info"></i><button type="button" class="close" data-dismiss="alert">\n\
                                 &times;</button><strong>This is Success Notification</strong>\n\
                                 <span></span>Selected records dumped.</div>');
-                                                //alert(1);
-                                        });
-                        }
+                        //alert(1);
+                    });
+                }
             </script>
         </div><!-- end container -->
         <div class="control-group row-fluid">

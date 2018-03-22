@@ -35,6 +35,8 @@ return [
 'awalbumimagedir' => 'album/', 
 'awauthordir'=> 'author/', 
 'awaevent'=> 'event/',
+'aw_csv'=> 'csv/',
+'aw_csv_escaped'=> 'csv/escaped/',    
 'awatipstag'=> 'tipstag/',
 'awfeaturebox'=>'featurebox/', 
 'awfeaturebox2'=>'featurebox2/', 

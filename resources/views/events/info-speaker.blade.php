@@ -229,10 +229,11 @@
                         <tbody>
                              @foreach($speakerDetails as $detail)
                              <tr>
-                                <td @if($detail->is_current==0) style="font-weight:bold;" @endif >{{$detail->designation}}({{$detail->company}}) </td>                               
+                                <td @if($detail->is_current==1) style="font-weight:bold;" @endif >{{$detail->designation}}({{$detail->company}}) </td>                               
                                 <td>
                                     <a href="#" class="show-detail">Show</a>
                                     <a href="#" class="hide-detail" style="display:none;">Hide</a>
+                                    &nbsp;&nbsp;&nbsp;<a href="/attendee/{{$speaker->id}}/edit?profile={{$detail->id}}" class="show-detail">Edit</a>
                                 </td>
                                 
                             </tr>
@@ -269,6 +270,7 @@
                             </tr>
                              @endforeach
                         </tbody>
+                </table>   
             </div>
           
         </div>

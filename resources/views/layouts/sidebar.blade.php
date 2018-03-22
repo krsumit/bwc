@@ -14,7 +14,7 @@
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon document_alt_stroke"></i>
                     <span class="nav-selection">Articles</span>
-                    <i class="icon-menu-arrow"></i>                </a>
+                    <i class="icon-menu-arrow"></i></a>
                 <div class="sub-nav">
                     <ul class="nav">
                         @if(in_array('2',Session::get('user_rights')))
@@ -202,7 +202,7 @@
             </li>
             @endif
 			
-	    @if(count(array_diff(array('48','49','50'), Session::get('user_rights'))) != count(array('48','49','50')))	 
+	    @if(count(array_diff(array('48','50','103','104','105','106','107','108','109'), Session::get('user_rights'))) != count(array('48','50','103','104','105','106','107','108','109')))	 
             <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon movie"></i>
@@ -212,22 +212,30 @@
                     <ul class="nav">
                         @if(in_array('48',Session::get('user_rights')))
                         <li>
-                            <a href="{{url('event/add-event-management')}}">Add New Events</a>
-                        </li>
-                        @endif
-                        @if(in_array('49',Session::get('user_rights')))
-                        <li>
                             <a href="{{url('event/published')}}">Published Events</a>
                         </li>
                         @endif
+                        
                         @if(in_array('50',Session::get('user_rights')))
                         <li>
-                            <a href="#">Reports</a>
+                            <a href="{{url('event/create')}}">Add New Events</a>
                         </li>
                         @endif
-<!--                        <li>
-                            <a href="#">Help</a> 
-                        </li>-->
+                        @if(in_array('103',Session::get('user_rights')))
+                        <li>
+                            <a href="{{url('attendee')}}">Attendees</a>
+                        </li>
+                        @endif
+                        @if(in_array('104',Session::get('user_rights')))
+                        <li>
+                            <a href="{{url('attendee/create')}}">Add New Attendee</a>
+                        </li>
+                        @endif
+                        @if(in_array('109',Session::get('user_rights')))
+                         <li>
+                            <a href="{{url('event/logs')}}">Event Activity logs</a>
+                        </li>
+                        @endif
                     </ul>
                 </div>
             </li>

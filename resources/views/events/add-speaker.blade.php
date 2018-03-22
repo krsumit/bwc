@@ -12,6 +12,7 @@
             <h1><small>Event Attendee</small></h1>
         </div>
         <script>
+           
             $().ready(function () {
                 $(".uniformRadio").uniform({
                     radioClass: 'uniformRadio'
@@ -94,7 +95,7 @@
         <h2><small>Event Attendee</small></h2>
 
     </header>
-    {!! Form::open(array('url'=>'speaker','class'=> 'form-horizontal','id'=>'speaker-form','enctype'=>'multipart/form-data')) !!}
+    {!! Form::open(array('url'=>'attendee','class'=> 'form-horizontal','id'=>'speaker-form','enctype'=>'multipart/form-data')) !!}
     {!! csrf_field() !!}
     @if (count($errors) > 0)
     <div class="alert alert-danger">
@@ -282,7 +283,7 @@
                 $("#Taglist").tokenInput("/event-speaker/getJson", {
                     theme: "facebook",
                     searchDelay: 300,
-                    minChars: 4,
+                    minChars: 2,
                     preventDuplicates: true,
                     tokenLimit: 1,
                 });

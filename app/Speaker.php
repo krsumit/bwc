@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Speaker extends Model
 {
     //
-    protected $table = "event_speaker";
+    protected $table = "speakers";
     protected $primaryKey = 'id';
 
 }

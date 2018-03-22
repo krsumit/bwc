@@ -421,23 +421,27 @@ Route::match(['get', 'post'], 'campaing/delete', ['as' => 'campaing/delete', 'us
  *  Adds events from add-new-events to events Table 
  */
 
-Route::match(['get', 'post'], 'event/add-event-management', ['middleware' => 'auth', 'uses' => 'EventController@index']);
+Route::match(['get', 'post'], 'event/create', ['middleware' => 'auth', 'uses' => 'EventController@create']);
 Route::match(['get', 'post'], 'event/add', ['middleware' => 'auth', 'uses' => 'EventController@store']);
-Route::match(['get', 'post'], 'event/published', ['middleware' => 'auth', 'uses' => 'EventController@published']);
+Route::match(['get', 'post'], 'event/published', ['middleware' => 'auth', 'uses' => 'EventController@index']);
 Route::match(['get', 'post'], 'event/edit', ['middleware' => 'auth', 'uses' => 'EventController@edit']);
 Route::match(['get', 'post'], 'event/delete', ['middleware' => 'auth', 'uses' => 'EventController@destroy']);
 Route::match(['get', 'post'], 'event/update', ['middleware' => 'auth', 'uses' => 'EventController@update']);
 Route::get('event/manage-speaker/{id}', ['middleware' => 'auth',   'uses' => 'EventController@manageEventSpeaker']);
-Route::post('event/speaker/add', ['middleware' => 'auth',   'uses' => 'EventController@storeEventSpeaker']);
-Route::get('event/speaker/{id}', ['middleware' => 'auth',   'uses' => 'EventController@editEventSpeaker']);
-Route::post('event/speaker/update', ['middleware' => 'auth',   'uses' => 'EventController@updateEventSpeaker']);
+//Route::post('event/speaker/add/{id}', ['middleware' => 'auth',   'uses' => 'EventController@storeEventSpeaker']);
 Route::get('api/event/speaker/{id}', ['uses' => 'EventController@apiEventSpeaker']);
 Route::match(['get', 'post'], 'event-speaker/addTag', ['middleware' => 'auth', 'uses' => 'EventController@storeTag']);
+Route::get('event/import/{id}',['middleware' => 'auth', 'uses' => 'EventController@import']);
+Route::post('event/import/',['middleware' => 'auth', 'uses' => 'EventController@saveImport']);
 Route::get('event-speaker/getJson',['middleware' => 'auth', 'uses' => 'EventController@returnJson']);
+Route::get('event/logs',['middleware' => 'auth', 'uses' => 'EventController@activityLog']);
 
+Route::group(['middleware' => 'auth'], function() {
+    Route::get('attendee/get-json','EventSpeakerController@returnSpeakerJson');
+    Route::resource('attendee','EventSpeakerController');
+});    
 
-
-/*
+/* 
  * 
  *  Adds Tag from CreateArticle to Tags Table - Ajax Request
  */

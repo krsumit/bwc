@@ -37,7 +37,7 @@
                             {
                                 "data": {
                                     "title": "Edit Professional Detail",
-                                    "attr": {"href": "#add-professional-detail"}
+                                    "attr": {"href": "#edit-professional-detail"}
                                 },
                             },
                             {
@@ -91,8 +91,9 @@
         <h2><small>Event Attendee</small></h2>
 
     </header>
-    {!! Form::open(array('url'=>'speaker','class'=> 'form-horizontal','id'=>'speaker-form','enctype'=>'multipart/form-data')) !!}
+    {!! Form::open(array('url'=>'attendee/'.$speaker->id,'class'=> 'form-horizontal','id'=>'speaker-form','enctype'=>'multipart/form-data')) !!}
     {!! csrf_field() !!}
+    {{ method_field('PUT') }}
     @if (count($errors) > 0)
     <div class="alert alert-danger">
         <ul>
@@ -178,6 +179,7 @@
                 <div class="fileupload fileupload-new" data-provides="fileupload">
                     <div class="input-append">
                         <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" name="speaker_image" id="speaker_image"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                        <img style="margin-left: 20px;" height="40" width="40" src="{{ config('constants.awsbaseurl').config('constants.awspeakerdir').$speaker->photo}}"/>
                     </div>
                 </div>
             </div>
@@ -208,7 +210,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <textarea rows="4" name="speaker_desc" id="speaker_desc" class="no-resize">{{$speaker->descrition}}</textarea>
+                    <textarea rows="4" name="speaker_desc" id="speaker_desc" class="no-resize">{{$speaker->description}}</textarea>
                 </div>
             </div>
         </div>
@@ -279,15 +281,16 @@
                 $("#Taglist").tokenInput("/event-speaker/getJson", {
                     theme: "facebook",
                     searchDelay: 300,
-                    minChars: 4,
+                    minChars: 2,
                     preventDuplicates: true,
                     tokenLimit: 1,
+                    prePopulate: <?php echo $tags ?>,
                 });
             });</script>
 
     </div>
 
-    <div class="container-fluid"    id="professional-detail">
+    <div class="container-fluid"    id="edit-professional-detail">
         <div class="form-legend" id="tags">Professional Detail</div>
         <div class="control-group row-fluid">
             <div class="span3">
@@ -295,7 +298,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <select name="select-profile" id="select-profile">
+                    <select name="select_profile" id="select_profile">
                         <option value="0">Create New</option>
                         @foreach($speakerDetails as $speakerDetail)
                           <option @if($speakerDetail->id == $profileId) selected="selected" @endif value="{{ $speakerDetail->id }}">{{ $speakerDetail->designation }} @if(trim($speakerDetail->company)) ({{ $speakerDetail->company }}) @endif </option>
@@ -303,7 +306,7 @@
                     </select>
                     <script>
                         $().ready(function () {
-                            $("#select-profile").select2();
+                            $("#select_profile").select2();
                         });
                     </script>
                 </div>
@@ -442,10 +445,11 @@
             
                       
             var profiles=JSON.parse('{!!json_encode($speakerDetails)!!}');
-            $('#select-profile').change(function(){
+            $('#select_profile').change(function(){
                 id=$(this).val();
                 $.each(profiles, function(i, v) {
                     if(v.id==id){
+                       
                         $('#speaker_designation').val(v.designation);
                         $('#speaker_company').val(v.company);
                         $('#speaker_phone').val(v.mobiles);

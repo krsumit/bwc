@@ -16,7 +16,7 @@
                 <input id="panelSearch" required  placeholder="Search" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">
                 <button class="btn btn-search" type="submit"></button>
                 @if(isset($_GET['searchin'])) 
-                <a href="{{url("event/attendee")}}"><button class="btn btn-default" type="button">Reset</button></a>
+                <a href="{{url("attendee")}}"><button class="btn btn-default" type="button">Reset</button></a>
                 @endif
                 <label class="radio">
                     <input type="radio" @if(isset($_GET['searchin'])) @if($_GET['searchin']=='name') checked @endif @endif name="searchin" class="uniformRadio" value="name">
@@ -94,6 +94,8 @@
     </div>
 </div>
 <div class="main-content">
+    
+    <form class="form-horizontal" method="get" action="">
     <div class="breadcrumb-container">
         <ul class="xbreadcrumbs">
             <li>
@@ -139,7 +141,12 @@
         </div>
         <!--Notifications end-->
     </div>
-
+    
+    <div style="margin-bottom:20px;margin-right:20px;text-align:right;">
+        <a href="attendee/create">
+            <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="button">Add Attendee</button>
+        </a>
+    </div>
     <div class="container-fluid">
 
 
@@ -158,9 +165,9 @@
                     <tbody>
                         @foreach ($speakers as $speaker)
                         <tr class="gradeX">
-                            <td style="width:160px;"><img src="{{ config('constants.awsbaseurl').config('constants.awspeakerdir').$speaker->photo}}" alt="user" style="width:70%;" /></td>
-                            <td >{{$speaker->name}}</td>
-                            <td >{{$speaker->email}}{{$speaker->id}}</td>
+                            <td style="width:160px;"><img src="{{ config('constants.awsbaseurl').config('constants.awspeakerdir').$speaker->photo}}" alt="User Image" style="width:70%;" /></td>
+                            <td>{{$speaker->name}}</td>
+                            <td>{{$speaker->email}}</td>
                             <td class="center"> 
                                 <div class="btn-group">
                                     <button type="button" class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Modify Detail<span class="caret"></span></button>
@@ -179,7 +186,9 @@
             </div>
         </div>
         <!--Sortable Responsive Media Table end-->
-
+         <div class="dataTables_paginate paging_bootstrap pagination">
+                {!! $speakers->appends(Input::get())->render() !!}
+         </div>
     </div><!-- end container -->
     <script>
         $(document).ready(function () {
@@ -234,7 +243,7 @@
             //                            }); 
         });
     </script>
-
+</form>
 
 </div>
 

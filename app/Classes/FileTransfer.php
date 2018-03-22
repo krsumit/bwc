@@ -29,13 +29,13 @@ class FileTransfer {
      }
      
      
-    public function uploadFile($file, $destination,$fileName,$removeSource=true) {
+    public function uploadFile($file, $destination,$fileName,$removeSource=true,$isPublic=true) {
         $this->fileDir=$destination; 
         $this->fileName = $fileName;
         $file->move($this->docroot.$destination, $fileName);
         
         if (config('constants.store_location') == 'aws') {
-            $this->transferToAws($removeSource);
+            $this->transferToAws($removeSource,$isPublic);
         } elseif (config('constants.store_location') == 'google') {
             $this->transferToGoogle($removeSource);
         }
@@ -43,7 +43,7 @@ class FileTransfer {
     }
     
 
-    public function tranferFile($fileName, $source, $destination,$removeSource=true) {
+    public function tranferFile($fileName, $source, $destination,$removeSource=true,$isPublic=true) {
         $this->fileDir=$destination;
         $this->fileName = $fileName;
         
@@ -51,9 +51,9 @@ class FileTransfer {
             @copy($this->docroot.$source.$fileName, $this->docroot.$destination.$fileName);
        // } else
         if (config('constants.store_location') == 'aws') {
-            $this->transferToAws();
+            $this->transferToAws($removeSource,$isPublic);
         } elseif (config('constants.store_location') == 'google') {
-            $this->transferToGoogle();
+            $this->transferToGoogle($removeSource,$isPublic);
         }
         if($removeSource)
             unlink( $this->docroot.$source.$fileName);
@@ -81,10 +81,15 @@ class FileTransfer {
         }
     }
 
-    private function transferToAws($removeSource=true) {
+    private function transferToAws($removeSource=true,$isPublic=true) {
         $s3 = AWS::createClient('s3');
+        if($isPublic)
+            $acl='public-read';
+        else
+            $acl='private';
+        
         $result = $s3->putObject(array(
-            'ACL' => 'public-read',
+            'ACL' => $acl,
             'Bucket' => config('constants.awbucket'),
             'Key' => $this->fileDir . $this->fileName,
             'SourceFile' => $this->docroot.$this->fileDir . $this->fileName,
