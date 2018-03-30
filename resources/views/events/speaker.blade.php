@@ -95,7 +95,9 @@
 </div>
 <div class="main-content">
     
-    <form class="form-horizontal" method="get" action="">
+    <form class="form-horizontal" method="post" action="attendee/delete">
+       
+       {!! csrf_field() !!}
     <div class="breadcrumb-container">
         <ul class="xbreadcrumbs">
             <li>
@@ -143,6 +145,9 @@
     </div>
     
     <div style="margin-bottom:20px;margin-right:20px;text-align:right;">
+        <a href="import/attendee">
+            <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="button">Import Attendee</button>
+        </a>&nbsp;&nbsp;&nbsp;
         <a href="attendee/create">
             <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="button">Add Attendee</button>
         </a>
@@ -160,6 +165,7 @@
                             <th>Name</th>
                             <th>Email-ID</th>
                             <th>Action</th>
+                            <th><input type="checkbox" class="uniformCheckbox" value="checkbox1"  id="selectall"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -178,6 +184,8 @@
                                     </ul>
                                 </div>
                             </td>
+                            </td>
+                                <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$speaker->id}}" name="checkItem[]"></td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -189,6 +197,15 @@
          <div class="dataTables_paginate paging_bootstrap pagination">
                 {!! $speakers->appends(Input::get())->render() !!}
          </div>
+        
+        
+        <div class="control-group row-fluid">
+        <div class="span12 span-inset">
+            <button type="submit" value="remove" class="btn btn-danger" id="delete-attendee" name="delete-attendee">Dump</button>
+            </div>
+        </div>
+        
+        
     </div><!-- end container -->
     <script>
         $(document).ready(function () {
@@ -231,16 +248,35 @@
                 bInfo: false,
                 bPaginate: false,
                 "aaSorting": [],
-                "aoColumnDefs": [{"bSortable": false, "aTargets": [3]}],
+                "aoColumnDefs": [{"bSortable": false, "aTargets": [3,4]}],
                 "fnInitComplete": function () {
                     $(".dataTables_wrapper select").select2({
                         dropdownCssClass: 'noSearch'
                     });
                 }
             });
-            //                            $("#simpleSelectBox").select2({
-            //                                dropdownCssClass: 'noSearch'
-            //                            }); 
+            
+            $("#delete-attendee").click(function(){
+                 if($('input[name="checkItem[]"]:checked').length==0){
+                        alert("Please select atleast one attendee to delete.");
+                        return false;
+                 }
+                  if(!confirm('Do you want to delete selected attendee?'))
+                            return false;
+            });
+            
+            $('#selectall').click(function (){
+                if ($(this).is(':checked')) {
+                    $('input[name="checkItem[]"]').each(function () {
+                        $(this).attr('checked', 'checked');
+                    });
+                } else {
+                    $('input[name="checkItem[]"]').each(function () {
+                        $(this).removeAttr('checked');
+                    });
+                }
+            });
+           
         });
     </script>
 </form>

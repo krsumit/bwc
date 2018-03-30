@@ -36,7 +36,7 @@ class EventSpeakerController extends Controller {
 
     public function index() {
         //$event = Event::find($id);
-        $speakers = Speaker::orderBy('updated_at', 'desc');
+        $speakers = Speaker::where('status','=','1')->orderBy('updated_at', 'desc');
         $rightId = 103;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
@@ -88,7 +88,7 @@ class EventSpeakerController extends Controller {
             ]);
         }
         
-        $activityLog=new ActivityLog();
+        
         $filename = '';
         if ($request->file('speaker_image')) { // echo 'test';exit;
             $filename = str_random(6) . '_' . $request->file('speaker_image')->getClientOriginalName();
@@ -108,6 +108,9 @@ class EventSpeakerController extends Controller {
         $speaker->tags = $request->Taglist;
         $speaker->status = '1';
         $speaker->save();
+        //Storing activity log
+        $activityLog=new ActivityLog();
+        $activityLog->storeActivity('create','attendee',$speaker); 
         $speaker_id = $speaker->id;
         if ($speaker_id) {
             if (trim($request->speaker_designation)) {
@@ -120,7 +123,10 @@ class EventSpeakerController extends Controller {
                 $speakerDetail->city = trim($request->speaker_city);
                 $speakerDetail->address = trim($request->speaker_add);
                 $speakerDetail->is_current = '1';
-                $speakerDetail->save();               
+                $speakerDetail->save();
+                //Storing activity log
+                $activityLog=new ActivityLog();
+                $activityLog->storeActivity('create','attendee_profile',$speakerDetail,$speaker);
             }
         }
 
@@ -190,6 +196,9 @@ class EventSpeakerController extends Controller {
        
         $filename = '';
         $speaker = Speaker::find($id);
+        
+        //echo '<pre>';
+        //print_r($speaker->all());
         if ($request->file('speaker_image')) { // echo 'test';exit;
             $filename = str_random(6) . '_' . $request->file('speaker_image')->getClientOriginalName();
             $fileTran = new FileTransfer();
@@ -209,18 +218,18 @@ class EventSpeakerController extends Controller {
         $speaker->linkedin = $request->speaker_linkedin;
         $speaker->description = $request->speaker_desc;
         $speaker->tags = $request->Taglist;
-        $speaker->status = '1';
+        $speaker->status = '1';        
+        $activityLog=new ActivityLog();
+        $activityLog->storeActivity('update','attendee', $speaker); //exit;
         $speaker->save();
+        
+        //echo $changeStatus; 
         if (trim($request->speaker_designation)) {
-             if($request->has('is_current')){
-                    //dd($request->all());
-                    $update=SpeakerDetails::where('speaker_id', '=',$id)->update(['is_current'=>0]);
-                }
             if($request->select_profile==0)
                 $speakerDetail = new SpeakerDetails;
             else
                 $speakerDetail = SpeakerDetails::find($request->select_profile);
-            
+            //dd($speakerDetail);
             $speakerDetail->speaker_id = $id;
             $speakerDetail->designation = trim($request->speaker_designation);
             $speakerDetail->company = trim($request->speaker_company);
@@ -229,7 +238,20 @@ class EventSpeakerController extends Controller {
             $speakerDetail->city = trim($request->speaker_city);
             $speakerDetail->address = trim($request->speaker_add);
             $speakerDetail->is_current = trim($request->is_current);
-            $speakerDetail->save();
+            $activityLog=new ActivityLog();
+            if($request->select_profile==0){ 
+                $speakerDetail->save();
+                $activityLog->storeActivity('create','attendee_profile',$speakerDetail,$speaker);
+            }
+            else{
+                $activityLog->storeActivity('update','attendee_profile',$speakerDetail,$speaker);
+                $speakerDetail->save();
+            }
+            if($request->has('is_current')){
+                    //dd($request->all());
+                    $update=SpeakerDetails::where('speaker_id', '=',$id)->where('id','!=',$speakerDetail->id)->update(['is_current'=>0]);
+                }
+            
         }
         Session::flash('message', 'Speaker updated successfully.');
         return Redirect::to('attendee'); 
@@ -241,33 +263,24 @@ class EventSpeakerController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function destroy() {
-        if (isset($_GET['option'])) {
-            $id = $_GET['option'];
-        }
+    public function deleteAttendee(Request $request) {
+        //dd($request->all());
         
         $rightId = 104;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId)) {
             return 'You are not authorized to access.';
         }
         /* Right mgmt end */
-
-
-        // echo $id; die;
-        //fwrite($asd, " Del Ids: ".$id." \n\n");
-        $delArr = explode(',', $id);
-        //fwrite($asd, " Del Arr Count: ".count($delArr)." \n\n");
-        foreach ($delArr as $d) {
-            //fwrite($asd, " Delete Id : ".$d." \n\n");
-            $valid = '0';
-            $deleteAl = [
-                'valid' => $valid,
-                'updated_at' => date('Y-m-d H:i:s')
-            ];
-            DB::table('event')
-                    ->where('event_id', $d)
-                    ->update($deleteAl);
+        foreach ($request->checkItem as $d) {
+            $speaker = Speaker::find($d);
+            $speaker->status=0;
+            $speaker->save();
+            $activityLog=new ActivityLog();
+            $activityLog->storeActivity('delete','attendee', $speaker);  
+            
         }
+        Session::flash('message', 'Speaker deleted successfully');
+        return Redirect::to('attendee');
         return;
     }
 

@@ -3573,6 +3573,11 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
                 $row['title']=$articleRow['title'];
                 $row['message']=$articleRow['summary'];
                 $row['landing_url']=$url= $this->url.'article/'.preg_replace('/([^a-zA-Z0-9_.])+/', '-',$articleRow['title']).'/'.$articleRow['publish_date'].'-'.$articleRow['article_id'];
+                $imageResult=$this->conn->query("select photopath from photos where owned_by='article' and owner_id='".$articleRow['article_id']."' ORDER BY sequence limit 1");
+                if($imageResult->num_rows>0){
+                    $imageRow=$imageResult->fetch_assoc();
+                    $row['banner_url']='https://static.businessworld.in/article/article_medium_image/'.$imageRow['photopath'];  
+                }
                 $data[]=$row;
         }
         
@@ -3591,6 +3596,11 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
                 $row['title']=$quickBytesRow['title'];
                 $row['message']=$quickBytesRow['description'];
                 $row['landing_url']=$url= $this->url.'quickbytes/'.preg_replace('/([^a-zA-Z0-9_.])+/', '-',$quickBytesRow['title']).'/'.$quickBytesRow['add_date'].'-'.$quickBytesRow['id'];
+                $imageResult=$this->conn->query("select photopath from photos where owned_by='quickbyte' and owner_id='".$quickBytesRow['id']."' ORDER BY sequence limit 1");
+                if($imageResult->num_rows>0){
+                    $imageRow=$imageResult->fetch_assoc();
+                    $row['banner_url']='https://static.businessworld.in/quickbyte/quickbytes_medium_image/'.$imageRow['photopath'];  
+                }
                 $data[]=$row;
                 
             }
@@ -3599,7 +3609,7 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
              $dataToPush = array(
             "title" => $dt['title'],
             "message" =>$dt['message'],
-            "icon_url" => "http://static.businessworld.in/static/images/BW-logo-200X200_new.jpg",
+            "icon_url" => "https://static.businessworld.in/static/images/BW-logo-200X200_new.jpg",
             "landing_url" =>$dt['landing_url'],
             "actions" => array(array("text" => "Read Detail", "url" =>$dt['landing_url'])),
             "utm_source" => "izooto",
@@ -3607,6 +3617,9 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
             "utm_campaign" => "promotion",
             "ttl" => 86400,
             "target" => array("type" => "all"));
+             if(isset($dt['banner_url'])){
+                 $dataToPush["banner_url"]=$dt["banner_url"];
+             }
          $json_data=json_encode($dataToPush);
         $ch = curl_init('https://apis.izooto.com/v1/notifications');
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");

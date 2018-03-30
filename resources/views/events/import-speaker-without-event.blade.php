@@ -1,6 +1,6 @@
 @extends('layouts/master')
 
-@section('title', 'Event Attendee - BWCMS')
+@section('title', 'Import Attendee - BWCMS')
 
 
 @section('content')
@@ -9,38 +9,14 @@
     <div class="panel-content filler">
         <div class="panel-logo"></div>
         <div class="panel-header">
-            <h1><small>Event Attendee</small></h1>
+            <h1><small>Import Attendee</small></h1>
         </div>
 
         <br><br>
         <div class="panel-header">
             <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
         </div> 
-        <script type="text/javascript">
-            $(function () {
-                $("#jstree").jstree({
-                    "json_data": {
-                        "data": [
-                            {
-                                "data": {
-                                    "title": "Add New Attendee",
-                                    "attr": {"href": "#new"}
-                                }
-                            },
-                        ]
-                    },
-                    "plugins": ["themes", "json_data", "ui"]
-                })
-                        .bind("click.jstree", function (event) {
-                            var node = $(event.target).closest("li");
-                            document.location.href = node.find('a').attr("href");
-                            return false;
-                        })
-                        .delegate("a", "click", function (event, data) {
-                            event.preventDefault();
-                        });
-            });
-        </script>
+       
         <div class="sidebarMenuHolder">
             <div class="JStree">
                 <div class="Jstree_shadow_top"></div>
@@ -63,15 +39,15 @@
                 </a>
             </li>
             <li class="current">
-                <a href="javascript:;">Event Attendee</a>
+                <a href="javascript:;">Import Attendee</a>
             </li>
         </ul>
     </div>           <header>
         <i class="icon-big-notepad"></i>
-        <h2><small>Event Attendee</small></h2>
+        <h2><small>Import Attendee</small></h2>
 
     </header>
-    {!! Form::open(array('url'=>'event/import/','class'=> 'form-horizontal','id'=>'speaker-form','enctype'=>'multipart/form-data')) !!}
+    {!! Form::open(array('url'=>'import/attendee','class'=> 'form-horizontal','id'=>'speaker-form','enctype'=>'multipart/form-data')) !!}
     {!! csrf_field() !!}
     <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
@@ -104,50 +80,13 @@
     </div>
 
 
-    <div class="container-fluid">
-
-        <div class="form-legend" id="Input_Field">Event Detail</div>
-
-
-
-        <div class="control-group row-fluid">
-            <div class="span3">
-                <label class="control-label" for="inputField">Event Name</label>
-            </div>
-            <div class="span9">
-                <div class="controls">
-                    <input type="hidden" name="event_id" id="event_id" value="{{$event->event_id}}"/>
-                    <input id="event_name" name="event_name" type="text" readonly value="{{$event->title}}">
-                </div>
-            </div>
-        </div>
-
-
-
-
-    </div>
+   
 
     <div class="container-fluid">
 
-        <div class="form-legend" id="tags">{{$speaker_type->name}}</div>
         <!--Select Box with Filter Search begin-->
 
         <div class="control-group row-fluid" id="Multiple_Select_Box_with_Filter_Search">
-            <div class="control-group row-fluid">    
-                <div class="span3">
-                    <label for="multiFilter" class="control-label">Import</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <select name="speaker_type" id="speaker_type">
-                            @foreach($speaker_types as $type)
-                            <option @if($type->id == $speaker_type->id) selected="selected" @endif value="{{ $type->id }}">{{ $type->name }} </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            </div>
-
 
             <!-- Add Tag to Tags Table - Ajax request -->
             <script>
@@ -207,9 +146,9 @@
                         extension: "csv"
                     },
                 },
-                submitHandler: function(){
+                submitHandler: function( ){
                     var filename=$('#speaker_file').val().split('\\').pop();
-                            answer = confirm("Are you sure you want to add "+filename+" file entry as "+$('#speaker_type option:selected').text()+"in \""+$('#event_name').val()+"\" event ?" );
+                            answer = confirm("Are you sure you want to add \""+filename+"\" file entries as event attendee ?" );
                             if (answer == true){
                             form.submit( );
                             }

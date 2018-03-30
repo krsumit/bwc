@@ -428,15 +428,20 @@ Route::match(['get', 'post'], 'event/edit', ['middleware' => 'auth', 'uses' => '
 Route::match(['get', 'post'], 'event/delete', ['middleware' => 'auth', 'uses' => 'EventController@destroy']);
 Route::match(['get', 'post'], 'event/update', ['middleware' => 'auth', 'uses' => 'EventController@update']);
 Route::get('event/manage-speaker/{id}', ['middleware' => 'auth',   'uses' => 'EventController@manageEventSpeaker']);
-//Route::post('event/speaker/add/{id}', ['middleware' => 'auth',   'uses' => 'EventController@storeEventSpeaker']);
+Route::post('event/speaker/add/{id}', ['middleware' => 'auth',   'uses' => 'EventController@storeEventSpeaker']);
 Route::get('api/event/speaker/{id}', ['uses' => 'EventController@apiEventSpeaker']);
 Route::match(['get', 'post'], 'event-speaker/addTag', ['middleware' => 'auth', 'uses' => 'EventController@storeTag']);
 Route::get('event/import/{id}',['middleware' => 'auth', 'uses' => 'EventController@import']);
 Route::post('event/import/',['middleware' => 'auth', 'uses' => 'EventController@saveImport']);
+
+Route::get('import/attendee',['middleware' => 'auth', 'uses' => 'EventController@importAttendee']);
+Route::post('import/attendee/',['middleware' => 'auth', 'uses' => 'EventController@saveImportAttendee']);
+
 Route::get('event-speaker/getJson',['middleware' => 'auth', 'uses' => 'EventController@returnJson']);
 Route::get('event/logs',['middleware' => 'auth', 'uses' => 'EventController@activityLog']);
 
 Route::group(['middleware' => 'auth'], function() {
+    Route::post('attendee/delete','EventSpeakerController@deleteAttendee');
     Route::get('attendee/get-json','EventSpeakerController@returnSpeakerJson');
     Route::resource('attendee','EventSpeakerController');
 });    
