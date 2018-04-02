@@ -182,21 +182,21 @@ class EventController extends Controller {
         //$end_time = $request->endhours.':'.$request->endminutes;
         $created_at = date('Y-m-d H:i:s');
         $updated_at = date('Y-m-d H:i:s');
-        
+
         $event = new Event();
-        $event->title=$request->title;
-        $event->description=$request->descripation;
-        $event->channel_id=$request->channel;
-        $event->imagepath=$photo;
-        $event->start_date=$start_date;
-        $event->end_date=$end_date;
-        $event->country=$request->country;
-        $event->state=$request->state;
-        $event->image_url=$request->url;
-        $event->category=$request->category;
-        $event->valid='1';        
-        $event->save();       
-        
+        $event->title = $request->title;
+        $event->description = $request->descripation;
+        $event->channel_id = $request->channel;
+        $event->imagepath = $photo;
+        $event->start_date = $start_date;
+        $event->end_date = $end_date;
+        $event->country = $request->country;
+        $event->state = $request->state;
+        $event->image_url = $request->url;
+        $event->category = $request->category;
+        $event->valid = '1';
+        $event->save();
+
         $activityLog = new ActivityLog();
         $activityLog->storeActivity('create', 'event', $event);
         Session::flash('message', 'Your data has been successfully add.');
@@ -249,9 +249,9 @@ class EventController extends Controller {
             return redirect('/dashboard');
         /* Right mgmt end */
         $validation = Validator::make($request->all(), [
-                      'photo' => 'image|mimes:jpeg,png|min:1|max:250'
+                    'photo' => 'image|mimes:jpeg,png|min:1|max:250'
         ]);
-        $event =Event::find($request->editevent_id);
+        $event = Event::find($request->editevent_id);
         if ($request->file('photo')) { // echo 'test';exit;
             $file = $request->file('photo');
             $filename = str_random(6) . '_' . $request->file('photo')->getClientOriginalName();
@@ -268,25 +268,25 @@ class EventController extends Controller {
         } else {
             $photo = $request->p_photo;
         }
-        
+
         $start_date = date("Y-m-d", strtotime($request->startdate));
         $end_date = date("Y-m-d", strtotime($request->enddate));
-        
-        $event =Event::find($request->editevent_id);
-        $event->title=$request->title;
-        $event->description=$request->descripation;
-        $event->channel_id=$request->channel;
-        $event->imagepath=$photo;
-        $event->start_date=$start_date;
-        $event->end_date=$end_date;
-        $event->country=$request->country;
-        $event->state=$request->state;
-        $event->image_url=$request->url;
-        $event->category=$request->category;
-        $activityLog=new ActivityLog();
-        $activityLog->storeActivity('update','event', $event);
-        $event->save();   
-        
+
+        $event = Event::find($request->editevent_id);
+        $event->title = $request->title;
+        $event->description = $request->descripation;
+        $event->channel_id = $request->channel;
+        $event->imagepath = $photo;
+        $event->start_date = $start_date;
+        $event->end_date = $end_date;
+        $event->country = $request->country;
+        $event->state = $request->state;
+        $event->image_url = $request->url;
+        $event->category = $request->category;
+        $activityLog = new ActivityLog();
+        $activityLog->storeActivity('update', 'event', $event);
+        $event->save();
+
         Session::flash('message', 'Your data has been successfully modified.');
         return Redirect::to('event/published?channel=' . $currentChannelId);
     }
@@ -313,11 +313,11 @@ class EventController extends Controller {
         $delArr = explode(',', $id);
         //fwrite($asd, " Del Arr Count: ".count($delArr)." \n\n");
         foreach ($delArr as $d) {
-            $event=Event::find($d);
-            $event->valid=0;
+            $event = Event::find($d);
+            $event->valid = 0;
             $event->save();
-            $activityLog=new ActivityLog();
-            $activityLog->storeActivity('delete','event', $event); 
+            $activityLog = new ActivityLog();
+            $activityLog->storeActivity('delete', 'event', $event);
         }
         return;
     }
@@ -350,8 +350,7 @@ class EventController extends Controller {
     }
 
     public function storeEventSpeaker(Request $request, $id) {
-        //echo $id;
-       
+        //echo $id;       
         $event = Event::find($id);
         $rightId = 106;
         $currentChannelId = $event->channel_id;
@@ -374,20 +373,20 @@ class EventController extends Controller {
                 $chkSpeaker = EventSpeaker::where('event_id', '=', $request->event_id)->where('speaker_id', '=', $sp_id)->where('speaker_type_id', '=', $request->speaker_type)->first();
 
                 if ($chkSpeaker) {
-                    
+
                     if ($chkSpeaker->speaker_detail_id != $speakerDeailId) {
                         $speaker = EventSpeaker::find($chkSpeaker->id);
                         $speaker->speaker_detail_id = $speakerDeailId;
-                        
+
                         $activityLog = new ActivityLog();
                         $activityLog->storeActivity('update', 'event_speaker', $speaker);
-                        
+
                         $speaker->save();
                     } else {
                         $skipArray[] = array('speaker_id' => $sp_id, 'speaker_type' => $chkSpeaker->speaker_type_id);
                     }
                 } else {
-                     
+
                     $speaker = new EventSpeaker();
                     $speaker->event_id = $request->event_id;
                     $speaker->speaker_type_id = $request->speaker_type;
@@ -395,20 +394,19 @@ class EventController extends Controller {
                     $speaker->speaker_detail_id = $speakerDeailId;
                     $speaker->assigned_by = $uid;
                     $speaker->save();
-                    
+
                     $activityLog = new ActivityLog();
                     $activityLog->storeActivity('create', 'event_speaker', $speaker);
-                    
                 }
             }
             Session::flash('message', 'Speaker added successfully');
         } elseif ($request->has('remove-attendee')) {
-            foreach ($request->checkItem as $spe_event_Id){
+            foreach ($request->checkItem as $spe_event_Id) {
                 $speaker = EventSpeaker::find($spe_event_Id);
                 $activityLog = new ActivityLog();
                 $activityLog->storeActivity('delete', 'event_speaker', $speaker);
             }
-            $deleted_row = EventSpeaker::whereIn('id', $request->checkItem)->delete();            
+            $deleted_row = EventSpeaker::whereIn('id', $request->checkItem)->delete();
             Session::flash('message', 'Speaker removed successfully');
         }
 
@@ -476,8 +474,8 @@ class EventController extends Controller {
                     $returnArr[] = $tagrow;
                 } else {
                     $tag->save();
-                    $activityLog=new ActivityLog();
-                    $activityLog->storeActivity('create','speaker_tag',$tag);
+                    $activityLog = new ActivityLog();
+                    $activityLog->storeActivity('create', 'speaker_tag', $tag);
                     $returnArr[] = array('id' => $tag->tags_id, 'name' => $tag->tag);
                 }
                 // if($returnTag->where('tag',trim($tagString))->count() == 0)
@@ -500,7 +498,7 @@ class EventController extends Controller {
     }
 
     public function import($id) {
-        //echo $id; exit;
+        
         $event = Event::find($id);
         $rightId = 107;
         $currentChannelId = $event->channel_id;
@@ -518,6 +516,11 @@ class EventController extends Controller {
     public function saveImport(Request $request) {
         $event = Event::find($request->event_id);
         $rightId = 107;
+
+        $noOfInserted = 0;
+        $noOfUpdated = 0;
+        $noOfEscapped = 0;
+
         $currentChannelId = $event->channel_id;
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect()->intended('/dashboard');
@@ -532,9 +535,12 @@ class EventController extends Controller {
         $mobileExp = '/^([0-9]{7,14})$/';
         $uid = Session::get('users')->id;
         $eventId = $request->event_id;
-        $noOfEscapped = 0;
         $filePath = $_SERVER['DOCUMENT_ROOT'] . '/files/' . config('constants.aw_csv') . $filename;
-        if (($handle = fopen($filePath, "r")) !== FALSE) {
+        if (($handle = fopen($filePath, "r")) !== FALSE) {            
+            $file = fopen ("http://static.businessworld.in/csv/sample.csv", "r");
+            if($file){
+                $data=fgetcsv($file);
+            }
             $escFilename = 'escaped_' . $filename;
             $newFileName = $_SERVER['DOCUMENT_ROOT'] . '/files/' . config('constants.aw_csv') . $escFilename;
             $filetowrite = fopen($newFileName, 'w');
@@ -564,6 +570,7 @@ class EventController extends Controller {
                                 $speakerDetail->address = trim($ass_data['Address']);
                                 $speakerDetail->is_current = '1';
                                 $speakerDetail->save();
+                                $noOfUpdated++;
                             } else {
                                 fputcsv($filetowrite, $ass_data);
                                 $noOfEscapped++;
@@ -573,7 +580,6 @@ class EventController extends Controller {
                         }
 
                         if ($speakerDetail) {
-
                             $eventSpeakerRow = EventSpeaker::where('speaker_id', '=', $speaker->id)->where('speaker_type_id', '=', $request->speaker_type)->where('event_id', '=', $eventId)->where('speaker_detail_id', '=', $speakerDetail->id)->first();
                             if (!$eventSpeakerRow) {
                                 EventSpeaker::where('speaker_id', '=', $speaker->id)->where('speaker_type_id', '=', $request->speaker_type)->where('event_id', '=', $eventId)->delete();
@@ -598,6 +604,7 @@ class EventController extends Controller {
                         $speaker->tags = $tagsId;
                         $speaker->status = '1';
                         $speaker->save();
+                        $noOfInserted++;
                         $speaker_id = $speaker->id;
                         if ($speaker_id) {
                             if (trim($ass_data['Designation'])) {
@@ -636,10 +643,17 @@ class EventController extends Controller {
         fclose($filetowrite);
         unlink($filePath);
         Session::flash('message', 'Speaker added successfully.');
+        $activityLog = new ActivityLog();
         if ($noOfEscapped > 0) {
+
             $fileTran->tranferFile($escFilename, config('constants.aw_csv'), config('constants.aw_csv_escaped'), false, false);
+            $activityLog->storeActivityCustom('event-attendee', array('filename' => $filename, 'escapped_filename' => $escFilename, 'noOfInserted' => $noOfInserted, 'noOfUpdated' => $noOfUpdated, 'noOfEscapped' => $noOfEscapped, 'attendeeType' => $request->speaker_type), $event);
+
             return Redirect::to('event/manage-speaker/' . $eventId . '?type=' . $request->speaker_type . '&escapped=' . 'escapped_' . $filename);
         } else {
+
+            $activityLog->storeActivityCustom('event-attendee', array('filename' => $filename, 'escapped_filename' => '', 'noOfInserted' => $noOfInserted, 'noOfUpdated' => $noOfUpdated, 'noOfEscapped' => $noOfEscapped, 'attendeType' => $request->speaker_type), $event);
+
             return Redirect::to('event/manage-speaker/' . $eventId . '?type=' . $request->speaker_type);
         }
     }
@@ -654,6 +668,10 @@ class EventController extends Controller {
     }
 
     public function saveImportAttendee(Request $request) {
+        $noOfInserted = 0;
+        $noOfUpdated = 0;
+        $noOfEscapped = 0;
+
         $rightId = 107;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect()->intended('/dashboard');
@@ -668,7 +686,6 @@ class EventController extends Controller {
         $mobileExp = '/^([0-9]{7,14})$/';
         $uid = Session::get('users')->id;
         $eventId = $request->event_id;
-        $noOfEscapped = 0;
         $filePath = $_SERVER['DOCUMENT_ROOT'] . '/files/' . config('constants.aw_csv') . $filename;
         if (($handle = fopen($filePath, "r")) !== FALSE) {
             $escFilename = 'escaped_' . $filename;
@@ -700,6 +717,7 @@ class EventController extends Controller {
                                 $speakerDetail->address = trim($ass_data['Address']);
                                 $speakerDetail->is_current = '1';
                                 $speakerDetail->save();
+                                $noOfUpdated++;
                             } else {
                                 fputcsv($filetowrite, $ass_data);
                                 $noOfEscapped++;
@@ -718,6 +736,7 @@ class EventController extends Controller {
                         $speaker->status = '1';
                         $speaker->save();
                         $speaker_id = $speaker->id;
+                        $noOfInserted++;
                         if ($speaker_id) {
                             if (trim($ass_data['Designation'])) {
                                 $speakerDetail = new SpeakerDetails;
@@ -745,11 +764,20 @@ class EventController extends Controller {
         fclose($handle);
         fclose($filetowrite);
         // unlink($filePath);
+
+        $activityLog = new ActivityLog();
+
         Session::flash('message', 'Speaker added successfully.');
         if ($noOfEscapped > 0) {
             $fileTran->tranferFile($escFilename, config('constants.aw_csv'), config('constants.aw_csv_escaped'), false, false);
-            return Redirect::to('event/manage-speaker/' . $eventId . '?type=' . $request->speaker_type . '&escapped=' . 'escapped_' . $filename);
+
+            $activityLog->storeActivityCustom('attendee', array('filename' => $filename, 'escapped_filename' => $escFilename, 'noOfInserted' => $noOfInserted, 'noOfUpdated' => $noOfUpdated, 'noOfEscapped' => $noOfEscapped));
+
+            return Redirect::to('attendee?escapped=' . 'escapped_' . $filename);
         } else {
+
+            $activityLog->storeActivityCustom('attendee', array('filename' => $filename, 'escapped_filename' => '', 'noOfInserted' => $noOfInserted, 'noOfUpdated' => $noOfUpdated, 'noOfEscapped' => $noOfEscapped));
+
             return Redirect::to('attendee');
         }
     }
@@ -763,6 +791,30 @@ class EventController extends Controller {
                         ->select('activity_logs.*', 'users.name')
                         ->orderBy('created_at', 'DESC')->get();
         return view('events.activity-logs', compact('activities'));
+    }
+
+    public function downloadLog($fileName) {
+
+        $rightId = 108;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect()->intended('/dashboard');
+
+        $fileName = base64_decode($fileName);
+        $filePath = $_SERVER['DOCUMENT_ROOT'] . '/files/' . config('constants.aw_csv') . $fileName;
+        if (file_exists($filePath)) {
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename="' . basename($filePath) . '"');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($filePath));
+            flush(); // Flush system output buffer
+            readfile($filePath);
+            exit;
+        } else {
+            echo 'The file doesn\'nt exists. It may be removed from this server. </br> We store only last 48 hours files. Contact digital team for the backup of this files.</br><b> Filname is : ' . $fileName . '</b>';
+        }
     }
 
 }

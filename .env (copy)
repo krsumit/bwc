@@ -8,6 +8,14 @@ DB_DATABASE=bw_cms_db
 DB_USERNAME=root
 DB_PASSWORD=bw#digital#2017#cms
 
+
+DB_HOST=localhost
+DB_DATABASE=bwcms
+DB_USERNAME=root
+DB_PASSWORD=admin
+
+
+
 CACHE_DRIVER=file
 SESSION_DRIVER=file
 QUEUE_DRIVER=sync

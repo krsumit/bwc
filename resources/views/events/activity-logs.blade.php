@@ -156,9 +156,10 @@
                             <tr>
                                 <td>{{$activity->name}}</td>
                                 <td>{{$activity->created_at}}</td>
-                                <td>{{$activity->notification}}
+                                <td>
+                                    {!!html_entity_decode($activity->notification)!!}
                                         <br>
-                                    <p class="noti_info" style="display:none;">
+                                    <p class="noti_info" style="display:none;max-width: 500px;word-wrap: break-word;">
                                         <b>Details:<br></b>
                                         {{$activity->notification_info}}
                                     </p>

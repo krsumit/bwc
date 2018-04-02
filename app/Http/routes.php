@@ -440,6 +440,9 @@ Route::post('import/attendee/',['middleware' => 'auth', 'uses' => 'EventControll
 Route::get('event-speaker/getJson',['middleware' => 'auth', 'uses' => 'EventController@returnJson']);
 Route::get('event/logs',['middleware' => 'auth', 'uses' => 'EventController@activityLog']);
 
+Route::get('download/logs/{name}',['middleware' => 'auth', 'uses' => 'EventController@downloadLog']);
+
+
 Route::group(['middleware' => 'auth'], function() {
     Route::post('attendee/delete','EventSpeakerController@deleteAttendee');
     Route::get('attendee/get-json','EventSpeakerController@returnSpeakerJson');

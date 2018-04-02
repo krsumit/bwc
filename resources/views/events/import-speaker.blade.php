@@ -158,7 +158,9 @@
                 });</script>
             <div id="File_Upload" class="control-group row-fluid">
                 <div class="span3">
-                    <label class="control-label">Photo<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="File should be only CSV"><i class="icon-photon info-circle"></i></a></label>
+                    <label class="control-label">Upload File<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="File should be only CSV"><i class="icon-photon info-circle"></i></a>
+                        <a href="https://static.businessworld.in/csv/sample.csv" title="Click here to dwonload sample file.">Sample</a>
+                    </label>
 
                 </div>
                 <div class="span9">
