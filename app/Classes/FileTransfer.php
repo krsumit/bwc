@@ -56,7 +56,7 @@ class FileTransfer {
             $this->transferToGoogle($removeSource,$isPublic);
         }
         if($removeSource)
-            unlink( $this->docroot.$source.$fileName);
+            unlink($this->docroot.$source.$fileName);
         return true;
         //echo config('constants.store_location'); exit;
     }

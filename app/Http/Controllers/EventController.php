@@ -539,18 +539,27 @@ class EventController extends Controller {
         if (($handle = fopen($filePath, "r")) !== FALSE) {            
             $file = fopen ("http://static.businessworld.in/csv/sample.csv", "r");
             if($file){
-                $data=fgetcsv($file);
+                $sampleData=fgetcsv($file);
+                $sampleData = array_map('trim', $sampleData);
+                $sampleData =array_filter($sampleData);
             }
             $escFilename = 'escaped_' . $filename;
             $newFileName = $_SERVER['DOCUMENT_ROOT'] . '/files/' . config('constants.aw_csv') . $escFilename;
             $filetowrite = fopen($newFileName, 'w');
             $firstRow = fgetcsv($handle, 1000, ",");
-            $firstRow = array_map('trim', array_filter($firstRow));
+            $firstRow = array_map('trim', $firstRow);            
+            $firstRow=array_filter($firstRow);
+            
+            if((count(array_diff_assoc($firstRow,$sampleData))>0) || (count(array_diff_assoc($sampleData, $firstRow))>0)){
+                Session::flash('error', 'Invalid file.');
+                return Redirect::to('event/import/' . $eventId . '?type=' . $request->speaker_type);
+            }       
+            
             fputcsv($filetowrite, $firstRow);
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $count=count($firstRow);
+                $data=array_slice($data,0,$count);
                 $ass_data = array_combine($firstRow, $data);
-                //echo '<pre>';
-                //print_r($ass_data);
                 if (preg_match($mobileExp, $ass_data['Mobile'])) {
                     $speaker = Speaker::where('mobile', '=', $ass_data['Mobile'])->first();
                     if ($speaker) {
@@ -641,7 +650,7 @@ class EventController extends Controller {
 
         fclose($handle);
         fclose($filetowrite);
-        unlink($filePath);
+        //unlink($filePath);
         Session::flash('message', 'Speaker added successfully.');
         $activityLog = new ActivityLog();
         if ($noOfEscapped > 0) {
@@ -688,16 +697,30 @@ class EventController extends Controller {
         $eventId = $request->event_id;
         $filePath = $_SERVER['DOCUMENT_ROOT'] . '/files/' . config('constants.aw_csv') . $filename;
         if (($handle = fopen($filePath, "r")) !== FALSE) {
+            $file = fopen ("http://static.businessworld.in/csv/sample.csv", "r");
+            if($file){
+                $sampleData=fgetcsv($file);
+                $sampleData = array_map('trim', $sampleData);
+                $sampleData =array_filter($sampleData);
+            }
             $escFilename = 'escaped_' . $filename;
             $newFileName = $_SERVER['DOCUMENT_ROOT'] . '/files/' . config('constants.aw_csv') . $escFilename;
             $filetowrite = fopen($newFileName, 'w');
             $firstRow = fgetcsv($handle, 1000, ",");
-            $firstRow = array_map('trim', array_filter($firstRow));
+            $firstRow = array_map('trim',$firstRow);
+            $firstRow=array_filter($firstRow);
+            
+            if((count(array_diff_assoc($firstRow,$sampleData))>0) || (count(array_diff_assoc($sampleData, $firstRow))>0)){
+                Session::flash('error', 'Invalid file.');
+                return Redirect::to('import/attendee');
+            }    
+             
             fputcsv($filetowrite, $firstRow);
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                $count=count($firstRow);
+                $data=array_slice($data,0,$count);
                 $ass_data = array_combine($firstRow, $data);
-                //echo '<pre>';
-                //print_r($ass_data);
+
                 if (preg_match($mobileExp, $ass_data['Mobile'])) {
                     $speaker = Speaker::where('mobile', '=', $ass_data['Mobile'])->first();
                     if ($speaker) {

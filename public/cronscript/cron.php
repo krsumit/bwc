@@ -139,7 +139,10 @@ class Cron {
             case 'izooto':
                 $this->izootoContentPush();
                 break;
-                   
+            case 'removecsv':
+                $this->removeCsv();
+                break;  
+            
             
         endswitch;
 
@@ -3633,6 +3636,34 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
         $result = curl_exec($ch);
         curl_close($ch);
         }                
+    }
+    
+    function removeCsv(){
+        $dir =__DIR__;
+        $pos=strrpos($dir,'/');
+        $dirCsv=substr($dir,0,$pos).'/files/csv/'; 
+        $escapedCsv=substr($dir,0,$pos).'/files/csv/escaped/';
+        
+        
+        $files=glob($dirCsv.'*.*');
+        $escapedFiles=glob($escapedCsv.'*.*');
+        
+        $currentTime=time();
+        $interval=2*24*60*60; //2 days
+        $cutOffTime=$currentTime-$interval;
+        
+        foreach($files as $file){
+            if(filemtime($file)<=$cutOffTime){
+                unlink($file);
+            }
+        }
+        foreach($escapedFiles as $escapedFile){
+           if(filemtime($escapedFile)<=$cutOffTime){
+                unlink($escapedFile);
+            } 
+        }
+        
+        // Download files from live and then check again
     }
     
   
