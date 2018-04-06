@@ -3173,20 +3173,20 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
             while ($campaignRow = $campaingResults->fetch_assoc()) {
                 //print_r($campaingRow); exit;
                 $campaingId = $campaignRow['campaign_id'];
-                $checkmasterVideoExistResultSet = $this->conn2->query("select campaing_id, campaing_title,campaing_status, campaing_pdate from campaign where campaing_id=$campaingId");
+                $checkmasterVideoExistResultSet = $this->conn2->query("select campaing_id from campaign where campaing_id=$campaingId");
                 if ($checkmasterVideoExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
-                    $masterVideoUpdateStmt = $this->conn2->prepare("update campaign set campaing_title=?,campaing_status=?,campaing_pdate=? where campaing_id=?");
-                    $masterVideoUpdateStmt->bind_param('sisi', $campaignRow['title'], $campaignRow['valid'], $campaignRow['updated_at'], $campaingId);
+                    $masterVideoUpdateStmt = $this->conn2->prepare("update campaign set campaing_title=?,description=?,url=?,campaing_status=?,campaing_pdate=? where campaing_id=?");
+                    $masterVideoUpdateStmt->bind_param('sssisi', $campaignRow['title'],$campaignRow['description'],$campaignRow['url'],$campaignRow['valid'], $campaignRow['updated_at'], $campaingId);
                     $masterVideoUpdateStmt->execute();
                     if ($masterVideoUpdateStmt->affected_rows)
                         $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                     // echo  $_SESSION['noofupd'];
                 }else {
                     //echo 'sumit'; exit;
-                    $campaignInsertStmt = $this->conn2->prepare("insert into campaign set campaing_id=?, campaing_title=?,campaing_status=?,campaing_pdate=?");
+                    $campaignInsertStmt = $this->conn2->prepare("insert into campaign set campaing_id=?, campaing_title=?,description=?,url=?,campaing_status=?,campaing_pdate=?");
                     //echo $this->conn2->error; exit;
-                    $campaignInsertStmt->bind_param('isis', $campaignRow['campaign_id'], $campaignRow['title'], $campaignRow['valid'], $campaignRow['updated_at']);
+                    $campaignInsertStmt->bind_param('isssis', $campaignRow['campaign_id'], $campaignRow['title'],$campaignRow['description'],$campaignRow['url'],$campaignRow['valid'], $campaignRow['updated_at']);
                     $campaignInsertStmt->execute();
                     if ($campaignInsertStmt->affected_rows) {
                         $_SESSION['noofins'] = $_SESSION['noofins'] + 1;

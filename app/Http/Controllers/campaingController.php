@@ -9,6 +9,7 @@ use Session;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
+use App\Classes\FileTransfer;
 
 class campaingController extends Controller
 {
@@ -51,6 +52,7 @@ class campaingController extends Controller
 		->select('campaign.*')
                 ->where('channel_id','=',$currentChannelId)
                 ->where('campaign.valid', '=', '1')
+                ->orderBy('campaign_id', 'desc')
                     
 		->paginate(10);
         }   
@@ -75,25 +77,16 @@ class campaingController extends Controller
             //'description' => 'required',
             'photo'     => 'image|mimes:jpeg,png|min:1|max:250'
         ]);
-       if($request->file('photo')){ // echo 'test';exit;
-        $file = $request->file('photo');
-       // echo $file; exit;
-        //$is_it = '1';
-        //$is_it = is_file($file);
-        //$is_it = '1';
-        $filename = str_random(6).'_'.$request->file('photo')->getClientOriginalName();
-        //$name = $request->title;
-        //var_dump($file);
-        //$l = fopen('/home/sudipta/check.log','a+');
-        //fwrite($l,"File :".$filename." Name: ".$name);
-
-        $destination_path = 'uploads/';
-
+       $fileTran = new FileTransfer();
+        if($request->file('photo')){
+            $file = $request->file('photo');
+            $filename = str_random(6) . '_' . $request->file('photo')->getClientOriginalName();
+            $fileTran->uploadFile($file, config('constants.awscampainimg'), $filename); 
+            $imageurl= $filename;
+        }
         //$filename = str_random(6).'_'.$request->file('photo')->getClientOriginalName();
         //$filename = "PHOTO";
-        $file->move($destination_path, $filename);
-        $imageurl=url($destination_path . $filename);
-        } 
+       
         if($request->cid){
             $channel_id = $request->channel;
             $title = $request->title;

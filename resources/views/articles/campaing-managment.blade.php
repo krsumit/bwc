@@ -231,7 +231,7 @@
                         <tbody>
                             @foreach($posts as $a)
                             <tr class="gradeX" id="rowCur{{$a->campaign_id}}">
-                                <td style="width:160px;"><img src="{{$a->url}}" alt="user" style="width:70%;" /></td>
+                                <td style="width:160px;"><img src="{{ config('constants.awsbaseurl').config('constants.awscampainimg').$a->url}}" alt="user" style="width:70%;" /></td>
                                 <td ><a href="#"onclick="getEditcampaing({{$a->campaign_id}})">{{$a->title}}</a></td>
 
                                 <td  class="center"><input type="checkbox" class="uniformCheckbox" value="{{$a->campaign_id}}" name="checkItem[]"></td>

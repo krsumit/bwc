@@ -482,7 +482,7 @@
                                 <td style="width:160px;"><img src="{{ config('constants.awsbaseurl').config('constants.awmagazinedir').$a->imagepath}}" alt="magazineissue" style="width:70%;" /></td>
                                 <td><a href="/magazineissue/edit/?id={{$a->magazine_id}}&channel={{$currentChannelId}}">{{$a->title}}</a>
                                 </td>
-                                <td><a href="/magazineissue/edit/?id={{$a->magazine_id}}">{{$a->publish_date_m}}</a>
+                                <td><a href="/magazineissue/edit/?id={{$a->magazine_id}}&channel={{$currentChannelId}}">{{$a->publish_date_m}}</a>
                                 </td>
                                 
                                 

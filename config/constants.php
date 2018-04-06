@@ -46,6 +46,7 @@ return [
 'quotesimage'=>'quotesimage/',    
 'awvideo'=>'videomaster/', 
 'awvideothumb'=> 'mastervideothumb/',
+'awscampainimg'=> 'campainimg/',
 'awvideothumb_small'=> 'mastervideothumb/thumb/',    
 'awsstaticimage'=> 'static/images/',
 'awsupload'=> 'upload/',     
