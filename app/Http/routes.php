@@ -639,6 +639,9 @@ Route::match(['get'], 'newsletter/subscriber/exportCsv', ['middleware' => 'auth'
 /* Api route start here */
 
 Route::match(['get', 'post'], 'api/video','ApiController@videoApi');
+
+Route::get('api/article/insert/image/{key}/{id}/{image}', ['uses' => 'ApiController@transFerArticleImage' ]);
+
 Route::get('api/article/insert', ['uses' => 'ApiController@insertArticle' ]);
 
 /* Api route ends here*/

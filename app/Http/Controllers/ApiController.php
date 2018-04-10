@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Video;
 use Illuminate\Http\Request;
 use App\Article;
@@ -12,7 +14,7 @@ use App\Classes\Zebra_Image;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 use Illuminate\Support\Facades\DB;
-
+use App\Classes\FileTransfer;
 
 class ApiController extends Controller {
 
@@ -22,40 +24,44 @@ class ApiController extends Controller {
     public function __construct() {
         $this->key = md5('apivideogist@bw@businessworld@businessworld.in');
     }
-    
-    public function insertArticle(){
+
+    public function insertArticle() {
+        echo '2';
+        exit;
         //http://35.194.177.143/xml/BES1-MH-IVF-CALF.xml
         //http://35.194.177.143/xml/WRG29-WEATHER-CHART%202%20LAST%20(BES9).xml
-      $string=file_get_contents('http://35.194.177.143/xml/BES1-MH-IVF-CALF.xml');
-      $xml = simplexml_load_string($string);
-      echo '<pre>';
-      //print_r($xml); 
-      echo $xml->channel->item->title;
-      echo '<br><br><br><br><br>'; 
-       //  echo trim($xml->channel->item->description);exit;
-      
-       $search_array=array('/\n\t/','/\n/');
-       $replace_array=array('<br><br>',' ');
-     
-      //$search_array=array('/\n\t/','/\n\b/','/\n\'/');
-      //$replace_array=array('<br><br>',' ',' \'');
-      echo trim(preg_replace($search_array,$replace_array, utf8_decode($xml->channel->item->description)));
-      
-        echo '<br><br><br><br><br>'; 
-        
-        
-      echo $xml->channel->item->category;
-      exit;
-      dd($xml);
+        $string = file_get_contents('http://35.194.177.143/xml/BES1-MH-IVF-CALF.xml');
+        $xml = simplexml_load_string($string);
+        echo '<pre>';
+        //print_r($xml); 
+        echo $xml->channel->item->title;
+        echo '<br><br><br><br><br>';
+        //  echo trim($xml->channel->item->description);exit;
+
+        $search_array = array('/\n\t/', '/\n/');
+        $replace_array = array('<br><br>', ' ');
+
+        //$search_array=array('/\n\t/','/\n\b/','/\n\'/');
+        //$replace_array=array('<br><br>',' ',' \'');
+        echo trim(preg_replace($search_array, $replace_array, utf8_decode($xml->channel->item->description)));
+
+        echo '<br><br><br><br><br>';
+
+
+        echo $xml->channel->item->category;
+        exit;
+        dd($xml);
     }
 
     public function videoApi(Request $request) {
+        echo '1';
+        exit;
         $msgArray = array();
         $flagArray = array();
         if ($request->has('access_key') && $request->has('article_id') && $request->has('video_url') && $request->has('thumb_url')) {
             if ($this->key == trim($request->access_key)) {
                 $article = Article::find($request->article_id);
-                
+
                 if ($article) {
                     $this->aws_obj = $s3 = AWS::createClient('s3');
                     $dir = $_SERVER['DOCUMENT_ROOT'] . '/files/';
@@ -123,37 +129,36 @@ class ApiController extends Controller {
                         $video->video_summary = $article->summary;
                         $video->video_thumb_name = $image_name;
                         $video->save();
-                        
-                         $articleVideo=DB::table('articles')->leftjoin('video_master','articles.video_id','=','video_master.id')
-                                ->select('article_id','video_type','video_id','id','video_by','video_name','video_thumb_name')
-                                ->where('article_id',$request->article_id)->first();
-                         if($articleVideo->video_id && trim($articleVideo->video_by)=='gist'){ // Deleting old gist video
-                             $this->deleteAwsObject(config('constants.awvideothumb'), $articleVideo->video_thumb_name);
-                             $this->deleteAwsObject(config('constants.awvideothumb_small'), $articleVideo->video_thumb_name);
-                             $this->deleteAwsObject(config('constants.awvideo'), $articleVideo->video_name);
-                             $oldVideo=MasterVideo::find($articleVideo->id);
-                             $oldVideo->video_status='0';
-                             $oldVideo->save();
-                         }
-                        if ($video->id) {
-                            if(trim($articleVideo->video_by)!='inhouse'){ // Link Video to article (If old video is not inhouse) 
-                            //DB::select("select article_id,video_type,video_id,id,video_by,video_name from articles left join video_master on articles.video_id=video_master.id where article_id=92170");
-                            $article->video_type = 'uploadedvideo';
-                            $article->video_Id = $video->id;
-                            if ($article->save()) {
-                                $msgArray = array('code' => '200', 'msg' => 'Congrats, Video linked with the article "' . $article->title . '"');
-                            } else {
-                                // If any error found while updating article, remove video from database and files from aws
-                                $vdo = MasterVideo::find($video->id);
-                                $vdo->delete();
-                                $this->deleteAwsObject(config('constants.awvideothumb'), $image_name);
-                                $this->deleteAwsObject(config('constants.awvideothumb_small'), $image_name);
-                                $this->deleteAwsObject(config('constants.awvideo'), $video_name);
-                                $msgArray = array('code' => '201', 'msg' => 'Error while linking the video with article, Please try again.');
-                            }
-                            }else{ // No need to connect
-                               $msgArray = array('code' => '200', 'msg' => 'Congrats, upload but can\'t link with article becasue article already has inhouse video');
 
+                        $articleVideo = DB::table('articles')->leftjoin('video_master', 'articles.video_id', '=', 'video_master.id')
+                                        ->select('article_id', 'video_type', 'video_id', 'id', 'video_by', 'video_name', 'video_thumb_name')
+                                        ->where('article_id', $request->article_id)->first();
+                        if ($articleVideo->video_id && trim($articleVideo->video_by) == 'gist') { // Deleting old gist video
+                            $this->deleteAwsObject(config('constants.awvideothumb'), $articleVideo->video_thumb_name);
+                            $this->deleteAwsObject(config('constants.awvideothumb_small'), $articleVideo->video_thumb_name);
+                            $this->deleteAwsObject(config('constants.awvideo'), $articleVideo->video_name);
+                            $oldVideo = MasterVideo::find($articleVideo->id);
+                            $oldVideo->video_status = '0';
+                            $oldVideo->save();
+                        }
+                        if ($video->id) {
+                            if (trim($articleVideo->video_by) != 'inhouse') { // Link Video to article (If old video is not inhouse) 
+                                //DB::select("select article_id,video_type,video_id,id,video_by,video_name from articles left join video_master on articles.video_id=video_master.id where article_id=92170");
+                                $article->video_type = 'uploadedvideo';
+                                $article->video_Id = $video->id;
+                                if ($article->save()) {
+                                    $msgArray = array('code' => '200', 'msg' => 'Congrats, Video linked with the article "' . $article->title . '"');
+                                } else {
+                                    // If any error found while updating article, remove video from database and files from aws
+                                    $vdo = MasterVideo::find($video->id);
+                                    $vdo->delete();
+                                    $this->deleteAwsObject(config('constants.awvideothumb'), $image_name);
+                                    $this->deleteAwsObject(config('constants.awvideothumb_small'), $image_name);
+                                    $this->deleteAwsObject(config('constants.awvideo'), $video_name);
+                                    $msgArray = array('code' => '201', 'msg' => 'Error while linking the video with article, Please try again.');
+                                }
+                            } else { // No need to connect
+                                $msgArray = array('code' => '200', 'msg' => 'Congrats, upload but can\'t link with article becasue article already has inhouse video');
                             }
                         }
                     } else {
@@ -190,6 +195,32 @@ class ApiController extends Controller {
             'Bucket' => config('constants.awbucket'),
             'Key' => $awsdir . $name
         ));
+    }
+
+    function transFerArticleImage($key,$id,$image=0) {
+        //echo '1'; exit;
+        $fileTran = new FileTransfer();
+        $this->key = md5(date('dmY') . 'businessworld');
+        if ($key == $this->key) {
+            $source = '';
+            if (is_file($_SERVER['DOCUMENT_ROOT'] . '/files/' . $image)) {
+                $destination = config('constants.awarticleimageextralargedir');
+                //$fileTran->tranferFile($image, $source, $dest, false);
+                $fileTran->resizeAndTransferFile($image, '870X470', $source, $destination);
+                $destination = config('constants.awarticleimagethumbtdir');
+                $fileTran->resizeAndTransferFile($image, '100X69', $source, $destination);
+                $destination = config('constants.awarticleimagemediumdir');
+                $fileTran->resizeAndTransferFile($image, '159X106', $source, $destination);
+                $destination = config('constants.awarticleimagelargedir');
+                $fileTran->resizeAndTransferFile($image, '367X232', $source, $destination);
+                
+                unlink($_SERVER['DOCUMENT_ROOT'] . '/files/' . $image);
+            }
+            echo '1';
+        } else {
+            echo 'Not authorized to access';
+            
+        }
     }
 
 }

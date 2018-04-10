@@ -4,7 +4,8 @@ date_default_timezone_set('Asia/Calcutta');
 $conn = new mysqli(HOST, USER, PASS, DATABASE) or die($conn->connect_errno);
 mysqli_set_charset($conn, "utf8");
 parse_str($argv['1']);
-//$partner = $_GET['partner'];
+
+//$partner = $_GET['partner']; 
 
 $partnerresult = $conn->query("select * from content_partner where name='$partner'") or die($this->conn->error);
 $partnerRow = $partnerresult->fetch_object();
@@ -16,8 +17,7 @@ $articles = simplexml_load_string($string);
 if (count($articles) > 0) {
     $count = 0;
     foreach ($articles->channel->item as $article) {
-//        echo '<pre>';
-//print_r($article); exit;
+     
         $checkArticle=$conn->query("select * from articles where partner_content_id='$article->id'") or die($this->conn->error);
         if($checkArticle->num_rows>0)continue;
         $createDate = date('Y-m-d H:i:s');
@@ -84,7 +84,27 @@ if (count($articles) > 0) {
                     $articleTagInsertStmt->execute();
                 }
             }
-            //Code to insert image
+            
+            $pos=strrpos(__DIR__,'/');
+            $dest=substr(__DIR__,0,$pos).'/files/'; 
+            //Becasue " is at the end of file name
+            if(substr($article->image->url,-1,1)=='"'){
+                $source=substr($article->image->url,0,strlen($article->image->url)-1);
+            }
+            if(trim($source)){                
+                $filename=substr($source,strrpos($source,'/')+1);
+                $filename=preg_replace('/([^a-zA-Z0-9_.])+/', '_',$filename);
+                copy($source,$dest.$filename);
+                $key=md5(date('dmY') . 'businessworld');
+                $url='http://bwcms.in/api/article/insert/image/'.$articleId.'/'.$key.'/'.$filename;
+                $data=file_get_contents($url);
+                if(trim($data)=='1'){
+                    $articleImageInsertStmt = $conn->prepare("insert into photos set channel_id='1',owned_by='article',active='1',photopath=?,photo_by=?,title=?,owner_id=?,created_at=?,updated_at=?");
+                    $articleImageInsertStmt->bind_param('sssiss',$filename,$partner,$article->image->title,$articleId,$dtToInsert,$dtToInsert) or die($conn->error);;
+                    $articleImageInsertStmt->execute() or die($conn->error);
+                }
+            }
+                    
         }
       
     }

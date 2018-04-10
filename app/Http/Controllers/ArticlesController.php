@@ -947,7 +947,6 @@ public function channelarticles($option) {
         $images = array_filter($images);
 
         if (count($images) == 0) {
-
             $photosCount = DB::table('photos')->where('valid', '1')
                     ->where('owned_by', 'article')
                     ->where('owner_id', $article->article_id)
