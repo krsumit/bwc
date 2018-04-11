@@ -23,6 +23,11 @@ div.error .select2-choice{background-color: #f4c8c5!important;background-image:n
 .related-img-selection-done{float:right;}
 #related_image_error{text-align: center; margin-top: -10px; margin-bottom: 10px;}
 .related_image{overflow: hidden}
+
+a[href^="https://www.froala.com/wysiwyg-editor?k=u"] {
+       display: none!important;
+}
+
 /* related image ends */
 /* Article image selection pop-up css start */
    /* .black_overlay{
