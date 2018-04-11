@@ -1406,6 +1406,7 @@ function migrateBwArticle() {
                             if ($photoshootUpdateStmt->affected_rows)
                             $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
                             $this->migrateBWPhotoshootPhoto($id,0,$condition);
+                            $this->migratePhotoshootAuthor($id, 0, $condition);
                             
                         }else{
                             $delStmt = $this->conn2->prepare("delete from photo_shoot where photo_shoot_id=?");
@@ -1438,6 +1439,7 @@ function migrateBwArticle() {
                                     $this->conn2->query("insert into photo_shoot_tags set photo_shoot_id=$iid,tag_id=$tag");
                                 }
                                 $this->migrateBWPhotoshootPhoto($iid,1,$condition);
+                                $this->migratePhotoshootAuthor($iid, 1, $condition);
                                 $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
                                 
                             }
@@ -1490,6 +1492,40 @@ function migrateBwArticle() {
         }
     }
    
+    function migratePhotoshootAuthor($id, $isNew = 0, $condition = '') {
+
+        if ($isNew == '1') {
+            $albumAuthorResultset = $this->conn->query("select * from album_author where album_id=$id");
+            while ($authorRow = $albumAuthorResultset->fetch_assoc()) {
+                $tauthId = $authorRow['author_id'];
+                $auInsertStmt = $this->conn2->prepare("insert into photo_shoot_authors set photo_shoot_id=?,author_id=?");
+                $auInsertStmt->bind_param('ii', $authorRow['album_id'],$authorRow['author_id']);
+                $auInsertStmt->execute();
+                $auInsertStmt->close();
+            }
+            
+        } else {
+            
+            $this->conn2->query("delete from photo_shoot_authors where photo_shoot_id=$id");
+            
+            $albumAuthorResultset = $this->conn->query("select * from album_author where album_id=$id");
+            
+            while ($authorRow = $albumAuthorResultset->fetch_assoc()) {
+                $tauthId = $authorRow['author_id'];
+                $auInsertStmt = $this->conn2->prepare("insert into photo_shoot_authors set photo_shoot_id=?,author_id=?");
+                $auInsertStmt->bind_param('ii', $authorRow['album_id'], $authorRow['author_id']);
+                $auInsertStmt->execute();
+                $auInsertStmt->close();
+            }            
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
    function deleteBWPhotoshootRelatedRelated($id){
        $delStmt = $this->conn2->prepare("delete from photo_shoot_photos where photo_shoot_id=?");
        $delStmt->bind_param('i', $id);
