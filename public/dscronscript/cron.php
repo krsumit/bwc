@@ -1463,8 +1463,8 @@ function migrateBwArticle() {
             while ($photo = $photos->fetch_object()) {
                 //print_r($photo);exit;
                 $photoInsStmt = $this->conn2->prepare("insert into photo_shoot_photos set photo_shoot_id=?,photo_shoot_photo_name=?,photo_shoot_photo_url=?"
-                        . ",photo_shoot_photo_title=?,photo_by=?,photo_shoot_photo_description=?");
-                $photoInsStmt->bind_param('isssss', $id, $photo->photopath, $photo->imagefullPath, $photo->title,$photo->photo_by,$photo->description);
+                        . ",photo_shoot_photo_title=?,photo_by=?,photo_shoot_photo_description=?,sequence=?");
+                $photoInsStmt->bind_param('isssssi', $id, $photo->photopath, $photo->imagefullPath, $photo->title,$photo->photo_by,$photo->description,$photo->sequence);
                 $photoInsStmt->execute();
             }
         } else {
@@ -1482,8 +1482,8 @@ function migrateBwArticle() {
                 while ($photo = $photos->fetch_object()) {
                     //print_r($photo);exit;
                     $photoInsStmt = $this->conn2->prepare("insert into photo_shoot_photos set photo_shoot_id=?,photo_shoot_photo_name=?,photo_shoot_photo_url=?"
-                            . ",photo_shoot_photo_title=?,photo_by=?,photo_shoot_photo_description=?") or die($this->conn2->error);;
-                    $photoInsStmt->bind_param('isssss', $id, $photo->photopath, $photo->imagefullPath, $photo->title,$photo->photo_by,$photo->description) or die($this->conn2->error);
+                            . ",photo_shoot_photo_title=?,photo_by=?,photo_shoot_photo_description=?,sequence=?") or die($this->conn2->error);;
+                    $photoInsStmt->bind_param('isssssi', $id, $photo->photopath, $photo->imagefullPath, $photo->title,$photo->photo_by,$photo->description,$photo->sequence) or die($this->conn2->error);
                     $photoInsStmt->execute() or die($this->conn2->error);
                 }
             }
