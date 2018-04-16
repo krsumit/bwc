@@ -170,6 +170,9 @@ class VideoController extends Controller
        // echo 'test'; exit;
         //echo '<pre>';
         $rightId=65;
+        
+        dd($_FILES);
+        
       //  print_r($_POST);
       //  print_r($_FILES);
       

@@ -19,7 +19,37 @@ if (count($articles) > 0) {
     foreach ($articles->channel->item as $article) {
      
         $checkArticle=$conn->query("select * from articles where partner_content_id='$article->id'") or die($this->conn->error);
-        if($checkArticle->num_rows>0)continue;
+        if($checkArticle->num_rows>0){
+            $aleArticleRow=$checkArticle->fetch_object();
+           $articleId=$aleArticleRow->article_id;
+            /* Image test start */
+                //Only in test code
+
+                //only in test code end 
+             
+                            $pos=strrpos(__DIR__,'/');
+                            $dest=substr(__DIR__,0,$pos).'/files/'; 
+                            //Becasue " is at the end of file name
+                            if(substr($article->image->url,-1,1)=='"'){
+                                $source=substr($article->image->url,0,strlen($article->image->url)-1);
+                            }
+                            if(trim($source)){                
+                                $filename=substr($source,strrpos($source,'/')+1);
+                                $filename=preg_replace('/([^a-zA-Z0-9_.])+/', '_',$filename);
+                                copy($source,$dest.$filename);
+                                $key=md5(date('dmY') . 'businessworld');
+                                $url='http://bwcms.in/api/article/insert/image/'.$key.'/'.$articleId.'/'.$filename;
+                                $data=file_get_contents($url);
+                                if(trim($data)=='1'){
+                                    $articleImageInsertStmt = $conn->prepare("insert into photos set channel_id='1',owned_by='article',active='1',photopath=?,photo_by=?,title=?,owner_id=?,created_at=?,updated_at=?");
+                                    $articleImageInsertStmt->bind_param('sssiss',$filename,$partner,$article->image->title,$articleId,$dtToInsert,$dtToInsert) or die($conn->error);;
+                                    $articleImageInsertStmt->execute() or die($conn->error);
+                                }
+                            }
+                 echo '1 image uploaded for '.$articleId;
+                 /* Image test end  */
+            continue;
+        }
         $createDate = date('Y-m-d H:i:s');
         $updateDate = date('Y-m-d H:i:s');
         $publishDate = date('Y-m-d');
