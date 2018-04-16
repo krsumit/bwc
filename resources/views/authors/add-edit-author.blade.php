@@ -174,7 +174,7 @@
                     </div>
                       @endif  
                        @if (Session::has('allready'))
-                    <div class="alert alert-block">
+                    <div class="alert alert-error alert-block">
                         <i class="icon-alert icon-alert-info"></i>
                         <button type="button" class="close" data-dismiss="alert">&times;</button>
                         <strong>This is Alert Notification</strong>

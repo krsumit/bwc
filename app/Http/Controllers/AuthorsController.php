@@ -416,7 +416,7 @@ class AuthorsController extends Controller {
                 $arr = array('status' => 'success');
             } else {
                
-                    Session::flash('message', 'Email already registred.');
+                    Session::flash('allready', 'Email already registred.');
                     return Redirect::to('article/add-author');
                 
                 $arr = array('status' => 'error', 'msg' => 'Email already registred');
