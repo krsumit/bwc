@@ -20,14 +20,11 @@ if (count($articles) > 0) {
      
         $checkArticle=$conn->query("select * from articles where partner_content_id='$article->id'") or die($this->conn->error);
         if($checkArticle->num_rows>0){
-            $aleArticleRow=$checkArticle->fetch_object();
-           $articleId=$aleArticleRow->article_id;
-            /* Image test start */
-                //Only in test code
-
-                //only in test code end 
-             
-                            $pos=strrpos(__DIR__,'/');
+             /* Image test start */
+            /* 
+             $aleArticleRow=$checkArticle->fetch_object();
+            $articleId=$aleArticleRow->article_id;
+                   $pos=strrpos(__DIR__,'/');
                             $dest=substr(__DIR__,0,$pos).'/files/'; 
                             //Becasue " is at the end of file name
                             if(substr($article->image->url,-1,1)=='"'){
@@ -47,6 +44,7 @@ if (count($articles) > 0) {
                                 }
                             }
                  echo '1 image uploaded for '.$articleId;
+                 */
                  /* Image test end  */
             continue;
         }
@@ -126,7 +124,7 @@ if (count($articles) > 0) {
                 $filename=preg_replace('/([^a-zA-Z0-9_.])+/', '_',$filename);
                 copy($source,$dest.$filename);
                 $key=md5(date('dmY') . 'businessworld');
-                $url='http://bwcms.in/api/article/insert/image/'.$articleId.'/'.$key.'/'.$filename;
+                $url='http://bwcms.in/api/article/insert/image/'.$key.'/'.$articleId.'/'.$filename;
                 $data=file_get_contents($url);
                 if(trim($data)=='1'){
                     $articleImageInsertStmt = $conn->prepare("insert into photos set channel_id='1',owned_by='article',active='1',photopath=?,photo_by=?,title=?,owner_id=?,created_at=?,updated_at=?");
