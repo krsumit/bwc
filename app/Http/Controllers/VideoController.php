@@ -171,8 +171,14 @@ class VideoController extends Controller
         //echo '<pre>';
         $rightId=65;
         
-        //dd($_FILES);
+        //dd($request->file('video_thumb_name'));
         
+        
+        //$info = new SplFileInfo($request->file('video_thumb_name'));
+        
+        //dd($request->file('video_name')->getClientOriginalExtension());
+        
+       // dd(get_class( $request->file('video_name')));
       //  print_r($_POST);
       //  print_r($_FILES);
       
