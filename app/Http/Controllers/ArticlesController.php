@@ -645,54 +645,6 @@ public function channelarticles($option) {
 
         return view('articles.create', compact('channels', 'p1', 'postAs', 'country', 'states', 'newstype', 'category', 'magazine', 'event', 'campaign', 'columns', 'tags', 'currentChannelId'));
     }
-    
-    
-    public function createTest() {
-        if (!Session::has('users')) {
-            return redirect()->intended('/auth/login');
-        }
-        //echo  Session::getId(); exit;
-        //echo date('Y-m-d'); 
-        //echo date('H:i:s'); 
-        //exit;
-        // exit;
-        $uid = Session::get('users')->id;
-
-        /* Right mgmt start */
-        $rightId = 2;
-        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
-        $channels = $this->rightObj->getAllowedChannels($rightId);
-        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
-            return redirect('/dashboard');
-        /* Right mgmt end */
-
-
-//        $channels = DB::table('channels')
-//                ->join('rights', 'rights.pagepath', '=', 'channels.channel_id')
-//                ->join('user_rights', 'user_rights.rights_id', '=', 'rights.rights_id')
-//                ->select('channels.*')
-//                ->where('rights.label', '=', 'channel')
-//                ->where('user_rights.user_id', '=', $uid)
-//                ->orderBy('channel')
-//                ->get();
-
-        $postAs = AuthorType::where('valid', '=', '1')->orderBy('label')->get();
-        $p1 = DB::table('author_type')->where('valid', '1')->lists('label', 'author_type_id');
-        $country = Country::where('valid', '=', '1')->get();
-        $states = State::where('valid', '=', '1')->orderBy('name')->get();
-        $newstype = DB::table('news_type')->where('valid', '1')->get();
-        $category = DB::table('category')->where('channel_id', $currentChannelId)->where('valid', '1')->orderBy('name')->get();
-
-        //fwrite($asd, "\n Channels SELECTED FOR USER ".$channels[1]->channel_id."\n");
-
-        $magazine = DB::table('magazine')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
-        $event = DB::table('event')->where('channel_id', $currentChannelId)->where('valid', '1')->orderBy('start_date','desc')->get();
-        $campaign = DB::table('campaign')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
-        $columns = DB::table('columns')->where('channel_id', $currentChannelId)->where('valid', '1')->get();
-        //$tags = DB::table('tags')->where('valid', '1')->get();
-
-        return view('articles.createtest', compact('channels', 'p1', 'postAs', 'country', 'states', 'newstype', 'category', 'magazine', 'event', 'campaign', 'columns', 'tags', 'currentChannelId'));
-    }
 
     /*
      * Any Update after First Save
