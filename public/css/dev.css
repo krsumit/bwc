@@ -24,8 +24,9 @@ div.error .select2-choice{background-color: #f4c8c5!important;background-image:n
 #related_image_error{text-align: center; margin-top: -10px; margin-bottom: 10px;}
 .related_image{overflow: hidden}
 
-a[href^="https://www.froala.com/wysiwyg-editor?k=u"] {
-    opacity:0;
+a[href^="https://www.froala.com/wysiwyg-editor?k=u"] {    
+    opacity:0;width:0px;height:0px;  
+    padding: 0px 0px !important;
 }
 
 /* related image ends */
