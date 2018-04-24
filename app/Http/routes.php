@@ -502,6 +502,7 @@ Route::post('/magazineissue/add', ['middleware' => 'auth',   'uses' => 'Magazine
 Route::match(['get', 'post'], 'magazineissue/edit', ['as' => 'magazineissue/edit', 'uses' => 'MagazineissueController@edit']);
 Route::match(['get', 'post'], 'magazineissue/delete', ['as' => 'magazineissue/delete', 'uses' => 'MagazineissueController@destroy']);
 Route::match(['get', 'post'], 'magazineissue/update', ['as' => 'magazineissue/update', 'uses' => 'MagazineissueController@update']);
+Route::match(['get', 'post'], 'magazineissuefeature/delete', ['as' => 'magazineissuefeature/delete', 'uses' => 'MagazineissueController@destroymagzinearticle']);
 
 /*
  *  insert mgarticle using ajax

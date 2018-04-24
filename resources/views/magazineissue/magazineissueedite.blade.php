@@ -172,6 +172,62 @@
                 </script>                           
             </div>                            
         </div>  
+         <div class="container-fluid" style="margin-bottom:0 !important;">
+
+
+            <div class="form-legend" id="tags3">Add in Newsletter</div> 
+
+            <div class="row-fluid">
+                
+                <div class="span12">
+
+                    
+
+                    <table class="table table-striped" id="tableSortable2">
+                        <thead>
+                           <tr>
+                               <th>Article ID</th>
+                               <th>Title</th>
+                               <th>Featured</th>
+                               <th>Last Word</th>
+                               <th>Editor-In-Chief's Note</th>
+                               <th><input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectall"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           @foreach($SelectedArticleArr as $selectarticle)
+                                <tr  class="gradeX"  id="rowCur{{$selectarticle->article_id}}">
+                                   <td>{{ $selectarticle->article_id }}</td>
+                                   <td><a href="/article/{{ $selectarticle->article_id }}">{{ $selectarticle->title }}</a></td>
+                                   <td class="center"><input type="checkbox" class="uniformCheckbox" value="{{$selectarticle->article_id}}" name="checkItem[]" @if($selectarticle->m_f==1) ? checked ="selected" @endif></td>
+                                   <td class="center">
+                                                <div class="uniformRadio" id="uniform-ifyes"><span><input id="ifyes" name="m_lw" class="uniformRadio" value="{{$selectarticle->article_id}}" @if($selectarticle->m_lw==1) ? checked ="selected" @endif style="opacity: 0;" type="radio"></span></div>
+                                   </td>
+                                   <td class="center">
+                                                <div class="uniformRadio" id="uniform-ifno"><span ><input id="ifno"  name="m_eicn" class="uniformRadio" value="{{$selectarticle->article_id}}" style="opacity: 0;" type="radio" @if($selectarticle->m_eicn==1) ? checked ="selected" @endif></span></div>
+                                   </td>
+                                   </td>
+                                <td  class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItems[]" value="{{ $selectarticle->article_id }}"></td>
+                               </tr>
+                              @endforeach       
+                            
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+            <!--Sortable Non-responsive Table end-->
+
+             <div class="control-group row-fluid">
+                    <div class="span12 span-inset">
+                        
+                        <button type="button" class="btn btn-danger" onclick="deleteMagazinesissuefeatur()">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                        
+                    </div>
+                </div>
+           
+        </div><!-- end container --> 
+         
         <div class="container-fluid">
             <div class="form-legend" id="ma">Magazine Articles</div>
                 <!--Sortable Responsive Media Table begin-->
@@ -208,12 +264,13 @@
 
                    </div>
                </div>
-               <!--<div class="dataTables_paginate paging_bootstrap pagination">
-
+               <!--<div class="dataTables_paginate paging_bootstrap pagination">-->
+               
+    
                     
-                </div>-->
-               <!--Sortable Responsive Media Table end-->
+               
            </div><!-- end container -->
+           
             <div class="container-fluid">		
                 <div class="control-group row-fluid">
                     <div class="span12 span-inset">
@@ -232,8 +289,20 @@
                            });
                        }
                    });
-
+                   
+                   $('#selectall').click(function () {
+                        if ($(this).is(':checked')) {
+                            $('input[name="checkItems[]"]').each(function () {
+                                $(this).attr('checked', 'checked');
+                            });
+                        } else {
+                            $('input[name="checkItems[]"]').each(function () {
+                                $(this).removeAttr('checked');
+                            });
+                        }
+                    });
                });
+               
            </script>			   			   
        </form>
    </div>
@@ -261,6 +330,39 @@
             });
 
     }
+    
+    function deleteMagazinesissuefeatur() {
+                    var ids = '';
+                    var checkedVals = $('input[name="checkItems[]"]:checkbox:checked').map(function () {
+                        //var row = 'rowCur' + this.value;
+                        //$("#" + row).hide();
+                        return this.value;
+                    }).get();
+                    if (checkedVals.length > 0) {
+                        var ids = checkedVals.join(",");
+                        //alert(ids);return false;
+                        $.get("{{ url('/magazineissuefeature/delete/')}}",
+                                {option: ids},
+                        function (data) {
+                            if (data.trim() == 'success') {
+                                $.each(checkedVals, function (i, e) {
+                                    var row = 'rowCur' + e;
+                                    $("#" + row).hide();
+                                });
+                                $('#notificationdiv').show();
+                                $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
+                            <i class="icon-alert icon-alert-info"></i><button type="button" class="close" data-dismiss="alert">\n\
+                            &times;</button><strong>This is Success Notification</strong>\n\
+                            <span></span>Selected records dumped.</div>');
+                            } else {
+                                alert(data);
+                            }
+                            //alert(1);
+                        });
+                    } else {
+                        alert('Please select at least one record.');
+                    }
+                }
 
 </script>
  

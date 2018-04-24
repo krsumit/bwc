@@ -182,9 +182,17 @@ class MagazineissueController extends Controller {
             return redirect('/dashboard');
         /* Right mgmt end */
          $ArticleArr=Article::where('magazine_id', $id)->get();
-         
+         //DB::enableQueryLog();
+          $q = DB::table('articles')
+                    ->Leftjoin('magazine_list', 'articles.article_id', '=', 'magazine_list.a_id');
+                    
+                $q->select(DB::raw('articles.article_id,articles.title,magazine_list.m_f,magazine_list.m_lw,magazine_list.m_eicn'));
+               
+           $SelectedArticleArr = $q->where('magazine_list.m_id', $id)->where('magazine_list.status', '1')->get();
+         //$SelectedArticleArr = DB::table('articles')->Leftjoin('magazine_list', 'articles.article_id', '=', 'magazine_list.a_id')->where('magazine_list.m_id', $id);
+           //dd(DB::getQueryLog());
          if($channel =='1'){
-        return view('magazineissue.magazineissueedite', compact('channels', 'posts', 'currentChannelId','ArticleArr','id'));
+        return view('magazineissue.magazineissueedite', compact('channels', 'posts', 'currentChannelId','ArticleArr','id','SelectedArticleArr'));
          }else{
              return view('magazineissue.magazineissueediteall', compact('channels', 'posts', 'currentChannelId'));
          }
@@ -260,6 +268,45 @@ class MagazineissueController extends Controller {
         return redirect('/magazineissue');
     }
 
+ public function destroymagzinearticle() {
+
+        /* Right mgmt start */
+        $rightId = 77;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return 'You are not authorized to access.';
+        /* Right mgmt end */
+
+
+        if (isset($_GET['option'])) {
+            $id = $_GET['option'];
+        }
+        $delArr = explode(',', $id);
+
+        foreach ($delArr as $d) {
+            $valid = '0';
+            $deleteAl = [
+
+                'status' => $valid,
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+            DB::table('magazine_list')
+                    ->where('a_id', $d)
+                    ->update($deleteAl);
+            
+                  
+
+        }
+        return 'success';
+    }
+   
+    
+    
+    
+    
+    
+    
+    
     /**
      * Remove the specified resource from storage.
      *
