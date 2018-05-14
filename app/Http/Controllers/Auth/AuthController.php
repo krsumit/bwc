@@ -92,7 +92,7 @@ use AuthenticatesAndRegistersUsers,
     }
 
     public function authenticate($email, $password) {
-        $attemptSatus = Auth::attempt(['email' => $email, 'password' => $password], true);
+        $attemptSatus = Auth::attempt(['email' => $email, 'password' => $password,'valid'=>'1'], true);
 
         //$asd=fopen("/home/sudipta/log.log",'a+');
         //fwrite($asd," Saving Session \n");
