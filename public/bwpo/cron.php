@@ -51,7 +51,9 @@ class Cron {
             case 'quotesauthor':
                 $this->migratequotesCategory();
                 break;
-
+            case 'livestreaming':
+                $this->Livestreaming();
+                break;
 	   case 'Sponsored':
                 $this->migrateSponsored();
                 break;
@@ -2445,6 +2447,56 @@ function migrateMasterNewsLetter() {
 
        
         
+    }
+    
+     //Live streaming module start here 
+    function Livestreaming() {
+        //echo 'sumit';exit;
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='livestreaming' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
+
+        $livestreamingResults = $this->conn->query("SELECT * FROM event_streaming where channel_id=10 $condition");
+        //echo $trendingResults->num_rows; exit;
+        if ($livestreamingResults->num_rows > 0) {
+
+            while ($livestreamingRow = $livestreamingResults->fetch_assoc()) {
+                //print_r($trendingRow); exit;
+                $livestreamingId = $livestreamingRow['id'];
+                $checklivestreamingExistResultSet = $this->conn2->query("select * from event_streaming where id=$trendingId");
+                if ($checklivestreamingExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
+                    //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
+                    $livestreamingUpdateStmt = $this->conn2->prepare("update event_streaming set event_name=?,banner_image=?,embed_code=?,is_live=? where id=?");
+                    $livestreamingUpdateStmt->bind_param('ssssi', $livestreamingRow['event_name'], $livestreamingRow['banner_image'], $livestreamingRow['embed_code'], $livestreamingRow['is_live'],$livestreamingId);
+                    $livestreamingUpdateStmt->execute();
+                    if ($livestreamingUpdateStmt->affected_rows)
+                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                    // echo  $_SESSION['noofupd'];
+                }else {
+                    //echo 'sumit'; exit;
+                    $livestreamingInsertStmt = $this->conn2->prepare("insert into event_streaming set id=?, event_name=?,banner_image=?,embed_code=?,is_live=?");
+                    //echo $this->conn2->error; exit;
+                    $livestreamingInsertStmt->bind_param('issss', $livestreamingId,$livestreamingRow['event_name'], $livestreamingRow['banner_image'], $livestreamingRow['embed_code'], $livestreamingRow['is_live']);
+                    $livestreamingInsertStmt->execute();
+                    if ($livestreamingInsertStmt->affected_rows) {
+                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                    }
+                }
+            }
+        }
+
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='livestreaming',start_time=?,end_time=?");
+        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecronstmt->execute();
+        $updatecronstmt->close();
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' livestreaming(s) inserted and ' . $_SESSION['noofupd'] . ' livestreaming(s) updated.</h5>';
     }
 }
 
