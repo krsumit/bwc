@@ -447,6 +447,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('attendee/delete','EventSpeakerController@deleteAttendee');
     Route::get('attendee/get-json','EventSpeakerController@returnSpeakerJson');
     Route::resource('attendee','EventSpeakerController');
+    Route::resource('event/streaming','EventStreamingController');
 });    
 
 /* 
@@ -544,12 +545,11 @@ Route::match(['get', 'post'], 'quickbyte/upload', ['middleware' => 'auth',   'us
 Route::post('quickbyte', ['middleware' => 'auth',   'uses' => 'QuickBytesController@store' ]);
 Route::match(['get', 'post'], '/quickbyte/delete', ['as' => '/quickbyte/delete', 'uses' => 'QuickBytesController@destroy']);
 Route::match(['get', 'post'], '/quickbyte/publish', ['as' => '/quickbyte/publish', 'uses' => 'QuickBytesController@publishBulk']);
+Route::post('quickbyte/relatedimage',['middleware' => 'auth','uses' => 'QuickBytesController@relatedImage']);
 Route::get('quickbyte/{id}','QuickBytesController@show');
 Route::post('quickbyte/image/upload', ['middleware' => 'auth',   'uses' => 'ArticlesController@imageUpload' ]);
 Route::get('quickbyte/image/upload','ArticlesController@imageUpload');
 Route::post('quickbyte/sort/{id}','QuickBytesController@sortImage');
-
-
 /* Debate start here */
 Route::get('debate/create', ['middleware' => 'auth',   'uses' => 'DebateController@create']);
 Route::post('debate', ['middleware' => 'auth',   'uses' => 'DebateController@store' ]);

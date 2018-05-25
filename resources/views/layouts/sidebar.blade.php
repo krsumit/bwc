@@ -202,7 +202,7 @@
             </li>
             @endif
 			
-	    @if(count(array_diff(array('48','50','103','104','105','106','107','108','109'), Session::get('user_rights'))) != count(array('48','50','103','104','105','106','107','108','109')))	 
+	    @if(count(array_diff(array('48','50','103','104','105','106','107','108','109','110'), Session::get('user_rights'))) != count(array('48','50','103','104','105','106','107','108','109','110')))	 
             <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon movie"></i>
@@ -234,6 +234,11 @@
                         @if(in_array('109',Session::get('user_rights')))
                          <li>
                             <a href="{{url('event/logs')}}">Event Activity logs</a>
+                        </li>
+                        @endif
+                         @if(in_array('110',Session::get('user_rights')))
+                         <li>
+                            <a href="{{url('event/streaming')}}">Manage Event Streaming</a>
                         </li>
                         @endif
                     </ul>
