@@ -2455,7 +2455,7 @@ function migrateMasterNewsLetter() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='livestreaming' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwpolivestreaming' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -2469,7 +2469,7 @@ function migrateMasterNewsLetter() {
             while ($livestreamingRow = $livestreamingResults->fetch_assoc()) {
                 //print_r($trendingRow); exit;
                 $livestreamingId = $livestreamingRow['id'];
-                $checklivestreamingExistResultSet = $this->conn2->query("select * from event_streaming where id=$trendingId");
+                $checklivestreamingExistResultSet = $this->conn2->query("select * from event_streaming where id=$livestreamingId");
                 if ($checklivestreamingExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
                     $livestreamingUpdateStmt = $this->conn2->prepare("update event_streaming set event_name=?,banner_image=?,embed_code=?,is_live=? where id=?");
@@ -2492,7 +2492,7 @@ function migrateMasterNewsLetter() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='livestreaming',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwpolivestreaming',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();

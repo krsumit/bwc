@@ -3690,7 +3690,7 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
             while ($livestreamingRow = $livestreamingResults->fetch_assoc()) {
                 //print_r($trendingRow); exit;
                 $livestreamingId = $livestreamingRow['id'];
-                $checklivestreamingExistResultSet = $this->conn2->query("select * from event_streaming where id=$trendingId");
+                $checklivestreamingExistResultSet = $this->conn2->query("select * from event_streaming where id=$livestreamingId");
                 if ($checklivestreamingExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
                     //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
                     $livestreamingUpdateStmt = $this->conn2->prepare("update event_streaming set event_name=?,banner_image=?,embed_code=?,is_live=? where id=?");
