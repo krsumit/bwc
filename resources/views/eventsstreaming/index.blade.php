@@ -75,6 +75,33 @@
             <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="button">Add Streaming</button>
         </a>
     </div>
+    <div class="container-fluid">
+
+            <div class="form-legend" id="Channel">Channel</div>
+
+            <!--Select Box with Filter Search begin-->
+            <div  class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="channel_sel">Channel</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <select name="channel_sel" id="channel_sel" class="required channel_sel formattedelement">
+                            @foreach($channels as $channel)
+                            <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                            @endforeach
+                        </select>
+
+                    </div>
+                </div>
+                <script>
+                    $().ready(function () {
+                        $("#channel_sel").select2();
+                    });</script>
+            </div>
+
+            <!--Select Box with Filter Search end-->
+        </div>
 
     <div class="container-fluid">
 
@@ -218,6 +245,18 @@
 
 
         });
+        
+         $("#channel_sel").change(function () {
+                    $(this).find("option:selected").each(function () {
+
+                        if ($(this).attr("value").trim().length != 0) {
+
+                            window.location = '{{url("event/streaming")}}' + '?channel=' + $(this).attr("value").trim();
+                        }
+                    });
+
+                });
+                
     </script>
 
     {!! Form::close() !!}

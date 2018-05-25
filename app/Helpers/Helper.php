@@ -30,6 +30,17 @@ public static function is_url_exist($url){
             curl_close($ch);
            return $status;
         }
-
-
+ public static function cleanFileName($fileName)
+    {
+     $maxLen=100;
+     $arr=explode('.',$fileName);
+     $extension=array_pop($arr);
+     $fName=implode('_',$arr);
+     $fName=preg_replace('{([^a-zA-Z0-9_])+}', '_',$fName);
+     $fName=preg_replace('/__+/', '_', $fName);
+     $fName=substr($fName,0,$maxLen);
+     $fName=$fName.'.'.$extension;
+     return $fName;
+    }
 }
+

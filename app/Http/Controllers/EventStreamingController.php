@@ -48,7 +48,7 @@ class EventStreamingController extends Controller {
             }
         }
         $streamings = $streamings->paginate(config('constants.recordperpage'));
-        return view('eventsstreaming.index', compact('streamings'));
+        return view('eventsstreaming.index', compact('streamings','channels','currentChannelId'));
     }
 
     /**
@@ -59,6 +59,7 @@ class EventStreamingController extends Controller {
      */
     public function create() { 
         $rightId=110;
+         //dd(Session::get('user_rights'));
         $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
         $channels = $this->rightObj->getAllowedChannels($rightId);
          if (!$this->rightObj->checkRights($currentChannelId, $rightId))
@@ -69,8 +70,10 @@ class EventStreamingController extends Controller {
     public function store(Request $request) {       
         $rightId = 110;
         //dd($request->all());
+       
         if (!$this->rightObj->checkRights($request->channel_sel,$rightId))
             return redirect('/dashboard');
+        
          $validation = $this->validate($request, [
                 'channel_sel' => 'required',
                 'event_name' => 'required',
@@ -96,7 +99,7 @@ class EventStreamingController extends Controller {
         $streaming->created_by = Session::get('users')->id;;
         $streaming->save();        
         Session::flash('message', 'Streaming added successfully.');
-        return Redirect::to('event/streaming');
+        return Redirect::to('event/streaming?channel=' .$request->channel_sel);
     }
 
     /**
@@ -159,7 +162,7 @@ class EventStreamingController extends Controller {
         $streaming->updated_by = Session::get('users')->id;;
         $streaming->save();  
         Session::flash('message', 'Streaming updated successfully.');
-        return Redirect::to('event/streaming'); 
+        return Redirect::to('event/streaming?channel=' .$request->channel_sel); 
     }
 
     /**
