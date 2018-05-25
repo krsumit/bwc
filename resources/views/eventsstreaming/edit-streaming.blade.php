@@ -135,7 +135,7 @@
                 <div class="controls">
                     <select name="channel_sel" id="channel_sel" class="required channel_sel formattedelement">
                         @foreach($channels as $channel)
-                        <option value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                        <option value="{{ $channel->channel_id }}" @if($channel->channel_id==$streaming->channel_id) selected="selected" @endif>{{ $channel->channel }}</option>
                         @endforeach
                     </select>
                 </div>
