@@ -307,7 +307,11 @@
            
             <div class="control-group row-fluid">
                 <div class="span12 span-inset">
-                    <button class="btn btn-warning pull-right" type="submit" style="display:block;">Add</button>
+		@if(@$editAuthor->email !='')
+                    <button class="btn btn-warning pull-right" type="submit" style="display:block;">Update</button>
+		@else
+		<button class="btn btn-warning pull-right" type="submit" style="display:block;">Add</button>
+		@endif
                 </div>
             </div>
 

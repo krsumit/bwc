@@ -249,6 +249,10 @@ class AuthorsController extends Controller {
         $fileTran = new FileTransfer();
 
         if ($request->qid) {
+            //echo $request->email;
+           //echo $author->where('email', trim($request->email))->count();
+           
+            if ($author->where('email', trim($request->email))->count() < 1) {
             $author = Author::find($request->qid);
             $imageurl = '';
             $authordetail = Author::where('author_id', $request->qid)->first();
@@ -323,6 +327,11 @@ class AuthorsController extends Controller {
                 Session::flash('message', 'Your data has been successfully modify.');
                 return Redirect::to('author/authorshowlist/4');
             }
+            }else{
+               Session::flash('allready', 'Email already registred.');
+               return Redirect::to('article/add-author/'.$request->qid);  
+                
+            }   
         } else {
 
 
