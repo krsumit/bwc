@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use Redirect;
 use App\Author;
 use Illuminate\Http\Request;
@@ -30,13 +32,13 @@ class AuthorsController extends Controller {
 
     public function index() {
         //echo '$queryed' ;exit;
-        $id ='';
+        $id = '';
         /* Right mgmt start */
         $rightId = 9;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
-         
+
         $editAuthor = Author::where('author_id', $id)
                 ->select('authors.*')
                 ->first();
@@ -44,7 +46,7 @@ class AuthorsController extends Controller {
                 ->select('columns.*')
                 ->get();
 
-        return view('authors.add-edit-author', compact('columns','editAuthor'));
+        return view('authors.add-edit-author', compact('columns', 'editAuthor'));
     }
 
     /**
@@ -59,9 +61,9 @@ class AuthorsController extends Controller {
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
-         if (isset($_GET['id'])) {
+        if (isset($_GET['id'])) {
             $id = $_GET['id'];
-         }
+        }
         //echo $queryed ;exit;
         if (isset($_GET['keyword'])) {
             $queryed = $_GET['keyword'];
@@ -93,8 +95,7 @@ class AuthorsController extends Controller {
 
         return view('authors.authorshowlist', compact('posts'));
     }
-    
-    
+
     public function gustauthor() {
 
         /* Right mgmt start */
@@ -250,95 +251,160 @@ class AuthorsController extends Controller {
 
         if ($request->qid) {
             //echo $request->email;
-           //echo $author->where('email', trim($request->email))->count();
-           
-            //if ($author->where('email', trim($request->email))->Where('author_id',$request->qid)) {
-            
-            if($author->where('email', trim($request->email))->where('author_id','!=',$request->qid)->count()==0){
+            //echo $author->where('email', trim($request->email))->count();
+
+
             $author = Author::find($request->qid);
             $imageurl = '';
             $authordetail = Author::where('author_id', $request->qid)->first();
             //print_r($authordetail->photo);exit;
-            if ($request->file('photo')) { // echo 'test';exit;
-                $file = $request->file('photo');
-             
-                $filename = str_random(6) . '_' . $request->file('photo')->getClientOriginalName();
-                $name = $request->name;
-                $destination_path = config('constants.awauthordir');
-                $fileTran->uploadFile($file, $destination_path, $filename);
-                $imageurl = $filename;
-                if (trim($authordetail->photo)) {
-                    $fileTran->deleteFile($destination_path, $authordetail->photo);
+            if ($author->where('email', trim($request->email))->count() < 1) {
+                if ($request->file('photo')) { // echo 'test';exit;
+                    $file = $request->file('photo');
+
+                    $filename = str_random(6) . '_' . $request->file('photo')->getClientOriginalName();
+                    $name = $request->name;
+                    $destination_path = config('constants.awauthordir');
+                    $fileTran->uploadFile($file, $destination_path, $filename);
+                    $imageurl = $filename;
+                    if (trim($authordetail->photo)) {
+                        $fileTran->deleteFile($destination_path, $authordetail->photo);
+                    }
                 }
-               
-            }
-            //echo 'e'; exit;
-            $name = $request->name;
-            $author_type_id = $request->author_type;
-            $bio = $request->bio;
-            $email = $request->email;
-            $mobile = $request->mobile;
-            if (!empty($imageurl)) {
-                $photo = $imageurl;
-            } else {
-                $photo = $request->photoset;
-            }
-            //$author->photo = $request->photo;
-            $twitter = $request->twitter;
+                //echo 'e'; exit;
+                $name = $request->name;
+                $author_type_id = $request->author_type;
+                $bio = $request->bio;
+                $email = $request->email;
+                $mobile = $request->mobile;
+                if (!empty($imageurl)) {
+                    $photo = $imageurl;
+                } else {
+                    $photo = $request->photoset;
+                }
+                //$author->photo = $request->photo;
+                $twitter = $request->twitter;
 
-            //If columnd_id is not NULL then is_columnist is Set
-            $isCol = 0;
-            if($author_type_id =='4'){
-            if ($request->column_id > 0) {
-                $isCol = '1';
-            }
-            
-            } else {
+                //If columnd_id is not NULL then is_columnist is Set
                 $isCol = 0;
-            }
-            $is_columnist = $isCol;
-            if($author_type_id =='4'){
-            if (!empty($request->column_id)) {
-                $column_id = $request->column_id;
-            } 
-            }
-            else {
-                $column_id = '0';
-            }
-            $valid = '1';
+                if ($author_type_id == '4') {
+                    if ($request->column_id > 0) {
+                        $isCol = '1';
+                    }
+                } else {
+                    $isCol = 0;
+                }
+                $is_columnist = $isCol;
+                if ($author_type_id == '4') {
+                    if (!empty($request->column_id)) {
+                        $column_id = $request->column_id;
+                    }
+                } else {
+                    $column_id = '0';
+                }
+                $valid = '1';
 
-            $author->name = $name;
-            $author->author_type_id = $author_type_id;
-            $author->bio = $bio;
-            $author->email = $email;
-            $author->mobile = $mobile;
-            $author->photo = $photo;
-            $author->twitter = $twitter;
-            $author->is_columnist = $is_columnist;
-            $author->column_id = $column_id;
-            $author->valid = $valid;
+                $author->name = $name;
+                $author->author_type_id = $author_type_id;
+                $author->bio = $bio;
+                $author->email = $email;
+                $author->mobile = $mobile;
+                $author->photo = $photo;
+                $author->twitter = $twitter;
+                $author->is_columnist = $is_columnist;
+                $author->column_id = $column_id;
+                $author->valid = $valid;
 
-            $author->update();
-            if ($author_type_id == '2') {
-                Session::flash('message', 'Your data has been successfully modify.');
-                return Redirect::to('author/authorshowlist/2');
-            } else if ($author_type_id == '3') {
-                Session::flash('message', 'Your data has been successfully modify.');
-                return Redirect::to('author/authorshowlist/3');
-            } else if ($author_type_id == '4') {
-                Session::flash('message', 'Your data has been successfully modify.');
-                return Redirect::to('author/authorshowlist/4');
+                $author->update();
+                if ($author_type_id == '2') {
+                    Session::flash('message', 'Your data has been successfully modify.');
+                    return Redirect::to('author/authorshowlist/2');
+                } else if ($author_type_id == '3') {
+                    Session::flash('message', 'Your data has been successfully modify.');
+                    return Redirect::to('author/authorshowlist/3');
+                } else if ($author_type_id == '4') {
+                    Session::flash('message', 'Your data has been successfully modify.');
+                    return Redirect::to('author/authorshowlist/4');
+                }
+            } elseif ($authordetail->email == $request->email) {
+                if ($request->file('photo')) { // echo 'test';exit;
+                    $file = $request->file('photo');
+
+                    $filename = str_random(6) . '_' . $request->file('photo')->getClientOriginalName();
+                    $name = $request->name;
+                    $destination_path = config('constants.awauthordir');
+                    $fileTran->uploadFile($file, $destination_path, $filename);
+                    $imageurl = $filename;
+                    if (trim($authordetail->photo)) {
+                        $fileTran->deleteFile($destination_path, $authordetail->photo);
+                    }
+                }
+                //echo 'e'; exit;
+                $name = $request->name;
+                $author_type_id = $request->author_type;
+                $bio = $request->bio;
+                $email = $request->email;
+                $mobile = $request->mobile;
+                if (!empty($imageurl)) {
+                    $photo = $imageurl;
+                } else {
+                    $photo = $request->photoset;
+                }
+                //$author->photo = $request->photo;
+                $twitter = $request->twitter;
+
+                //If columnd_id is not NULL then is_columnist is Set
+                $isCol = 0;
+                if ($author_type_id == '4') {
+                    if ($request->column_id > 0) {
+                        $isCol = '1';
+                    }
+                } else {
+                    $isCol = 0;
+                }
+                $is_columnist = $isCol;
+                if ($author_type_id == '4') {
+                    if (!empty($request->column_id)) {
+                        $column_id = $request->column_id;
+                    }
+                } else {
+                    $column_id = '0';
+                }
+                $valid = '1';
+
+                $author->name = $name;
+                $author->author_type_id = $author_type_id;
+                $author->bio = $bio;
+                $author->email = $email;
+                $author->mobile = $mobile;
+                $author->photo = $photo;
+                $author->twitter = $twitter;
+                $author->is_columnist = $is_columnist;
+                $author->column_id = $column_id;
+                $author->valid = $valid;
+
+                $author->update();
+                if ($author_type_id == '2') {
+                    Session::flash('message', 'Your data has been successfully modify.');
+                    return Redirect::to('author/authorshowlist/2');
+                } else if ($author_type_id == '3') {
+                    Session::flash('message', 'Your data has been successfully modify.');
+                    return Redirect::to('author/authorshowlist/3');
+                } else if ($author_type_id == '4') {
+                    Session::flash('message', 'Your data has been successfully modify.');
+                    return Redirect::to('author/authorshowlist/4');
+                }
+            } else {
+                Session::flash('allready', 'Email already registred.');
+                return Redirect::to('article/add-author/' . $request->qid);
             }
-            }else{
-               Session::flash('allready', 'Email already registred.');
-               return Redirect::to('article/add-author/'.$request->qid);  
-                
-            }   
         } else {
+
+
 
             if ($author->where('email', trim($request->email))->count() == 0) {
 
-                 //print_r($request->all());exit;
+                //print_r($request->all());exit;
                 //$image = new Image;
                 // upload the image //
                 //$f = sizeof($_FILES);
@@ -392,21 +458,20 @@ class AuthorsController extends Controller {
 
                 //If columnd_id is not NULL then is_columnist is Set
                 $isCol = 0;
-                if($author_type_id =='4'){
-                if ($request->column_id > 0) {
-                    $isCol = '1';
-                }
-                }else {
+                if ($author_type_id == '4') {
+                    if ($request->column_id > 0) {
+                        $isCol = '1';
+                    }
+                } else {
                     $isCol = 0;
                 }
                 $author->is_columnist = $isCol;
-                if($author_type_id =='4'){
-                if (!empty($request->column_id)) {
-                    $author->column_id = $request->column_id;
-                }
-                } 
-                else {
-                $author->column_id = 0;
+                if ($author_type_id == '4') {
+                    if (!empty($request->column_id)) {
+                        $author->column_id = $request->column_id;
+                    }
+                } else {
+                    $author->column_id = 0;
                 }
                 $author->valid = '1';
 
@@ -424,10 +489,10 @@ class AuthorsController extends Controller {
                 }
                 $arr = array('status' => 'success');
             } else {
-               
-                    Session::flash('allready', 'Email already registred.');
-                    return Redirect::to('article/add-author');
-                
+
+                Session::flash('allready', 'Email already registred.');
+                return Redirect::to('article/add-author');
+
                 $arr = array('status' => 'error', 'msg' => 'Email already registred');
             }
 
@@ -461,9 +526,9 @@ class AuthorsController extends Controller {
         $editAuthor = Author::where('author_id', $id)
                 ->select('authors.*')
                 ->first();
-        
+
         //print_r($editAuthor);exit;
-        
+
         $columns = DB::table('columns')
                 ->select('columns.*')
                 ->get();
@@ -497,31 +562,29 @@ class AuthorsController extends Controller {
         //fwrite($asd, " Del Ids: ".$id." \n\n");
         $delArr = explode(',', $id);
         //fwrite($asd, " Del Arr Count: ".count($delArr)." \n\n");
-        $errorArray=array();
+        $errorArray = array();
         foreach ($delArr as $d) {
             //fwrite($asd, " Delete Id : ".$d." \n\n");
             $valid = '0';
-            $noOfArticles=ArticleAuthor::where('author_id',$d)->count();
-            if($noOfArticles==0){
+            $noOfArticles = ArticleAuthor::where('author_id', $d)->count();
+            if ($noOfArticles == 0) {
                 $deleteAl = [
-                'updated_at'=> date('Y:m:d H:i:s'),
-                'valid' => $valid
+                    'updated_at' => date('Y:m:d H:i:s'),
+                    'valid' => $valid
                 ];
                 DB::table('authors')
-                    ->where('author_id', $d)
-                    ->update($deleteAl);
-                
-            }else{
-                $author=Author::find($d);
-                $errorArray['author_id'][]=$d;
-                $errorArray['author_detail'][]=$author->name.'('.$author->email.')';      
+                        ->where('author_id', $d)
+                        ->update($deleteAl);
+            } else {
+                $author = Author::find($d);
+                $errorArray['author_id'][] = $d;
+                $errorArray['author_detail'][] = $author->name . '(' . $author->email . ')';
             }
         }
-        if(count($errorArray)>0)
+        if (count($errorArray) > 0)
             return json_encode($errorArray);
         else
             return 'success';
-            
     }
 
     public function changeStatus() {

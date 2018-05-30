@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Author;
 use App\Tag;
 use Illuminate\Http\Request;
@@ -579,5 +577,61 @@ class QuickBytesController extends Controller {
                 ->where('id', $id)
                 ->update(['updated_at' => date('Y:m:d H:i:s')]);
     }
-
+    
+    function relatedImage(Request $request) {        
+        //echo '123'; exit;
+        
+        /*array:2 [
+            "search_key" => "modi"
+            "selected_values" => array:3 [
+              0 => "tag"
+              1 => "qbtitle"
+              2 => "imagetitle"
+            ]
+          ]
+          */
+        //dd($request->all());
+        /*
+         select *,count(*) as cs from tags join (select * from article_tags order by updated_at desc ) as article_tags on tags.tags_id=article_tags.tags_id where (tag like '%modi %' or tag like '% modi%' or tag like 'modi' ) group by tags.tags_id order by article_tags.updated_at desc,cs desc limit 5
+         * 
+         */
+        $total = 25;
+        echo $query = "select *,count(*) as cs from tags join (select * from article_tags order by updated_at desc ) as article_tags on tags.tags_id=article_tags.tags_id where (tag like '%" . $request->search_key . " %' or tag like '% " . $request->search_key . "%'  or tag like '" . $request->search_key . "' ) group by tags.tags_id order by article_tags.updated_at desc,cs desc limit 5"; exit;
+        $tags = DB::select($query);
+        $related_images = array();
+        $imgids = array();
+        $cond = '';
+        
+        //dd($tags); exit;
+        
+        usort($tags, array($this, 'compareByCount'));
+        if (count($tags) > 0) {
+            $minlimit = ceil($total / count($tags));
+            $maxlimit = ceil($total / count($tags));
+            foreach ($tags as $tag) {
+                if (count($imgids) > 0) {
+                    $cond = ' and photo_id not in (' . implode(',', $imgids) . ')';
+                }
+                $imagequery = "select photo_id,photopath,photo_by,title from photos where valid='1' and photopath!='' and owned_by='article' $cond and owner_id in(SELECT articles.article_id FROM `articles` inner join article_tags on articles.article_id=article_tags.article_id WHERE  article_tags.tags_id=" . $tag->tags_id . " order by article_tags.updated_at desc) group by photopath order by updated_at desc limit " . $maxlimit;
+                $images = DB::select($imagequery);
+                if (count($images) < $maxlimit) {
+                    $maxlimit = $maxlimit + ($minlimit - count($images));
+                } else {
+                    $maxlimit = $minlimit;
+                }
+                foreach ($images as $image) {
+                    $imgids[] = $image->photo_id;
+                    $related_images[] = array('image_url' => config('constants.awsbaseurl') . config('constants.awarticleimagethumbtdir') . $image->photopath, 'image_id' => $image->photo_id, 'tag_name' => $tag->tag, 'tag_id' => $tag->tags_id, 'photo_by' => $image->photo_by, 'image_name' => $image->photopath, 'title' => $image->title);
+                }
+            }
+        } else {
+            json_encode(array('error' => 'No result found'));
+        }
+        return json_encode($related_images);
+    }
+    
+    public static function compareByCount($a, $b) {
+        return strcmp($a->cs, $b->cs);
+    }
+    
 }

@@ -341,7 +341,44 @@
             </div>
         </div>
 
+        <div id="Photo-feature"  class="control-group row-fluid" style="border-bottom: none;">
+            <div class="span3">
+                <label class="control-label">Browse recent related images :</label>
+            </div>
+            <div class="span9 related_image" >
+                <div class="controls">
+                    <input type="text" name="related_image_search" id="related_image_search" />
+                    <button class="btn btn-success" onclick="searchRelatedImageQb()" id="related_image_button"  name="status" type="button" style="margin-bottom:0px !important;">Search</button>
+                    <div>
+                        <label class="checkbox pull-left" style="margin:0;">
+                            <input type="checkbox" class="uniformCheckbox" value="tag" id="tags_chk" name="searchFor[]">
+                            <a for="tags_chk">Tags</a>
+                        </label>
+                        <label class="checkbox pull-left" >
+                            <input type="checkbox" class="uniformCheckbox" value="qbtitle" id="qb_title_chk" name="searchFor[]">
+                            <a for="qb_title_chk">QB Title</a>
+                        </label> 
+                        <label class="checkbox pull-left" >
+                            <input type="checkbox" class="uniformCheckbox" value="imagetitle" id="image_title_chk" name="searchFor[]">
+                            <a for="image_title_chk">Image Title</a>
+                        </label>
+                     </div>
+                </div>
+                <div class="relaed_image_box_outer hide" >
+                    <img src="{{ asset('images/photon/preloader/76.gif')}}" class="loader-img-related-content hide" alt="loader" />
+                    <div class="relaed_image_box">
 
+                    </div>
+                    <div class="related-img-selection-done"  >
+                        <button class="btn btn-success hide related_action_button" onclick="relatedImageSelectedQb()" id="related_selected_button" name="related_selected" type="button" >Upload</button>
+                        <button class="btn btn-danger delete related_action_button" onclick="closeRelatedImageQb()" type="button"><i class="glyphicon glyphicon-trash"></i><span>Close</span>
+                        </button>
+                        <img src="{{ asset('images/photon/preloader/76.gif')}}" class="loader-img-selected hide" alt="loader" />
+                    </div>
+                </div>
+            </div>
+        </div>
+      
         <!--Drag And Drop Upload begin-->
         <div id="Drag_And_Drop_Upload" class="control-group row-fluid">
             <div class="span3">

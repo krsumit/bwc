@@ -51,7 +51,8 @@ return [
 'awsstaticimage'=> 'static/images/',
 'awsupload'=> 'upload/',     
 'debatefeatured'=>'debate/featuredimage/',
-'debateexpert'=>'debate/expertimage/',     
+'debateexpert'=>'debate/expertimage/',
+'eventstreaming'=>'eventstreaming/',
 'awbucket'=>'static.businessworld.in',
 'awsbaseurl_backup'=>'http://d1s8mqgwixvb29.cloudfront.net/   http://bwcms.localhost/files/',
 'awsbaseurl'=>'http://static.businessworld.in/',       
@@ -71,6 +72,5 @@ return [
 'dimension_magz'=>'328X450',
 'dimension_video'=>'680X370',
 'ee_rating_cateogy_id'=>'47025',
-'sitename'=>'BWCMS'    
 ];
 ?>
