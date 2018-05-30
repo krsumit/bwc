@@ -21,65 +21,64 @@
 
         <script type="text/javascript">
             $(function () {
-                $("#jstree").jstree({
-                    "json_data": {
-                        "data": [
-                            {
-                                "data": {
-                                    "title": "Channel",
-                                    "attr": {"href": "#Channel"}
-                                }
-                            },
-                            {
-                                "data": {
-                                    "title": "Author",
-                                    "attr": {"href": "#Author"}
-                                }
-                            },
-                            {
-                                "data": {
-                                    "title": "Quick Byte Feature",
-                                    "attr": {"href": "#qb-feature"}
-                                }
-                            },
-                            {
-                                "data": {
-                                    "title": "Tags",
-                                    "attr": {"href": "#tags"}
-                                }
-                            },
-                            {
-                                "data": {
-                                    "title": "Topics",
-                                    "attr": {"href": "#topics"}
-                                }
-                            },
-                             {
-                            "data" : {
-                            "title" : "Assign This QB To A Campaign",
-                                    "attr" : { "href" : "#assign-article-to-a-campaign" }
-                            }
-                            },
-                            {
-                                "data": {
-                                    "title": "Categories",
-                                    "attr": {"href": "#categories"}
-                                }
-                            }
-                        ]
-                    },
+            $("#jstree").jstree({
+            "json_data": {
+            "data": [
+            {
+            "data": {
+            "title": "Channel",
+                    "attr": {"href": "#Channel"}
+            }
+            },
+            {
+            "data": {
+            "title": "Author",
+                    "attr": {"href": "#Author"}
+            }
+            },
+            {
+            "data": {
+            "title": "Quick Byte Feature",
+                    "attr": {"href": "#qb-feature"}
+            }
+            },
+            {
+            "data": {
+            "title": "Tags",
+                    "attr": {"href": "#tags"}
+            }
+            },
+            {
+            "data": {
+            "title": "Topics",
+                    "attr": {"href": "#topics"}
+            }
+            },
+            {
+            "data" : {
+            "title" : "Assign This QB To A Campaign",
+                    "attr" : { "href" : "#assign-article-to-a-campaign" }
+            }
+            },
+            {
+            "data": {
+            "title": "Categories",
+                    "attr": {"href": "#categories"}
+            }
+            }
+            ]
+            },
                     "plugins": ["themes", "json_data", "ui"]
-                })
-                        .bind("click.jstree", function (event) {
-                            var node = $(event.target).closest("li");
+            })
+                    .bind("click.jstree", function (event) {
+                    var node = $(event.target).closest("li");
                             document.location.href = node.find('a').attr("href");
                             return false;
-                        })
-                        .delegate("a", "click", function (event, data) {
-                            event.preventDefault();
-                        });
-            });
-        </script>
+                    })
+                    .delegate("a", "click", function (event, data) {
+                    event.preventDefault();
+                    });
+            });        </script>
         <div class="sidebarMenuHolder">
             <div class="JStree">
                 <div class="Jstree_shadow_top"></div>
@@ -138,33 +137,33 @@
 
     <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
 
-             <div class="form-legend" id="Notifications">Notifications</div>
+         <div class="form-legend" id="Notifications">Notifications</div>
 
-            <!--Notifications begin-->
-            <div class="control-group row-fluid" >
-                <div class="span12 span-inset">
-                    @if (Session::has('message'))
-                    <div class="alert alert-success alert-block" style="">
-                        <i class="icon-alert icon-alert-info"></i>
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>This is Success Notification</strong>
-                        <span>{{ Session::get('message') }}</span>
-                    </div>
-                    @endif
-
-                    @if (Session::has('error'))
-                    <div class="alert alert-error alert-block">
-                        <i class="icon-alert icon-alert-info"></i>
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <strong>This is Error Notification</strong>
-                        <span>{{ Session::get('error') }}</span>
-                    </div>
-                    @endif
+        <!--Notifications begin-->
+        <div class="control-group row-fluid" >
+            <div class="span12 span-inset">
+                @if (Session::has('message'))
+                <div class="alert alert-success alert-block" style="">
+                    <i class="icon-alert icon-alert-info"></i>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>This is Success Notification</strong>
+                    <span>{{ Session::get('message') }}</span>
                 </div>
-            </div>
-            <!--Notifications end-->
+                @endif
 
+                @if (Session::has('error'))
+                <div class="alert alert-error alert-block">
+                    <i class="icon-alert icon-alert-info"></i>
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <strong>This is Error Notification</strong>
+                    <span>{{ Session::get('error') }}</span>
+                </div>
+                @endif
+            </div>
         </div>
+        <!--Notifications end-->
+
+    </div>
     <div class="container-fluid">
 
         <div class="form-legend" id="Channel">Channel</div>
@@ -184,44 +183,40 @@
                 </div>
             </div>
             <script>
-                $().ready(function () {
-                    $("#channel").select2();
+                        $().ready(function () {
+                $("#channel").select2();
+                        $('#channel').change(function () {
 
-                    $('#channel').change(function () {
-                        
-                          $.get("{{ url('article/campaign')}}",
-                                { option: $(this).attr("value") },
-                                        function(data) {
-                                        var Box = $('#campaign_id');
-                                                Box.empty();
-                                                Box.append("<option value=''>Please Select</option>");
-                                                $.each(data, function(index, element) {
-                                                Box.append("<option value='" + element + "'>" + index + "</option>");
-                                                });
-                                                $("#campaign_id").select2();
-                             });
-                                        
-                        
-                        $.get("{{ url('article/dropdown1')}}",
-                                {option: $(this).attr("value") + '&level='},
-                        function (data) {
-                            var Box = $('#category1');
-                            Box.empty();
-                            Box.append("<option value=''>Please Select</option>");
-                            $.each(data, function (index, element) {
+                $.get("{{ url('article/campaign')}}",
+                { option: $(this).attr("value") },
+                        function(data) {
+                        var Box = $('#campaign_id');
+                                Box.empty();
+                                Box.append("<option value=''>Please Select</option>");
+                                $.each(data, function(index, element) {
                                 Box.append("<option value='" + element + "'>" + index + "</option>");
-                            });
-                            $("#category1").select2();
-                            $('#selectBoxFilter3').html("<option value=''>Please Select</option>");
-                            $("#selectBoxFilter3").select2();
-                            $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
-                            $('#selectBoxFilter4').select2();
-                            $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
-                            $('#selectBoxFilter5').select2();
+                                });
+                                $("#campaign_id").select2();
                         });
-                    });
+                        $.get("{{ url('article/dropdown1')}}",
+                        {option: $(this).attr("value") + '&level='},
+                                function (data) {
+                                var Box = $('#category1');
+                                        Box.empty();
+                                        Box.append("<option value=''>Please Select</option>");
+                                        $.each(data, function (index, element) {
+                                        Box.append("<option value='" + element + "'>" + index + "</option>");
+                                        });
+                                        $("#category1").select2();
+                                        $('#selectBoxFilter3').html("<option value=''>Please Select</option>");
+                                        $("#selectBoxFilter3").select2();
+                                        $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
+                                        $('#selectBoxFilter4').select2();
+                                        $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                        $('#selectBoxFilter5').select2();
+                                });
                 });
-            </script>
+                });            </script>
         </div>
 
         <!--Select Box with Filter Search end-->					
@@ -251,46 +246,39 @@
                 </div>
             </div>
             <script>
-                $().ready(function () {
-                    $("#author_type").select2();
-
-                });
-            </script>
+                        $().ready(function () {
+                $("#author_type").select2();
+                });            </script>
 
             <script type="text/javascript">
 
-                $(document).ready(function () {
-                    $("#ch-reporter").hide();
+                        $(document).ready(function () {
+                $("#ch-reporter").hide();
+                        $("#author_type").change(function () {
 
-                    $("#author_type").change(function () {
+                $(this).find("option:selected").each(function () {
 
-                        $(this).find("option:selected").each(function () {
-
-                            if ($(this).attr("value") != "1" && $(this).attr("value") != "") {
-                                $("#ch-reporter").show();
-                                $.get("{{ url('/article/authorddd/')}}",
-                                        {option: $(this).attr("value")},
+                if ($(this).attr("value") != "1" && $(this).attr("value") != "") {
+                $("#ch-reporter").show();
+                        $.get("{{ url('/article/authorddd/')}}",
+                        {option: $(this).attr("value")},
                                 function (data) {
-                                    var simpleSelectBox1 = $('#author_name');
-                                    simpleSelectBox1.empty();
-                                    simpleSelectBox1.append("<option value=''>Please Select</option>");
-                                    $.each(data, function (index, element) {
+                                var simpleSelectBox1 = $('#author_name');
+                                        simpleSelectBox1.empty();
+                                        simpleSelectBox1.append("<option value=''>Please Select</option>");
+                                        $.each(data, function (index, element) {
                                         simpleSelectBox1.append("<option value='" + element + "'>" + index + "</option>");
-                                    });
-                                    $("#author_name").select2();
+                                        });
+                                        $("#author_name").select2();
                                 });
-                            }
-                            else {
-                                $("#ch-reporter").hide();
-                            }
-
-                        });
-
-                    }).change();
+                }
+                else {
+                $("#ch-reporter").hide();
+                }
 
                 });
-
-            </script>
+                }).change();
+                });            </script>
 
         </div>
 
@@ -308,10 +296,9 @@
                 </div>
             </div>
             <script>
-                $().ready(function () {
-                    $("#author_name").select2();
-                });
-            </script>                            
+                        $().ready(function () {
+                $("#author_name").select2();
+                });            </script>                            
         </div>
 
     </div>
@@ -360,6 +347,7 @@
                         </label> 
                         <label class="checkbox pull-left" >
                             <input type="checkbox" class="uniformCheckbox" value="imagetitle" id="image_title_chk" name="searchFor[]">
+                            
                             <a for="image_title_chk">Image Title</a>
                         </label>
                      </div>
@@ -467,13 +455,12 @@
             </div>
         </div>
         <script>
-            $(document).ready(function (e) {
-                $("#des_area").hide();
-                $("#add_des").click(function (e) {
+                            $(document).ready(function (e) {
+                    $("#des_area").hide();
+                            $("#add_des").click(function (e) {
                     $("#des_area").show();
-                });
-            });
-        </script>
+                    });
+                    });        </script>
 
     </div>
 
@@ -551,52 +538,52 @@
             </div>
             <!-- Add Tag to Tags Table - Ajax request -->
             <script>
-                $().ready(function () {
-                    var token = $('input[name=_token]');
-                    // process the form
-                    $("#attachTag").click(function () {
+                                $().ready(function () {
+                        var token = $('input[name=_token]');
+                                // process the form
+                                $("#attachTag").click(function () {
                         if ($('input[name=addtags]').val().trim().length == 0) {
-                            alert('Please enter tage');
-                            return false;
+                        alert('Please enter tage');
+                                return false;
                         }
 
                         $.ajax({
-                            type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                            url: '/article/addTag', // the url where we want to POST
-                            data: {tag: $('input[name=addtags]').val()},
-                            dataType: 'json', // what type of data do we expect back from the server
-                            encode: true,
-                            beforeSend: function (data) {
+                        type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                                url: '/article/addTag', // the url where we want to POST
+                                data: {tag: $('input[name=addtags]').val()},
+                                dataType: 'json', // what type of data do we expect back from the server
+                                encode: true,
+                                beforeSend: function (data) {
                                 $('#attachTag').hide();
-                                $('#attachTag').siblings('img').show();
-                            },
-                            complete: function (data) {
+                                        $('#attachTag').siblings('img').show();
+                                },
+                                complete: function (data) {
                                 $('#attachTag').show();
-                                $('#attachTag').siblings('img').hide();
-                            },
-                            success: function (data) {
+                                        $('#attachTag').siblings('img').hide();
+                                },
+                                success: function (data) {
 
                                 $.each(data, function (key, val) {
 
-                                    $("#Taglist").tokenInput("add", val);
+                                $("#Taglist").tokenInput("add", val);
                                 });
-                                $('input[name=addtags]').val('');
+                                        $('input[name=addtags]').val('');
 //                                        alert('Tag Saved');
 //                                        $("#Taglist").tokenInput("add", [{"id":"2","name":"Coal Scam"},{"id":"4","name":"Cuisine"},{"id":"7","name":"Education"},{"id":"15","name":"Election"},{"id":"208","name":"testtag1"},{"id":"1","name":"Modi"},{"id":"207","name":"tagtest"},{"id":"210","name":"ankita"}]);
 //                                         //$("#Taglist").tokenInput("add", {id: 9992, name: "test22"});
-                            },
-                            headers: {
+                                },
+                                headers: {
                                 'X-CSRF-TOKEN': token.val()
-                            }
+                                }
                         })
-                    });
-                    $("#Taglist").tokenInput("/tags/getJson", {
+                        });
+                                $("#Taglist").tokenInput("/tags/getJson", {
                         theme: "facebook",
-                        searchDelay: 300,
-                        minChars: 4,
-                        preventDuplicates: true,
-                    });
-                });</script>
+                                searchDelay: 300,
+                                minChars: 4,
+                                preventDuplicates: true,
+                        });
+                        });</script>
         </div>                       
         <!--Select Box with Filter Search end-->
     </div>
@@ -619,7 +606,7 @@
                         @endforeach
                     </select>
                     <span for="campaign" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
-                   
+
                 </div>
             </div>
             <script>
@@ -648,68 +635,67 @@
                 </div>
             </div>
             <script>
-                $().ready(function () {
-                    $("#Ltopics").pickList();
-                });
-                $("#genTopic").click(function () {
-                    var token = $('input[name=_token]');
-                    //alert($('#maxi').elrte('val'));
-                    // process the form
-                    var tdata = $('#featuredesc').val();
-                    $('body').find('.table.table-striped textarea').each(function () {
+                                $().ready(function () {
+                        $("#Ltopics").pickList();
+                        });
+                                $("#genTopic").click(function () {
+                        var token = $('input[name=_token]');
+                                //alert($('#maxi').elrte('val'));
+                                // process the form
+                                var tdata = $('#featuredesc').val();
+                                $('body').find('.table.table-striped textarea').each(function () {
                         // alert($(this).val());
                         tdata += ' ' + $(this).val();
-                    });
-                    $.ajax({
-                        type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
-                        url: '/article/generateTopics', // the url where we want to POST
-                        data: {detail: tdata},
-                        dataType: 'json', // what type of data do we expect back from the server
-                        encode: true,
-                        beforeSend: function (data) {
-                            $('#genTopic').hide();
-                            $('#genTopic').siblings('img').show();
-                        },
-                        complete: function (data) {
-                            $('#genTopic').show();
-                            $('#genTopic').siblings('img').hide();
-                        },
-                        success: function (data) {
+                        });
+                                $.ajax({
+                                type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                                        url: '/article/generateTopics', // the url where we want to POST
+                                        data: {detail: tdata},
+                                        dataType: 'json', // what type of data do we expect back from the server
+                                        encode: true,
+                                        beforeSend: function (data) {
+                                        $('#genTopic').hide();
+                                                $('#genTopic').siblings('img').show();
+                                        },
+                                        complete: function (data) {
+                                        $('#genTopic').show();
+                                                $('#genTopic').siblings('img').hide();
+                                        },
+                                        success: function (data) {
 
-                            var resplen = (data).length;
-                            //alert(resplen);
-                            var selectedarray = new Array();
-                            $('.ltopicsparentdiv').find("#Ltopics option:selected").each(function () {
-                                selectedarray.push($(this).val());
-                            });
-                            var dataoption = '<select multiple name="Ltopics[]" id="Ltopics">';
-                            var selectedop = '';
-                            $.each(data, function (index, element) {
-                                selectedop = '';
-                                if (selectedarray.indexOf(element.id) >= 0)
-                                    selectedop = 'selected';
-                                dataoption += "<option " + selectedop + " value='" + element.id + "'>" + element.topic + "</option>";
-
-                            });
-                            dataoption += '</select>';
-                            $(".ltopicsparentdiv").html(dataoption);
-                            $("#Ltopics").pickList();
-                        },
-                        headers: {
-                            'X-CSRF-TOKEN': token.val()
-                        }
-                    })
-                            // using the done promise callback
-                            .done(function (data) {
+                                        var resplen = (data).length;
+                                                //alert(resplen);
+                                                var selectedarray = new Array();
+                                                $('.ltopicsparentdiv').find("#Ltopics option:selected").each(function () {
+                                        selectedarray.push($(this).val());
+                                        });
+                                                var dataoption = '<select multiple name="Ltopics[]" id="Ltopics">';
+                                                var selectedop = '';
+                                                $.each(data, function (index, element) {
+                                                selectedop = '';
+                                                        if (selectedarray.indexOf(element.id) >= 0)
+                                                        selectedop = 'selected';
+                                                        dataoption += "<option " + selectedop + " value='" + element.id + "'>" + element.topic + "</option>";
+                                                });
+                                                dataoption += '</select>';
+                                                $(".ltopicsparentdiv").html(dataoption);
+                                                $("#Ltopics").pickList();
+                                        },
+                                        headers: {
+                                        'X-CSRF-TOKEN': token.val()
+                                        }
+                                })
+                                // using the done promise callback
+                                .done(function (data) {
                                 // log data to the console so we can see
                                 //console.log(data);
                                 //alert(data);
                                 //alert('Topic Populated');
                                 // here we will handle errors and validation messages
-                            });
-                    // stop the form from submitting the normal way and refreshing the page
-                    //event.preventDefault();
-                });</script>
+                                });
+                                // stop the form from submitting the normal way and refreshing the page
+                                //event.preventDefault();
+                        });</script>
             <div class="span12 span-inset">
                 <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:5%; display:none;">
             </div>
@@ -735,27 +721,26 @@
                 </div>
             </div>
             <script>
-                $(document).ready(function () {
-                    $("#category1").select2();
-                    $('#category1').change(function () {
+                                $(document).ready(function () {
+                        $("#category1").select2();
+                                $('#category1').change(function () {
                         $.get("{{ url('article/dropdown1')}}",
-                                {option: $(this).attr("value") + '&level=_two'},
-                        function (data) {
-                            var selectBoxFilter3 = $('#selectBoxFilter3');
-                            selectBoxFilter3.empty();
-                            selectBoxFilter3.append("<option value=''>Please Select</option>");
-                            $.each(data, function (index, element) {
-                                selectBoxFilter3.append("<option value='" + element + "'>" + index + "</option>");
-                            });
-                            $("#selectBoxFilter3").select2();
-                            $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
-                            $('#selectBoxFilter4').select2();
-                            $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
-                            $('#selectBoxFilter5').select2();
-
+                        {option: $(this).attr("value") + '&level=_two'},
+                                function (data) {
+                                var selectBoxFilter3 = $('#selectBoxFilter3');
+                                        selectBoxFilter3.empty();
+                                        selectBoxFilter3.append("<option value=''>Please Select</option>");
+                                        $.each(data, function (index, element) {
+                                        selectBoxFilter3.append("<option value='" + element + "'>" + index + "</option>");
+                                        });
+                                        $("#selectBoxFilter3").select2();
+                                        $('#selectBoxFilter4').html("<option value=''>Please Select</option>");
+                                        $('#selectBoxFilter4').select2();
+                                        $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                        $('#selectBoxFilter5').select2();
+                                });
                         });
-                    });
-                });</script>
+                        });</script>
         </div>
         <div id="categories" class="control-group row-fluid">
             <div class="span3">
@@ -770,24 +755,24 @@
                 </div>
             </div>
             <script>
-                $(document).ready(function () {
-                    $("#selectBoxFilter3").select2();
-                    $('#selectBoxFilter3').change(function () {
+                                $(document).ready(function () {
+                        $("#selectBoxFilter3").select2();
+                                $('#selectBoxFilter3').change(function () {
                         $.get("{{ url('article/dropdown1')}}",
-                                {option: $(this).attr("value") + '&level=_three'},
-                        function (data) {
-                            var selectBoxFilter4 = $('#selectBoxFilter4');
-                            selectBoxFilter4.empty();
-                            selectBoxFilter4.append("<option selected='' value=''>Please Select</option>");
-                            $.each(data, function (index, element) {
-                                selectBoxFilter4.append("<option value='" + element + "'>" + index + "</option>");
-                            });
-                            $('#selectBoxFilter4').select2();
-                            $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
-                            $('#selectBoxFilter5').select2();
+                        {option: $(this).attr("value") + '&level=_three'},
+                                function (data) {
+                                var selectBoxFilter4 = $('#selectBoxFilter4');
+                                        selectBoxFilter4.empty();
+                                        selectBoxFilter4.append("<option selected='' value=''>Please Select</option>");
+                                        $.each(data, function (index, element) {
+                                        selectBoxFilter4.append("<option value='" + element + "'>" + index + "</option>");
+                                        });
+                                        $('#selectBoxFilter4').select2();
+                                        $('#selectBoxFilter5').html("<option value=''>Please Select</option>");
+                                        $('#selectBoxFilter5').select2();
+                                });
                         });
-                    });
-                });</script>
+                        });</script>
         </div>
         <div id="categories" class="control-group row-fluid">
             <div class="span3">
@@ -801,22 +786,22 @@
                 </div>
             </div>
             <script>
-                $(document).ready(function () {
-                    $("#selectBoxFilter4").select2();
-                    $('#selectBoxFilter4').change(function () {
+                                $(document).ready(function () {
+                        $("#selectBoxFilter4").select2();
+                                $('#selectBoxFilter4').change(function () {
                         $.get("{{ url('article/dropdown1')}}",
-                                {option: $(this).attr("value") + '&level=_four'},
-                        function (data) {
-                            var selectBoxFilter5 = $('#selectBoxFilter5');
-                            selectBoxFilter5.empty();
-                            selectBoxFilter5.append("<option value=''>Please Select</option>");
-                            $.each(data, function (index, element) {
-                                selectBoxFilter5.append("<option value='" + element + "'>" + index + "</option>");
-                            });
-                            $('#selectBoxFilter5').select2();
+                        {option: $(this).attr("value") + '&level=_four'},
+                                function (data) {
+                                var selectBoxFilter5 = $('#selectBoxFilter5');
+                                        selectBoxFilter5.empty();
+                                        selectBoxFilter5.append("<option value=''>Please Select</option>");
+                                        $.each(data, function (index, element) {
+                                        selectBoxFilter5.append("<option value='" + element + "'>" + index + "</option>");
+                                        });
+                                        $('#selectBoxFilter5').select2();
+                                });
                         });
-                    });
-                });</script>
+                        });</script>
         </div>
         <div id="categories" class="control-group row-fluid">
             <div class="span3">
@@ -830,9 +815,9 @@
                 </div>
             </div>
             <script>
-                $().ready(function () {
-                    $("#selectBoxFilter5").select2();
-                });</script>
+                                $().ready(function () {
+                        $("#selectBoxFilter5").select2();
+                        });</script>
         </div>
         <!--Select Box with Filter Search end-->
 
@@ -846,10 +831,9 @@
                     <a href="#" target="_blank">This Is  Sponsored</a>
                 </label>
                 <script>
-                    $().ready(function () {
-                        $(".uniformCheckbox").uniform();
-                    });
-                </script>
+                                    $().ready(function () {
+                            $(".uniformCheckbox").uniform();
+                            });                </script>
 
             </div>
         </div>
@@ -1001,105 +985,95 @@
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-validate.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/jquery.fileupload-ui.js') }}"></script>
 <script>
-                    $(document).ready(function () {
-                        $('#fileupload').fileupload({
+                                    $(document).ready(function () {
+                            $('#fileupload').fileupload({
                             // Uncomment the following to send cross-domain cookies:
                             //xhrFields: {withCredentials: true},
                             url: '<?php echo url('quickbyte/image/upload') ?>',
-                            acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-                            maxFileSize: 2000000
-                        });
-                    });
+                                    acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+                                    maxFileSize: 2000000
+                            });
+                            });
+                                    $('#fileupload').bind('fileuploaddone', function (e, data) {
+                            //console.log(e);
+                            var dataa = JSON.parse(data.jqXHR.responseText);
+                                    //console.log(dataa['files']['0']['name']);
+                                    $.each(dataa['files'], function (index, element) {
+                                    //console.log(element.name);
+                                    if ($('#uploadedImages').val().trim())        // validation ends here           
+                                            $('#uploadedImages').val($('#uploadedImages').val() + ',' + element.name);
+                                            else
+                                            $('#uploadedImages').val(element.name);
+                                    });
+                            });
+                                    $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
+                            // console.log(data);
+                            var file = getArg(data.url, 'file');
+                                    var images = $('#uploadedImages').val().split(',');
+                                    images.splice(images.indexOf(file), 1);
+                                    $('#uploadedImages').val(images.join());
+                                    //$('#imagesname').val($('#imagesname').val().replace(','+));
 
-
-
-                    $('#fileupload').bind('fileuploaddone', function (e, data) {
-                        //console.log(e);
-                        var dataa = JSON.parse(data.jqXHR.responseText);
-                        //console.log(dataa['files']['0']['name']);
-                        $.each(dataa['files'], function (index, element) {
-                            //console.log(element.name);
-                            if ($('#uploadedImages').val().trim())        // validation ends here           
-                                $('#uploadedImages').val($('#uploadedImages').val() + ',' + element.name);
-                            else
-                                $('#uploadedImages').val(element.name);
-                        });
-
-                    });
-                    $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
-                        // console.log(data);
-                        var file = getArg(data.url, 'file');
-                        var images = $('#uploadedImages').val().split(',');
-                        images.splice(images.indexOf(file), 1);
-                        $('#uploadedImages').val(images.join());
-                        //$('#imagesname').val($('#imagesname').val().replace(','+));
-
-                    });
-
-
-                    function getArg(url, name) {
-                        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
-                        if (results == null) {
-                            return null;
-                        }
-                        else {
-                            return results[1] || 0;
-                        }
-                    }
+                            });
+                                    function getArg(url, name) {
+                                    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(url);
+                                            if (results == null) {
+                                    return null;
+                                    }
+                                    else {
+                                    return results[1] || 0;
+                                    }
+                                    }
 
 
 
 // Validation start hee
 
-                    $("#fileupload").validate({
-                        errorElement: "span",
-                        errorClass: "error",
-                        //$("#pageSubmit").onclick: true,
-                        onclick: true,
-                        invalidHandler: function (event, validator) {
-                            $('#submitsection').show();
-                            for (var i in validator.errorMap) {
+                            $("#fileupload").validate({
+                            errorElement: "span",
+                                    errorClass: "error",
+                                    //$("#pageSubmit").onclick: true,
+                                    onclick: true,
+                                    invalidHandler: function (event, validator) {
+                                    $('#submitsection').show();
+                                            for (var i in validator.errorMap) {
 
-                                if ($('#' + i).hasClass('formattedelement')) {
+                                    if ($('#' + i).hasClass('formattedelement')) {
                                     $('#' + i).siblings('.formattedelement').addClass('error');
+                                    }
 
-                                }
-
-                            }
-                        },
-                        rules: {
-                            "req": {
-                                required: true
-                            },
-                            "channel": {
-                                required: true
-                            },
-                            "author_type": {
-                                required: true,
-                            },
-                            "title": {
-                                required: true
-                            },
-                            "featuredesc": {
-                                required: true
-                            },
-                            "uploadedImages": {
-                                required: true
-                            }
-                        }
-                    });
-                    
-                    $('#submitsection button').click(function(){
-                        $('#submitsection').hide();
-                     });  
-                     
-                    $('select.formattedelement').change(function () {
-                        if ($(this).val().trim() != '')
-                            $(this).siblings('.formattedelement').removeClass('error');
-                        $(this).siblings('span.error').remove();
-                    });
-
-                    // Validation ends here    
+                                    }
+                                    },
+                                    rules: {
+                                    "req": {
+                                    required: true
+                                    },
+                                            "channel": {
+                                            required: true
+                                            },
+                                            "author_type": {
+                                            required: true,
+                                            },
+                                            "title": {
+                                            required: true
+                                            },
+                                            "featuredesc": {
+                                            required: true
+                                            },
+                                            "uploadedImages": {
+                                            required: true
+                                            }
+                                    }
+                            });
+                                    $('#submitsection button').click(function(){
+                            $('#submitsection').hide();
+                          });
+                                    $('select.formattedelement').change(function () {
+                            if ($(this).val().trim() != '')
+                                    $(this).siblings('.formattedelement').removeClass('error');
+                                    $(this).siblings('span.error').remove();
+                            });
+                                    // Validation ends here    
 
 </script>
 @stop

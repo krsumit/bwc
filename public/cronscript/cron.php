@@ -70,7 +70,6 @@ class Cron {
             case 'sponsorviewcount':
                 $this->Sponsorviewcount();
                 break;
-
             case 'category':
                 $this->migrateCategory();
                 break;
@@ -145,8 +144,6 @@ class Cron {
             case 'livestreaming':
                 $this->Livestreaming();
                 break;
-            
-            
         endswitch;
 
         $_SESSION['message'] = $this->message;

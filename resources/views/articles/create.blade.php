@@ -1,7 +1,5 @@
 @extends('layouts/master')
-
 @section('title', 'Create Article - BWCMS')
-
 @section('content')
 <style> .none { display:none; } </style>
 <div class="panel">
@@ -1765,11 +1763,11 @@
     <!--	end container-->
     {!! Form::close() !!}
     <script>
-                                        function editImageDetail(){
-                                        BootstrapDialog.show({
-                                        message: $('<div class="shekhartest"></div>').load('http://localhost:8080/login.html')
-                                        });
-                                        }
+            function editImageDetail(){
+                BootstrapDialog.show({
+                    message: $('<div class="shekhartest"></div>').load('http://localhost:8080/login.html')
+                });
+            }
     </script>
 </div>
 

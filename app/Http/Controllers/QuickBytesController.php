@@ -580,7 +580,7 @@ class QuickBytesController extends Controller {
     
     function relatedImage(Request $request) {        
         //echo '123'; exit;
-        
+       
         /*array:2 [
             "search_key" => "modi"
             "selected_values" => array:3 [
@@ -595,15 +595,15 @@ class QuickBytesController extends Controller {
          select *,count(*) as cs from tags join (select * from article_tags order by updated_at desc ) as article_tags on tags.tags_id=article_tags.tags_id where (tag like '%modi %' or tag like '% modi%' or tag like 'modi' ) group by tags.tags_id order by article_tags.updated_at desc,cs desc limit 5
          * 
          */
+  
         $total = 25;
-        echo $query = "select *,count(*) as cs from tags join (select * from article_tags order by updated_at desc ) as article_tags on tags.tags_id=article_tags.tags_id where (tag like '%" . $request->search_key . " %' or tag like '% " . $request->search_key . "%'  or tag like '" . $request->search_key . "' ) group by tags.tags_id order by article_tags.updated_at desc,cs desc limit 5"; exit;
+        $query = "select *,count(*) as cs from tags join (select * from article_tags order by updated_at desc ) as article_tags on tags.tags_id=article_tags.tags_id where (tag like '%" . $request->search_key . " %' or tag like '% " . $request->search_key . "%'  or tag like '" . $request->search_key . "' ) group by tags.tags_id order by article_tags.updated_at desc,cs desc limit 5";
         $tags = DB::select($query);
         $related_images = array();
         $imgids = array();
         $cond = '';
         
-        //dd($tags); exit;
-        
+       
         usort($tags, array($this, 'compareByCount'));
         if (count($tags) > 0) {
             $minlimit = ceil($total / count($tags));

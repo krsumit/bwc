@@ -1,5 +1,4 @@
 @extends('layouts/master')
-
 @section('title', 'Edit Article - BWCMS')
 @section('content')
  <style> .none { display:none; } 
@@ -9,13 +8,10 @@
         <div class="panel-logo"></div>
         <div class="panel-header">
             <h1><small>Edit Article</small></h1>
-
         </div>
-
         <div class="panel-header">
             <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
         </div>
-
         <script>
             $(document).ready(function(){
                 

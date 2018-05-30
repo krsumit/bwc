@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Redirect;
 use App\Category;
 use Illuminate\Http\Request;

@@ -1646,7 +1646,7 @@ public function articlechannelinsert(Request $request) {
                     $cond = ' and photo_id not in (' . implode(',', $imgids) . ')';
                 }
                 //echo $maxlimit;
-                $imagequery = "select photo_id,photopath,photo_by,title from photos where valid='1' and photopath!='' and owned_by='article' $cond and owner_id in(SELECT articles.article_id FROM `articles` inner join article_tags on articles.article_id=article_tags.article_id WHERE  article_tags.tags_id=" . $tag->tags_id . " order by article_tags.updated_at desc) order by updated_at desc limit " . $maxlimit;
+                $imagequery = "select photo_id,photopath,photo_by,title from photos where valid='1' and photopath!='' and owned_by='article' $cond and owner_id in(SELECT articles.article_id FROM `articles` inner join article_tags on articles.article_id=article_tags.article_id WHERE  article_tags.tags_id=" . $tag->tags_id . " order by article_tags.updated_at desc) group by photopath order by updated_at desc limit " . $maxlimit;
                 $images = DB::select($imagequery);
                 if (count($images) < $maxlimit) {
                     $maxlimit = $maxlimit + ($minlimit - count($images));
