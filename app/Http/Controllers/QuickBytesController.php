@@ -7,7 +7,7 @@ use App\Right;
 use DB;
 use Session;
 use App\QuickByte;
-use App\Http\Requests;
+use App\Http\Requests;  
 use App\Http\Controllers\Auth;
 use App\Http\Controllers\AuthorsController;
 use App\Http\Controllers\Controller;
@@ -583,19 +583,53 @@ class QuickBytesController extends Controller {
        
         /*array:2 [
             "search_key" => "modi"
-            "selected_values" => array:3 [
+            "selected_values" => array:4 [
               0 => "tag"
               1 => "qbtitle"
               2 => "imagetitle"
+              3 => "imagetag"
             ]
           ]
           */
         //dd($request->all());
-        /*
-         select *,count(*) as cs from tags join (select * from article_tags order by updated_at desc ) as article_tags on tags.tags_id=article_tags.tags_id where (tag like '%modi %' or tag like '% modi%' or tag like 'modi' ) group by tags.tags_id order by article_tags.updated_at desc,cs desc limit 5
-         * 
-         */
-  
+        $query=" select * from photos where owned_by='quickbyte'";
+        $where='';  
+        $key=$request->search_key;
+        $join='';
+        
+        if(in_array('tag',$request->selected_values)){
+            $join.="join (select tags.tags_id,tags.tag,quickbyte.id,count(*) as cs from tags join quickbyte where find_in_set(tags.tags_id,quickbyte.tags) and tags.tag like '%$key%' group by tags_id order by quickbyte.publish_date desc) as qbtags";
+            $where='and find_in_set(qbtags.tags_id,quickbyte.tags)';
+           //$where.=" and ";
+        }
+        
+        if(in_array('qbtitle',$request->selected_values)){
+            $where.=" and quickbyte.title like '%$key%'";
+        }
+        
+        if(in_array('imagetitle',$request->selected_values)){
+           $where.=" and photos.title like '%$key%' ";
+        }
+        
+//        if(in_array('imagetag',$request->selected_values)){
+//            $where.=" and photos.title like '%$key%' ";
+//        }
+        
+//$imagequery = "select photos.* from photos join quickbyte on photos.owner_id=quickbyte.id join (select tags.tags_id,tags.tag,quickbyte.id,count(*) as cs from tags join quickbyte where find_in_set(tags.tags_id,quickbyte.tags) and tags.tag like '%modi%' group by tags_id order by quickbyte.publish_date desc) as qbtags where find_in_set(qbtags.tags_id,quickbyte.tags) and photos.photopath!='' and photos.owned_by='quickbyte' $where  group by photos.photo_id";
+        
+       echo $imagequery = "select photos.* from photos join quickbyte on photos.owner_id=quickbyte.id $join where  photos.photopath!='' and photos.owned_by='quickbyte' $where  group by photos.photo_id";  
+        exit;
+        
+           $images = DB::select($imagequery);
+            $related_images = array();
+            
+           foreach ($images as $image) {
+                    $imgids[] = $image->photo_id;
+                    $related_images[] = array('image_url' => config('constants.awsbaseurl') . config('constants.awquickbytesimagethumbtdir') . $image->photopath, 'image_id' => $image->photo_id, 'tag_name' => $image->title, 'tag_id' => '$tag->tags_id', 'photo_by' => $image->photo_by, 'image_name' => $image->photopath, 'title' => $image->title);
+                }
+                
+           return json_encode($related_images);
+        
         $total = 25;
         $query = "select *,count(*) as cs from tags join (select * from article_tags order by updated_at desc ) as article_tags on tags.tags_id=article_tags.tags_id where (tag like '%" . $request->search_key . " %' or tag like '% " . $request->search_key . "%'  or tag like '" . $request->search_key . "' ) group by tags.tags_id order by article_tags.updated_at desc,cs desc limit 5";
         $tags = DB::select($query);

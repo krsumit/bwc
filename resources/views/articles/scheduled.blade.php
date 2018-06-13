@@ -222,7 +222,17 @@
                                     <a href="/article/{{ $article->article_id }}">{{$article->publish_date}}</a>
                                     <a href="/article/{{ $article->article_id }}">{{$article->publish_time}}</a>
                                 </td>
-                                <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{ $article->article_id }}" name="checkItem[]"></td>
+                                <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{ $article->article_id }}" name="checkItem[]">
+                                    @if($article->locked_by>0)
+                                    @if(in_array('14',Session::get('user_rights')) || Auth::user()->id==$article->locked_by)
+                                    <a href="{{url('article/unlock/'.$article->article_id)}}?destination={{urlencode(Request::fullUrl())}}" title="Locked by {{$article->locker_name.'. At: '.date('h:i a,d-M-Y',strtotime($article->locked_at))}},Once you unlock,Anyone can edit." onclick="confirm('Unlocking this article may remove unsaved changes,Do you want to continue ?')">
+                                        <button type="button"  class="btn btn-success">Locked</button>
+                                    </a>
+                                    @else
+                                    <button type="button" title="Locked by {{$article->locker_name.'. At: '.date('h:i a,d-M-Y',strtotime($article->locked_at))}}" class="btn btn-warning">Locked</button>
+                                    @endif
+                                    @endif
+                                </td>
                             </tr>
                             @endforeach
 

@@ -2,7 +2,6 @@
 
 @section('title', 'Create New Quickbyte - BWCMS')
 
-
 @section('content')
 <?php
 //print_r($p1);exit;
@@ -11,7 +10,7 @@
     <div class="panel-content filler">
         <div class="panel-logo"></div>
         <div class="panel-header">
-            <h1><small>Create New QuickByte</small></h1>
+            <h1><small>Create New QuickByte </small></h1>
 
         </div>
 
@@ -350,6 +349,12 @@
                             
                             <a for="image_title_chk">Image Title</a>
                         </label>
+                        
+                        <label class="checkbox pull-left" >
+                            <input type="checkbox" class="uniformCheckbox" value="imagetag" id="image_tag_chk" name="searchFor[]">         
+                            <a for="image_title_chk">Image Tag</a>
+                        </label>
+                        
                      </div>
                 </div>
                 <div class="relaed_image_box_outer hide" >

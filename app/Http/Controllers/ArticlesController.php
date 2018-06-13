@@ -121,13 +121,14 @@ class ArticlesController extends Controller {
 
             $q = DB::table('articles')
                     ->Leftjoin('article_author', 'articles.article_id', '=', 'article_author.article_id')
-                    ->Leftjoin('authors', 'article_author.author_id', '=', 'authors.author_id');
+                    ->Leftjoin('authors', 'article_author.author_id', '=', 'authors.author_id')
+                    ->Leftjoin('users as locker','articles.locked_by','=','locker.id');
             if ($option == 'new') {
                 $q->join('users', 'articles.user_id', '=', 'users.id');
-                $q->select(DB::raw('articles.article_id,articles.title,articles.created_at,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.auto_published,articles.channel_id,articles.locked_by,users.name as username'));
+                $q->select(DB::raw('articles.article_id,articles.title,articles.created_at,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.auto_published,articles.channel_id,articles.locked_by,users.name as username,locker.name as locker_name,articles.locked_at'));
                 $q->orderBy('articles.created_at', 'desc');
             } else {
-                $q->select(DB::raw('articles.article_id,articles.title,articles.auto_published,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.channel_id,articles.locked_by'));
+                $q->select(DB::raw('articles.article_id,articles.title,articles.auto_published,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.channel_id,articles.locked_by,locker.name as locker_name,articles.locked_at'));
                 if ($option == 'scheduled') {
                     $q->orderBy('articles.updated_at', 'desc');
                 } else {
@@ -398,8 +399,39 @@ public function channelarticles($option) {
      * @returns to Edit Article View
      *
      */
+    private function isLocked($article){
+        $uid=Session::get('users')->id;
+        //echo $uid.'--'.$article->locked_by; exit;
+        if($article->locked_by!=$uid && $article->locked_by>0)
+            return true;
+      
+        return false;
+    }
+    
+    public function unlock($id){
+        $uid=Session::get('users')->id;
+        $article=Article::find($id);
+        $currentChannelId = $article->channel_id;
+        if($uid==$article->locked_by){ // If article is unlocked by same user(who locked) check edit permisssion only.
+            $rightId=8;
+        }else{// Unlock article locked by other user. 
+            $rightId=14;
+        }
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
+        
+        $article->locked_by=0;
+        $article->update();
+        if(isset($_GET['destination'])){
+            $url=urldecode($_GET['destination']);
+        }else{
+            $url=url('article/list/published');
+        }
+       return redirect()->away($url);
+    }
 
     public function show($id) {
+        //dd($_SERVER);
         //Check if Authenticated
         $uid = Session::get('users')->id;
         //Test this functionality
@@ -408,30 +440,33 @@ public function channelarticles($option) {
         }
         $userTup = User::find($uid);
 
-
-
         //Get Article Tuple
         //$arti2 = Article::find($id);
         if (!($article = Article::find($id))) {
             Session::flash('error', 'This Article ID not found in database.');
             return redirect('/article/list/new');
         }
-
-        //Lock Article for Editor
-        $addArticle = Article::find($id);
-
+        $is_locked=0;
+        if($this->isLocked($article)){
+            $lockedBy=User::find($article->locked_by);
+             Session::flash('error', 'This Article is locked by '.$lockedBy->name.'. At : '.date('h:i a,d-M-Y',strtotime($article->locked_at)));
+             $is_locked=1;
+            //echo 'Locked by someone else'; exit;
+        }else{
+            //Lock Article for Editor
+            $addArticle = Article::find($id);
+            $addArticle->locked_by = $uid;
+            $addArticle->locked_at = date('Y-m-d H:i:s');
+            $addArticle->save();
+        }
+        
         /* Right mgmt start */
         $rightId = 8;
-        $currentChannelId = $addArticle->channel_id;
+        $currentChannelId = $article->channel_id;
         $channels = $this->rightObj->getAllowedChannels($rightId);
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
-
-        //Remove comment for Live
-        //$addArticle->locked_by = $uid;
-        $addArticle->locked_at = date('Y-m-d H:i:s');
-        $addArticle->save();
 
         //Get Author Ids and Names - with label 1, 2, 3
         if($article->author_type!=6){            
@@ -578,7 +613,7 @@ public function channelarticles($option) {
                 ->orderBy('sequence')
                 ->get();
         //echo 'test'; exit;
-        return view('articles.edit', compact('article', 'rights', 'channels', 'p1', 'postAs', 'country', 'states', 'newstype', 'category', 'magazine', 'event', 'campaign', 'columns', 'tags', 'photos', 'acateg', 'arrAuth','authors', 'arrTags', 'arrVideo', 'userTup', 'arrTopics'));
+        return view('articles.edit', compact('article', 'rights', 'channels', 'p1', 'postAs', 'country', 'states', 'newstype', 'category', 'magazine', 'event', 'campaign', 'columns', 'tags', 'photos', 'acateg', 'arrAuth','authors', 'arrTags', 'arrVideo', 'userTup', 'arrTopics','is_locked'));
     }
 
     public function getRights($uid, $parentId = 0) {

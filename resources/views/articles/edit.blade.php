@@ -420,8 +420,19 @@
                 </div>
             </div>
             <!--Notifications end-->
-
         </div>
+    @if($is_locked)
+    @if(in_array('14',Session::get('user_rights')))
+        <div class="container-fluid" style="border:none;text-align: center;">
+            <a href="{{url('article/unlock/'.$article->article_id)}}?destination=@if(isset($_SERVER['HTTP_REFERER'])){{urlencode(url($_SERVER['HTTP_REFERER']))}}@else {{urlencode(url('article/list/published'))}}@endif" title="Once you unlock,Anyone can edit." onclick="confirm('Unlocking this article may remove unsaved changes,Do you want to continue ?')">
+                <button type="button" class="btn btn-success">Click to Unlock</button>
+            </a>
+            <a href="{{url('article/unlock/'.$article->article_id)}}?destination={{urlencode(url('article/'.$article->article_id))}}" title="It will be locked by you, Only you can can edit." onclick="confirm('Unlocking this article may remove unsaved changes,Do you want to continue ?')">
+                <button type="button" class="btn btn-warning">Click to Unlock and Edit</button>
+            </a>
+        </div>
+    @endif
+    @else
     <input type="hidden" name="id" value="{{$article->article_id}}">
     <div class="container-fluid">
         <div class="form-legend" id="Author-Detail">Author Detail
@@ -2403,6 +2414,7 @@ $(':radio[id=embedcodevideo]').change(function() {
         </div>
     </div>
     <!--	end container-->
+    @endif
     {!! Form::close() !!}
 
 </div>

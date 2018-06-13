@@ -196,7 +196,9 @@
                                 <th>Title</th>
                                 <th>Reporter Name</th>
                                 <th>Date,Time</th>
-                                <th><input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectall"></th>
+                                <th>
+                                    <input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectall">
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -219,7 +221,18 @@
                                 <td @if($article->auto_published == 1) style="background-color: #cce3cf;" @endif class="center"><a href="/article/{{ $article->article_id }}">{{ $article->publish_date }}</a>
                                     <a href="/article/{{ $article->article_id }}">{{ $article->publish_time }}</a>
                                 </td>
-                                <td @if($article->auto_published == 1) style="background-color: #cce3cf;" @endif class="center"> <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="{{ $article->article_id }}"></td>
+                                <td @if($article->auto_published == 1) style="background-color: #cce3cf;" @endif class="center">                                     
+                                     <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="{{ $article->article_id }}">  
+                                    @if($article->locked_by>0)
+                                    @if(in_array('14',Session::get('user_rights')) || Auth::user()->id==$article->locked_by)
+                                    <a href="{{url('article/unlock/'.$article->article_id)}}?destination={{urlencode(Request::fullUrl())}}" title="Locked by {{$article->locker_name.'. At: '.date('h:i a,d-M-Y',strtotime($article->locked_at))}},Once you unlock,Anyone can edit." onclick="confirm('Unlocking this article may remove unsaved changes,Do you want to continue ?')">
+                                        <button type="button"  class="btn btn-success">Locked</button>
+                                    </a>
+                                    @else
+                                    <button type="button" title="Locked by {{$article->locker_name.'. At: '.date('h:i a,d-M-Y',strtotime($article->locked_at))}}" class="btn btn-warning">Locked</button>
+                                    @endif
+                                    @endif    
+                                </td>
                             </tr>
                             @endforeach
                             <!--
