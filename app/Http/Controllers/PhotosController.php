@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 use App\Classes\FileTransfer;
+use App\PhotoTag;
 class PhotosController extends Controller
 {
     
@@ -209,7 +210,7 @@ class PhotosController extends Controller
              $fileTran->deleteFile(config('constants.awquickbytesimagethumbtdir'), $photo->photopath);
              $fileTran->deleteFile(config('constants.awquickbytesimagemediumdir'), $photo->photopath);
              $fileTran->deleteFile(config('constants.awquickbytesimageextralargedir'), $photo->photopath);
-
+             PhotoTag::where('photo_id','=',$request->photoId)->delete();
             break;
         case 'sponsoredpost':
             $fileTran->deleteFile(config('constants.aw_sponsored_image_thumb_dir'), $photo->photopath);

@@ -334,7 +334,7 @@
             <div class="span9 related_image" >
                 <div class="controls">
                     <input type="text" name="related_image_search" id="related_image_search" />
-                    <button class="btn btn-success" onclick="searchRelatedImageQb()" id="related_image_button"  name="status" type="button" style="margin-bottom:0px !important;">Search</button>
+                    <button class="btn btn-success" onclick="searchRelatedImageQb(1)" id="related_image_button"  name="status" type="button" style="margin-bottom:0px !important;">Search</button>
                     <div>
                         <label class="checkbox pull-left" style="margin:0;">
                             <input type="checkbox" class="uniformCheckbox" value="tag" id="tags_chk" name="searchFor[]">
@@ -357,17 +357,18 @@
                         
                      </div>
                 </div>
-                <div class="relaed_image_box_outer hide" >
+                <div class="relaed_image_box_outer hide clearfix" >
                     <img src="{{ asset('images/photon/preloader/76.gif')}}" class="loader-img-related-content hide" alt="loader" />
                     <div class="relaed_image_box">
 
                     </div>
-                    <div class="related-img-selection-done"  >
+                    <div class="related-img-selection-done" style="clear:both" >
                         <button class="btn btn-success hide related_action_button" onclick="relatedImageSelectedQb()" id="related_selected_button" name="related_selected" type="button" >Upload</button>
                         <button class="btn btn-danger delete related_action_button" onclick="closeRelatedImageQb()" type="button"><i class="glyphicon glyphicon-trash"></i><span>Close</span>
                         </button>
                         <img src="{{ asset('images/photon/preloader/76.gif')}}" class="loader-img-selected hide" alt="loader" />
                     </div>
+                    <div class="pagination" style="clear:both"><ul  id="js-paging" ></ul></div>
                 </div>
             </div>
         </div>
@@ -582,8 +583,8 @@
                                 }
                         })
                         });
-                                $("#Taglist").tokenInput("/tags/getJson", {
-                        theme: "facebook",
+                        $("#Taglist").tokenInput("/tags/getJson", {
+                                theme: "facebook",
                                 searchDelay: 300,
                                 minChars: 4,
                                 preventDuplicates: true,
@@ -777,7 +778,8 @@
                                         $('#selectBoxFilter5').select2();
                                 });
                         });
-                        });</script>
+                        });
+                </script>
         </div>
         <div id="categories" class="control-group row-fluid">
             <div class="span3">
@@ -952,7 +954,10 @@
     <td colspan="1">Photograph By</td>
     <td colspan="3"><input type="text" name="photographby[{%=file.name%}]"/></textarea></td>    
     </tr>
-
+    <tr>
+    <td colspan="1">Image Tags</td>
+    <td colspan="3"><input type="text" name="photograph_tags[{%=file.name%}]"/></textarea></td>    
+    </tr>
     </table>   
     </td>           
 
@@ -1010,7 +1015,24 @@
                                             else
                                             $('#uploadedImages').val(element.name);
                                     });
+                                    
                             });
+                            
+                             $('#fileupload').bind('fileuploadcompleted', function (e, data) {
+                                var dataa = JSON.parse(data.jqXHR.responseText);
+                                  $.each(dataa['files'], function (index, element) {
+                                    $('body').find("input[name='photograph_tags["+element.name+"]']").tokenInput("/tags/getJson", {
+                                        theme: "facebook",
+                                        searchDelay: 300,
+                                        minChars: 3,
+                                        preventDuplicates: true,
+                                    });
+                                  
+                                    });
+
+                             });
+                            
+                            
                                     $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
                             // console.log(data);
                             var file = getArg(data.url, 'file');

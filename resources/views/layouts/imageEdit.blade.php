@@ -73,6 +73,21 @@
                 </div>
             </div>
             @endif
+            @if($photo->owned_by=='quickbyte')
+            <div id="Multiple_Select_Box_with_Filter_Search" class="control-group row-fluid">
+                <div class="control-group row-fluid">    
+                    <div class="span3">
+                        <label class="control-label" for="multiFilter">&nbsp;&nbsp;Image Tags</label>
+                    </div>
+                    <div class="span9">
+                        <div class="controls">
+                            <input  type="text" name="image_tags" style="outline: medium none;" id="image_tags" />
+                            <input  type="hidden" id="prepop_tag" name="prepop_tag" value="<?php echo htmlentities($tags) ?>"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
             @if($photo->owned_by=='album')
             <div id="Multiple_Select_Box_with_Filter_Search" class="control-group row-fluid">
                 <div class="control-group row-fluid">    

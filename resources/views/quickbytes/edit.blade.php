@@ -383,6 +383,51 @@
             </div>
         </div>
         <!--Drag And Drop Upload begin-->
+        <div id="Photo-feature"  class="control-group row-fluid" style="border-bottom: none;">
+            <div class="span3">
+                <label class="control-label">Browse recent related images :</label>
+            </div>
+            <div class="span9 related_image" >
+                <div class="controls">
+                    <input type="text" name="related_image_search" id="related_image_search" />
+                    <button class="btn btn-success" onclick="searchRelatedImageQb(1)" id="related_image_button"  name="status" type="button" style="margin-bottom:0px !important;">Search</button>
+                    <div>
+                        <label class="checkbox pull-left" style="margin:0;">
+                            <input type="checkbox" class="uniformCheckbox" value="tag" id="tags_chk" name="searchFor[]">
+                            <a for="tags_chk">Tags</a>
+                        </label>
+                        <label class="checkbox pull-left" >
+                            <input type="checkbox" class="uniformCheckbox" value="qbtitle" id="qb_title_chk" name="searchFor[]">
+                            <a for="qb_title_chk">QB Title</a>
+                        </label> 
+                        <label class="checkbox pull-left" >
+                            <input type="checkbox" class="uniformCheckbox" value="imagetitle" id="image_title_chk" name="searchFor[]">
+                            
+                            <a for="image_title_chk">Image Title</a>
+                        </label>
+                        
+                        <label class="checkbox pull-left" >
+                            <input type="checkbox" class="uniformCheckbox" value="imagetag" id="image_tag_chk" name="searchFor[]">         
+                            <a for="image_title_chk">Image Tag</a>
+                        </label>
+                        
+                     </div>
+                </div>
+                <div class="relaed_image_box_outer hide clearfix" >
+                    <img src="{{ asset('images/photon/preloader/76.gif')}}" class="loader-img-related-content hide" alt="loader" />
+                    <div class="relaed_image_box">
+
+                    </div>
+                    <div class="related-img-selection-done" style="clear:both" >
+                        <button class="btn btn-success hide related_action_button" onclick="relatedImageSelectedQb()" id="related_selected_button" name="related_selected" type="button" >Upload</button>
+                        <button class="btn btn-danger delete related_action_button" onclick="closeRelatedImageQb()" type="button"><i class="glyphicon glyphicon-trash"></i><span>Close</span>
+                        </button>
+                        <img src="{{ asset('images/photon/preloader/76.gif')}}" class="loader-img-selected hide" alt="loader" />
+                    </div>
+                    <div class="pagination" style="clear:both"><ul  id="js-paging" ></ul></div>
+                </div>
+            </div>
+        </div>
         <div id="Drag_And_Drop_Upload" class="control-group row-fluid">
             <div class="span3">
                 <label class="control-label" for="inputField">
@@ -1005,7 +1050,10 @@
             <td colspan="1">Photograph By</td>
             <td colspan="3"><input type="text" name="photographby[{%=file.name%}]"/></textarea></td>    
    </tr>
-
+    <tr>
+    <td colspan="1">Image Tags</td>
+    <td colspan="3"><input type="text" name="photograph_tags[{%=file.name%}]"/></textarea></td>    
+    </tr>
     </table>   
     </td>           
 
@@ -1066,6 +1114,20 @@
                         });
 
                     });
+                    
+                    $('#fileupload').bind('fileuploadcompleted', function (e, data) {
+                                var dataa = JSON.parse(data.jqXHR.responseText);
+                                  $.each(dataa['files'], function (index, element) {
+                                    $('body').find("input[name='photograph_tags["+element.name+"]']").tokenInput("/tags/getJson", {
+                                        theme: "facebook",
+                                        searchDelay: 300,
+                                        minChars: 3,
+                                        preventDuplicates: true,
+                                    });
+                                  
+                                    });
+                    });
+                             
                     $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
                         // console.log(data);
                         var file = getArg(data.url, 'file');
@@ -1195,6 +1257,12 @@
   }).disableSelection();
 
 </script>
+<style>
+    .token-input-dropdown-facebook{
+        z-index: 9999!important;
+    }
+    
+</style>
 @stop
 
 

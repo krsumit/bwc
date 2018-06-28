@@ -225,7 +225,7 @@
                                      <input type="checkbox" class="uniformCheckbox" name="checkItem[]" value="{{ $article->article_id }}">  
                                     @if($article->locked_by>0)
                                     @if(in_array('14',Session::get('user_rights')) || Auth::user()->id==$article->locked_by)
-                                    <a href="{{url('article/unlock/'.$article->article_id)}}?destination={{urlencode(Request::fullUrl())}}" title="Locked by {{$article->locker_name.'. At: '.date('h:i a,d-M-Y',strtotime($article->locked_at))}},Once you unlock,Anyone can edit." onclick="confirm('Unlocking this article may remove unsaved changes,Do you want to continue ?')">
+                                    <a href="{{url('article/unlock/'.$article->article_id)}}?destination={{urlencode(Request::fullUrl())}}" title="Locked by {{$article->locker_name.'. At: '.date('h:i a,d-M-Y',strtotime($article->locked_at))}},Once you unlock,Anyone can edit." onclick="return confirm('Unlocking this article may remove unsaved changes,Do you want to continue ?')">
                                         <button type="button"  class="btn btn-success">Locked</button>
                                     </a>
                                     @else

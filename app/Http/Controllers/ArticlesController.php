@@ -24,6 +24,7 @@ use App\State;
 use App\Author;
 use App\NewsType;
 use App\MasterVideo;
+use App\PhotoTag;
 use App\Http\Controllers\Auth;
 use App\Http\Controllers\AuthorsController;
 use App\Http\Requests;
@@ -171,15 +172,30 @@ class ArticlesController extends Controller {
     }
 
     function imageEdit(Request $request) {  
+        $tags=array();
         $photo = Photo::find($request->id);
         $article = '';
         if ($photo->owned_by == 'article') {
             $article = Article::find($photo->owner_id);
         }
-        return view('layouts.imageEdit', compact('photo', 'article'));
+        
+        if ($photo->owned_by == 'quickbyte') {
+            //DB::enableQueryLog();
+            $tags =Db::table('photo_tags')
+                    ->select('tags.tags_id as id','tags.tag as name')
+                    ->join('tags','photo_tags.tag_id','=','tags.tags_id')
+                    ->where('photo_tags.photo_id','=',$request->id)
+                    ->get();
+            //dd(DB::getQueryLog());
+            //exit;
+        }
+        $tags=json_encode($tags);
+        
+        return view('layouts.imageEdit', compact('photo', 'article','tags'));
     }
 
     function storeImageDetail(Request $request) {
+        //echo $request->detail;exit;
         parse_str($request->detail);
         $photo = Photo::find($photo_id);
         if ($photo->owned_by == 'article') {
@@ -210,6 +226,28 @@ class ArticlesController extends Controller {
             $photo->title = $imagetitlep;
             $photo->photo_by = $imagebyp;
             $photo->description = $descriptionp;
+            
+            
+            
+            $oldTags=json_decode($prepop_tag);
+           // print_r($oldTags); exit;
+            $oldArray=array();
+            foreach($oldTags as $tag){
+                $oldArray[]=$tag->id;
+            }
+            $newArray=explode(',',$image_tags);
+            
+            $to_delete=array_diff($oldArray,$newArray);
+            $to_insert=array_diff($newArray,$oldArray);
+            
+            PhotoTag::whereIn('tag_id',$to_delete)->where('photo_id','=',$photo_id)->delete();   
+            
+            foreach($to_insert as $tag_id){
+                $photoTag=new PhotoTag();
+                $photoTag->photo_id=$photo_id;
+                $photoTag->tag_id=$tag_id;
+                $photoTag->save();
+            }   
             $return = '
                                             <td width="20%">
                                                 <img style="width:40%;" alt="user" src="' . config('constants.awsbaseurl') . config('constants.awquickbytesimagethumbtdir') . $photo->photopath . '">
@@ -227,6 +265,8 @@ class ArticlesController extends Controller {
             DB::table('quickbyte')
                     ->where('id', $photo->owner_id)
                     ->update(['updated_at' => date('Y:m:d H:i:s')]);
+            // Photo Tags 
+            
         } elseif ($photo->owned_by == 'album') {
             $photo->title = $imagetitlep;
             $photo->photo_by = $imagebyp;
@@ -1246,6 +1286,7 @@ public function channelarticles($option) {
                 // echo $key; exit;
             }
         }
+        
         $images = explode(',', $request->uploadedImages);
         $images = array_filter($images);
         //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
@@ -1535,7 +1576,6 @@ public function articlechannelinsert(Request $request) {
                 $article_tags = new ArticleTag();
                 $article_tags->article_id = $id;
                 $article_tags->tags_id = $tagRow['tags_id'];
-                    
                 $article_tags->save();
             }
         }
