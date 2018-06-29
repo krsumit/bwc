@@ -265,6 +265,11 @@ class ArticlesController extends Controller {
             DB::table('quickbyte')
                     ->where('id', $photo->owner_id)
                     ->update(['updated_at' => date('Y:m:d H:i:s')]);
+            
+            if(count($to_insert) || count($to_delete))
+                DB::table('photos')
+                ->where('photo_id', $photo->photo_id)
+                ->update(['updated_at' => date('Y:m:d H:i:s')]);
             // Photo Tags 
             
         } elseif ($photo->owned_by == 'album') {

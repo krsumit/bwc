@@ -1685,9 +1685,19 @@ class Cron {
                         . ",quick_byte_photo_title=?,quick_byte_photo_description=?,photo_by=?,sequence=?");
                 $photoInsStmt->bind_param('issssi', $id, $photo->photopath, $photo->title, $photo->description, $photo->photo_by, $photo->sequence);
                 $photoInsStmt->execute();
+
+                // Photo Tags 
+                $photoTagRst = $this->conn->query("SELECT tag_id FROM `photo_tags` WHERE  `photo_id`='$id'");
+                while ($photoTagRow = $photoTagRst->fetch_assoc()) {//print_r($catRow);exit;
+                    $insertPhotoTagStmt = $this->conn2->prepare("insert into photo_tags set photo_id=?,tag_id=?");
+                    $insertPhotoTagStmt->bind_param('ii', $id,$photoTagRow['tag_id']);
+                    $insertPhotoTagStmt->execute();
+                    $insertPhotoTagStmt->close();
+                }
             }
         } else {
             $this->conn2->query("delete from quick_bytes_photos where quick_byte_id=$id");
+                        
             $photos = $this->conn->query("select * from photos where owned_by='quickbyte' and owner_id=$id");
             while ($photo = $photos->fetch_object()) {
                 //print_r($photo);exit;
@@ -1695,6 +1705,15 @@ class Cron {
                         . ",quick_byte_photo_title=?,quick_byte_photo_description=?,photo_by=?,sequence=?");
                 $photoInsStmt->bind_param('issssi', $id, $photo->photopath, $photo->title, $photo->description, $photo->photo_by, $photo->sequence);
                 $photoInsStmt->execute();
+                // Photo Tags 
+                $this->conn2->query("delete from photo_tags where photo_id=$id");
+                $photoTagRst = $this->conn->query("SELECT tag_id FROM `photo_tags` WHERE  `photo_id`='$id'");
+                while ($photoTagRow = $photoTagRst->fetch_assoc()) {//print_r($catRow);exit;
+                    $insertPhotoTagStmt = $this->conn2->prepare("insert into photo_tags set photo_id=?,tag_id=?");
+                    $insertPhotoTagStmt->bind_param('ii', $id,$photoTagRow['tag_id']);
+                    $insertPhotoTagStmt->execute();
+                    $insertPhotoTagStmt->close();
+                }
             }
         }
     }
