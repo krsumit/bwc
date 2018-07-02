@@ -274,6 +274,7 @@ class QuickBytesController extends Controller {
                 $qbImage->save();
                 
                 $tagArray=  explode(',',$request->rimage_tags[$key]);
+                $tagArray=array_filter($tagArray);
                 if(count($tagArray)){
                     foreach($tagArray as $tag_id){
                         $photoTag=new PhotoTag();
@@ -323,12 +324,14 @@ class QuickBytesController extends Controller {
                 $imageEntry->save();
                 
                 $tagArray=  explode(',',$request->photograph_tags[$image]);
+                $tagArray=array_filter($tagArray);
+                
                 if(count($tagArray)){
                     foreach($tagArray as $tag_id){
-                        $photoTag=new PhotoTag();
-                        $photoTag->photo_id=$imageEntry->photo_id;
-                        $photoTag->tag_id=$tag_id;
-                        $photoTag->save();
+                            $photoTag=new PhotoTag();
+                            $photoTag->photo_id=$imageEntry->photo_id;
+                            $photoTag->tag_id=$tag_id;
+                            $photoTag->save();
                     }                    
                 }
             }
@@ -532,6 +535,7 @@ class QuickBytesController extends Controller {
                 $qbImage->save();
                 
                 $tagArray=  explode(',',$request->rimage_tags[$key]);
+                $tagArray=array_filter($tagArray);
                 if(count($tagArray)){
                     foreach($tagArray as $tag_id){
                         $photoTag=new PhotoTag();
@@ -579,6 +583,7 @@ class QuickBytesController extends Controller {
                 $imageEntry->save();
                 
                 $tagArray=  explode(',',$request->photograph_tags[$image]);
+                $tagArray=array_filter($tagArray);
                 if(count($tagArray)){
                     foreach($tagArray as $tag_id){
                         $photoTag=new PhotoTag();
