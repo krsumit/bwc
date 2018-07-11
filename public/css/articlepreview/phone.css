@@ -1,0 +1,103 @@
+
+@media only screen and (max-width:600px) {
+
+	.boxed {
+		overflow: hidden
+	}
+	.paragraph-row>div {
+		display: block;
+		margin-left: 0!important;
+		width: 100%!important;
+		margin-bottom: 15px
+	}
+	.content #sidebar, .content #sidebar .widget, .content-main.with-sidebar {
+		display: block;
+		width: 100%;
+		float: none
+	}
+	.main-article p {
+		font-size: 14px
+	}
+	.main-article .article-header .article-meta .meta-date {
+		display: block;
+		width: 100%;
+		float: none
+	}
+	.main-article .article-header .article-meta .meta-tools {
+		display: block;
+		width: 100%;
+		float: none;
+		padding-left: 0;
+		border-left: 0;
+		clear: both;
+		padding-top: 14px
+	}
+	.about-author {
+		text-align: center
+	}
+	.about-author>a {
+		display: block
+	}
+	.about-author .about-avatar {
+		max-width: 100%;
+		height: auto;
+		display: inline-block;
+		float: none;
+		margin-bottom: 20px
+	}
+	.about-author .about-content {
+		margin-left: 0
+	}
+	.tagcloud a, .tag-cloud a {
+		font-size: 12px!important;
+		line-height: 26px;
+		margin: 0 4px 8px 0;
+		padding: 0 8px 1px
+	}
+	.wrapper {
+		width: 90%!important
+	}
+	.boxed, .active.boxed {
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		border: 0;
+		box-shadow: none
+	}
+	p {
+		font-size: 14px
+	}
+	.boxed.active.width1000 #sidebar .mini-sidebar .widget>h3, .mini-sidebar .widget>h3, #sidebar .widget>h3, .strict-block .block-title h2 {
+		font-size: 16px
+	}
+	.main-article .tag-cloud, .main-article .social-article {
+		margin-top: 0
+	}
+	.main-article h1 {
+		font-size: 20px
+	}
+	.main-article h2 {
+		font-size: 17px
+	}
+	.main-article h3 {
+		font-size: 15px
+	}
+	.main-article h4 {
+		font-size: 13px
+	}
+	.main-article h5 {
+		font-size: 10px
+	}
+	.main-article h6 {
+		font-size: 8px
+	}
+	.main-article .button {
+		margin-bottom: 10px;
+		font-size: 13px!important;
+		line-height: 32px
+	}
+	.strict-block .block-content {
+		padding: 15px 0 0;
+		background: 0 0
+	}
+}

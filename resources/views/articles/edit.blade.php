@@ -908,7 +908,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <textarea  name="title" rows="4" class="no-resize required title_range valid">{{$article->title}}</textarea>
+                    <textarea  id="title" name="title" rows="4" class="no-resize required title_range valid">{{$article->title}}</textarea>
                     <span for="title" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
                 </div>
             </div>
@@ -922,7 +922,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <textarea  name="summary" rows="4" class="">{{$article->summary}}</textarea>
+                    <textarea id="summary" name="summary" rows="4" class="">{{$article->summary}}</textarea>
                 </div>
             </div>
         </div>
@@ -2409,7 +2409,10 @@ $(':radio[id=embedcodevideo]').change(function() {
                 <button type="submit" name="status" value="D" id="dumpSubmit" class="btn btn-danger">Dump</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
                 @endif
                 @endif
-                
+                 <a href="javascript:void(0);" id="preview_article" class="btn btn-primary" title="Preview">
+                    <i class="icon-photon eye"></i>
+                </a>
+               
             </div>
         </div>
     </div>
@@ -2615,8 +2618,26 @@ function getArg(url,name){
         
     }
   }).disableSelection();
+  
+  
+  $('#preview_article').click(function(){
+      
+     //var data=$('#maxi').val(); 
+        $.ajax({
+           data: {title:$('#title').val(),summary:$('#summary').val(),description: $('#maxi').val()},
+           type: 'POST',
+           url: '{{url("article/preview")}}',
+           headers: {
+                       'X-CSRF-TOKEN': token.val()
+                    }
+       }).done(function(data) { 
+           if(data=='done'){
+              window.open('{{url("article/preview")}}');
+           }
+          
+       });
+  });
+  
 
 </script>
-
-
 @stop

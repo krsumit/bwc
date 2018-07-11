@@ -95,6 +95,9 @@ Route::post('article', ['middleware' => 'auth',   'uses' => 'ArticlesController@
 Route::get('article/publishscheduled','ArticlesController@publishScheduledArticle');
 Route::post('article/relatedimage', ['middleware' => 'auth',   'uses' => 'ArticlesController@relatedImage' ]);
 Route::get('profile', ['middleware' => 'auth',   'uses' => 'ArticlesController@create' ]);
+Route::get('article/preview', ['middleware' => 'auth',   'uses' => 'ArticlesController@preview' ]);
+Route::post('article/preview', ['middleware' => 'auth',   'uses' => 'ArticlesController@previewSet' ]);
+
 /*
  *  Delete Image from Create Article Form - Ajax Request
  */

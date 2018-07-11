@@ -1,0 +1,57 @@
+
+.paragraph-row .column12 {
+    width: 100%
+}
+.paragraph-row .column11 {
+    width: 91.48936170212765%
+}
+.paragraph-row .column10 {
+    width: 82.97872340425532%
+}
+.main-article h1, .main-article h2, .main-article h3, .main-article h4, .main-article h5, .main-article h6 {
+    margin-bottom: 15px;
+    color: #232323
+}
+.main-article .button, p .marker {
+    color: #fff;
+    display: inline-block
+}
+.main-article h1 {
+    font-size: 30px
+}
+.main-article h2 {
+    font-size: 27px
+}
+.main-article h3 {
+    font-size: 25px
+}
+.main-article h4 {
+    font-size: 23px
+}
+.main-article h5 {
+    font-size: 20px
+}
+.main-article h6 {
+    font-size: 18px
+}
+p.marker {
+    padding: 0 4px;
+    margin: 0 5px;
+    background: #232323;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    font-weight: 700
+}
+.main-article .button {
+    font-size: 16px!important;
+    line-height: 38px;
+    margin: 0 4px 0 0;
+    background: #2c3e50;
+    padding: 0 18px 2px;
+    border-radius: 2px;
+    -moz-border-radius: 2px;
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,.2)
+}
+.main-article .button:hover {
+    background: #232323!important
+}

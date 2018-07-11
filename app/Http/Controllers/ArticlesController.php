@@ -1832,6 +1832,17 @@ public function trendinginsert(Request $request) {
         return 'success';
     }
 
-
+public function preview(){
+    $title=session('title');
+    $summary=session('summary');
+    $description=session('description');
+    return view('articles.articlepreview', compact('title', 'summary', 'description'));
+}
     
+public function previewSet(Request $request){
+    session(['title' => $request->title]);
+    session(['summary' => $request->summary]);
+    session(['description' => $request->description]);
+   return response('done');
+}
 }

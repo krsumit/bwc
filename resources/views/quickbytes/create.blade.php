@@ -77,7 +77,7 @@
                     .delegate("a", "click", function (event, data) {
                     event.preventDefault();
                     });
-            });        </script>
+            });</script>
         <div class="sidebarMenuHolder">
             <div class="JStree">
                 <div class="Jstree_shadow_top"></div>
@@ -215,7 +215,7 @@
                                         $('#selectBoxFilter5').select2();
                                 });
                 });
-                });            </script>
+                });</script>
         </div>
 
         <!--Select Box with Filter Search end-->					
@@ -247,7 +247,7 @@
             <script>
                         $().ready(function () {
                 $("#author_type").select2();
-                });            </script>
+                });</script>
 
             <script type="text/javascript">
 
@@ -277,7 +277,7 @@
 
                 });
                 }).change();
-                });            </script>
+                });</script>
 
         </div>
 
@@ -297,7 +297,7 @@
             <script>
                         $().ready(function () {
                 $("#author_name").select2();
-                });            </script>                            
+                });</script>                            
         </div>
 
     </div>
@@ -346,16 +346,16 @@
                         </label> 
                         <label class="checkbox pull-left" >
                             <input type="checkbox" class="uniformCheckbox" value="imagetitle" id="image_title_chk" name="searchFor[]">
-                            
+
                             <a for="image_title_chk">Image Title</a>
                         </label>
-                        
+
                         <label class="checkbox pull-left" >
                             <input type="checkbox" class="uniformCheckbox" value="imagetag" id="image_tag_chk" name="searchFor[]">         
                             <a for="image_title_chk">Image Tag</a>
                         </label>
-                        
-                     </div>
+
+                    </div>
                 </div>
                 <div class="relaed_image_box_outer hide clearfix" >
                     <img src="{{ asset('images/photon/preloader/76.gif')}}" class="loader-img-related-content hide" alt="loader" />
@@ -372,7 +372,7 @@
                 </div>
             </div>
         </div>
-      
+
         <!--Drag And Drop Upload begin-->
         <div id="Drag_And_Drop_Upload" class="control-group row-fluid">
             <div class="span3">
@@ -466,7 +466,7 @@
                             $("#add_des").click(function (e) {
                     $("#des_area").show();
                     });
-                    });        </script>
+                    });</script>
 
     </div>
 
@@ -583,8 +583,8 @@
                                 }
                         })
                         });
-                        $("#Taglist").tokenInput("/tags/getJson", {
-                                theme: "facebook",
+                                $("#Taglist").tokenInput("/tags/getJson", {
+                        theme: "facebook",
                                 searchDelay: 300,
                                 minChars: 4,
                                 preventDuplicates: true,
@@ -778,8 +778,7 @@
                                         $('#selectBoxFilter5').select2();
                                 });
                         });
-                        });
-                </script>
+                        });            </script>
         </div>
         <div id="categories" class="control-group row-fluid">
             <div class="span3">
@@ -840,7 +839,7 @@
                 <script>
                                     $().ready(function () {
                             $(".uniformCheckbox").uniform();
-                            });                </script>
+                            });</script>
 
             </div>
         </div>
@@ -1015,24 +1014,18 @@
                                             else
                                             $('#uploadedImages').val(element.name);
                                     });
-                                    
                             });
-                            
-                             $('#fileupload').bind('fileuploadcompleted', function (e, data) {
-                                var dataa = JSON.parse(data.jqXHR.responseText);
-                                  $.each(dataa['files'], function (index, element) {
-                                    $('body').find("input[name='photograph_tags["+element.name+"]']").tokenInput("/tags/getJson", {
-                                        theme: "facebook",
-                                        searchDelay: 300,
-                                        minChars: 3,
-                                        preventDuplicates: true,
+                                    $('#fileupload').bind('fileuploadcompleted', function (e, data) {
+                            var dataa = JSON.parse(data.jqXHR.responseText);
+                                    $.each(dataa['files'], function (index, element) {
+                                    $('body').find("input[name='photograph_tags[" + element.name + "]']").tokenInput("/tags/getJson", {
+                                    theme: "facebook",
+                                            searchDelay: 300,
+                                            minChars: 3,
+                                            preventDuplicates: true,
                                     });
-                                  
                                     });
-
-                             });
-                            
-                            
+                            });
                                     $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
                             // console.log(data);
                             var file = getArg(data.url, 'file');
@@ -1094,14 +1087,13 @@
                             });
                                     $('#submitsection button').click(function(){
                             $('#submitsection').hide();
-                          });
+                            });
                                     $('select.formattedelement').change(function () {
                             if ($(this).val().trim() != '')
                                     $(this).siblings('.formattedelement').removeClass('error');
                                     $(this).siblings('span.error').remove();
                             });
-                                    // Validation ends here    
-
+                                    // Validation ends here  
 </script>
 @stop
 

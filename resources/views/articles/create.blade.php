@@ -762,7 +762,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <textarea  name="title" rows="2" class="no-resize  title_range valid"></textarea>
+                    <textarea  id="title" name="title" rows="2" class="no-resize  title_range valid"></textarea>
                     <span for="title" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
                 </div>
             </div>
@@ -776,7 +776,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <textarea  name="summary" rows="4" class=""></textarea>
+                    <textarea  id="summary" name="summary" rows="4" class=""></textarea>
                 </div>
             </div>
         </div>
@@ -1471,7 +1471,7 @@
                             <div class="related-img-selection-done"  >
                                 <button class="btn btn-success hide related_action_button" onclick="relatedImageSelected()" id="related_selected_button" name="related_selected" type="button" >Upload</button>
                                 <button class="btn btn-danger delete related_action_button" onclick="closeRelated()" type="button"><i class="glyphicon glyphicon-trash"></i><span>Close</span>
-                                </button>
+                                </button>                                
                                 <img src="{{ asset('images/photon/preloader/76.gif')}}" class="loader-img-selected hide" alt="loader" />
                             </div>
                         </div>
@@ -1756,6 +1756,9 @@
                 @endif
 
                 <button type="reset" name="status" value="D" id="dumpSubmit" class="btn btn-danger">Dump</button><img src="{{ asset('images/photon/preloader/76.gif')}}" alt="loader" style="width:5%; display:none;"/>
+                <a href="javascript:void(0);" id="preview_article" class="btn btn-primary" title="Preview">
+                    <i class="icon-photon eye"></i>
+                </a>
 
             </div>
         </div>
@@ -1927,6 +1930,24 @@
                                         return results[1] || 0;
                                         }
                                         }
+                                        
+                            $('#preview_article').click(function(){
+                                var token = $('input[name=_token]');
+                            //var data=$('#maxi').val(); 
+                            $.ajax({
+                            data: {title:$('#title').val(),summary:$('#summary').val(),description: $('#maxi').val()},
+                                    type: 'POST',
+                                    url: '{{url("article/preview")}}',
+                                    headers: {
+                                    'X-CSRF-TOKEN': token.val()
+                                    }
+                            }).done(function(data) {
+                            if (data == 'done'){
+                            window.open('{{url("article/preview")}}');
+                            }
+
+                            });
+                            });
 
 
 </script>
