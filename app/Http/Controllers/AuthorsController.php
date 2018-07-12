@@ -256,6 +256,9 @@ class AuthorsController extends Controller {
             
             if($author->where('email', trim($request->email))->where('author_id','!=',$request->qid)->count()==0){
             $author = Author::find($request->qid);
+            if($author->author_type_id!=$request->author_type){
+                //Code to change autor article here
+            }
             $imageurl = '';
             $authordetail = Author::where('author_id', $request->qid)->first();
             //print_r($authordetail->photo);exit;
@@ -435,15 +438,7 @@ class AuthorsController extends Controller {
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function show($id) {
-        //
-    }
+ 
 
     /**
      * Show the form for editing the specified resource.
