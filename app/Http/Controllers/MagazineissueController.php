@@ -181,7 +181,7 @@ class MagazineissueController extends Controller {
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
         /* Right mgmt end */
-         $ArticleArr=Article::where('magazine_id', $id)->get();
+         $ArticleArr=Article::where('magazine_id', $id)->where('status','P')->get();
          //DB::enableQueryLog();
           $q = DB::table('articles')
                     ->Leftjoin('magazine_list', 'articles.article_id', '=', 'magazine_list.a_id');
