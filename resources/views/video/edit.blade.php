@@ -60,13 +60,13 @@
     </ul>
 </div>            <header>
                 <i class="icon-big-notepad"></i>
-                <h2><small>Edit Album</small></h2>
+                <h2><small>Edit Video</small></h2>
             </header>
 <!--            <form class="form-horizontal" id="fileupload" action="" method="POST" enctype="multipart/form-data">-->
               {!! Form::open(array('url'=>'video/update','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
                 
               {!! csrf_field() !!}    
-               @method('PUT')
+             
                 <input type="hidden" name="id" value="{{$video->id}}">
                 <input type="hidden" name="video_thumb_name_second" value="{{$video->video_thumb_name}}">
                 <input type="hidden" name="video_name_second" value="{{$video->video_name}}">

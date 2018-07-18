@@ -68,10 +68,10 @@ class Cron {
               //echo $email;exit;
               $name=  $authorRow['name'];
               $articletitle =  $authorRow['title'];
-              $title=  str_replace(' ', '-', $authorRow['title']);
+              $title=trim($authorRow['title']);
 	      $publish_date=date('d-m-Y',strtotime($authorRow['publish_date']));
               $article_id=  str_replace(' ', '-', $authorRow['article_id']);
-              $url= $this->url.'article/'.preg_replace('/([^a-zA-Z0-9_.]){2,}/', '-',$title).'/'.$publish_date.'-'.$article_id;
+              $url= $this->url.'article/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$title).'/'.$publish_date.'-'.$article_id;
               $user_email= 'BW Edit Team <noreply@businessworld.in>';
              //$user_email= 'noreply@businessworld.com';
              $urlcontact =$this->url.'contact-us/';

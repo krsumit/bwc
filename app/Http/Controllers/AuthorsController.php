@@ -217,12 +217,16 @@ class AuthorsController extends Controller {
      * @param  Request  $request
      * @return Response
      */
+    private function changeAuthorType($authorId){
+        //select article_id,count(*) as cs from article_author GROUP by article_id having cs>1 order by article_id desc
+        //select article_id,count(*)as cs,GROUP_CONCAT(author_id)  as authors_id from article_author GROUP by article_id having cs>1 order by article_id desc
+        //select * from article_author where article_id in (select article_id from (select article_id,count(*)as cs,GROUP_CONCAT(author_id)  as authors_id from article_author GROUP by article_id having cs>1 and find_in_set('83019',authors_id) order by article_id desc) as ars) and author_id=83019
+        
+       
+    }
     public function store(Request $request) {
 
-        //Save Request Tuple in Table - Validate First
         // print_r($request->all());exit;
-        // Validation //
-
 
         if ($request->author_type == 2) {// Bw reporters
             $rightId = 45;
@@ -256,9 +260,12 @@ class AuthorsController extends Controller {
             
             if($author->where('email', trim($request->email))->where('author_id','!=',$request->qid)->count()==0){
             $author = Author::find($request->qid);
+            
+            //Author type changes 
             if($author->author_type_id!=$request->author_type){
-                //Code to change autor article here
+                $this->changeAuthorType($request->qid);
             }
+            
             $imageurl = '';
             $authordetail = Author::where('author_id', $request->qid)->first();
             //print_r($authordetail->photo);exit;
@@ -301,7 +308,8 @@ class AuthorsController extends Controller {
             }
             $is_columnist = $isCol;
             if($author_type_id =='4'){
-            if (!empty($request->column_id)) {
+                $d=$request->column_id;
+            if (!empty($d)) {
                 $column_id = $request->column_id;
             } 
             }
@@ -309,7 +317,6 @@ class AuthorsController extends Controller {
                 $column_id = '0';
             }
             $valid = '1';
-
             $author->name = $name;
             $author->author_type_id = $author_type_id;
             $author->bio = $bio;
