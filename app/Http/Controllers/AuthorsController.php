@@ -222,6 +222,11 @@ class AuthorsController extends Controller {
         //select article_id,count(*)as cs,GROUP_CONCAT(author_id)  as authors_id from article_author GROUP by article_id having cs>1 order by article_id desc
         //select * from article_author where article_id in (select article_id from (select article_id,count(*)as cs,GROUP_CONCAT(author_id)  as authors_id from article_author GROUP by article_id having cs>1 and find_in_set('83019',authors_id) order by article_id desc) as ars) and author_id=83019
         
+        // Delete this author from shared(having more than one author) articles
+      //  DB::delete("select * from article_author where article_id in (select article_id from (select article_id,count(*)as cs,GROUP_CONCAT(author_id)  as authors_id from article_author GROUP by article_id having cs>1 and find_in_set($authorId,authors_id) order by article_id desc) as ars) and author_id=$authorId");
+        // Change the article's author type
+       // DB::update('update users set votes = 100 where name = ?', ['John']);
+        
        
     }
     public function store(Request $request) {

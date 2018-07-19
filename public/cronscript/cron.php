@@ -2018,7 +2018,7 @@ class Cron {
 
     function migrateArticleAuthor($articleId, $isNew = 0, $condition = '') {
 
-        $allauthorRst = $this->conn2->query("select author_id,author_type from author");
+        $allauthorRst = $this->conn2->query("select author_id,author_type from author"); // Need optimization
         $allAuthArr = array();
         while ($autRow = $allauthorRst->fetch_object()) {
             $allAuthArr[$autRow->author_id] = $autRow->author_type;
