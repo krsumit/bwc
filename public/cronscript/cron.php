@@ -3756,7 +3756,7 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
         $data['apikey']=$key;
         $data['message']='For more such business quotes, please visit http://businessworld.in/all-quotes/';
         $data['attachment']='http://static.businessworld.in/quotesimage/'.$quotestRow['quotes_image'];
-        $data['targeting_id']='3405';
+        //$data['targeting_id']='3405';
         
         $postfilelds=http_build_query($data);
         

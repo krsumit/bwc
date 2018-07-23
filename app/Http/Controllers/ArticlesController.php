@@ -683,8 +683,7 @@ public function channelarticles($option) {
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
-        echo  Session::getId(); 
-        DB::delete("delete from cron_log where id=3406736"); exit;
+        //echo  Session::getId(); 
         //echo date('Y-m-d'); 
         //echo date('H:i:s'); 
         //exit;
