@@ -217,15 +217,20 @@ class AuthorsController extends Controller {
      * @param  Request  $request
      * @return Response
      */
-    private function changeAuthorType($authorId){
+    private function changeAuthorType($authorId,$authorType){
         //select article_id,count(*) as cs from article_author GROUP by article_id having cs>1 order by article_id desc
         //select article_id,count(*)as cs,GROUP_CONCAT(author_id)  as authors_id from article_author GROUP by article_id having cs>1 order by article_id desc
         //select * from article_author where article_id in (select article_id from (select article_id,count(*)as cs,GROUP_CONCAT(author_id)  as authors_id from article_author GROUP by article_id having cs>1 and find_in_set('83019',authors_id) order by article_id desc) as ars) and author_id=83019
         
         // Delete this author from shared(having more than one author) articles
-      //  DB::delete("select * from article_author where article_id in (select article_id from (select article_id,count(*)as cs,GROUP_CONCAT(author_id)  as authors_id from article_author GROUP by article_id having cs>1 and find_in_set($authorId,authors_id) order by article_id desc) as ars) and author_id=$authorId");
-        // Change the article's author type
-       // DB::update('update users set votes = 100 where name = ?', ['John']);
+        $updateTime=date('Y:m:d H:i:s');
+        DB::delete("delete from article_author where article_id in (select article_id from (select article_id,count(*)as cs,GROUP_CONCAT(author_id)  as authors_id from article_author GROUP by article_id having cs>1 and find_in_set($authorId,authors_id) order by article_id desc) as ars) and author_id=$authorId");
+        
+        // Updating article author table
+        DB::update("update article_author set updated_at='$updateTime' where author_id=$authorId");     
+        
+        //Update articles change updated_at and author_type
+        DB::update("update articles set updated_at='$updateTime',author_type='$authorType' WHERE article_id in(select article_id from article_author where author_id=$authorId)");
         
        
     }
@@ -268,7 +273,7 @@ class AuthorsController extends Controller {
             
             //Author type changes 
             if($author->author_type_id!=$request->author_type){
-                $this->changeAuthorType($request->qid);
+                $this->changeAuthorType($request->qid,$request->author_type);
             }
             
             $imageurl = '';
