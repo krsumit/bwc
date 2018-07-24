@@ -2351,10 +2351,7 @@ $(':radio[id=embedcodevideo]').change(function() {
                     <input type="checkbox" name="for_homepage" class="uniformCheckbox" value="checkbox1" @if($article->for_homepage == 1) checked @endif>
                            <a href="#" target="_blank">Publish this to Home Page.</a>
                 </label>
-                <script>
-                            $().ready(function(){
-                    $(".uniformCheckbox").uniform();
-                    });</script>
+                
 
                 <label class="checkbox" >
                     <input type="checkbox" name="important" class="uniformCheckbox2" value="checkbox1" @if($article->important == 1) checked @endif>
@@ -2373,7 +2370,17 @@ $(':radio[id=embedcodevideo]').change(function() {
                     <input type="checkbox" name="exclusive_non_featured" class="uniformCheckbox3" value="1" @if($article->exclusive_non_featured == 1) checked @endif>
                            <a href="#" target="_blank">Web Exclusive(Non featured)</a>
                 </label>
-                
+                @if($article->whatsapp_bd=='0')
+                <label class="checkbox" >
+                    <input type="checkbox" name="whatsapp_bd" class="uniformCheckbox" value="1"  />
+                    <a href="#" target="_blank">Broadcast on Whatsapp </a>
+                </label>
+                @endif
+              <script>
+                    $().ready(function(){
+                        $(".uniformCheckbox").uniform();
+                    });
+               </script>
                 
                 <script>
                             $().ready(function(){

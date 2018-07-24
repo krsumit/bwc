@@ -1715,11 +1715,7 @@
                     <input type="checkbox" name="for_homepage" class="uniformCheckbox" value="checkbox1" checked >
                     <a href="#" target="_blank">Publish this to Home Page.</a>
                 </label>
-                <script>
-                                                    $().ready(function(){
-                                            $(".uniformCheckbox").uniform();
-                                            });</script>
-
+               
                 <label class="checkbox" >
                     <input type="checkbox" name="important" class="uniformCheckbox2" value="checkbox1">
                     <a href="#" target="_blank">This article is important.</a>
@@ -1738,9 +1734,19 @@
                     <a href="#" target="_blank">Web Exclusive(Non featured)</a>
                 </label>
                 <script>
-                                                    $().ready(function(){
-                                            $(".uniformCheckbox3").uniform();
-                                            });</script>
+                        $().ready(function(){
+                $(".uniformCheckbox3").uniform();
+                });</script>
+                
+                <label class="checkbox" >
+                    <input type="checkbox" name="whatsapp_bd" class="uniformCheckbox" value="1"  />
+                    <a href="#" target="_blank">Broadcast on Whatsapp </a>
+                </label>
+                 <script>
+                        $().ready(function(){
+                            $(".uniformCheckbox").uniform();
+                        });
+                 </script>
 
 
             </div>

@@ -836,6 +836,10 @@
                     <input type="checkbox" class="uniformCheckbox" value="checkbox1" name="is_sponsored">
                     <a href="#" target="_blank">This Is  Sponsored</a>
                 </label>
+                 <label class="checkbox" >
+                    <input type="checkbox" name="whatsapp_bd" class="uniformCheckbox" value="1"  />
+                    <a href="#" target="_blank">Broadcast on Whatsapp </a>
+                </label>
                 <script>
                                     $().ready(function () {
                             $(".uniformCheckbox").uniform();

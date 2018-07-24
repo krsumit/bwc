@@ -467,6 +467,10 @@
                     <input type="checkbox" name="for_automated_news_video" class="uniformCheckbox" value="1"  >
                     <a href="#" target="_blank">Automated News Video</a>
                 </label>
+                <label class="checkbox" >
+                    <input type="checkbox" name="whatsapp_bd" class="uniformCheckbox" value="1"  />
+                    <a href="#" target="_blank">Broadcast on Whatsapp </a>
+                </label>
                 <script>
                     $().ready(function(){
                     $(".uniformCheckbox").uniform();

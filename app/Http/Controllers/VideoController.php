@@ -336,6 +336,7 @@ class VideoController extends Controller
         }
        
         $uid = Session::get('users')->id;
+        //dd($video);
         //$channels = VideoController::getUserChannels($uid);
         return view('video.edit', compact('video','tags','channels','campaign','acateg','category','videotypes'));
        

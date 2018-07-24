@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\DB;
 use App\Classes\UploadHandler;
 use App\Classes\FileTransfer;
 use App\Classes\Zebra_Image;
+use App\Classes\GeneralFunctions;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 
@@ -1082,7 +1083,10 @@ public function channelarticles($option) {
             
             //}
         }
-
+        
+         if(1==2){
+            GeneralFunctions::sendWhatsappBroadcast(array());
+        }
 
         if ($article->status == 'P') {
             Session::flash('message', 'Your Article has been Published successfully. It will appear on website shortly.');
