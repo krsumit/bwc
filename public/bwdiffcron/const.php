@@ -9,4 +9,4 @@ define('DATABASE','bw_cms_db');
 define('LHOST','104.199.166.236');
 define('LUSER','root');
 define('LPASS','bwchannelsuser2016');
-define('LDATABASE','w_def_db');
+define('LDATABASE','bw_def_db');
