@@ -18,6 +18,8 @@ use App\Photo;
 use App\Classes\FileTransfer;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
+use App\Channel;
+use App\Classes\GeneralFunctions;
 
 class VideoController extends Controller
 {
@@ -244,6 +246,25 @@ class VideoController extends Controller
                 $video_category->level = $i;
                 $video_category->save();
             }
+            
+            //Whatsapp broadcast
+            if($request->whatsapp_bd){
+                $channel=Channel::find($request->channel);
+                $publish_date=date('d-m-Y',strtotime($video->created_at));
+                $video_id=$video->id;
+                $url= $channel->channelurl.'/video/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$video->video_title).'/'.$publish_date.'-'.$video_id;
+                $data['message']=trim($video->video_title).',Read here '.$url;
+
+                $data['attachment']= config('constants.awsbaseurl').config('constants.awvideo').$video->video_name;
+
+                $server_output=GeneralFunctions::sendWhatsappBroadcast($data);
+                $dataArray=json_decode($server_output);
+                if(trim($dataArray->code)=='200'){
+                    $video->whatsapp_bd='1';
+                    $video->update();
+                }
+            }
+        
 
             Session::flash('message', 'Your video has been Upload successfully.');
             return redirect('/video/list?channel='.$request->channel);
@@ -455,7 +476,23 @@ class VideoController extends Controller
             $video_category->save();
         }
         
-        
+        //Whatsapp broadcast
+        if($request->whatsapp_bd){
+            $channel=Channel::find($request->channel);
+            $publish_date=date('d-m-Y',strtotime($video->created_at));
+            $video_id=$video->id;
+            $url= $channel->channelurl.'/video/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$video->video_title).'/'.$publish_date.'-'.$video_id;
+            $data['message']=trim($video->video_title).',Read here '.$url;
+          
+            $data['attachment']= config('constants.awsbaseurl').config('constants.awvideo').$video->video_name;
+          
+            $server_output=GeneralFunctions::sendWhatsappBroadcast($data);
+            $dataArray=json_decode($server_output);
+            if(trim($dataArray->code)=='200'){
+                $video->whatsapp_bd='1';
+                $video->update();
+            }
+        }
        
             
         Session::flash('message', 'Your Video has been Published successfully.');

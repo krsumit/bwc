@@ -13,10 +13,8 @@ class GeneralFunctions {
         
         $key='7c5e0350c00a96852f2013ca014c71a4_9580_05720d08eb0689adc71fea0f6a';
         $url='https://rest.whatsbroadcast.com/api/v1/newsletter';
-        echo 'test'; exit;
         $data['apikey']=$key;
-        $data['targeting_id']='3405';
-        
+        //$data['targeting_id']='3405';
         $postfilelds=http_build_query($data);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL,$url);
@@ -26,8 +24,8 @@ class GeneralFunctions {
         $server_output = curl_exec ($ch);
         curl_close ($ch);
         return $server_output;
-        $dataArray=json_decode($server_output);
-        print_r($dataArray); exit;
+//        $dataArray=json_decode($server_output);
+//        print_r($dataArray); exit;
 //        if(trim($dataArray->code)=='200'){
 //            $up_query="update quotes set whatsaap_bd=1 where quote_id=".$quotestRow['quote_id'];
 //            DB::update($up_query);

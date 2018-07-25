@@ -1084,8 +1084,22 @@ public function channelarticles($option) {
             //}
         }
         
-         if(1==2){
-            GeneralFunctions::sendWhatsappBroadcast(array());
+        if($request->whatsapp_bd && $article->status == 'P'){
+            $channel=Channel::find($request->channel_sel);
+            $publish_date=date('d-m-Y',strtotime($article->publish_date));
+            $article_id=$article->article_id;
+            $url= $channel->channelurl.'/article/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$article->title).'/'.$publish_date.'-'.$article_id;
+            $data['message']=trim($article->title).',Read here '.$url;
+            $photo=Photo::where('owner_id','=',$article->article_id)->where('owned_by','=','article')->orderBy('sequence','asc')->first();
+            if($photo){
+                $data['attachment']= config('constants.awsbaseurl').config('constants.awarticleimagemediumdir').$photo->photopath;
+            }
+            $server_output=GeneralFunctions::sendWhatsappBroadcast($data);
+            $dataArray=json_decode($server_output);
+            if(trim($dataArray->code)=='200'){
+                $article->whatsapp_bd='1';
+                $article->update();
+            }
         }
 
         if ($article->status == 'P') {
@@ -1352,6 +1366,23 @@ public function channelarticles($option) {
         //     exit;        
         //fwrite($asd, "Step 3.1 In Article POST Function END ING \n");        
         //If has been Saved by Editor
+        if($request->whatsapp_bd && $article->status == 'P'){
+            $channel=Channel::find($request->channel_sel);
+            $publish_date=date('d-m-Y',strtotime($article->publish_date));
+            $article_id=$article->article_id;
+            $url= $channel->channelurl.'/article/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$article->title).'/'.$publish_date.'-'.$article_id;
+            $data['message']=trim($article->title).',Read here '.$url;
+            $photo=Photo::where('owner_id','=',$article->article_id)->where('owned_by','=','article')->orderBy('sequence','asc')->first();
+            if($photo){
+                $data['attachment']= config('constants.awsbaseurl').config('constants.awarticleimagemediumdir').$photo->photopath;
+            }
+            $server_output=GeneralFunctions::sendWhatsappBroadcast($data);
+            $dataArray=json_decode($server_output);
+            if(trim($dataArray->code)=='200'){
+                $article->whatsapp_bd='1';
+                $article->update();
+            }
+        }
         if ($request->status == 'P') {
             Session::flash('message', 'Your Article has been Published successfully. It will appear on website shortly.');
             return redirect('/article/list/published?channel=' . $currentChannelId);

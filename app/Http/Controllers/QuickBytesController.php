@@ -8,6 +8,7 @@ use DB;
 use Session;
 use App\QuickByte;
 use App\PhotoTag;
+use App\Channel;
 use App\Http\Requests;  
 use App\Http\Controllers\Auth;
 use App\Http\Controllers\AuthorsController;
@@ -19,6 +20,7 @@ use App\Classes\UploadHandler;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 use App\Classes\FileTransfer;
+use App\Classes\GeneralFunctions;
 
 
 class QuickBytesController extends Controller {
@@ -336,6 +338,26 @@ class QuickBytesController extends Controller {
                 }
             }
         }
+        
+        
+         //Whatsapp broadcast
+        if($request->whatsapp_bd){
+            $channel=Channel::find($request->channel);
+            $publish_date=date('d-m-Y',strtotime($quickbyte->publish_date));
+            $qb_id=$quickbyte->id;
+            $url= $channel->channelurl.'/quickbytes/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$quickbyte->title).'/'.$publish_date.'-'.$qb_id;
+            $data['message']=trim($quickbyte->title).',Read here '.$url;
+            $photo=Photo::where('owner_id','=',$quickbyte->id)->where('owned_by','=','quickbyte')->orderBy('sequence','asc')->first();
+            if($photo){
+                $data['attachment']= config('constants.awsbaseurl').config('constants.awquickbytesimagemediumdir').$photo->photopath;
+            }
+            $server_output=GeneralFunctions::sendWhatsappBroadcast($data);
+            $dataArray=json_decode($server_output);
+            if(trim($dataArray->code)=='200'){
+                $quickbyte->whatsapp_bd='1';
+                $quickbyte->update();
+            }
+        }
 
         //If has been Saved by Editor
 
@@ -595,6 +617,26 @@ class QuickBytesController extends Controller {
                 
             }
         }
+        
+        //Whatsapp broadcast
+        if($request->whatsapp_bd){
+            $channel=Channel::find($request->channel);
+            $publish_date=date('d-m-Y',strtotime($quickbyte->publish_date));
+            $qb_id=$quickbyte->id;
+            $url= $channel->channelurl.'/quickbytes/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$quickbyte->title).'/'.$publish_date.'-'.$qb_id;
+            $data['message']=trim($quickbyte->title).',Read here '.$url;
+            $photo=Photo::where('owner_id','=',$quickbyte->id)->where('owned_by','=','quickbyte')->orderBy('sequence','asc')->first();
+            if($photo){
+                $data['attachment']= config('constants.awsbaseurl').config('constants.awquickbytesimagemediumdir').$photo->photopath;
+            }
+            $server_output=GeneralFunctions::sendWhatsappBroadcast($data);
+            $dataArray=json_decode($server_output);
+            if(trim($dataArray->code)=='200'){
+                $quickbyte->whatsapp_bd='1';
+                $quickbyte->update();
+            }
+        }
+        
         //If has been Saved by Editor
         if ($request->status == 'P') {
             Session::flash('message', 'Your Quickbte has been Published successfully.');
