@@ -929,10 +929,12 @@
                            <a href="#" target="_blank">This Is  Sponsored</a>
                 </label>
                  @if($quickbyte->whatsapp_bd=='0')
-                <label class="checkbox" >
-                    <input type="checkbox" name="whatsapp_bd" class="uniformCheckbox" value="1"  />
-                    <a href="#" target="_blank">Broadcast on Whatsapp </a>
-                </label>
+                 @if(in_array('111',Session::get('user_rights')))
+                    <label class="checkbox" >
+                        <input type="checkbox" name="whatsapp_bd" class="uniformCheckbox" value="1"  />
+                        <a href="#" target="_blank">Broadcast on Whatsapp </a>
+                    </label>
+                 @endif
                 @endif
                 <script>
                     $().ready(function () {

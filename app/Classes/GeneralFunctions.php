@@ -14,6 +14,7 @@ class GeneralFunctions {
         $key='7c5e0350c00a96852f2013ca014c71a4_9580_05720d08eb0689adc71fea0f6a';
         $url='https://rest.whatsbroadcast.com/api/v1/newsletter';
         $data['apikey']=$key;
+        $data['date']=date('Y-m-d-H-i',time()+660);
         //$data['targeting_id']='3405';
         $postfilelds=http_build_query($data);
         $ch = curl_init();
