@@ -15,6 +15,7 @@ class GeneralFunctions {
         $url='https://rest.whatsbroadcast.com/api/v1/newsletter';
         $data['apikey']=$key;
         $data['date']=date('Y-m-d-H-i',time()-12000);  // Gmt+3 Germany-time zone, In indian time zone it's 10 min after saving action
+        //$data['targeting_id']='3405';
         $postfilelds=http_build_query($data);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL,$url);

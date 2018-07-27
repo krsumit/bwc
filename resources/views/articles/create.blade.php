@@ -116,8 +116,8 @@
                                                     required: true
                                                     },
                                                     "title":{
-                                                    required: true,
-                                                            rangelength: [10, 200]
+                                                        required: true,
+                                                        rangelength: [10, 250]
                                                     },
                                                     "description":{
                                                     required: true
