@@ -1088,11 +1088,11 @@ public function channelarticles($option) {
             $channel=Channel::find($request->channel_sel);
             $publish_date=date('d-m-Y',strtotime($article->publish_date));
             $article_id=$article->article_id;
-            $url= $channel->channelurl.'/article/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$article->title).'/'.$publish_date.'-'.$article_id;
+            $url= $channel->channelurl.'/article/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$article->title).'/'.$publish_date.'-'.$article_id.'/?utm_source=whatsapp&utm_medium=newsletter';
             $data['message']=trim($article->title).',Read here '.$url;
             $photo=Photo::where('owner_id','=',$article->article_id)->where('owned_by','=','article')->orderBy('sequence','asc')->first();
             if($photo){
-                $data['attachment']= config('constants.awsbaseurl').config('constants.awarticleimagemediumdir').$photo->photopath;
+                $data['attachment']= config('constants.awsbaseurl').config('constants.awarticleimagelargedir').$photo->photopath;
             }
             $server_output=GeneralFunctions::sendWhatsappBroadcast($data);
             $dataArray=json_decode($server_output);
@@ -1370,11 +1370,11 @@ public function channelarticles($option) {
             $channel=Channel::find($request->channel_sel);
             $publish_date=date('d-m-Y',strtotime($article->publish_date));
             $article_id=$article->article_id;
-            $url= $channel->channelurl.'/article/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$article->title).'/'.$publish_date.'-'.$article_id;
+            $url= $channel->channelurl.'/article/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$article->title).'/'.$publish_date.'-'.$article_id.'/?utm_source=whatsapp&utm_medium=newsletter';
             $data['message']=trim($article->title).',Read here '.$url;
             $photo=Photo::where('owner_id','=',$article->article_id)->where('owned_by','=','article')->orderBy('sequence','asc')->first();
             if($photo){
-                $data['attachment']= config('constants.awsbaseurl').config('constants.awarticleimagemediumdir').$photo->photopath;
+                $data['attachment']= config('constants.awsbaseurl').config('constants.awarticleimagelargedir').$photo->photopath;
             }
             $server_output=GeneralFunctions::sendWhatsappBroadcast($data);
             $dataArray=json_decode($server_output);

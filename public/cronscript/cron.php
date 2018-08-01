@@ -3749,17 +3749,13 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
         $query="select quote_id,quotes_image from quotes where whatsaap_bd=0 order by rand() limit 1";
         $rst=$this->conn->query($query);
         $quotestRow = $rst->fetch_assoc();
-        
         $key='7c5e0350c00a96852f2013ca014c71a4_9580_05720d08eb0689adc71fea0f6a';
         $url='https://rest.whatsbroadcast.com/api/v1/newsletter';
-        
         $data['apikey']=$key;
-        $data['message']='For more such business quotes, please visit http://businessworld.in/all-quotes/';
+        $data['message']='For more such business quotes, please visit http://businessworld.in/all-quotes/'.'?utm_source=whatsapp&utm_medium=newsletter';
         $data['attachment']='http://static.businessworld.in/quotesimage/'.$quotestRow['quotes_image'];
         //$data['targeting_id']='3405';
-        
         $postfilelds=http_build_query($data);
-        
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL,$url);
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -3773,9 +3769,6 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
             $this->conn->query($up_query);
         }
     }
-    
-  
-
 }
 
 ?>

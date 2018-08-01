@@ -345,7 +345,7 @@ class QuickBytesController extends Controller {
             $channel=Channel::find($request->channel);
             $publish_date=date('d-m-Y',strtotime($quickbyte->publish_date));
             $qb_id=$quickbyte->id;
-            $url= $channel->channelurl.'/quickbytes/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$quickbyte->title).'/'.$publish_date.'-'.$qb_id;
+            $url= $channel->channelurl.'/quickbytes/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$quickbyte->title).'/'.$publish_date.'-'.$qb_id.'/?utm_source=whatsapp&utm_medium=newsletter';
             $data['message']=trim($quickbyte->title).',Read here '.$url;
             $photo=Photo::where('owner_id','=',$quickbyte->id)->where('owned_by','=','quickbyte')->orderBy('sequence','asc')->first();
             if($photo){
@@ -623,7 +623,7 @@ class QuickBytesController extends Controller {
             $channel=Channel::find($request->channel);
             $publish_date=date('d-m-Y',strtotime($quickbyte->publish_date));
             $qb_id=$quickbyte->id;
-            $url= $channel->channelurl.'/quickbytes/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$quickbyte->title).'/'.$publish_date.'-'.$qb_id;
+            $url= $channel->channelurl.'/quickbytes/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$quickbyte->title).'/'.$publish_date.'-'.$qb_id.'/?utm_source=whatsapp&utm_medium=newsletter';
             $data['message']=trim($quickbyte->title).',Read here '.$url;
             $photo=Photo::where('owner_id','=',$quickbyte->id)->where('owned_by','=','quickbyte')->orderBy('sequence','asc')->first();
             if($photo){

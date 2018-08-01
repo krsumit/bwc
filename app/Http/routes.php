@@ -449,6 +449,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('attendee/get-json','EventSpeakerController@returnSpeakerJson');
     Route::resource('attendee','EventSpeakerController');
     Route::resource('event/streaming','EventStreamingController');
+    Route::resource('livefeed','LiveFeedController');    
 });    
 
 /* 
