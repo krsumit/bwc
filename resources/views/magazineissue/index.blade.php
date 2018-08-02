@@ -261,11 +261,11 @@
         </div>
 
 
-        <div class="container-fluid">
+        <!--<div class="container-fluid">
 
             <div class="form-legend">Story 1</div>
 
-            <!--Select Box with Filter Search begin-->
+            
             <div class="control-group row-fluid">
                 <div class="span3">
                     <label class="control-label" for="selectBoxFilter">Title</label>
@@ -288,14 +288,14 @@
                 </div>
             </div>
 
-            <!--Select Box with Filter Search end-->					
+            					
         </div>
 
         <div class="container-fluid">
 
             <div class="form-legend">Story 2</div>
 
-            <!--Select Box with Filter Search begin-->
+           
             <div class="control-group row-fluid">
                 <div class="span3">
                     <label class="control-label" for="selectBoxFilter">Title</label>
@@ -318,14 +318,14 @@
                 </div>
             </div>
 
-            <!--Select Box with Filter Search end-->					
+            				
         </div>
 
         <div class="container-fluid">
 
             <div class="form-legend">Story 3</div>
 
-            <!--Select Box with Filter Search begin-->
+            
             <div class="control-group row-fluid">
                 <div class="span3">
                     <label class="control-label" for="selectBoxFilter">Title</label>
@@ -348,14 +348,14 @@
                 </div>
             </div>
 
-            <!--Select Box with Filter Search end-->					
+            				
         </div>
 
         <div class="container-fluid">
 
             <div class="form-legend">Story 4</div>
 
-            <!--Select Box with Filter Search begin-->
+            
             <div class="control-group row-fluid">
                 <div class="span3">
                     <label class="control-label" for="selectBoxFilter">Title</label>
@@ -378,14 +378,14 @@
                 </div>
             </div>
 
-            <!--Select Box with Filter Search end-->					
+           					
         </div>
 
         <div class="container-fluid">
 
             <div class="form-legend">Story 5</div>
 
-            <!--Select Box with Filter Search begin-->
+            
             <div class="control-group row-fluid">
                 <div class="span3">
                     <label class="control-label" for="selectBoxFilter">Title</label>
@@ -408,8 +408,8 @@
                 </div>
             </div>
 
-            <!--Select Box with Filter Search end-->					
-        </div>
+            					
+        </div>--->
 
         <div class="container-fluid">
 
@@ -471,7 +471,7 @@
                                 <th>Image</th>
                                 <th>Name</th>
                                 <th>Date</th>
-                                <th>Feature</th>
+                                <th>EditMI&Title</th>
                                 <th><input type="checkbox" class="uniformCheckbox" name="selectall" id="selectall" value="checkbox1"></th>
                             </tr>
                         </thead>
@@ -485,7 +485,8 @@
                                 <td><a href="/magazineissue/edit/?id={{$a->magazine_id}}&channel={{$currentChannelId}}">{{$a->publish_date_m}}</a>
                                 </td>
                                 
-                                
+                                <td><a href="/magazineissue/editmititle/?id={{$a->magazine_id}}&channel={{$currentChannelId}}">Magazine Title And image</a>
+                                </td>
                                 <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$a->magazine_id}}" name="checkItem[]"></td>
                             </tr>
                            @endforeach

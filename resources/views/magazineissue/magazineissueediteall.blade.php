@@ -181,7 +181,7 @@
                 </div>
                 <div class="span9">
                 <div class="controls">
-                    <input type="text" name="publish_date_m" id="datepicker" class="span3" />
+                    <input type="text" name="publish_date_m" value="{{$a->publish_date_m}}" id="datepicker" class="span3" />
                 </div>
             </div>
                                                           
@@ -208,8 +208,8 @@
                             <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input name="photo" type="file"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
                             <a href="javascript:void(0);" style="font-size:12px;" onClick="cropImage('{{url('/photo/crop')}}?dimension={{config('constants.dimension_magz')}}')">&nbsp;Need to crop images? Click here</a>
                         </div>
-                         {{$a->imagepath}}
-                        
+                         
+                        <img src="{{ config('constants.awsbaseurl').config('constants.awmagazinedir').$a->imagepath}}" alt="magazineissue" style="width:80px;" />
                     </div>
                 </div>
             </div>
@@ -225,157 +225,6 @@
                 </div>
             </div>
 
-        </div>
-
-
-        <div class="container-fluid">
-
-            <div class="form-legend">Story 1</div>
-
-            <!--Select Box with Filter Search begin-->
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Title</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story1_title" name="story1_title" value="{{$a->story1_title}}"type="text"/>
-                    </div>   
-                </div>
-            </div>
-
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">URL</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story1_url" name="story1_url"  value="{{$a->story1_url}}" type="url"/>
-                    </div>   
-                </div>
-            </div>
-
-            <!--Select Box with Filter Search end-->					
-        </div>
-
-        <div class="container-fluid">
-
-            <div class="form-legend">Story 2</div>
-
-            <!--Select Box with Filter Search begin-->
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Title</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story2_title" name="story2_title"   value="{{$a->story2_title}}" type="text"/>
-                    </div>   
-                </div>
-            </div>
-
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">URL</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story2_url" name="story2_url"  value="{{$a->story2_url}}" type="url"/>
-                    </div>   
-                </div>
-            </div>
-
-            <!--Select Box with Filter Search end-->					
-        </div>
-
-        <div class="container-fluid">
-
-            <div class="form-legend">Story 3</div>
-
-            <!--Select Box with Filter Search begin-->
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Title</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story3_title" name="story3_title"  value="{{$a->story3_title}}"  type="text"/>
-                    </div>   
-                </div>
-            </div>
-
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">URL</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story3_url" name="story3_url"  value="{{$a->story3_url}}" type="url"/>
-                    </div>   
-                </div>
-            </div>
-
-            <!--Select Box with Filter Search end-->					
-        </div>
-
-        <div class="container-fluid">
-
-            <div class="form-legend">Story 4</div>
-
-            <!--Select Box with Filter Search begin-->
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Title</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story4_title" name="story4_title" value="{{$a->story4_title}}"  type="text"/>
-                    </div>   
-                </div>
-            </div>
-
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">URL</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story4_url" name="story4_url"  value="{{$a->story4_url}}" type="url"/>
-                    </div>   
-                </div>
-            </div>
-
-            <!--Select Box with Filter Search end-->					
-        </div>
-
-        <div class="container-fluid">
-
-            <div class="form-legend">Story 5</div>
-
-            <!--Select Box with Filter Search begin-->
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">Title</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story5_title" name="story5_title" value="{{$a->story5_title}}" type="text"/>
-                    </div>   
-                </div>
-            </div>
-
-            <div class="control-group row-fluid">
-                <div class="span3">
-                    <label class="control-label" for="selectBoxFilter">URL</label>
-                </div>
-                <div class="span9">
-                    <div class="controls">
-                        <input id="story5_url" name="story5_url" value="{{$a->story5_url}}" type="url"/>
-                    </div>   
-                </div>
-            </div>
-
-            <!--Select Box with Filter Search end-->					
         </div>
 
         <div class="container-fluid">
@@ -422,7 +271,7 @@
         <div class="container-fluid">
             <div class="control-group row-fluid">
                 <div class="span12 span-inset">
-                    <button type="submit" class="btn btn-success">Publish</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                    <button type="submit" class="btn btn-success">Update</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
                 </div>
             </div>
         </div>

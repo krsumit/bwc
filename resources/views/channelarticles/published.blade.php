@@ -15,6 +15,7 @@
         <div class="panel-search container-fluid">
             <form class="form-horizontal" method="get" action="">
                 <input type="hidden" name="channelf" value="{{$idchannelf}}"/>
+                <input type="hidden" name="channel" value="{{$currentChannelId}}"/>
                 <input id="panelSearch" required  placeholder="Search" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">
                 <button class="btn btn-search" type="submit"></button>
                 @if(isset($_GET['searchin'])) 

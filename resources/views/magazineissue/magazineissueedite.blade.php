@@ -175,7 +175,7 @@
          <div class="container-fluid" style="margin-bottom:0 !important;">
 
 
-            <div class="form-legend" id="tags3">Add in Newsletter</div> 
+            <div class="form-legend" id="tags3">Add in Magazine for Home Page</div> 
 
             <div class="row-fluid">
                 
@@ -325,6 +325,7 @@
                         //alert(response);
                        document.getElementById("msg").style.display = "block";
                        $('html, body').scrollTop($("#msg").offset().top);
+                       window.location.reload();
                     }
 
             });

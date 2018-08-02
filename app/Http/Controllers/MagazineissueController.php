@@ -157,17 +157,12 @@ class MagazineissueController extends Controller {
         if (isset($_GET['channel'])) {
             $channel = $_GET['channel'];
         }
-         if($channel =='1'){
+         
         $posts = DB::table('magazine')
                 ->select('magazine.*')
                 ->where('magazine_id', '=', $id)
                 ->first();
-         }else{
-        $posts = DB::table('magazine')
-                ->select('magazine.*')
-                ->where('magazine_id', '=', $id)
-                ->get();
-         }
+         
         if (!(count($posts) > 0)) {
             Session::flash('error', 'There is no such article.');
             return redirect()->intended('/dashboard');
@@ -191,13 +186,51 @@ class MagazineissueController extends Controller {
            $SelectedArticleArr = $q->where('magazine_list.m_id', $id)->where('magazine_list.status', '1')->get();
          //$SelectedArticleArr = DB::table('articles')->Leftjoin('magazine_list', 'articles.article_id', '=', 'magazine_list.a_id')->where('magazine_list.m_id', $id);
            //dd(DB::getQueryLog());
-         if($channel =='1'){
+         
         return view('magazineissue.magazineissueedite', compact('channels', 'posts', 'currentChannelId','ArticleArr','id','SelectedArticleArr'));
-         }else{
-             return view('magazineissue.magazineissueediteall', compact('channels', 'posts', 'currentChannelId'));
-         }
+         
     }
 
+     public function editmititle() {
+
+       $uid = Session::get('users')->id;
+        $rightLabel = "";
+
+        $rightId = '';
+        if (isset($_GET['id'])) {
+            $id = $_GET['id'];
+        }
+        if (isset($_GET['channel'])) {
+            $channel = $_GET['channel'];
+        }
+         
+        $posts = DB::table('magazine')
+                ->select('magazine.*')
+                ->where('magazine_id', '=', $id)
+                ->get();
+         
+        if (!(count($posts) > 0)) {
+            Session::flash('error', 'There is no such article.');
+            return redirect()->intended('/dashboard');
+        }
+
+
+        /* Right mgmt start */
+        $rightId = 77;
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
+        
+         
+        return view('magazineissue.magazineissueediteall', compact('channels', 'posts', 'currentChannelId','id'));
+         
+    }
+    
+    
+    
+    
+    
     /**
      * Update the specified resource in storage.
      *
@@ -376,6 +409,7 @@ public function mgainsert(Request $request) {
                 foreach($MagissueArticle as $articleRow) {
                     $MgArticleup = Magazineissuearticle::find($articleRow->id);
                     $MgArticleup->m_f = '1';
+                    $MgArticleup->status = '1';
                     $MgArticleup->update();
                 }
             }
@@ -398,6 +432,7 @@ public function mgainsert(Request $request) {
         if(count($mgalwarrd)> 0){
             $MgArticleup = Magazineissuearticle::find($mgalwarrd->id);
             $MgArticleup->m_lw = '1';
+            $MgArticleup->status = '1';
             $MgArticleup->update();
          }else{
             $MgArticle = new Magazineissuearticle();
@@ -417,6 +452,7 @@ public function mgainsert(Request $request) {
         if(count($mgalwarr)> 0){
             $MgArticleup = Magazineissuearticle::find($mgalwarr->id);
             $MgArticleup->m_eicn = '1';
+            $MgArticleup->status = '1';
             $MgArticleup->update();
          }else{
             $MgArticle = new Magazineissuearticle();

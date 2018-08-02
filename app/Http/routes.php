@@ -503,6 +503,7 @@ Route::match(['get', 'post'], 'featurebox/delete', ['as' => 'featurebox/delete',
 Route::get('/magazineissue', ['middleware' => 'auth',   'uses' => 'MagazineissueController@create']);
 Route::post('/magazineissue/add', ['middleware' => 'auth',   'uses' => 'MagazineissueController@store']);
 Route::match(['get', 'post'], 'magazineissue/edit', ['as' => 'magazineissue/edit', 'uses' => 'MagazineissueController@edit']);
+Route::match(['get', 'post'], 'magazineissue/editmititle', ['as' => 'magazineissue/editmititle', 'uses' => 'MagazineissueController@editmititle']);
 Route::match(['get', 'post'], 'magazineissue/delete', ['as' => 'magazineissue/delete', 'uses' => 'MagazineissueController@destroy']);
 Route::match(['get', 'post'], 'magazineissue/update', ['as' => 'magazineissue/update', 'uses' => 'MagazineissueController@update']);
 Route::match(['get', 'post'], 'magazineissuefeature/delete', ['as' => 'magazineissuefeature/delete', 'uses' => 'MagazineissueController@destroymagzinearticle']);
