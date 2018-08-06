@@ -142,7 +142,4 @@ class LiveFeedController extends Controller {
     }
     
 
-   
-
-
 }
