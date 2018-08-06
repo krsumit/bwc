@@ -59,6 +59,12 @@ class Cron {
            case 'photoshoot':
                 $this->migrateBWPhotoshoot();
                 break;
+            case 'magazine':
+                $this->migrateMagazineissue();
+                break;
+            case 'Magazineissuearticlelist':
+                $this->MagazineissueArticlelist();
+                break;
           
         endswitch;
 
