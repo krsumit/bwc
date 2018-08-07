@@ -111,16 +111,6 @@ class MagazineissueController extends Controller {
         $magazineissue->channel_id = $request->channel;
         $magazineissue->imagepath = $imageurl;
         $magazineissue->publish_date_m = date('Y-m-d', strtotime($request->publish_date_m));
-        $magazineissue->story1_title = $request->story1_title;
-        $magazineissue->story1_url = $request->story1_url;
-        $magazineissue->story2_title = $request->story2_title;
-        $magazineissue->story2_url = $request->story2_url;
-        $magazineissue->story3_title = $request->story3_title;
-        $magazineissue->story3_url = $request->story3_url;
-        $magazineissue->story4_title = $request->story4_title;
-        $magazineissue->story4_url = $request->story4_url;
-        $magazineissue->story5_title = $request->story5_title;
-        $magazineissue->story5_url = $request->story5_url;
         $magazineissue->flipbook_url = $request->flipbook_url;
         $magazineissue->buy_digital = $request->buy_digital;
         $magazineissue->valid = '1';
