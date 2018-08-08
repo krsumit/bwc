@@ -147,6 +147,8 @@ class Cron {
             case 'quoteswtbd': // Quotest what's app broadcast
                 $this->whatsAppBroadcast();
                 break;
+            case 'livefeed':
+                $this->migrateLiveFeed();
             //whatsAppBroadcast
         endswitch;
 
@@ -3767,6 +3769,50 @@ ar on ch.channel_id=ar.channel_id where ch.valid='1' and ch.channel_id=1 group b
         if(trim($dataArray->code)=='200'){
             $up_query="update quotes set whatsaap_bd=1 where quote_id=".$quotestRow['quote_id'];
             $this->conn->query($up_query);
+        }
+    }
+    
+    function migrateLiveFeed(){
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwlivefeed' order by  start_time desc limit 0,1") or die($this->conn->error);
+         $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
+        $feedResults = $this->conn->query("SELECT * FROM live_feeds where 1 $condition"); 
+        
+        if($feedResults->num_rows > 0){
+            while ($feedRow = $feedResults->fetch_assoc()) {
+                //echo '<pre>';
+                //print_r($feedRow);               
+                if(!($feedRow['deleted_at'])){
+                    $checkFeedExists=$this->conn2->query("select id from live_feeds where id=".$feedRow['id']);
+                    if ($checkFeedExists->num_rows > 0) {// Update feed
+                        $updateFeedStmt=$this->conn2->prepare("update live_feeds set article_id=?,title=?,description=?,created_at=?,updated_at=? where id=?");
+                        $updateFeedStmt->bind_param('issssi',$feedRow['article_id'],$feedRow['title'],$feedRow['description'],$feedRow['created_at'],$feedRow['updated_at'],$feedRow['id']);
+                        $updateFeedStmt->execute()or die($this->conn2->error);
+                         echo '<br>update-'.$feedRow['id']; 
+                    }else{// Insert feed
+                        $insertFeedStmt=$this->conn2->prepare("insert into live_feeds set id=?,article_id=?,title=?,description=?,created_at=?,updated_at=?");
+                        $insertFeedStmt->bind_param('iissss',$feedRow['id'],$feedRow['article_id'],$feedRow['title'],$feedRow['description'],$feedRow['created_at'],$feedRow['updated_at']);
+                        $insertFeedStmt->execute()or die($this->conn2->error);
+                         echo '<br>insert-'.$feedRow['id']; 
+                    }
+                }else{
+                     
+                     $this->conn2->query("delete from live_feeds where id=".$feedRow['id']);
+                     echo '<br>delte-'.$feedRow['id']; 
+                }
+            }            
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwlivefeed',start_time=?,end_time=?");
+        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecronstmt->execute();
+        $updatecronstmt->close();
+       // echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' bwdiffevent(s) inserted and ' . $_SESSION['noofupd'] . ' bwdevent(s) updated.</h5>';;   
         }
     }
 }

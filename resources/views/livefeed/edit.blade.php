@@ -46,6 +46,14 @@
                             "description": {
                                 required: true
                             },
+                            "article_title": {
+                                required: true,
+                                rangelength: [10, 250]
+                            },
+                            "article_summary": {
+                                required: true,
+                                rangelength: [50, 800]
+                            }
                         }
                     });
                     
@@ -126,6 +134,11 @@
         <i class="icon-big-notepad"></i>
         <h2><small>Add Live Feed</small></h2>
     </header>
+    <div style="margin-bottom:20px;margin-right:20px;text-align:right;">
+    <a href="/article/{{$article->article_id}}" >
+        <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="submit">Edit Linked Article</button>
+    </a>
+    </div>
     {!! Form::open(array('url'=>'livefeed/'.$feed->id,'class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
     {!! csrf_field() !!}
     {!! method_field('PUT') !!}
@@ -169,6 +182,38 @@
         </div>
         <!--Notifications end-->
 
+    </div>
+    
+    <div class="container-fluid">
+        <div class="form-legend" id="feed-detail">Article Details</div>
+        
+         <!--Text Area - No Resize begin-->
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="title">Title (200 Characters)</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <textarea  id="article_title" name="article_title" rows="2" class="no-resize">{{$article->title}}</textarea>
+                    
+                </div>
+            </div>
+        </div>
+        <!--Text Area - No Resize end-->
+
+        <!--Text Area Resizable begin-->
+        <div id="Text_Area_Resizable" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label">Summary (800 Characters)</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <textarea  id="article_summary" name="article_summary" rows="4" class="">{{$article->summary}}</textarea>
+                </div>
+            </div>
+        </div>
+        <!--Text Area Resizable end-->
+        
     </div>
 
     <div class="container-fluid">

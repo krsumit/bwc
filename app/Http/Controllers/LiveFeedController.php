@@ -59,9 +59,15 @@ class LiveFeedController extends Controller {
             return redirect('/dashboard');
    
         $validation = $this->validate($request, [
-            'description' => 'required'
+            'description' => 'required',
+            'article_title' => 'required|min:10|max:250',
+            'article_summary' => 'required|min:50|max:800'
         ]);
    //dd($request);
+        $article->title=$request->article_title;
+        $article->summary=$request->article_summary;
+        $article->update();
+        
         $liveFeed = new LiveFeed();
         $liveFeed->article_id = trim($request->article_id);
         $liveFeed->title = trim($request->title);
@@ -100,9 +106,15 @@ class LiveFeedController extends Controller {
             return redirect('/dashboard');
    
         $validation = $this->validate($request, [
-            'description' => 'required'
+            'description' => 'required',
+            'article_title' => 'required|min:10|max:250',
+            'article_summary' => 'required|min:50|max:800'
         ]);
    //dd($request);
+        $article->title=$request->article_title;
+        $article->summary=$request->article_summary;
+        $article->update();
+        
         $liveFeed = LiveFeed::find($request->feed_id);
         $liveFeed->article_id = trim($request->article_id);
         $liveFeed->title = trim($request->title);
