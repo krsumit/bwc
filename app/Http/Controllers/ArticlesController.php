@@ -1089,16 +1089,17 @@ public function channelarticles($option) {
             $publish_date=date('d-m-Y',strtotime($article->publish_date));
             $article_id=$article->article_id;
             $url= $channel->channelurl.'/article/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$article->title).'/'.$publish_date.'-'.$article_id.'/?utm_source=whatsapp&utm_medium=newsletter';
-            $data['message']=trim($article->title).',Read here '.$url;
+            $data['message']=trim($article->title).'<br>'.$url;
             $photo=Photo::where('owner_id','=',$article->article_id)->where('owned_by','=','article')->orderBy('sequence','asc')->first();
             if($photo){
                 $data['attachment']= config('constants.awsbaseurl').config('constants.awarticleimagelargedir').$photo->photopath;
             }
+            
             $server_output=GeneralFunctions::sendWhatsappBroadcast($data);
             $dataArray=json_decode($server_output);
             if(trim($dataArray->code)=='200'){
                 $article->whatsapp_bd='1';
-                $article->update();
+                //$article->update();
             }
         }
 
@@ -1371,7 +1372,7 @@ public function channelarticles($option) {
             $publish_date=date('d-m-Y',strtotime($article->publish_date));
             $article_id=$article->article_id;
             $url= $channel->channelurl.'/article/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$article->title).'/'.$publish_date.'-'.$article_id.'/?utm_source=whatsapp&utm_medium=newsletter';
-            $data['message']=trim($article->title).',Read here '.$url;
+            $data['message']=trim($article->title).'<br>'.$url;
             $photo=Photo::where('owner_id','=',$article->article_id)->where('owned_by','=','article')->orderBy('sequence','asc')->first();
             if($photo){
                 $data['attachment']= config('constants.awsbaseurl').config('constants.awarticleimagelargedir').$photo->photopath;
@@ -1880,4 +1881,217 @@ public function previewSet(Request $request){
     session(['description' => $request->description]);
    return response('done');
 }
+
+//
+//public function articlechannelinsertGet(Request $request) {
+//
+////        if (!Session::has('users')) {
+////            return 'Please login first.';
+////        }
+//
+//        /* Right mgmt start */
+////        $rightId = 13;
+////        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+////        $channels = $this->rightObj->getAllowedChannels($rightId);
+////        if (!$this->rightObj->checkRights($currentChannelId, $rightId)) {
+////            return 'You are not authorized to access';
+////        }
+//        /* Right mgmt end */
+//
+//        $uid = Session::get('users')->id; 
+//        //
+//        
+//       //if (isset($_POST['checkItem'])) {
+////        $ArArr = $_POST['checkItem'];
+//         $channel_selfm = 12;
+//         $channel_sel = 1;
+//         //print_r($ArArr);
+//         $ChennalArr = DB::table('channels')->where('channel_id', '=', '1')->first();
+//         $ChennalArr->channelurl;
+//         //print_r($ChennalArr);
+//         //exit();
+//         //DB::enableQueryLog();
+//       // $ArticleArr=Article::whereIn('article_id', $ArArr)->where('channel_id', '=', $channel_sel)->get();
+//        
+//          //echo 'test'; exit;
+//        //select ar.* from article_category ac inner join articles ar on ac.article_id=ar.article_id  where category_id=47334 and status='P' and ar.article_id not in (157168,156960)
+//      //DB::enableQueryLog();
+//           $ArticleArr=DB::table('article_category as ac')
+//                    ->join('articles as ar', 'ac.article_id', '=', 'ar.article_id')
+//                    ->select('ar.*')
+//                    ->where('ar.channel_id', '=', $channel_sel)
+//                    ->where('ar.status', '=', 'P')
+//                    ->where('ac.category_id', '=', '47334')
+//                    ->whereNotIn('ar.article_id', [157168,156960])
+//                    ->get();
+//      //echo 'test'; exit;
+//         
+//        // echo 'test'; exit;
+//        //$ArticleArr='';
+//        //dd(DB::getQueryLog());
+//            //print_r($ArticleArr);
+//            //exit();
+//           $i=0;
+//                foreach($ArticleArr as $articleRow) {
+//                    //dd($articleRow); exit;
+//                    $article = new Article();
+//                    // Add Arr Data to Article Table //
+//                    $publish_date=date('d-m-Y',strtotime($articleRow->publish_date));
+//                    $title=  str_replace(' ', '-', $articleRow->title);
+//                    $article->channel_id = $channel_selfm;
+//                    $article->user_id = $uid;
+//                    $article->author_type = $articleRow->author_type;
+//                    $article->is_columnist = $articleRow->is_columnist;                  
+//                    $article->title = $articleRow->title;
+//                    $article->summary = $articleRow->summary;
+//                    $article->description = $articleRow->description;
+//                    $article->country = $articleRow->country;
+//                    $article->state = $articleRow->state;
+//                    $article->news_type = $articleRow->news_type;
+//                    $article->magazine_id = $articleRow->magazine_id;                    
+//                    $article->event_id = $articleRow->event_id;
+//                    $article->canonical_options = $articleRow->canonical_options;
+//                    $article->view_count = $articleRow->view_count;
+//                    $article-> exclusive_non_featured = $articleRow->exclusive_non_featured;
+//                    $article-> featured_in_print = $articleRow->featured_in_print;
+//                    $article-> send_mail_status = $articleRow->send_mail_status;
+//                    $article-> bitly_url = $articleRow->bitly_url;
+//                    $article-> auto_published = $articleRow->auto_published;
+//                    $article->copyarticle_id = $articleRow->article_id;
+//                    if($articleRow->canonical_url!=''){
+//                    $article->canonical_url = $articleRow->canonical_url;
+//                    }else{
+//                        $article->canonical_url = $ChennalArr->channelurl.'/'. preg_replace('/([^a-zA-Z0-9_.])+/', '-',$title). '/'.$publish_date.'-'.$articleRow->article_id;
+//                        }
+//                    $article->canonical_options = 1;
+//                    $article->social_title = $articleRow->social_title;
+//                    $article->social_summary = $articleRow->social_summary;
+//                    $article->video_Id = $articleRow->video_Id;
+//                    $article->rating_point = $articleRow->rating_point;
+//                    $article->social_image = $articleRow->social_image;
+//                    $article->hide_image = $articleRow->hide_image;
+//                    $article->video_type = $articleRow->video_type;
+//                    $article->campaign_id = $articleRow->campaign_id;
+//                    $article->for_homepage = $articleRow->for_homepage;
+//                    $article->publish_date = $articleRow->publish_date;
+//                    $article->publish_time = $articleRow->publish_time;
+//                    $article->important = $articleRow->important;
+//                    $article->web_exclusive = $articleRow->web_exclusive;
+//                    $article->slug = $articleRow->slug;
+//                    $article->status = $articleRow->status;
+//                    $article->save();
+//                    $oldid= $articleRow->article_id;
+//                    //Get Article_id
+//                     $id = $article->article_id;
+//                   
+//        //DB::enableQueryLog();
+//        $channelAth=ArticleAuthor::where('article_id', $oldid)->get();
+//        //dd(DB::getQueryLog());
+//         foreach($channelAth as $authRow) {
+//        // Assignig static author if author type is online bureau
+//            $article_author = new ArticleAuthor();
+//            $article_author->article_id = $id;
+//            $article_author->channel_id = $channel_selfm;
+//            $article_author->article_author_rank = $authRow['article_author_rank'];
+//            $article_author->author_id = $authRow['author_id']; // It's fixed in for all onlien bureau
+//            $article_author->valid = $authRow['valid'];
+//            //print_r($ArticleArr);
+//             // echo   $authRow['valid'];
+//            $article_author->save();
+//        }
+//        //Article Topics - Save
+//        $channelAto=ArticleTopic::where('article_id', $oldid)->get();
+//        if (count($channelAto) > 0){
+//         foreach($channelAto as $topicRow) {
+//                $article_topics = new ArticleTopic();
+//                $article_topics->article_id = $id;
+//                $article_topics->topic_id = $topicRow['topic_id'];
+//                 //echo $topicRow['topic_id'];
+//                
+//                $article_topics->save();
+//            }
+//        }
+//        
+//        //Article Tags - Save
+//        $channelAtg=ArticleTag::where('article_id', $oldid)->get();
+//        //print_r($channelAtg);
+//        
+//        if (count($channelAtg) > 0){
+//         foreach($channelAtg as $tagRow) { 
+//                $article_tags = new ArticleTag();
+//                $article_tags->article_id = $id;
+//                $article_tags->tags_id = $tagRow['tags_id'];
+//                $article_tags->save();
+//            }
+//        }
+//
+//
+//            $CategoryArr = DB::table('category')->where('channel_id', '=', $channel_selfm)->first();
+//                   
+//            $article_category = new ArticleCategory();
+//            $article_category->article_id = $id;
+//            $article_category->category_id = $CategoryArr->category_id;
+//            $article_category->level = 1;
+//            $article_category->save();
+//         
+//
+//        //- Update article_id to respective table -//
+//        //Video table (article_id)- Save
+//        $channelVid=Video::where('owner_id', $oldid)->get();
+//        if (count($channelVid) > 0){
+//         foreach($channelVid as $VidRow) {  
+//            $objVideo = new Video();
+//            $objVideo->title = $VidRow['title'];
+//            $objVideo->code = $VidRow['code'];
+//            $objVideo->source = $VidRow['source'];
+//            $objVideo->url = $VidRow['url'];
+//            $objVideo->channel_id = $channel_selfm;
+//            $objVideo->owned_by = $VidRow['owned_by'];
+//            $objVideo->owner_id = $VidRow['owner_id'];
+//            $objVideo->added_by = $VidRow['added_by'];
+//            $objVideo->added_on = $VidRow['added_on'];
+//            $objVideo->save();
+//        }
+//
+//        }
+//         //DB::enableQueryLog();
+//         $channelpho=Photo::where('owner_id', $oldid)->get();
+//         //print_r($channelpho);
+//          //dd(DB::getQueryLog());
+//         if (count($channelpho) > 0){
+//         foreach($channelpho as $phoRow) {
+//            
+//                $articleImage = new Photo();
+//                $articleImage->photopath = $phoRow['photopath'];
+//                $articleImage->photo_by = $phoRow['photo_by'];
+//                $articleImage->title = $phoRow['title'];
+//                $articleImage->channel_id = $channel_selfm;
+//                $articleImage->description = $phoRow['description'];
+//                $articleImage->imagefullPath = $phoRow['imagefullPath'];
+//                $articleImage->sequence = $phoRow['sequence'];
+//                $articleImage->source = $phoRow['source'];
+//                $articleImage->source_url = $phoRow['source_url'];
+//                $articleImage->channel_id = $phoRow['channel_id'];
+//                $articleImage->owned_by = $phoRow['owned_by'];
+//                $articleImage->owner_id = $id;
+//                $articleImage->active = $phoRow['active'];
+//                $articleImage->created_at = $phoRow['created_at'];
+//                $articleImage->updated_at = $phoRow['updated_at'];
+//                $articleImage->save();
+//                //echo 'sumitsdsdsfsd---';
+//            }
+//           }
+//        //return redirect('/article/list/new?channel=' . $channel_selfm);
+//
+//        //return redirect('/dashboard');
+//        //return Redirect::to('/dashboard');
+//        //return view('/dashboard');
+//           $i++;
+//            }
+//            
+//        //}
+//        
+//        echo $i.'-----done';
+//    }
+//    
 }

@@ -253,7 +253,7 @@ class VideoController extends Controller
                 $publish_date=date('d-m-Y',strtotime($video->created_at));
                 $video_id=$video->id;
                 $url= $channel->channelurl.'/video/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$video->video_title).'/'.$publish_date.'-'.$video_id.'/?utm_source=whatsapp&utm_medium=newsletter';
-                $data['message']=trim($video->video_title).',Read here '.$url;
+                $data['message']=trim($video->video_title).'<br>'.$url;
 
                 $data['attachment']= config('constants.awsbaseurl').config('constants.awvideo').$video->video_name;
 
@@ -482,7 +482,7 @@ class VideoController extends Controller
             $publish_date=date('d-m-Y',strtotime($video->created_at));
             $video_id=$video->id;
             $url= $channel->channelurl.'/video/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$video->video_title).'/'.$publish_date.'-'.$video_id.'/?utm_source=whatsapp&utm_medium=newsletter';
-            $data['message']=trim($video->video_title).',Read here '.$url;
+            $data['message']=trim($video->video_title).'<br>'.$url;
           
             $data['attachment']= config('constants.awsbaseurl').config('constants.awvideo').$video->video_name;
           

@@ -66,7 +66,7 @@ if (count($articles) > 0) {
         $newsType = 1;
         $canonical_option = 1;
         $canonical_url = $article->url;
-        $stmt = $conn->prepare("insert into articles set channel_id=1,auto_published=1,user_id=1,author_type=1,is_old=0,send_mail_status=1,"
+        $stmt = $conn->prepare("insert into articles set channel_id=12,auto_published=1,user_id=1,author_type=1,is_old=0,send_mail_status=1,"
                 . "title=?,summary=?,description=?,publish_date=?,publish_time=?,status=?,created_at=?,updated_at=?,news_type=?,canonical_options=?,canonical_url=?,partner_id=?,partner_content_id=?");
         $stmt->bind_param('ssssssssiisii', $title, $summary, $description, $publishDate, $publishTime, $st, $createDate, $updateDate, $newsType, $canonical_option, $canonical_url,$partnerRow->id,$article->id);
         if ($stmt->execute()) {
@@ -81,7 +81,7 @@ if (count($articles) > 0) {
             $catstmt = $conn->prepare("insert into article_category set article_id=?,category_id=?,level=?,valid=1,created_at=?,updated_at=?");
             $catstmt->bind_param('iisss', $articleId, $categoryId, $level, $createDate, $updateDate);
             $catstmt->execute();
-            if($partnerRow->category_id!=0){
+            if($partnerRow->category_id_level_2!=0){
                 $categoryId = $partnerRow->category_id_level_2;
                 $level = 2;
                 $catstmt = $conn->prepare("insert into article_category set article_id=?,category_id=?,level=?,valid=1,created_at=?,updated_at=?");
