@@ -1099,7 +1099,7 @@ public function channelarticles($option) {
             $dataArray=json_decode($server_output);
             if(trim($dataArray->code)=='200'){
                 $article->whatsapp_bd='1';
-                //$article->update();
+                $article->update();
             }
         }
 
