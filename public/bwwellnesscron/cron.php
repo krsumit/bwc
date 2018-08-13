@@ -71,6 +71,18 @@ class Cron {
             case 'livestreaming':
                 $this->Livestreaming();
                 break;
+	    case 'quotes':
+                $this->migrateQuotes();
+                break;
+            case 'quotestag':
+                $this->migratequotesTage();
+                break;
+            case 'photoshoot':
+                $this->migratePhotoshoot();
+                break;
+            case 'quotesauthor':
+                $this->migratequotesCategory();
+                break;
             case 'sendreport': 
              //echo 'test'; exit;
             $this->generateReport();
@@ -413,6 +425,184 @@ function migrateFeature() {
         $updatecronstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . 'bwwellnesssponsorviewcount(s) inserted and ' . $_SESSION['noofupd'] . 'bwwellnesssponsorviewcount   (s) updated.</h5>';
     } 
+    
+    function migrateQuotes() {
+        $this->migratequotesTage();
+        $this->migratequotesCategory();
+        //echo 'test';
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwwellnessquotes' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
+        //echo "SELECT * FROM event  WHERE 1 $condition";exit;
+        $quotesrResults = $this->conn->query("SELECT * FROM quotes WHERE channel_id = '12'  $condition");
+        //echo $quotesrResults->num_rows;exit;
+        if ($quotesrResults->num_rows > 0) {
+
+            while ($quotesRow = $quotesrResults->fetch_assoc()) {
+                //print_r($quotesRow);exit;
+                $quotesId = $quotesRow['quote_id'];
+                // exit;
+                $checkQuotesExistResultSet = $this->conn2->query("select quote_id,quote from channel_quote where quote_id=$quotesId");
+                if ($checkQuotesExistResultSet->num_rows > 0) { //echo 'test';exit;
+                    //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
+                    if ($quotesRow['valid'] == 1) {
+
+                        $quotesUpdateStmt = $this->conn2->prepare("update channel_quote set quote=?,quote_description=?,q_author_id=?,q_tags=?,quotes_image=?,valid=?,quote_update_at=?,quote_created_at=? where quote_id=?") or die($this->conn->error);
+                        $quotesUpdateStmt->bind_param('ssississi', $quotesRow['quote'], $quotesRow['description'], $quotesRow['q_category_id'], $quotesRow['q_tags'], $quotesRow['quotes_image'], $quotesRow['valid'], $quotesRow['updated_at'], $quotesRow['created_at'], $quotesId) or die($this->conn->error);
+                        //echo $this->conn2->error;exit;
+                        $quotesUpdateStmt->execute()or die($this->conn->error);
+                        //print_r($tagUpdateStmt);exit;
+                        //echo $eventUpdateStmt->affected_rows;exit;
+                        if ($quotesUpdateStmt->affected_rows)
+                            $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                    }else {
+
+                        $delStmt = $this->conn2->prepare("delete from channel_quote where quote_id=?");
+                        $delStmt->bind_param('i', $quotesId);
+                        $delStmt->execute();
+                    }
+                } else {//echo 'goint to insert';exit;
+                    $quotesInsertStmt = $this->conn2->prepare("insert into channel_quote set quote_id=?,quote=?,quote_description=?,q_author_id=?,q_tags=?,quotes_image=?,valid=?,quote_update_at=?,quote_created_at=?");
+                    //echo $this->conn2->error; exit;
+                    $quotesInsertStmt->bind_param('issississ', $quotesRow['quote_id'], $quotesRow['quote'], $quotesRow['description'], $quotesRow['q_category_id'], $quotesRow['q_tags'], $quotesRow['quotes_image'], $quotesRow['valid'], $quotesRow['updated_at'], $quotesRow['created_at']);
+                    //print_r($tipstagcombInsertStmt);exit;
+                    //echo $tipstagcombInsertStmt->affected_rows;exit;
+                    $quotesInsertStmt->execute();
+                    //print_r($tipstagcombInsertStmt);exit;
+                    //echo $_SESSION['noofins'];
+                    //echo $tipstagcombInsertStmt->insert_id;exit;
+                    if ($quotesInsertStmt->affected_rows) {
+                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                    }
+                }
+            }
+        }
+
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwwellnessquotes',start_time=?,end_time=?");
+        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecronstmt->execute();
+        $updatecronstmt->close();
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' quotes(s) inserted and ' . $_SESSION['noofupd'] . ' quotes(s) updated.</h5>';
+    }
+
+    function migratequotesCategory() {
+        ///echo 'test';
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwwellnessquotescategory' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
+        //echo "SELECT * FROM event  WHERE 1 $condition";exit;
+        $quotescategoryrResults = $this->conn->query("SELECT * FROM quotescategory  WHERE 1 $condition");
+        //echo $quotescategoryrResults->num_rows;exit;
+        if ($quotescategoryrResults->num_rows > 0) {
+
+            while ($quotescategoryRow = $quotescategoryrResults->fetch_assoc()) {
+                //print_r($quotescategoryRow);exit;
+                $quotescategoryId = $quotescategoryRow['cate_id'];
+                // exit;
+                $checkquotesCategoryExistResultSet = $this->conn2->query("select author_id,author_name from quotesauthor where author_id=$tipscategoryId");
+                if ($checkquotesCategoryExistResultSet->num_rows > 0) { //echo 'test';exit;
+                    //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
+                    $quotescategoryUpdateStmt = $this->conn2->prepare("update quotesauthor set author_name=?,valid=? where author_id=?") or die($this->conn->error);
+                    $quotescategoryUpdateStmt->bind_param('sii', $quotescategoryRow['category'], $quotescategoryRow['valid'], $tipscategoryId) or die($this->conn->error);
+                    //echo $this->conn2->error;exit;
+                    $quotescategoryUpdateStmt->execute()or die($this->conn->error);
+                    //print_r($tagUpdateStmt);exit;
+                    //echo $eventUpdateStmt->affected_rows;exit;
+                    if ($quotescategoryUpdateStmt->affected_rows)
+                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                }else {//echo 'goint to insert';exit;
+                    $quotescategoryInsertStmt = $this->conn2->prepare("insert into quotesauthor set author_id=?,author_name=?,valid=?");
+                    //echo $this->conn2->error; exit;
+                    $quotescategoryInsertStmt->bind_param('isi', $quotescategoryRow['cate_id'], $quotescategoryRow['category'], $quotescategoryRow['valid']);
+                    //print_r($tipstagcombInsertStmt);exit;
+                    //echo $tipstagcombInsertStmt->affected_rows;exit;
+                    $quotescategoryInsertStmt->execute();
+                    //print_r($tipstagcombInsertStmt);exit;
+                    //echo $_SESSION['noofins'];
+                    //echo $tipstagcombInsertStmt->insert_id;exit;
+                    if ($quotescategoryInsertStmt->affected_rows) {
+                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                    }
+                }
+            }
+        }
+
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwwellnessquotescategory',start_time=?,end_time=?");
+        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecronstmt->execute();
+        $updatecronstmt->close();
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' quotescategory(s) inserted and ' . $_SESSION['noofupd'] . ' quotescategory(s) updated.</h5>';
+    }
+
+    function migratequotesTage() {
+        ///echo 'test';
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwwellnessquotetags' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
+        //echo "SELECT * FROM quotetags  WHERE 1 $condition"; 
+        $tagrResults = $this->conn->query("SELECT * FROM quotetags  WHERE 1 $condition");
+        //echo $eventrResults->num_rows;exit;
+        //echo '--'.$tagrResults->num_rows; exit;
+        if ($tagrResults->num_rows > 0) {
+
+            while ($tagRow = $tagrResults->fetch_assoc()) {
+                //print_r($tagRow);
+                $tagtId = $tagRow['tag_id'];
+                // echo "select tag_id,tag from quotetags where tag_id=$tagtId"; exit;
+                $checkTagExistResultSet = $this->conn2->query("select tag_id,tag from quotetags where tag_id=$tagtId");
+                if ($checkTagExistResultSet->num_rows > 0) { //echo 'test';exit;
+                    //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
+                    $tagUpdateStmt = $this->conn2->prepare("update quotetags set tag=?,valid=? where tag_id=?") or die($this->conn->error);
+                    $tagUpdateStmt->bind_param('sii', $tagRow['tag'], $tagRow['valid'], $tagtId) or die($this->conn->error);
+                    //echo $this->conn2->error;exit;
+                    $tagUpdateStmt->execute()or die($this->conn->error);
+                    //print_r($tagUpdateStmt);exit;
+                    //echo $eventUpdateStmt->affected_rows;exit;
+                    if ($tagUpdateStmt->affected_rows)
+                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                }else {//echo 'goint to insert';exit;
+                    $tagInsertStmt = $this->conn2->prepare("insert into quotetags set tag_id=?,tag=?,valid=?");
+                    //echo $this->conn2->error; exit;
+                    $tagInsertStmt->bind_param('isi', $tagRow['tags_id'], $tagRow['tag'], $tagRow['valid']);
+                    $tagInsertStmt->execute();
+                    if ($tagInsertStmt->affected_rows) {
+                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                    }
+                }
+            }
+        }
+        //        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' quotetags(s) inserted and ' . $_SESSION['noofupd'] . ' quotetags(s) updated.</h5>';
+        //echo 'here'; exit;
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwwellnessquotetags',start_time=?,end_time=?");
+        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecronstmt->execute();
+        $updatecronstmt->close();
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' quotetags(s) inserted and ' . $_SESSION['noofupd'] . ' quotetags(s) updated.</h5>';
+    }
+    
+    
+    
     
     function Articleviewcount() {
 	///echo 'test';
