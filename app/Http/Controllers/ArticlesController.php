@@ -1089,7 +1089,7 @@ public function channelarticles($option) {
             $publish_date=date('d-m-Y',strtotime($article->publish_date));
             $article_id=$article->article_id;
             $url= $channel->channelurl.'/article/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$article->title).'/'.$publish_date.'-'.$article_id.'/?utm_source=whatsapp&utm_medium=newsletter';
-            $data['message']=trim($article->title).'<br>'.$url;
+            $data['message']=trim($article->title).'  '.$url;
             $photo=Photo::where('owner_id','=',$article->article_id)->where('owned_by','=','article')->orderBy('sequence','asc')->first();
             if($photo){
                 $data['attachment']= config('constants.awsbaseurl').config('constants.awarticleimagelargedir').$photo->photopath;
@@ -1372,7 +1372,7 @@ public function channelarticles($option) {
             $publish_date=date('d-m-Y',strtotime($article->publish_date));
             $article_id=$article->article_id;
             $url= $channel->channelurl.'/article/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$article->title).'/'.$publish_date.'-'.$article_id.'/?utm_source=whatsapp&utm_medium=newsletter';
-            $data['message']=trim($article->title).'<br>'.$url;
+            $data['message']=trim($article->title).'  '.$url;
             $photo=Photo::where('owner_id','=',$article->article_id)->where('owned_by','=','article')->orderBy('sequence','asc')->first();
             if($photo){
                 $data['attachment']= config('constants.awsbaseurl').config('constants.awarticleimagelargedir').$photo->photopath;
