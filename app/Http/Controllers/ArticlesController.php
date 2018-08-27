@@ -165,11 +165,12 @@ class ArticlesController extends Controller {
         return view('articles.' . $option, compact('articles', 'editor', 'channels', 'currentChannelId'));
     }
 
-    function imageUpload() {
+    function imageUpload(){
 
-        //  echo 'test';exit;
+         
         $arg['script_url'] = url('article/image/upload');
         $upload_handler = new UploadHandler($arg);
+        
     }
 
     function imageEdit(Request $request) {  
@@ -401,7 +402,7 @@ public function channelarticles($option) {
         }
 
         DB::table('articles')
-                ->where('id', $id)
+                ->where('article_id', $id)
                 ->update(['updated_at' => date('Y:m:d H:i:s')]);
     }
 

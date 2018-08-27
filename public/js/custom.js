@@ -122,6 +122,13 @@ $('body').find("#image_tags").tokenInput("/tags/getJson", {
 }, 1000);
 
 }
+
+function editModelImage(id){
+    BootstrapDialog.show({
+    title: 'Edit image detail',
+            message: $('<div class="devest"></div>').load('/brand-models/image/edit?id=' + id)
+    });    
+}
 // FUNCTIONS FOR QUICKBYTE RELATED IMAGE
 
 function searchRelatedImageQb(pageNo) {

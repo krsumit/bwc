@@ -5,8 +5,13 @@ use Illuminate\Support\Facades\DB;
 
 class GeneralFunctions {
 
-    public static function clearFileName($name) {
-        return $name;
+    public static function cleanFileName($name) {
+       // echo $name; exit;
+        $pos=strrpos($name,'.');
+        $fileName=substr($name,0,$pos);
+        $extension=substr($name,$pos+1);
+        $fileName=preg_replace('/([^a-zA-Z0-9]){1,}/', '_',$fileName);
+        return str_random(6).'_'.$fileName.'.'.$extension;
     }
     
     public static function sendWhatsappBroadcast($data){  
@@ -33,5 +38,6 @@ class GeneralFunctions {
 //        }
         
     }
+    
     
 }

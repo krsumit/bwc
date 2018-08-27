@@ -1,5 +1,6 @@
 <?php
 namespace App\Classes;
+use App\Classes\GeneralFunctions;
 /*
  * jQuery File Upload Plugin PHP Class
  * https://github.com/blueimp/jQuery-File-Upload
@@ -1062,8 +1063,7 @@ class UploadHandler
     protected function handle_file_upload($uploaded_file, $name, $size, $type, $error,
             $index = null, $content_range = null) {
         $file = new \stdClass();
-        $file->name = time().'_'.str_random(6).'_'.str_replace(' ','_',$this->get_file_name($uploaded_file, $name, $size, $type, $error,
-            $index, $content_range));
+        $file->name = time().'_'.GeneralFunctions::cleanFileName(str_replace(' ','_',$this->get_file_name($uploaded_file, $name, $size, $type, $error,$index, $content_range)));
         $file->size = $this->fix_integer_overflow((int)$size);
         $file->type = $type;
         if ($this->validate($uploaded_file, $file, $error, $index)) {
@@ -1112,6 +1112,7 @@ class UploadHandler
         return $file;
     }
 
+    
     protected function readfile($file_path) {
         $file_size = $this->get_file_size($file_path);
         $chunk_size = $this->options['readfile_chunk_size'];

@@ -49,7 +49,9 @@ return [
 'awscampainimg'=> 'campainimg/',
 'awvideothumb_small'=> 'mastervideothumb/thumb/',    
 'awsstaticimage'=> 'static/images/',
-'awsupload'=> 'upload/',     
+'awsupload'=> 'upload/',
+'aws_brand_logo'=>'brand_logo/', 
+'aws_model_image'=>'model_image/',     
 'debatefeatured'=>'debate/featuredimage/',
 'debateexpert'=>'debate/expertimage/',
 'eventstreaming'=>'eventstreaming/',
@@ -71,6 +73,7 @@ return [
 'dimension_debate_expert'=>'126X95', 
 'dimension_magz'=>'328X450',
 'dimension_video'=>'680X370',
+'dimension_brand_logo'=>'200X200',    
 'ee_rating_cateogy_id'=>'47025',
 'sitename'=>'BWCMS'
 ];

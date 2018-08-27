@@ -449,7 +449,17 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('attendee/get-json','EventSpeakerController@returnSpeakerJson');
     Route::resource('attendee','EventSpeakerController');
     Route::resource('event/streaming','EventStreamingController');
-    Route::resource('livefeed','LiveFeedController');    
+    Route::resource('livefeed','LiveFeedController');
+    
+    Route::get('brand-models/image/edit','BrandModelController@imageEdit');
+    Route::post('brand-models/image/update','BrandModelController@storeImageDetail');
+    Route::post('brand-models/sort/{id}','BrandModelController@sortImage');
+    Route::post('brand-models/update','BrandModelController@update');
+    Route::post('brand-models/deleteImage','BrandModelController@deleteImage');
+    Route::resource('brand-models','BrandModelController');
+       
+    Route::resource('brands','BrandController');
+    Route::resource('product-types','ProductTypeController');
 });    
 
 /* 

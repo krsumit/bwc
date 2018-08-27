@@ -575,6 +575,50 @@
                 </div>
             </li>
             @endif
+            
+            @if(count(array_diff(array('113','114','115','116','117','118','119','120'), Session::get('user_rights'))) != count(array('113','114','115','116','117','118','119','120')))	
+            <li>
+                <a href="javascript:;" class="sub-nav-container">
+                    <i class="icon-photon book"></i>
+                    <span class="nav-selection">Product</span>
+                    <i class="icon-menu-arrow"></i>                </a>
+                <div class="sub-nav">
+                    <ul class="nav">
+                        @if(in_array('113',Session::get('user_rights')))
+                        <li>
+                            <a href="/brands">Manage Brands</a>
+                        </li>
+                        @endif
+                        @if(in_array('115',Session::get('user_rights')))
+                        <li>
+                            <a href="/product-types">Manage product Types</a>
+                        </li>
+                        @endif
+                        @if(in_array('117',Session::get('user_rights')))                        
+                        <li>
+                            <a href="/brand-models">Manage Models</a>
+                        </li>
+                        @endif
+                        @if(in_array('119',Session::get('user_rights')))
+                        <li>
+                            <a href="/attributes">Manage Attributes</a>
+                        </li>
+                        @endif
+                        @if(in_array('121',Session::get('user_rights')))
+                        <li>
+                            <a href="/attribute-groups">Manage Attribute Groups</a>
+                        </li>
+                        @endif
+                         @if(in_array('123',Session::get('user_rights')))
+                        <li>
+                            <a href="/products">Manage Products</a>
+                        </li>
+                        @endif
+                        
+                    </ul>
+                </div>
+            </li>
+            @endif
         <li class="nav-logout">
                 <a href="/auth/logout">
                     <i class="icon-photon key_stroke"></i><span class="nav-selection">Logout</span>
