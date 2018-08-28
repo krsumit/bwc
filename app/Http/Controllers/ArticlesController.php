@@ -1607,6 +1607,8 @@ public function articlechannelinsert(Request $request) {
                 
                 $article_topics->save();
             }
+            
+            
         }
         
         //Article Tags - Save
