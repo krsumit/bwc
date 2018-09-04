@@ -66,6 +66,10 @@ class Cron {
             case 'magazine':
                 $this->migrateBwMagazineissue();
                  break;
+            case 'Magazineissuearticlelist':
+                $this->MagazineissueArticlelist();
+                break; 
+             
             case 'livestreaming':
                 $this->Livestreaming();
                 break;
@@ -1878,6 +1882,58 @@ function migrateMasterNewsLetter() {
         $updatecronstmt->close();
         echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' livestreaming(s) inserted and ' . $_SESSION['noofupd'] . ' livestreaming(s) updated.</h5>';
     }
+    
+  // Migrate magazine article
+    function MagazineissueArticlelist() {
+        //echo 'sumit';exit;
+        $_SESSION['noofins'] = 0;
+        $_SESSION['noofupd'] = 0;
+        $conStartTime = date('Y-m-d H:i:s');
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhotmagazineissueArticlelist' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $condition = '';
+        if ($cronresult->num_rows > 0) {
+            $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
+            // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
+        }
+
+        $magazineissueArticlelistResults = $this->conn->query("SELECT * FROM magazine_list where channel_id=$this->channelId $condition");
+        //echo $magazineissueArticlelistResults->num_rows; exit;
+        if ($magazineissueArticlelistResults->num_rows > 0) {
+
+            while ($magazineissueArticlelistRow = $magazineissueArticlelistResults->fetch_assoc()) {
+                //print_r($magazineissueArticlelistRow); exit;
+                $magazineissueArticlelistId = $magazineissueArticlelistRow['id'];
+                $checkmagazineissueArticlelistExistResultSet = $this->conn2->query("select * from magazine_list where id=$magazineissueArticlelistId");
+                if ($checkmagazineissueArticlelistExistResultSet->num_rows > 0) { //echo 'going to update';exit;  
+                    //Array ( [id] => 161 [tag] => anuradha parthasarathy [valid] => 1 )
+                    $magazineissueArticlelistUpdateStmt = $this->conn2->prepare("update magazine_list set m_id=?,a_id=?,m_f=?,m_lw=?,m_eicn=?,created_at=?,updated_at=?,status=? where id=?");
+                    $magazineissueArticlelistUpdateStmt->bind_param('iiiiissii', $magazineissueArticlelistRow['m_id'], $magazineissueArticlelistRow['a_id'], $magazineissueArticlelistRow['m_f'], $magazineissueArticlelistRow['m_lw'], $magazineissueArticlelistRow['m_eicn'], $magazineissueArticlelistRow['created_at'],$magazineissueArticlelistRow['updated_at'],$magazineissueArticlelistRow['status'],$magazineissueArticlelistId);
+                    $magazineissueArticlelistUpdateStmt->execute();
+                    if ($magazineissueArticlelistUpdateStmt->affected_rows)
+                        $_SESSION['noofupd'] = $_SESSION['noofupd'] + 1;
+                      //$_SESSION['noofupd'].'sumit';
+                }else {
+                    //echo 'sumit'; exit;
+                    $magazineissueArticlelistInsertStmt = $this->conn2->prepare("insert into magazine_list set id=?, m_id=?,a_id=?,m_f=?,m_lw=?,m_eicn=?,created_at=?,updated_at=?,status=?");
+                    //echo $this->conn2->error; exit;
+                    $magazineissueArticlelistInsertStmt->bind_param('iiiiiissi', $magazineissueArticlelistId,$magazineissueArticlelistRow['m_id'], $magazineissueArticlelistRow['a_id'], $magazineissueArticlelistRow['m_f'], $magazineissueArticlelistRow['m_lw'], $magazineissueArticlelistRow['m_eicn'], $magazineissueArticlelistRow['created_at'],$magazineissueArticlelistRow['updated_at'],$magazineissueArticlelistRow['status']);
+                    $magazineissueArticlelistInsertStmt->execute();
+                    if ($magazineissueArticlelistInsertStmt->affected_rows) {
+                        $_SESSION['noofins'] = $_SESSION['noofins'] + 1;
+                    }
+                }
+            }
+        }
+
+        $cronEndTime = date('Y-m-d H:i:s');
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhotmagazineissueArticlelist',start_time=?,end_time=?");
+        $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
+        $updatecronstmt->execute();
+        $updatecronstmt->close();
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' magazineissueArticlelist(s) inserted and ' . $_SESSION['noofupd'] . ' magazineissueArticlelist(s) updated.</h5>';
+    }
+  
+    
 
 }
 
