@@ -8,6 +8,9 @@ use App\Right;
 use Auth;
 use App\Brand;
 use App\ProductType;
+use App\AttributeGroup;
+use App\Attribute;
+use App\AttributeGroupAttribute;
 use Session;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -106,14 +109,70 @@ class ProductTypeController extends Controller {
      * @return Response
      */
     public function show($id){
+       $productType=  ProductType::find($id);
+       $attributeGroups=AttributeGroup::where('product_type_id','=',$id)->get();
+       $groupAttributes=  AttributeGroup::leftJoin('attribute_group_attributes','attribute_groups.id','=','attribute_group_attributes.attribute_group_id')->select(DB::raw('attribute_groups.id,attribute_groups.name,group_concat(attribute_group_attributes.attribute_id) as group_attributes'))->where('attribute_groups.product_type_id','=',$id)->groupBy('attribute_groups.id')->get();
+       //dd($groupAttributes);
+       $groupAttributesArray=array();
+       $assignedAttributes=array();
+       foreach($groupAttributes as $groupAttribute){
+           $groupAttributesArray[$groupAttribute->id]=explode(',',$groupAttribute->group_attributes);
+           $assignedAttributes=array_merge($assignedAttributes,explode(',',$groupAttribute->group_attributes));
+       }
        
+       $unassingedAttributes= Attribute::whereNotIn('id',$assignedAttributes)->get();
+       $assignedAttributesDetail=  Attribute::whereIn('id',$assignedAttributes)->select('name','id')->get();
+       $assignedAttributesDetail=$assignedAttributesDetail->pluck('name','id');
+       //print_r($assignedAttributesDetail);exit;
+      return view('producttype.manage_attribute',compact('productType','unassingedAttributes','attributeGroups','groupAttributesArray','assignedAttributesDetail'));
     }
   
+    public function storeAttribute(Request $request){
+       //dd($request); //AttributeGroupAttribute
+        $id=$request->product_type_id;
+        $attributeGroups=AttributeGroup::where('product_type_id','=',$id)->get();
+        $groupAttributes=  AttributeGroup::leftJoin('attribute_group_attributes','attribute_groups.id','=','attribute_group_attributes.attribute_group_id')->select(DB::raw('attribute_groups.id,attribute_groups.name,group_concat(attribute_group_attributes.attribute_id) as group_attributes'))->where('attribute_groups.product_type_id','=',$id)->groupBy('attribute_groups.id')->get();
+        //dd($request->attr_group);
+        $allAttributes=array();
+        $allGroup=array();
+        foreach($request->attr_group as $key => $grp){
+            $allAttributes=array_merge($allAttributes,$grp);
+            $allGroup[]=$key;
+        }
+        
+        foreach($groupAttributes as $groupAttribute){
+            $existingGroupAttr=array_filter(explode(',',$groupAttribute->group_attributes));
+            $newGroupAttr=$request->attr_group[$groupAttribute->id];
+            // Delete old attribute from Group
+            AttributeGroupAttribute::where('attribute_group_id','=',$groupAttribute->id)->whereNotIn('attribute_id',$newGroupAttr)->whereNotIn('attribute_id',$allAttributes)->forceDelete();
+            // Delete old attribute from product
+            
+
+            //Add new attribute in group or change group
+            $newAttributes=array_diff($newGroupAttr,$existingGroupAttr);
+            foreach($newAttributes as $newAttribute){
+                
+                $checkAtt=  AttributeGroupAttribute::where('attribute_id',$newAttribute)->whereIn('attribute_group_id',$allGroup)->first();
+                if($checkAtt){ // If attribute already exist change group
+                    $groupAtt=AttributeGroupAttribute::find($checkAtt->id);
+                    $groupAtt->attribute_group_id=$groupAttribute->id;
+                    $groupAtt->update();
+                }else{ // If new add attribute in group
+                    $groupAtt=new AttributeGroupAttribute();
+                    $groupAtt->attribute_group_id=$groupAttribute->id;
+                    $groupAtt->attribute_id=$newAttribute;
+                    $groupAtt->save(); 
+                }
+                   
+            }
+        }
+         return Redirect::to('product-types');
+    }
     
     public function destroy(Request $request){
         //dd($request);
         ProductType::whereIn('id',$request->checkItem)->delete();
         Session::flash('message', 'Product Type(s) deleted successfully.');
-        return Redirect::to('product-types/');
+        return Redirect::to('product-types');
     }
 }

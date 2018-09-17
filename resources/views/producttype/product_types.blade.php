@@ -106,6 +106,8 @@
                                 <tr class="gradeX" id="rowCur{{$productType->id}}">
                                     <td><a href="/product-types/{{$productType->id}}/edit">{{$productType->id}}</a> </td>
                                     <td><a href="/product-types/{{$productType->id}}/edit">{{$productType->name}}</a></td>
+                                     <td><a href="/product-types/{{$productType->id}}"><button class="btn btn-default"  type="button">Assign Attribute</button></a>
+                                     </td>
                                    <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$productType->id}}" name="checkItem[]"></td>
                                 </tr>
                                 @endforeach

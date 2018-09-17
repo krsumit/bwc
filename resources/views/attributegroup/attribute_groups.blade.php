@@ -1,14 +1,11 @@
 @extends('layouts/master')
-
-@section('title', 'Models - BWCMS')
-
-
+@section('title', 'Attribute Groups - BWCMS')
 @section('content') 
 <div class="panel">
     <div class="panel-content filler">
         <div class="panel-logo"></div>
         <div class="panel-header">
-            <h1><small>Models</small></h1>
+            <h1><small>Attribute Groups</small></h1>
 
         </div>
         <div class="panel-search container-fluid">
@@ -20,11 +17,12 @@
                  <button type="submit" class="btn btn-info">Search</button>
                 <!--                <button class="btn btn-search" type="submit"></button>-->
                 @if(isset($_GET['keyword'])) 
-                <a href="/brand-models"><button class="btn btn-default" type="button">Reset</button></a>
+                <a href="/attribute-groups"><button class="btn btn-default" type="button">Reset</button></a>
                 @endif
 
             </form>
         </div>
+
         <div class="panel-header">
     <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
         </div> 
@@ -45,16 +43,16 @@
                 </a>
             </li>
             <li class="current">
-                <a href="javascript:;">Models</a>
+                <a href="javascript:;">Attribute Groups</a>
             </li>
         </ul>
     </div>           <header>
         <i class="icon-big-notepad"></i>
-        <h2><small>Models</small></h2>
+        <h2><small>Attribute Groups</small></h2>
     </header>
    <div style="margin-bottom:20px;margin-right:20px;text-align:right;">
-        <a href="/brand-models/create" >
-            <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="submit">Create Model</button>
+        <a href="/attribute-groups/create" >
+            <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="submit">Create Attribute Group</button>
         </a>
     </div>
   
@@ -85,8 +83,8 @@
             <!--Notifications end-->
 
         </div>
-        @if(count($brandModels)>0)
-            {!! Form::open(array('url'=>'brand-models/'.$brandModels[0]->id,'class'=> 'form-horizontal','id'=>'list_from','enctype'=>'multipart/form-data')) !!}
+        @if(count($groups)>0)
+            {!! Form::open(array('url'=>'attribute-groups/'.$groups[0]->id,'class'=> 'form-horizontal','id'=>'group_list_from','enctype'=>'multipart/form-data')) !!}
             {!! csrf_field() !!}
             {!! method_field('DELETE') !!}  
             <div class="container-fluid">
@@ -97,21 +95,19 @@
                         <table class="table table-striped" id="tableSortable">
                             <thead>
                                 <tr>
-                                    <th>Model ID</th>
-                                    <th>Title</th>
+                                    <th>Group ID</th>
+                                    <th>Name</th>
+                                    <th>Product Type</th>
                                     <th><input type="checkbox" class="uniformCheckbox" value="checkbox1"  id="selectall"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($brandModels as $brandModel)
-                                <tr class="gradeX" id="rowCur{{$brandModel->id}}">
-                                    <td><a href="/brand-models/{{$brandModel->id}}/edit">{{$brandModel->id}}</a> </td>
-                                    <td><a href="/brand-models/{{$brandModel->id}}/edit">{{$brandModel->name}}</a></td>
-                                    <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$brandModel->id}}" name="checkItem[]">
-                                    <a href="/products/{{$brandModel->id}}">
-                                            <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="button">Manage Products</button>
-                                    </a>
-                                    </td>
+                                @foreach($groups as $group)
+                                <tr class="gradeX" id="rowCur{{$group->id}}">
+                                    <td><a href="/attribute-groups/{{$group->id}}/edit">{{$group->id}}</a> </td>
+                                    <td><a href="/attribute-groups/{{$group->id}}/edit">{{$group->name}}</a></td>
+                                    <td><a href="/product-types/{{$group->id}}/edit">{{$group->type_name}}</a></td>
+                                    <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$group->id}}" name="checkItem[]"></td>
                                 </tr>
                                 @endforeach
 
@@ -122,7 +118,7 @@
                 <!--Sortable Non-responsive Table end-->
 
                 <div class="dataTables_paginate paging_bootstrap pagination">
-                    {!! $brandModels->appends(Input::get())->render() !!}
+                    {!! $groups->appends(Input::get())->render() !!}
                 </div>
                 <script>
                     $(document).ready(function () {
@@ -130,7 +126,7 @@
                             bInfo: false,
                             bPaginate: false,
                             "aaSorting": [],
-                            "aoColumnDefs": [{"bSortable": false, "aTargets": [2]}],
+                            "aoColumnDefs": [{"bSortable": false, "aTargets": [3]}],
                             "fnInitComplete": function () {
                                 $(".dataTables_wrapper select").select2({
                                     dropdownCssClass: 'noSearch'
@@ -153,14 +149,14 @@
                     });
 
 
-                    function deleteRecord() {
+                    function deleteGroup() {
                             var ids = '';
                             var checkedVals = $('input[name="checkItem[]"]:checkbox:checked').map(function () {
                                 return this.value;
                             }).get();
                             if (checkedVals.length > 0) {
                                 var ids = checkedVals.join(",");
-                                $('#list_from').submit();
+                                $('#group_list_from').submit();
 
                             } else {
                                 alert('Please select at least one record.');
@@ -172,7 +168,7 @@
             </div><!-- end container -->
             <div class="control-group row-fluid">
                 <div class="span12 span-inset">
-                    <button type="button" onclick="deleteRecord()" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>							
+                    <button type="button" onclick="deleteGroup()" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>							
                 </div>
             </div>
             {!! Form::close() !!}

@@ -579,7 +579,7 @@
             @if(count(array_diff(array('113','114','115','116','117','118','119','120'), Session::get('user_rights'))) != count(array('113','114','115','116','117','118','119','120')))	
             <li>
                 <a href="javascript:;" class="sub-nav-container">
-                    <i class="icon-photon book"></i>
+                    <i class="icon-photon iphone"></i>
                     <span class="nav-selection">Product</span>
                     <i class="icon-menu-arrow"></i>                </a>
                 <div class="sub-nav">

@@ -458,8 +458,16 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('brand-models/deleteImage','BrandModelController@deleteImage');
     Route::resource('brand-models','BrandModelController');
        
+    Route::resource('attributes','AttributeController');
+    Route::resource('attribute-groups','AttributeGroupController');
+    Route::resource('attribute-values','AttributeValueController');
     Route::resource('brands','BrandController');
+    Route::resource('products','ProductController');
+    
+    Route::post('product-types/attribute/store','ProductTypeController@storeAttribute');    
     Route::resource('product-types','ProductTypeController');
+    
+    
 });    
 
 /* 

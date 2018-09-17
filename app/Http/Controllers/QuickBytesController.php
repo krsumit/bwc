@@ -7,9 +7,7 @@ use App\Right;
 use DB;
 use Session;
 use App\QuickByte;
-use App\PhotoTag;
-use App\Channel;
-use App\Http\Requests;  
+use App\Http\Requests;
 use App\Http\Controllers\Auth;
 use App\Http\Controllers\AuthorsController;
 use App\Http\Controllers\Controller;
@@ -20,7 +18,6 @@ use App\Classes\UploadHandler;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 use App\Classes\FileTransfer;
-use App\Classes\GeneralFunctions;
 
 
 class QuickBytesController extends Controller {
@@ -197,7 +194,7 @@ class QuickBytesController extends Controller {
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
-        
+
         /* Right mgmt start */
         $rightId = 23;
         $currentChannelId = $request->channel;
@@ -258,36 +255,6 @@ class QuickBytesController extends Controller {
             $quick_category->save();
         }
 
-        if ($request->get('rimage')) {
-           
-            foreach ($request->get('rimage') as $key => $value) {
-                $oldPhoto = Photo::find($key);
-                $qbImage = new Photo();
-                $qbImage->photopath = $oldPhoto->photopath;
-                $qbImage->photo_by = $value;
-                $qbImage->title = isset($request->rtitle[$key]) ? $request->rtitle[$key] : '';
-                $qbImage->description = isset($request->rdesc[$key]) ? $request->rdesc[$key] : '';
-                $qbImage->channel_id = $request->channel;
-                $qbImage->owned_by = 'quickbyte';
-                $qbImage->owner_id = $id;
-                $qbImage->active = '1';
-                $qbImage->created_at = date('Y-m-d H:i:s');
-                $qbImage->updated_at = date('Y-m-d H:i:s');
-                $qbImage->save();
-                
-                $tagArray=  explode(',',$request->rimage_tags[$key]);
-                $tagArray=array_filter($tagArray);
-                if(count($tagArray)){
-                    foreach($tagArray as $tag_id){
-                        $photoTag=new PhotoTag();
-                        $photoTag->photo_id=$qbImage->photo_id;
-                        $photoTag->tag_id=$tag_id;
-                        $photoTag->save();
-                    }                    
-                }
-                // echo $key; exit;
-            }
-        }
 
 
         $images = explode(',', $request->uploadedImages);
@@ -311,9 +278,7 @@ class QuickBytesController extends Controller {
                     unlink($source_thumb);
                 $imageEntry = new Photo();
                 $imageEntry->title = $request->imagetitle[$image];
-                
                 $imageEntry->description = $request->imagedesc[$image];
-                
                 $imageEntry->photo_by = $request->photographby[$image];
                 $imageEntry->photopath = $image;
                 $imageEntry->imagefullPath = '';
@@ -324,38 +289,6 @@ class QuickBytesController extends Controller {
                 $imageEntry->created_at = date('Y-m-d H:i:s');
                 $imageEntry->updated_at = date('Y-m-d H:i:s');
                 $imageEntry->save();
-                
-                $tagArray=  explode(',',$request->photograph_tags[$image]);
-                $tagArray=array_filter($tagArray);
-                
-                if(count($tagArray)){
-                    foreach($tagArray as $tag_id){
-                            $photoTag=new PhotoTag();
-                            $photoTag->photo_id=$imageEntry->photo_id;
-                            $photoTag->tag_id=$tag_id;
-                            $photoTag->save();
-                    }                    
-                }
-            }
-        }
-        
-        
-         //Whatsapp broadcast
-        if($request->whatsapp_bd){
-            $channel=Channel::find($request->channel);
-            $publish_date=date('d-m-Y',strtotime($quickbyte->publish_date));
-            $qb_id=$quickbyte->id;
-            $url= $channel->channelurl.'/quickbytes/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$quickbyte->title).'/'.$publish_date.'-'.$qb_id.'/?utm_source=whatsapp&utm_medium=newsletter';
-            $data['message']=trim($quickbyte->title).'  '.$url;
-            $photo=Photo::where('owner_id','=',$quickbyte->id)->where('owned_by','=','quickbyte')->orderBy('sequence','asc')->first();
-            if($photo){
-                $data['attachment']= config('constants.awsbaseurl').config('constants.awquickbytesimagemediumdir').$photo->photopath;
-            }
-            $server_output=GeneralFunctions::sendWhatsappBroadcast($data);
-            $dataArray=json_decode($server_output);
-            if(trim($dataArray->code)=='200'){
-                $quickbyte->whatsapp_bd='1';
-                $quickbyte->update();
             }
         }
 
@@ -539,36 +472,7 @@ class QuickBytesController extends Controller {
             $quick_category->category_level = $i;
             $quick_category->save();
         }
-         if ($request->get('rimage')) {
-           
-            foreach ($request->get('rimage') as $key => $value) {
-                $oldPhoto = Photo::find($key);
-                $qbImage = new Photo();
-                $qbImage->photopath = $oldPhoto->photopath;
-                $qbImage->photo_by = $value;
-                $qbImage->title = isset($request->rtitle[$key]) ? $request->rtitle[$key] : '';
-                $qbImage->description = isset($request->rdesc[$key]) ? $request->rdesc[$key] : '';
-                $qbImage->channel_id = $request->channel;
-                $qbImage->owned_by = 'quickbyte';
-                $qbImage->owner_id = $id;
-                $qbImage->active = '1';
-                $qbImage->created_at = date('Y-m-d H:i:s');
-                $qbImage->updated_at = date('Y-m-d H:i:s');
-                $qbImage->save();
-                
-                $tagArray=  explode(',',$request->rimage_tags[$key]);
-                $tagArray=array_filter($tagArray);
-                if(count($tagArray)){
-                    foreach($tagArray as $tag_id){
-                        $photoTag=new PhotoTag();
-                        $photoTag->photo_id=$qbImage->photo_id;
-                        $photoTag->tag_id=$tag_id;
-                        $photoTag->save();
-                    }                    
-                }
-                // echo $key; exit;
-            }
-        }
+
 
         $images = explode(',', $request->uploadedImages);
         //fwrite($asd, "Each Photo Being Updated".count($arrIds)." \n");
@@ -603,40 +507,8 @@ class QuickBytesController extends Controller {
                 $imageEntry->created_at = date('Y-m-d H:i:s');
                 $imageEntry->updated_at = date('Y-m-d H:i:s');
                 $imageEntry->save();
-                
-                $tagArray=  explode(',',$request->photograph_tags[$image]);
-                $tagArray=array_filter($tagArray);
-                if(count($tagArray)){
-                    foreach($tagArray as $tag_id){
-                        $photoTag=new PhotoTag();
-                        $photoTag->photo_id=$imageEntry->photo_id;
-                        $photoTag->tag_id=$tag_id;
-                        $photoTag->save();
-                    }                    
-                }
-                
             }
         }
-        
-        //Whatsapp broadcast
-        if($request->whatsapp_bd){
-            $channel=Channel::find($request->channel);
-            $publish_date=date('d-m-Y',strtotime($quickbyte->publish_date));
-            $qb_id=$quickbyte->id;
-            $url= $channel->channelurl.'/quickbytes/'.preg_replace('/([^a-zA-Z0-9]){1,}/', '-',$quickbyte->title).'/'.$publish_date.'-'.$qb_id.'/?utm_source=whatsapp&utm_medium=newsletter';
-            $data['message']=trim($quickbyte->title).'  '.$url;
-            $photo=Photo::where('owner_id','=',$quickbyte->id)->where('owned_by','=','quickbyte')->orderBy('sequence','asc')->first();
-            if($photo){
-                $data['attachment']= config('constants.awsbaseurl').config('constants.awquickbytesimagemediumdir').$photo->photopath;
-            }
-            $server_output=GeneralFunctions::sendWhatsappBroadcast($data);
-            $dataArray=json_decode($server_output);
-            if(trim($dataArray->code)=='200'){
-                $quickbyte->whatsapp_bd='1';
-                $quickbyte->update();
-            }
-        }
-        
         //If has been Saved by Editor
         if ($request->status == 'P') {
             Session::flash('message', 'Your Quickbte has been Published successfully.');
@@ -708,82 +580,39 @@ class QuickBytesController extends Controller {
     
     function relatedImage(Request $request) {        
         //echo '123'; exit;
-       
+<<<<<<< Updated upstream
+        
         /*array:2 [
             "search_key" => "modi"
-            "selected_values" => array:4 [
+            "selected_values" => array:3 [
               0 => "tag"
               1 => "qbtitle"
               2 => "imagetitle"
-              3 => "imagetag"
             ]
           ]
           */
         //dd($request->all());
-        $query=" select * from photos where owned_by='quickbyte'";
-        $where='';  
-        $key=$request->search_key;
-        $join='';
-        $limit=15;
-        
-        if($request->page)
-            $page=$request->page;
-        else
-            $page=1;
-        
-        $limitStart=($page-1)*$limit;
-        
-        if(in_array('tag',$request->selected_values)){
-            $join.=" join (select tags.tags_id,tags.tag,quickbyte.id,count(*) as cs from tags join quickbyte where find_in_set(tags.tags_id,quickbyte.tags) and tags.tag like '%$key%' group by tags_id order by quickbyte.publish_date desc) as qbtags";
-            $where='and find_in_set(qbtags.tags_id,quickbyte.tags)';
-           //$where.=" and ";
-        }
-        if(in_array('qbtitle',$request->selected_values)){
-            $where.=" and quickbyte.title like '%$key%'";
-        }
-        
-        if(in_array('imagetitle',$request->selected_values)){
-           $where.=" and photos.title like '%$key%' ";
-        }
-        
-        if(in_array('imagetag',$request->selected_values)){
-            $join.=" join (select tags.tags_id as image_tags_id,photo_tags.photo_id,tags.tag as image_tag,count(*) as image_tag_cs from tags join photo_tags on tags.tags_id=photo_tags.tag_id  where tags.tag like '%$key%' order by photo_tags.created_at desc) as ph_tags on ph_tags.photo_id=photos.photo_id";
-        }
-
-//$imagequery = "select photos.* from photos join quickbyte on photos.owner_id=quickbyte.id join (select tags.tags_id,tags.tag,quickbyte.id,count(*) as cs from tags join quickbyte where find_in_set(tags.tags_id,quickbyte.tags) and tags.tag like '%modi%' group by tags_id order by quickbyte.publish_date desc) as qbtags where find_in_set(qbtags.tags_id,quickbyte.tags) and photos.photopath!='' and photos.owned_by='quickbyte' $where  group by photos.photo_id";
-        
-       $imagequery = "select photos.* from photos join quickbyte on photos.owner_id=quickbyte.id $join where  photos.photopath!='' and photos.owned_by='quickbyte' $where  group by photos.photo_id";
-       
-        $imageCount= count(DB::select($imagequery)); 
-        
-        $imagequery.=" limit $limitStart,$limit"; 
-        
-           $images = DB::select($imagequery);
-            $related_images = array();
-            
-           foreach ($images as $image) {
-                    $imgids[] = $image->photo_id;
-                    $related_images[] = array('image_url' => config('constants.awsbaseurl') . config('constants.awquickbytesimagethumbtdir') . $image->photopath, 'image_id' => $image->photo_id, 'tag_name' => $image->title,'description' => $image->description, 'tag_id' => '$tag->tags_id', 'photo_by' => $image->photo_by, 'image_name' => $image->photopath, 'title' => $image->title);
-                }    
-           $data=array();
-           $data['info']=array('total_pages'=> ceil($imageCount/$limit));
-           $data['images']=$related_images;
-           return json_encode($data);
-           
-           
-           
-           
-           
-           /*
-        
+        /*
+         select *,count(*) as cs from tags join (select * from article_tags order by updated_at desc ) as article_tags on tags.tags_id=article_tags.tags_id where (tag like '%modi %' or tag like '% modi%' or tag like 'modi' ) group by tags.tags_id order by article_tags.updated_at desc,cs desc limit 5
+         * 
+         */
+        $total = 25;
+        echo $query = "select *,count(*) as cs from tags join (select * from article_tags order by updated_at desc ) as article_tags on tags.tags_id=article_tags.tags_id where (tag like '%" . $request->search_key . " %' or tag like '% " . $request->search_key . "%'  or tag like '" . $request->search_key . "' ) group by tags.tags_id order by article_tags.updated_at desc,cs desc limit 5"; exit;
+=======
         $total = 25;
         $query = "select *,count(*) as cs from tags join (select * from article_tags order by updated_at desc ) as article_tags on tags.tags_id=article_tags.tags_id where (tag like '%" . $request->search_key . " %' or tag like '% " . $request->search_key . "%'  or tag like '" . $request->search_key . "' ) group by tags.tags_id order by article_tags.updated_at desc,cs desc limit 5";
+>>>>>>> Stashed changes
         $tags = DB::select($query);
         $related_images = array();
         $imgids = array();
         $cond = '';
         
-       
+<<<<<<< Updated upstream
+        //dd($tags); exit;
+=======
+        dd($tags); exit;
+>>>>>>> Stashed changes
+        
         usort($tags, array($this, 'compareByCount'));
         if (count($tags) > 0) {
             $minlimit = ceil($total / count($tags));
@@ -807,7 +636,7 @@ class QuickBytesController extends Controller {
         } else {
             json_encode(array('error' => 'No result found'));
         }
-        return json_encode($related_images);*/
+        return json_encode($related_images);
     }
     
     public static function compareByCount($a, $b) {
