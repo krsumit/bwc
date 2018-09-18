@@ -457,6 +457,8 @@ Route::group(['middleware' => 'auth'], function() {
     Route::post('brand-models/update','BrandModelController@update');
     Route::post('brand-models/deleteImage','BrandModelController@deleteImage');
     Route::resource('brand-models','BrandModelController');
+    Route::resource('reviews','ReviewController');
+    
        
     Route::resource('attributes','AttributeController');
     Route::resource('attribute-groups','AttributeGroupController');

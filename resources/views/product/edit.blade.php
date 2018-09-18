@@ -1,12 +1,12 @@
 @extends('layouts/master')
-@section('title', 'Add Variant (Model:'.$model->name.') - BWCMS')
+@section('title', 'Edit Variant (Model:'.$model->name.') - BWCMS')
 @section('content')
 <style> .none { display:none; } </style>
 <div class="panel">
     <div class="panel-content filler">
         <div class="panel-logo"></div>
         <div class="panel-header">
-            <h1><small>Add Variant</small></h1>
+            <h1><small>Edit Variant</small></h1>
         </div>
         <script type="text/javascript">
             $(function () {
@@ -66,13 +66,13 @@
 
             </li>
             <li class="current">
-                <a href="javascript:;">Add Variant</a>
+                <a href="javascript:;">Edit Variant</a>
             </li>
         </ul>
     </div>            
     <header>
         <i class="icon-big-notepad"></i>
-        <h2><small>Add Variant of (Model :{{$model->name}})</small></h2>
+        <h2><small>Edit Variant of (Model :{{$model->name}})</small></h2>
         Brand : {{$brand->name}}(Product Type : {{$productType->name}})
     </header>
     <div style="margin-bottom:20px;margin-right:20px;text-align:right;">
@@ -80,9 +80,11 @@
             <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="submit">Variant List</button>
         </a>
     </div>
-    {!! Form::open(array('url'=>'products','class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
+    {!! Form::open(array('url'=>'products/'.$product->id,'class'=> 'form-horizontal','id'=>'fileupload','enctype'=>'multipart/form-data')) !!}
     {!! csrf_field() !!}
-        <input type="hidden" name="model_id" value="{{$model->id}}"/>
+     {!! method_field('PUT') !!}
+    <input type="hidden" name="model_id" value="{{$model->id}}"/>
+    <input type="hidden" name="product_id" value="{{$product->id}}"/>
     <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')) && (!$errors->any()))style="display: none" @endif >
 
          <div class="form-legend" id="Notifications">Notifications</div>
@@ -130,7 +132,7 @@
             </div>
             <div class="span9">
                 <div class="controls">
-                    <input type="text" id="product_name" name="product_name" required="required"  value="{{old('product_name')?old('product_name'):$productName}}"/>
+                    <input type="text" id="product_name" name="product_name" required="required"  value="{{old('product_name')?old('product_name'):$product->name}}"/>
 
                 </div>
             </div>
@@ -144,7 +146,7 @@
         {{--*/ $attributes=explode(',',$group->group_attributes) /*--}}
         @foreach($attributes as $attribute)
 
-        {!!App\Helpers\Helper::getAttributeHtml($attribute,$copy_id)!!}
+        {!!App\Helpers\Helper::getAttributeHtml($attribute,$product->id)!!}
 
         @endforeach
 

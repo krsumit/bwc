@@ -104,7 +104,11 @@
                                 <tr class="gradeX" id="rowCur{{$product->id}}">
                                     <td><a href="/products/{{$product->id}}/edit">{{$product->id}}</a> </td>
                                     <td><a href="/products/{{$product->id}}/edit">{{$product->name}}</a></td>
-                                    <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$product->id}}" name="checkItem[]"></td>
+                                    <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$product->id}}" name="checkItem[]">
+                                        <a href="/products/create?model_id={{$model->id}}&AMP;copy_id={{$product->id}}">
+                                            <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="button">Copy and Create</button>
+                                    </a>
+                                    </td>
                                 </tr>
                                 @endforeach
 

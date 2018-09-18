@@ -1,14 +1,11 @@
 @extends('layouts/master')
-
-@section('title', 'Models - BWCMS')
-
-
+@section('title', 'Variants BWCMS')
 @section('content') 
 <div class="panel">
     <div class="panel-content filler">
         <div class="panel-logo"></div>
         <div class="panel-header">
-            <h1><small>Models</small></h1>
+            <h1><small>Variants</small></h1>
 
         </div>
         <div class="panel-search container-fluid">
@@ -20,7 +17,7 @@
                  <button type="submit" class="btn btn-info">Search</button>
                 <!--                <button class="btn btn-search" type="submit"></button>-->
                 @if(isset($_GET['keyword'])) 
-                <a href="/brand-models"><button class="btn btn-default" type="button">Reset</button></a>
+                <a href="/products"><button class="btn btn-default" type="button">Reset</button></a>
                 @endif
 
             </form>
@@ -45,16 +42,16 @@
                 </a>
             </li>
             <li class="current">
-                <a href="javascript:;">Models</a>
+                <a href="javascript:;">Variants</a>
             </li>
         </ul>
     </div>           <header>
         <i class="icon-big-notepad"></i>
-        <h2><small>Models</small></h2>
+        <h2><small>Variants</small></h2>
     </header>
    <div style="margin-bottom:20px;margin-right:20px;text-align:right;">
-        <a href="/brand-models/create" >
-            <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="submit">Create Model</button>
+        <a href="/brand-models" >
+            <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="submit">Models</button>
         </a>
     </div>
   
@@ -85,8 +82,8 @@
             <!--Notifications end-->
 
         </div>
-        @if(count($brandModels)>0)
-            {!! Form::open(array('url'=>'brand-models/'.$brandModels[0]->id,'class'=> 'form-horizontal','id'=>'list_from','enctype'=>'multipart/form-data')) !!}
+        @if(count($products)>0)
+            {!! Form::open(array('url'=>'products/','class'=> 'form-horizontal','id'=>'list_from','enctype'=>'multipart/form-data')) !!}
             {!! csrf_field() !!}
             {!! method_field('DELETE') !!}  
             <div class="container-fluid">
@@ -97,24 +94,19 @@
                         <table class="table table-striped" id="tableSortable">
                             <thead>
                                 <tr>
-                                    <th>Model ID</th>
+                                    <th>Variant ID</th>
                                     <th>Title</th>
+                                    <th>Model</th>
                                     <th><input type="checkbox" class="uniformCheckbox" value="checkbox1"  id="selectall"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($brandModels as $brandModel)
-                                <tr class="gradeX" id="rowCur{{$brandModel->id}}">
-                                    <td><a href="/brand-models/{{$brandModel->id}}/edit">{{$brandModel->id}}</a> </td>
-                                    <td><a href="/brand-models/{{$brandModel->id}}/edit">{{$brandModel->name}}</a></td>
-                                    <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$brandModel->id}}" name="checkItem[]">
-                                    <a href="/products/{{$brandModel->id}}">
-                                            <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="button">Manage Products</button>
-                                    </a>
-                                     <a href="/reviews/{{$brandModel->id}}">
-                                            <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="button">Manage Review</button>
-                                    </a>   
-                                    </td>
+                                @foreach($products as $product)
+                                <tr class="gradeX" id="rowCur{{$product->id}}">
+                                    <td><a href="/products/{{$product->id}}/edit">{{$product->id}}</a> </td>
+                                    <td><a href="/products/{{$product->id}}/edit">{{$product->name}}</a></td>
+                                    <td><a href="/products/{{$product->model_id}}">{{$product->model_name}}</a></td>
+                                    <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$product->id}}" name="checkItem[]"></td>
                                 </tr>
                                 @endforeach
 
@@ -125,7 +117,7 @@
                 <!--Sortable Non-responsive Table end-->
 
                 <div class="dataTables_paginate paging_bootstrap pagination">
-                    {!! $brandModels->appends(Input::get())->render() !!}
+                    {!! $products->appends(Input::get())->render() !!}
                 </div>
                 <script>
                     $(document).ready(function () {
@@ -173,11 +165,7 @@
 
                 </script>
             </div><!-- end container -->
-            <div class="control-group row-fluid">
-                <div class="span12 span-inset">
-                    <button type="button" onclick="deleteRecord()" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>							
-                </div>
-            </div>
+          
             {!! Form::close() !!}
         @else
         <div class="container-fluid">
