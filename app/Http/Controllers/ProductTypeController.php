@@ -52,7 +52,9 @@ class ProductTypeController extends Controller {
      * @return Response
      */
     public function create() {
-      return view('producttype.create');
+      $rightId=116;  
+      $channels = $this->rightObj->getAllowedChannels($rightId);  
+      return view('producttype.create',compact('channels'));
       
     }
 
@@ -63,6 +65,7 @@ class ProductTypeController extends Controller {
         ]);
         $prodType = new ProductType();
         $prodType->name = trim($request->product_type_name);
+        $prodType->channel_id=$request->channel_id;
         $prodType->save();
         Session::flash('message', 'Product Type added successfully.');
         return Redirect::to('product-types');
@@ -71,9 +74,11 @@ class ProductTypeController extends Controller {
 
   
     public function edit($id){       
-        $rightId = 10;
+        $rightId=116;  
+        $channels = $this->rightObj->getAllowedChannels($rightId); 
+        //dd($channels);
         $productType=  ProductType::find($id);       
-        return view('producttype.edit',compact('productType'));
+        return view('producttype.edit',compact('productType','channels'));
     }
 
     /**
@@ -91,8 +96,7 @@ class ProductTypeController extends Controller {
         $productType = ProductType::find($id);
         
         $productType->name = trim($request->product_type_name);
-       
-      
+        $productType->channel_id=$request->channel_id;      
         $productType->save();
    
         Session::flash('message', 'Product Type updated successfully.');

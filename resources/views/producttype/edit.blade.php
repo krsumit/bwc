@@ -86,7 +86,27 @@
 
     <div class="container-fluid">
         <div class="form-legend" id="feed-detail">Product Type Details</div>
-
+         <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="channel_sel">Channel</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <select name="channel_id" id="channel_id" class="required channel_sel formattedelement">
+                        @foreach($channels as $channel)
+                        <option value="{{ $channel->channel_id }}" @if($channel->channel_id==$productType->channel_id) selected="selected" @endif>{{ $channel->channel }}</option>
+                        @endforeach
+                    </select>
+                    <span for="channel_sel1" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
+                </div>
+            </div>
+            <script>
+                        $().ready(function(){
+                            $("#channel_id").select2();
+                        });
+                                            
+            </script>
+        </div>
         <!--Text Area - No Resize begin-->
         <div  class="control-group row-fluid">
             <div class="span3">
