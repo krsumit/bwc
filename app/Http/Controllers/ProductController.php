@@ -234,29 +234,39 @@ class ProductController extends Controller {
             $productAttributeValue->save();
         }
 
-        foreach ($request->attribute_multiselect as $key => $valArray) {
-                 //$oldOptionValues=  ProductAttributeValue::where('product_id')
-            
-//            foreach($valArray as $val){
-//                $productAttributeValue=new ProductAttributeValue();
-//                $productAttributeValue->product_id=$productId;
-//                $productAttributeValue->attribute_id=$key;
-//                $productAttributeValue->attribute_value_id=$val;
-//                $productAttributeValue->save();
-//            }
+        foreach ($request->attribute_multiselect as $key => $valArray){
+            $oldOptionValues=  ProductAttributeValue::where('product_id','=',$id)->where('attribute_id','=',$key)->lists('attribute_value_id')->toArray();
+            $deleteAttributeValues = array_diff($oldOptionValues, $valArray);
+            $addAttributeValues = array_diff($valArray, $oldOptionValues);
+            //echo '<pre>';  print_r($deleteAttributeValues); print_r($addAttributeValues); exit;
+            ProductAttributeValue::whereIn('attribute_value_id',$deleteAttributeValues)->where('attribute_id','=',$key)->where('product_id', '=', $id)->delete();
+            foreach($addAttributeValues as $val){
+                $productAttributeValue=new ProductAttributeValue();
+                $productAttributeValue->product_id=$productId;
+                $productAttributeValue->attribute_id=$key;
+                $productAttributeValue->attribute_value_id=$val;
+                $productAttributeValue->save();
+            }
         }
 
         foreach ($request->attribute_colorpicker as $key => $valArray) {
-              
-//            foreach($valArray as $k=>$val){
-//                
-//                $productAttributeValue=new ProductAttributeValue();
-//                $productAttributeValue->product_id=$productId;
-//                $productAttributeValue->attribute_id=$key;
-//                $productAttributeValue->value=$val;
-//                $productAttributeValue->caption=$request->label_attribute_colorpicker[$key][$k];
-//                $productAttributeValue->save();
-//            }
+            $oldOptionValues=  ProductAttributeValue::where('product_id','=',$id)->where('attribute_id','=',$key)->lists('value')->toArray();
+       
+            $deleteAttributeValues = array_diff($oldOptionValues, $valArray);
+            $addAttributeValues = array_diff($valArray, $oldOptionValues);
+            //echo '<pre>'; print_r($oldOptionValues);print_r($valArray); print_r($deleteAttributeValues); print_r($addAttributeValues); exit;
+            ProductAttributeValue::whereIn('value',$deleteAttributeValues)->where('attribute_id','=',$key)->where('product_id', '=', $id)->delete();
+            foreach($valArray as $k=>$val){
+                if (in_array($k, $addAttributeValues))
+                    $productAttributeValue = new ProductAttributeValue();
+                else
+                    $productAttributeValue = ProductAttributeValue::where('attribute_id', '=', $key)->where('product_id', '=', $id)->where('value','=',$val)->first();
+                $productAttributeValue->product_id=$productId;
+                $productAttributeValue->attribute_id=$key;
+                $productAttributeValue->value=$val;
+                $productAttributeValue->caption=$request->label_attribute_colorpicker[$key][$k];
+                $productAttributeValue->save();
+            }
         }
 
 
