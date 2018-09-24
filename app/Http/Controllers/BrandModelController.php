@@ -92,7 +92,7 @@ class BrandModelController extends Controller {
             $c++;
         }
         Session::flash('message', 'Brand model added successfully.');
-        return Redirect::to('brands');
+        return Redirect::to('brand_models');
         
     }
 
