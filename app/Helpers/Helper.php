@@ -64,7 +64,7 @@ public static function is_url_exist($url){
      }
      $data='<div  class="control-group row-fluid">
             <div class="span3">
-                <label class="control-label" for="title">'.$attribute->name.' ('.$attribute->type.')</label>
+                <label class="control-label" for="title">'.$attribute->name.'</label>
             </div>
             <div class="span9">
                 <div class="controls">';
