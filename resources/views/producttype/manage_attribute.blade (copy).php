@@ -122,14 +122,8 @@
                         </div>
                     </div>
                     
-                    <div class="span8" style="height:400px; overflow: auto;">
-                    
-                     <div class="row-fluid">
-                         
-                             
-                        
                     @foreach($attributeGroups as $attributeGroup)
-                    <div class="span4" style="margin-bottom: 5px; float:left; ">
+                    <div class="span4" style="margin-bottom: 5px;">
                         <div id="div_group_{{$attributeGroup->id}}" class="container-fluid" style="margin: 0 !important;"s>
 
                             <div class="form-legend" >{{$attributeGroup->name}}</div>
@@ -150,10 +144,8 @@
                         </div>
                     </div>
                     @endforeach
-                    
-                     </div>
                    
-                    </div>             
+                                 
 
                 </div>
 
