@@ -272,7 +272,7 @@
 
         <div class="control-group row-fluid" id="submitsection">
             <div class="span12 span-inset">
-                <button type="submit" name="add" value="N" id="add_button"class="btn btn-warning" onclick="this.disabled = true" >Update</button>
+                <button type="submit" name="add" value="N" id="add_button"class="btn btn-warning" >Update</button>
             </div>
         </div>
     </div>
