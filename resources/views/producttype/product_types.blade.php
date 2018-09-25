@@ -98,6 +98,7 @@
                                 <tr>
                                     <th>Product Type ID</th>
                                     <th>Title</th>
+                                    <th></th>
                                     <th><input type="checkbox" class="uniformCheckbox" value="checkbox1"  id="selectall"></th>
                                 </tr>
                             </thead>
@@ -106,9 +107,10 @@
                                 <tr class="gradeX" id="rowCur{{$productType->id}}">
                                     <td><a href="/product-types/{{$productType->id}}/edit">{{$productType->id}}</a> </td>
                                     <td><a href="/product-types/{{$productType->id}}/edit">{{$productType->name}}</a></td>
-                                     <td><a href="/product-types/{{$productType->id}}"><button class="btn btn-default"  type="button">Assign Attribute</button></a>
-                                     </td>
-                                   <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$productType->id}}" name="checkItem[]"></td>
+                                    <td><a href="/product-types/{{$productType->id}}"><button class="btn btn-default"  type="button">Assign Attribute</button></a></td>
+                                   <td class="center"> 
+                                       <input type="checkbox" class="uniformCheckbox" value="{{$productType->id}}" name="checkItem[]"> </td>
+                                  
                                 </tr>
                                 @endforeach
 
@@ -137,6 +139,7 @@
 
 
                         $('#selectall').click(function () {
+                            alert(1);
                             if ($(this).is(':checked')) {
                                 $('input[name="checkItem[]"]').each(function () {
                                     $(this).attr('checked', 'checked');
