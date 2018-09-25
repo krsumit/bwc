@@ -131,8 +131,10 @@
                             <div class="control-group row-fluid">
                                 <div style="padding:10px 10px 30px 10px; min-height:100px; cursor: grab" id="group_{{$attributeGroup->id}}" class="span12" ondrop="drop(event)" ondragover="allowDrop(event)">
                                     @foreach($groupAttributesArray[$attributeGroup->id] as $groupAttribute)
+                                        @if($groupAttribute)
                                         <input id="attribute_{{$groupAttribute}}" name="attr_group[{{$attributeGroup->id}}][]" value="{{$groupAttribute}}" type="hidden" class="edit_mod">
                                         <span id="drag_{{$groupAttribute}}" draggable="true" ondragstart="drag(event)" class="badge badge-info" style="width:80%">{{$assignedAttributesDetail[$groupAttribute]}}</span>
+                                        @endif
                                         @endforeach
                                     
                                 </div>

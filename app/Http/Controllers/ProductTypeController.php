@@ -38,6 +38,8 @@ class ProductTypeController extends Controller {
       $rightId=115;  
       $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
       $channels = $this->rightObj->getAllowedChannels($rightId);  
+      if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
       
        $productTypes=ProductType::where('channel_id','=',$currentChannelId)->orderBy('created_at');
        if (isset($_GET['keyword'])) {
@@ -58,7 +60,10 @@ class ProductTypeController extends Controller {
      */
     public function create() {
       $rightId=116;  
+      $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
       $channels = $this->rightObj->getAllowedChannels($rightId);  
+      if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
       return view('producttype.create',compact('channels'));
       
     }
@@ -134,6 +139,7 @@ class ProductTypeController extends Controller {
        $assignedAttributesDetail=$assignedAttributesDetail->pluck('name','id');
        //print_r($assignedAttributesDetail);exit;
       return view('producttype.manage_attribute',compact('productType','unassingedAttributes','attributeGroups','groupAttributesArray','assignedAttributesDetail'));
+      
     }
   
     public function storeAttribute(Request $request){
