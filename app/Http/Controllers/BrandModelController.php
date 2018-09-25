@@ -92,7 +92,7 @@ class BrandModelController extends Controller {
             $c++;
         }
         Session::flash('message', 'Brand model added successfully.');
-        return Redirect::to('brand_models');
+        return Redirect::to('brand-models');
         
     }
 
@@ -155,7 +155,7 @@ class BrandModelController extends Controller {
         }
         
         Session::flash('message', 'Model updated successfully.');
-        return Redirect::to('brand_models');
+        return Redirect::to('brand-models');
          
     }
     
@@ -176,7 +176,7 @@ class BrandModelController extends Controller {
         //dd($request);
         BrandModel::whereIn('id',$request->checkItem)->delete();
         Session::flash('message', 'Model deleted successfully.');
-        return Redirect::to('brand_models/');
+        return Redirect::to('brand-models/');
     }
     
     
