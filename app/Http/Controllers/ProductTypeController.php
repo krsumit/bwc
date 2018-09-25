@@ -34,7 +34,12 @@ class ProductTypeController extends Controller {
     }
 
     public function index() {
-       $productTypes=ProductType::orderBy('created_at');
+        
+      $rightId=115;  
+      $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+      $channels = $this->rightObj->getAllowedChannels($rightId);  
+      
+       $productTypes=ProductType::where('channel_id','=',$currentChannelId)->orderBy('created_at');
        if (isset($_GET['keyword'])) {
            $queryed = $_GET['keyword'];
            if(trim($queryed)){
@@ -42,7 +47,7 @@ class ProductTypeController extends Controller {
            }
        }
        $productTypes=$productTypes->paginate(config('constants.recordperpage'));
-       return view('producttype.product_types',compact('productTypes'));
+       return view('producttype.product_types',compact('productTypes','channels','currentChannelId'));
     }
 
     /**

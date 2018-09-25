@@ -85,6 +85,36 @@
             <!--Notifications end-->
 
         </div>
+          <div class="form-horizontal">
+
+        <div class="container-fluid">
+
+            <div class="form-legend" id="Channel">Channel</div>
+
+            <!--Select Box with Filter Search begin-->
+            <div  class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="channel_sel">Channel</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <select name="channel_sel" id="channel_sel" class="required channel_sel formattedelement">
+                            @foreach($channels as $channel)
+                            <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                            @endforeach
+                        </select>
+
+                    </div>
+                </div>
+                <script>
+                    $().ready(function () {
+                        $("#channel_sel").select2();
+                    });</script>
+            </div>
+
+            <!--Select Box with Filter Search end-->
+        </div>
+    </div>
         @if(count($productTypes)>0)
             {!! Form::open(array('url'=>'product-types/'.$productTypes[0]->id,'class'=> 'form-horizontal','id'=>'brands_list_from','enctype'=>'multipart/form-data')) !!}
             {!! csrf_field() !!}
@@ -136,10 +166,8 @@
                                 });
                             }
                         });
-
-
+                        
                         $('#selectall').click(function () {
-                            alert(1);
                             if ($(this).is(':checked')) {
                                 $('input[name="checkItem[]"]').each(function () {
                                     $(this).attr('checked', 'checked');
@@ -181,5 +209,11 @@
             No data available
         </div>
         @endif    
+        <script>
+            $("#channel_sel").change(function (){
+                //alert('{{url("product-types")}}' + '?channel=' + $(this).val());
+                window.location = '{{url("product-types")}}' + '?channel=' + $(this).val();
+            });
+        </script>
 </div>
 @stop
