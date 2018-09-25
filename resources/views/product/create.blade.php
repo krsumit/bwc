@@ -139,16 +139,19 @@
 
     </div>  
     @foreach($attributeGroups as $group)
-    <div class="container-fluid" id="group_section_{{$group->id}}">
-        <div class="form-legend" id="feed-detail">{{$group->name}}</div>
-        {{--*/ $attributes=explode(',',$group->group_attributes) /*--}}
-        @foreach($attributes as $attribute)
+     {{--*/ $attributes=array_filter(explode(',',$group->group_attributes)) /*--}}
+     @if(count($attributes)>0)
+        <div class="container-fluid" id="group_section_{{$group->id}}">
+            <div class="form-legend" id="feed-detail">{{$group->name}}</div>
 
-        {!!App\Helpers\Helper::getAttributeHtml($attribute,$copy_id)!!}
+            @foreach($attributes as $attribute)
 
-        @endforeach
+            {!!App\Helpers\Helper::getAttributeHtml($attribute,$copy_id)!!}
 
-    </div>  
+            @endforeach
+
+        </div>  
+     @endif
     @endforeach
 
     <div class="container-fluid">

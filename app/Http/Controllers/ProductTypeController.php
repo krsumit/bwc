@@ -157,7 +157,12 @@ class ProductTypeController extends Controller {
         
         foreach($groupAttributes as $groupAttribute){
             $existingGroupAttr=array_filter(explode(',',$groupAttribute->group_attributes));
+            if(isset($request->attr_group[$groupAttribute->id])){
             $newGroupAttr=$request->attr_group[$groupAttribute->id];
+            }else{
+                 $newGroupAttr=array();
+            }
+              
             // Delete old attribute from Group
             AttributeGroupAttribute::where('attribute_group_id','=',$groupAttribute->id)->whereNotIn('attribute_id',$newGroupAttr)->whereNotIn('attribute_id',$allAttributes)->forceDelete();
             // Delete old attribute from product
