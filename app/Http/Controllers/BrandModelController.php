@@ -33,8 +33,15 @@ class BrandModelController extends Controller {
     }
 
     public function index() {
+        
+        $rightId=117;  
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId);  
+        //dd($channels);
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+              return redirect('/dashboard'); 
        
-       $brandModels=BrandModel::orderBy('created_at');
+       $brandModels=BrandModel::select('brand_models.*','product_types.name as pt_name')->join('product_types','brand_models.product_type_id','=','product_types.id')->where('product_types.channel_id','=',$currentChannelId)->orderBy('created_at');
        if (isset($_GET['keyword'])) {
            $queryed = $_GET['keyword'];
            if(trim($queryed)){
@@ -42,7 +49,7 @@ class BrandModelController extends Controller {
            }
        }
        $brandModels=$brandModels->paginate(config('constants.recordperpage'));
-       return view('brandmodel.brand_models',compact('brandModels'));
+       return view('brandmodel.brand_models',compact('brandModels','currentChannelId','channels'));
     }
 
     /**

@@ -85,6 +85,36 @@
             <!--Notifications end-->
 
         </div>
+         <div class="form-horizontal">
+
+        <div class="container-fluid">
+
+            <div class="form-legend" id="Channel">Channel</div>
+
+            <!--Select Box with Filter Search begin-->
+            <div  class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="channel_sel">Channel</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <select name="channel_sel" id="channel_sel" class="required channel_sel formattedelement">
+                            @foreach($channels as $channel)
+                            <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                            @endforeach
+                        </select>
+
+                    </div>
+                </div>
+                <script>
+                    $().ready(function () {
+                        $("#channel_sel").select2();
+                    });</script>
+            </div>
+
+            <!--Select Box with Filter Search end-->
+        </div>
+    </div>
         @if(count($brandModels)>0)
             {!! Form::open(array('url'=>'brand-models/'.$brandModels[0]->id,'class'=> 'form-horizontal','id'=>'list_from','enctype'=>'multipart/form-data')) !!}
             {!! csrf_field() !!}
@@ -99,6 +129,7 @@
                                 <tr>
                                     <th>Model ID</th>
                                     <th>Title</th>
+                                    <th>Product Type</th>
                                     <th><input type="checkbox" class="uniformCheckbox" value="checkbox1"  id="selectall"></th>
                                 </tr>
                             </thead>
@@ -107,6 +138,7 @@
                                 <tr class="gradeX" id="rowCur{{$brandModel->id}}">
                                     <td><a href="/brand-models/{{$brandModel->id}}/edit">{{$brandModel->id}}</a> </td>
                                     <td><a href="/brand-models/{{$brandModel->id}}/edit">{{$brandModel->name}}</a></td>
+                                    <td>{{$brandModel->pt_name}}</td>
                                     <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$brandModel->id}}" name="checkItem[]">
                                     <a href="/products/{{$brandModel->id}}">
                                             <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="button">Manage Variants</button>
@@ -133,7 +165,7 @@
                             bInfo: false,
                             bPaginate: false,
                             "aaSorting": [],
-                            "aoColumnDefs": [{"bSortable": false, "aTargets": [2]}],
+                            "aoColumnDefs": [{"bSortable": false, "aTargets": [3]}],
                             "fnInitComplete": function () {
                                 $(".dataTables_wrapper select").select2({
                                     dropdownCssClass: 'noSearch'
@@ -184,5 +216,11 @@
             No data available
         </div>
         @endif    
+         <script>
+            $("#channel_sel").change(function (){
+                //alert('{{url("product-types")}}' + '?channel=' + $(this).val());
+                window.location = '{{url("brand-models")}}' + '?channel=' + $(this).val();
+            });
+        </script>
 </div>
 @stop

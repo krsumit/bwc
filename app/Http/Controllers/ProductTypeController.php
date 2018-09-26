@@ -78,7 +78,7 @@ class ProductTypeController extends Controller {
         $prodType->channel_id=$request->channel_id;
         $prodType->save();
         Session::flash('message', 'Product Type added successfully.');
-        return Redirect::to('product-types');
+        return Redirect::to('product-types?channel='.$request->channel_id);
         
     }
 
@@ -113,7 +113,7 @@ class ProductTypeController extends Controller {
         $productType->save();
    
         Session::flash('message', 'Product Type updated successfully.');
-        return Redirect::to('product-types');
+        return Redirect::to('product-types?channel='.$request->channel_id);
          
     }
     
