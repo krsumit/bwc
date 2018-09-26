@@ -109,7 +109,7 @@
                                     <td><a href="/brand-models/{{$brandModel->id}}/edit">{{$brandModel->name}}</a></td>
                                     <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$brandModel->id}}" name="checkItem[]">
                                     <a href="/products/{{$brandModel->id}}">
-                                            <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="button">Manage Products</button>
+                                            <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="button">Manage Variants</button>
                                     </a>
                                      <a href="/reviews/{{$brandModel->id}}">
                                             <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="button">Manage Review</button>

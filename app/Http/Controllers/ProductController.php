@@ -353,7 +353,7 @@ class ProductController extends Controller {
 
     public function destroy(Request $request) {
         //dd($request);
-        BrandModel::whereIn('id', $request->checkItem)->delete();
+        Product::whereIn('id', $request->checkItem)->delete();
         Session::flash('message', 'Model deleted successfully.');
         return Redirect::to('brand_models/');
     }
