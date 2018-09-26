@@ -85,13 +85,16 @@ class ProductTypeController extends Controller {
   
     public function edit($id){       
         $rightId=116;  
-        $channels = $this->rightObj->getAllowedChannels($rightId); 
-        //dd($channels);
-        $productType=  ProductType::find($id);       
+        $productType=ProductType::find($id); 
+        $currentChannelId = $productType->channel_id;
+        $channels = $this->rightObj->getAllowedChannels($rightId);  
+        if(!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
+        
         return view('producttype.edit',compact('productType','channels'));
     }
 
-    /**
+    /*
      * Update the specified resource in storage.
      *
      * @param  Request  $request
