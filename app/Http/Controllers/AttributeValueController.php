@@ -68,29 +68,34 @@ class AttributeValueController extends Controller {
        if(count($request->edit_value)>0){
            $oldValueIds=array_keys($request->edit_value);
            AttributeValue::where('attribute_id','=',$id)->whereNotIn('id',$oldValueIds)->delete();
-           
-           foreach($request->edit_value as $key=>$val){
-                $attVal=AttributeValue::find($key);
-                if(trim($val)){
-                 $attVal->value=$val;
-                 $attVal->attribute_id=$id;
-                 $attVal->save();
-                }else{
-                 $attVal->delete();   
+           if(count($request->edit_value)>0){
+               foreach($request->edit_value as $key=>$val){
+                    $attVal=AttributeValue::find($key);
+                    if(trim($val)){
+                     $attVal->value=$val;
+                     $attVal->attribute_id=$id;
+                     $attVal->save();
+                    }else{
+                     $attVal->delete();   
+                    }
                 }
-            }
+               
+           }
+           
            
        }else{
            AttributeValue::where('attribute_id','=',$id)->delete();
        }
-       foreach($request->attribute_value as $val){
-           if(trim($val)){
-            $attVal=new AttributeValue();
-            $attVal->value=$val;
-            $attVal->attribute_id=$id;
-            $attVal->save();
-           }
-       }
+       if(count($request->attribute_value)>0){       
+            foreach($request->attribute_value as $val){
+                if(trim($val)){
+                 $attVal=new AttributeValue();
+                 $attVal->value=$val;
+                 $attVal->attribute_id=$id;
+                 $attVal->save();
+                }
+            }
+        }
        
        Session::flash('message', 'Attribute values saved successfully.');
        return Redirect::to('attribute-values/'.$id);
