@@ -269,14 +269,17 @@ class ProductController extends Controller {
 
                 $deleteAttributeValues = array_diff($oldOptionValues, $valArray);
                 $addAttributeValues = array_diff($valArray, $oldOptionValues);
-                //echo '<pre>'; print_r($oldOptionValues);print_r($valArray); print_r($deleteAttributeValues); print_r($addAttributeValues); exit;
                 ProductAttributeValue::whereIn('value',$deleteAttributeValues)->where('attribute_id','=',$key)->where('product_id', '=', $id)->delete();
                 foreach($valArray as $k=>$val){
-                    if (in_array($k, $addAttributeValues))
+                    if (in_array($val, $addAttributeValues)){
                         $productAttributeValue = new ProductAttributeValue();
-                    else
+                    }    
+                    else{
                         $productAttributeValue = ProductAttributeValue::where('attribute_id', '=', $key)->where('product_id', '=', $id)->where('value','=',$val)->first();
-                    $productAttributeValue->product_id=$productId;
+                    }    
+                    
+                   // echo 'going to updat --'.$productId.'<br>';
+                    $productAttributeValue->product_id=$productId; 
                     $productAttributeValue->attribute_id=$key;
                     $productAttributeValue->value=$val;
                     $productAttributeValue->caption=$request->label_attribute_colorpicker[$key][$k];
@@ -284,6 +287,7 @@ class ProductController extends Controller {
                 }
             }
         }
+       // echo 'here'; exit;
         if(count($request->file('attribute_file'))>0){
             foreach ($request->file('attribute_file') as $key => $file) {
                 if ($file) {
