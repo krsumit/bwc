@@ -65,7 +65,34 @@ class ReviewController extends Controller {
      * @return Response
      */
     public function update(Request $request,$id) {
+       $rightId=125;
+       $model=BrandModel::find($id);
+       $productType = ProductType::find($model->product_type_id);
+       $currentChannelId=$productType->channel_id;
+       if(!$this->rightObj->checkRights($currentChannelId, $rightId))
+              return redirect('/dashboard');
+
        //dd($request);
+       $model->review_title=$request->review_title;
+       $model->review_description=$request->review_description;
+       $model->review_social_title=$request->review_social_title;
+       $model->review_social_description=$request->review_social_description;
+       $model->review_conclusion=$request->review_conclusion;
+       
+       if ($request->file('review_image')) { 
+                $fileTran = new FileTransfer();
+                $file = $request->file('review_image');
+                $filename=GeneralFunctions::cleanFileName($request->file('review_image')->getClientOriginalName());
+                $destination_path = config('constants.aws_review_image');
+                $fileTran->uploadFile($file, $destination_path, $filename);
+                if (trim($model->review_image)){    
+                    $fileTran->deleteFile($destination_path,$model->review_image);
+                } 
+                $model->review_image=$filename;
+         }
+       
+       $model->save();
+       
        foreach($request->reivew as $key=>$value){
            $review=ModelReview::where('brand_model_id','=',$id)->where('attribute_group_id','=',$key)->first();
            if(!$review)
@@ -94,10 +121,15 @@ class ReviewController extends Controller {
      * @return Response
      */
     public function show($id){
-        //echo 'Model id:'.$id;
-        //echo '<b>There section is under development.</b>';exit;
+       $rightId=125;
        $model=  BrandModel::find($id);
-      // DB::enableQueryLog();
+       $productType = ProductType::find($model->product_type_id);
+       $currentChannelId=$productType->channel_id;
+       if(!$this->rightObj->checkRights($currentChannelId, $rightId))
+              return redirect('/dashboard');
+       
+       // DB::enableQueryLog();
+       //dd($model);
        $attributeGroups=AttributeGroup::join('product_types','attribute_groups.product_type_id','=','product_types.id')
                 ->select('attribute_groups.*')
                 ->join('brand_models','product_types.id','=','brand_models.product_type_id')
@@ -116,10 +148,8 @@ class ReviewController extends Controller {
            }
        }
        //dd(DB::getQueryLog());
-       $productType = ProductType::find($model->product_type_id);
        $brand = Brand::find($model->brand_id);
         return view('review.review',compact('attributeGroups','model','productType','brand','reviews'));
-        
        //$attributeGroups=AttributeGroup::join()->join()->get();
     }
   

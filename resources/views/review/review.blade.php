@@ -15,11 +15,11 @@
             "data" : [
             {
             "data" : {
-            "title" : "Review Detail",
-                    "attr" : { "href" : "#review_detail" }
+            "title" : "General Information",
+                    "attr" : { "href" : "#group_section_general" }
             }
-            },
-                    @foreach($attributeGroups as $group)
+            },  
+            @foreach($attributeGroups as $group)
             {
             "data" : {
             "title" : "{{$group->name}}",
@@ -27,6 +27,12 @@
             }
             },
                     @endforeach
+            {
+            "data" : {
+            "title" : "Conclusion",
+                    "attr" : { "href" : "#group_section_conclusion" }
+            }
+            },        
             ]
             },
                     "plugins" : [ "themes", "json_data", "ui" ]
@@ -118,6 +124,70 @@
         <!--Notifications end-->
 
     </div>
+    
+    <div class="container-fluid" id="group_section_general">
+        <div class="form-legend" id="feed-detail">General Information</div>
+        <div class="control-group row-fluid">
+        <div class="span3">
+            <label class="control-label" for="title">Title</label>
+        </div>
+        <div class="span9">
+            <div class="controls">
+                <input maxlength="255" class="attribute_text" id="review_title" name="review_title" value="{{$model->review_title}}" type="text"></span></div>
+         </div>
+        </div>
+        <div class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="title">Description</label>
+            </div>
+            <div class="span9">
+                <div class="controls"><textarea class="attribute_textarea editor" id="review_description" name="review_description">{{$model->review_description}}</textarea></div>
+             </div>
+        </div>
+        
+        <div class="control-group row-fluid">
+        <div class="span3">
+            <label class="control-label" for="title">Social Title</label>
+        </div>
+        <div class="span9">
+            <div class="controls">
+                <input maxlength="255" class="attribute_text" id="review_social_title" name="review_social_title" value="{{$model->review_social_title}}" type="text"></span></div>
+         </div>
+        </div>
+        <div class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="title">Social Description</label>
+            </div>
+            <div class="span9">
+                <div class="controls"><textarea maxlength="255"  class="attribute_textarea editor" id="review_social_description" name="review_social_description">{{$model->review_social_description}}</textarea></div>
+             </div>
+        </div>
+        <div id="File_Upload" class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label">Upload logo (Size:{{config('constants.dimension_brand_logo')}}, File Size<={{config('constants.maxfilesize').' '.config('constants.filesizein')}})
+                </label>
+            </div>
+            <div class="span9">
+                <div class="fileupload fileupload-new" data-provides="fileupload">
+                    <div class="input-append">
+                        <div class="uneditable-input span3"><i class="icon-file fileupload-exists"></i> <span class="fileupload-preview"></span></div><span class="btn btn-file"><span class="fileupload-new">Select file</span><span class="fileupload-exists">Change</span><input type="file" name="review_image"></span><a href="javascript:;" class="btn fileupload-exists" data-dismiss="fileupload">Remove</a>
+                         
+                      
+                        </div>
+
+                    </div>
+                @if(trim($model->review_image))
+                <div>
+                  <img style="width: 70px;height: 70px;margin-left: 5px;" src="{{ config('constants.awsbaseurl').config('constants.aws_review_image').$model->review_image}}" alt="user" style="width:12%;" />
+                </div>
+                 @endif
+                </div>
+
+            </div>
+        
+    </div>  
+    
+    
 
    
     @foreach($attributeGroups as $group)
@@ -136,12 +206,29 @@
                 <label class="control-label" for="title">Review</label>
             </div>
             <div class="span9">
-                <div class="controls"><textarea maxlength="255" class="attribute_textarea" id="review_{$group->id}}" name="reivew[{{$group->id}}]">{{$reviews[$group->id]['review']}}</textarea></div>
+                <div class="controls"><textarea maxlength="255"  class="attribute_textarea editor" id="review_{$group->id}}" name="reivew[{{$group->id}}]">{{$reviews[$group->id]['review']}}</textarea></div>
              </div>
             </div>
         
     </div>  
     @endforeach
+    
+    
+    
+    <div class="container-fluid" id="group_section_conclusion">
+        <div class="form-legend" id="feed-detail">Conclusion</div>
+       
+        <div class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="title">Review</label>
+            </div>
+            <div class="span9">
+                <div class="controls"><textarea maxlength="255"  class="attribute_textarea editor" id="review_conclusion" name="review_conclusion">{{$model->review_conclusion}}</textarea></div>
+             </div>
+            </div>
+        
+    </div>  
+    
 
     <div class="container-fluid">
 
@@ -155,12 +242,29 @@
 
 </div>
 
+<script type="text/javascript" src="{{ asset('js/florawysiwyg/froala_editor.pkgd.min.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ asset('css/florawysiwyg/froala_editor.pkgd.min.css') }}" media="all" />
+<link rel="stylesheet" type="text/css" href="{{ asset('css/florawysiwyg/froala_style.min.css') }}" media="all" />
+<link rel="stylesheet" type="text/css" href="{{ asset('css/florawysiwyg/font-awesome.min.css') }}" media="all" />
+
 
 <script type="text/javascript" src="{{ asset('colorpicker/js/bootstrap-colorpicker.min.js') }}"></script>
 <link rel="stylesheet" type="text/css" href="{{ asset('colorpicker/css/bootstrap-colorpicker.min.css') }}" media="all" />
 
 <script>
                             $(document).ready(function () {
+                                
+                                $('.editor').froalaEditor({
+                                        height: 200,
+                                        htmlRemoveTags: [],
+                                        pastePlain: true,
+                                        imageUploadURL: '/photo/editor/store',
+                                        imageUploadParams: {
+                                        _token: $('input[name="_token"]').val()
+                                        },
+                                        imageMaxSize: 1024 * 1024 * 1 / 2
+                                });
+                                
                                 $('.attribute_colorpicker_div').colorpicker({format:'hex'});
 
                             });

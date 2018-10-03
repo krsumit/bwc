@@ -69,6 +69,10 @@ class ProductTypeController extends Controller {
     }
 
     public function store(Request $request) {
+        $rightId=116;  
+        $currentChannelId=$request->channel_id;
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
         
           $validation = $this->validate($request,[
             'product_type_name' => 'required',
@@ -101,7 +105,11 @@ class ProductTypeController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function update(Request $request,$id) {
+    public function update(Request $request,$id){
+        $rightId=116;  
+        $currentChannelId=$request->channel_id;
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');        
           
         $validation = $this->validate($request,[
             'product_type_name' => 'required',
@@ -127,6 +135,12 @@ class ProductTypeController extends Controller {
      */
     public function show($id){
        $productType=  ProductType::find($id);
+       
+        $rightId=116;  
+        $currentChannelId = $productType->channel_id;
+        if(!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
+       
        $attributeGroups=AttributeGroup::where('product_type_id','=',$id)->get();
        $groupAttributes=  AttributeGroup::leftJoin('attribute_group_attributes','attribute_groups.id','=','attribute_group_attributes.attribute_group_id')->select(DB::raw('attribute_groups.id,attribute_groups.name,group_concat(attribute_group_attributes.attribute_id) as group_attributes'))->where('attribute_groups.product_type_id','=',$id)->groupBy('attribute_groups.id')->get();
        //dd($groupAttributes);
@@ -148,6 +162,13 @@ class ProductTypeController extends Controller {
     public function storeAttribute(Request $request){
        //dd($request); //AttributeGroupAttribute
         $id=$request->product_type_id;
+        
+        $productType=ProductType::find($id);
+        $rightId=116;  
+        $currentChannelId = $productType->channel_id;
+        if(!$this->rightObj->checkRights($currentChannelId, $rightId))
+            return redirect('/dashboard');
+        
         $attributeGroups=AttributeGroup::where('product_type_id','=',$id)->get();
         $groupAttributes=  AttributeGroup::leftJoin('attribute_group_attributes','attribute_groups.id','=','attribute_group_attributes.attribute_group_id')->select(DB::raw('attribute_groups.id,attribute_groups.name,group_concat(attribute_group_attributes.attribute_id) as group_attributes'))->where('attribute_groups.product_type_id','=',$id)->groupBy('attribute_groups.id')->get();
         //dd($request->attr_group);

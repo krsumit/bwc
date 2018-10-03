@@ -52,6 +52,7 @@ return [
 'awsupload'=> 'upload/',
 'aws_brand_logo'=>'brand_logo/', 
 'aws_model_image'=>'model_image/',
+'aws_review_image'=>'review/',    
 'aws_attribute_file'=>'attribute_file/', 
 'debatefeatured'=>'debate/featuredimage/',
 'debateexpert'=>'debate/expertimage/',

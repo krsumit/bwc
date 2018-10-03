@@ -59,12 +59,28 @@ class BrandModelController extends Controller {
      * @return Response
      */
     public function create() {
+      $rightId=118;  
+      $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+      $channels = $this->rightObj->getAllowedChannels($rightId); 
+      $allowedChannel=array();
+      foreach($channels as $channel){
+          $allowedChannel[]=$channel->channel_id;
+      }
+      if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+              return redirect('/dashboard');   
+        
       $brands=Brand::orderBy('name')->lists('name','id')->toArray();
-      $productTypes= ProductType::orderBy('name','desc')->lists('name','id')->toArray();
+      $productTypes=ProductType::whereIn('channel_id',$allowedChannel)->orderBy('name')->lists('name','id')->toArray();
       return view('brandmodel.create',compact('brands','productTypes'));
    }
 
-    public function store(Request $request) {
+    public function store(Request $request){
+        
+        $rightId=118;  
+        $productType=ProductType::find($request->product_type);
+        $currentChannelId =$productType->channel_id;
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+              return redirect('/dashboard');
         //dd($request);
           $validation = $this->validate($request,[
             'model_name' => 'required',
@@ -105,9 +121,19 @@ class BrandModelController extends Controller {
 
   
     public function edit($id){       
-        $rightId = 10;
+        $rightId=118;  
+        $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
+        $channels = $this->rightObj->getAllowedChannels($rightId); 
+        $allowedChannel=array();
+        foreach($channels as $channel){
+            $allowedChannel[]=$channel->channel_id;
+        }
+        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
+                return redirect('/dashboard');  
+      
+      
         $brands=Brand::orderBy('name')->lists('name','id')->toArray();
-        $productTypes= ProductType::orderBy('name','desc')->lists('name','id')->toArray();
+        $productTypes= ProductType::whereIn('channel_id',$allowedChannel)->orderBy('name')->lists('name','id')->toArray();
         $brandModel=  BrandModel::find($id);  
         $photos=  ModelImage::where('brand_model_id','=',$id)->orderBy('sequence')->get();
         //dd($photos);
@@ -121,7 +147,13 @@ class BrandModelController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function update(Request $request) {
+    public function update(Request $request){
+        
+        $rightId=118;  
+        $productType=ProductType::find($request->product_type);
+        $currentChannelId =$productType->channel_id;
+        if(!$this->rightObj->checkRights($currentChannelId, $rightId))
+              return redirect('/dashboard');
         
         $validation = $this->validate($request,[
             'model_name' => 'required',
