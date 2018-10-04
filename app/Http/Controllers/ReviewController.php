@@ -123,6 +123,7 @@ class ReviewController extends Controller {
     public function show($id){
        $rightId=125;
        $model=  BrandModel::find($id);
+       //dd($model);
        $productType = ProductType::find($model->product_type_id);
        $currentChannelId=$productType->channel_id;
        if(!$this->rightObj->checkRights($currentChannelId, $rightId))

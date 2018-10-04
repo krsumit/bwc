@@ -85,7 +85,7 @@
             <!--Notifications end-->
 
         </div>
-          <div class="form-horizontal">
+        <div class="form-horizontal">
 
         <div class="container-fluid">
 
@@ -113,8 +113,8 @@
             </div>
 
             <!--Select Box with Filter Search end-->
+            </div>
         </div>
-    </div>
         @if(count($productTypes)>0)
             {!! Form::open(array('url'=>'product-types/'.$productTypes[0]->id,'class'=> 'form-horizontal','id'=>'brands_list_from','enctype'=>'multipart/form-data')) !!}
             {!! csrf_field() !!}

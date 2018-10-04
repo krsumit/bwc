@@ -31,7 +31,11 @@ class AttributeController extends Controller {
         $this->rightObj = new Right();
     }
 
-    public function index(){        
+    public function index(){
+        $rightId = 119;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
+        
        $attributes=  Attribute::join('attribute_types','attributes.attribute_type_id','=','attribute_types.id')
                ->select('attributes.*','attribute_types.name as type_name','attribute_types.type')
                ->orderBy('created_at');
@@ -52,11 +56,17 @@ class AttributeController extends Controller {
      * @return Response
      */
     public function create(){
+        $rightId = 120;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
       $atributeTypes= AttributeType::orderBy('name','desc')->lists('name','id')->toArray();  
       return view('attribute.create',compact('atributeTypes'));
     }
 
     public function store(Request $request) {
+        $rightId = 120;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
       
         $validation = $this->validate($request,[
             'attribute_type' => 'required',  
@@ -75,7 +85,9 @@ class AttributeController extends Controller {
 
   
     public function edit($id){       
-        $rightId = 10;
+        $rightId = 120;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
         $atributeTypes= AttributeType::orderBy('name','desc')->lists('name','id')->toArray();  
         $attribute= Attribute::find($id); // Brand::find($id);  
         return view('attribute.edit',compact('attribute','atributeTypes'));
@@ -89,7 +101,9 @@ class AttributeController extends Controller {
      * @return Response
      */
     public function update(Request $request,$id) {
-          
+         $rightId = 120;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard'); 
          $validation = $this->validate($request,[
             'attribute_type' => 'required',  
             'attribute_name' => 'required',
@@ -120,6 +134,9 @@ class AttributeController extends Controller {
     
     public function destroy(Request $request){
         //dd($request);
+        $rightId = 120;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
         Attribute::whereIn('id',$request->checkItem)->delete();
         Session::flash('message', 'Attribute  deleted successfully.');
         return Redirect::to('attributes/');

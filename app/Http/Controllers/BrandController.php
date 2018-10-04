@@ -30,6 +30,10 @@ class BrandController extends Controller {
     }
 
     public function index() {
+        $rightId = 113;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');
+        
        $brands=Brand::orderBy('created_at');
        if (isset($_GET['keyword'])) {
            $queryed = $_GET['keyword'];
@@ -48,12 +52,17 @@ class BrandController extends Controller {
      * @return Response
      */
     public function create() {
+       $rightId = 114;
+       if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+            return redirect('/dashboard');  
       return view('brand.create');
       echo 'create brand page';
     }
 
     public function store(Request $request) {
-      
+        $rightId = 114;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+             return redirect('/dashboard'); 
           $validation = $this->validate($request,[
             'brand_name' => 'required',
             'logo_image' => 'mimes:jpeg,bmp,png,jpg,gif',
@@ -77,7 +86,9 @@ class BrandController extends Controller {
 
   
     public function edit($id){       
-        $rightId = 10;
+        $rightId = 114;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+             return redirect('/dashboard'); 
         $brand=  Brand::find($id);       
         return view('brand.edit',compact('brand'));
     }
@@ -89,8 +100,11 @@ class BrandController extends Controller {
      * @param  int  $id
      * @return Response
      */
-    public function update(Request $request,$id) {
-          
+    public function update(Request $request,$id){
+        $rightId = 114;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+             return redirect('/dashboard');   
+        
         $validation = $this->validate($request,[
             'brand_name' => 'required',
             'logo_image' => 'mimes:jpeg,bmp,png,jpg,gif',
@@ -134,6 +148,10 @@ class BrandController extends Controller {
     
     public function destroy(Request $request){
         //dd($request);
+        $rightId = 114;
+        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+             return redirect('/dashboard'); 
+        
         Brand::whereIn('id',$request->checkItem)->delete();
         Session::flash('message', 'Brand deleted successfully.');
         return Redirect::to('brands/');

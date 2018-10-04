@@ -19,7 +19,6 @@ use App\Classes\GeneralFunctions;
 use App\Classes\FileTransfer;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
-
 class ProductTypeController extends Controller {
 
     /**
@@ -58,7 +57,7 @@ class ProductTypeController extends Controller {
      * @param  Request  $request
      * @return Response
      */
-    public function create() {
+    public function create(){
       $rightId=116;  
       $currentChannelId = $this->rightObj->getCurrnetChannelId($rightId);
       $channels = $this->rightObj->getAllowedChannels($rightId);  
