@@ -82,6 +82,36 @@
             <!--Notifications end-->
 
         </div>
+        <div class="form-horizontal">
+
+        <div class="container-fluid">
+
+            <div class="form-legend" id="Channel">Channel</div>
+
+            <!--Select Box with Filter Search begin-->
+            <div  class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="channel_sel">Channel</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <select name="channel_sel" id="channel_sel" class="required channel_sel formattedelement">
+                            @foreach($channels as $channel)
+                            <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
+                            @endforeach
+                        </select>
+
+                    </div>
+                </div>
+                <script>
+                    $().ready(function () {
+                        $("#channel_sel").select2();
+                    });</script>
+            </div>
+
+            <!--Select Box with Filter Search end-->
+        </div>
+    </div>
         @if(count($products)>0)
             {!! Form::open(array('url'=>'products/','class'=> 'form-horizontal','id'=>'list_from','enctype'=>'multipart/form-data')) !!}
             {!! csrf_field() !!}
@@ -171,6 +201,12 @@
         <div class="container-fluid">
             No data available
         </div>
-        @endif    
+        @endif  
+        <script>
+            $("#channel_sel").change(function (){
+                //alert('{{url("product-types")}}' + '?channel=' + $(this).val());
+                window.location = '{{url("products")}}' + '?channel=' + $(this).val();
+            });
+        </script>
 </div>
 @stop
