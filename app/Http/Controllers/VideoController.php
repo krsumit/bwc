@@ -20,7 +20,6 @@ use App\Classes\GeneralFunctions;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 use App\Channel;
-use App\Classes\GeneralFunctions;
 
 class VideoController extends Controller
 {

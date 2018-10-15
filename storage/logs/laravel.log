@@ -17502,3 +17502,6 @@ Stack trace:
 #39 /var/www/html/bwcms/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(86): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #40 /var/www/html/bwcms/public/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #41 {main}  
+[2018-10-15 16:32:56] local.ERROR: Symfony\Component\Debug\Exception\FatalErrorException: Cannot use App\Classes\GeneralFunctions as GeneralFunctions because the name is already in use in /var/www/html/bwcms/app/Http/Controllers/VideoController.php:23
+Stack trace:
+#0 {main}  
