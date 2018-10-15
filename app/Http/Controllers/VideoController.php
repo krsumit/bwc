@@ -16,6 +16,7 @@ use App\Http\Controllers\AuthorsController;
 use App\Http\Controllers\Controller;
 use App\Photo;
 use App\Classes\FileTransfer;
+use App\Classes\GeneralFunctions;
 use Aws\Laravel\AwsFacade as AWS;
 use Aws\Laravel\AwsServiceProvider;
 use App\Channel;
@@ -197,13 +198,13 @@ class VideoController extends Controller
         $video = new MasterVideo();
        if($request ->video_name !=''){
             $file = $request->file('video_name');
-            $filename = str_random(6) . '_' . $request->file('video_name')->getClientOriginalName();
+            $filename = GeneralFunctions::cleanFileName($request->file('video_name')->getClientOriginalName());             
             $fileTran->uploadFile($file, config('constants.awvideo'), $filename,false); 
             $video->video_name = $filename;
         }
         if($request ->video_thumb_name !=''){
             $file = $request->file('video_thumb_name');
-            $filename = str_random(6) . '_' . $request->file('video_thumb_name')->getClientOriginalName();
+            $filename =GeneralFunctions::cleanFileName($request->file('video_thumb_name')->getClientOriginalName()); 
             $fileTran->uploadFile($file, config('constants.awvideothumb'), $filename); 
             $video->video_thumb_name = $filename;
         }
@@ -397,7 +398,7 @@ class VideoController extends Controller
        if($request ->video_name !=''){
            
             $file = $request->file('video_name');
-            $filename = str_random(6) . '_' . $request->file('video_name')->getClientOriginalName();
+            $filename = GeneralFunctions::cleanFileName($request->file('video_name')->getClientOriginalName());
             $fileTran->uploadFile($file, config('constants.awvideo'), $filename,false); 
             $video->video_name = $filename;
             if(trim($request->video_name_second)){
@@ -412,7 +413,7 @@ class VideoController extends Controller
         if($request ->video_thumb_name !=''){
            
             $file = $request->file('video_thumb_name');
-            $filename = str_random(6) . '_' . $request->file('video_thumb_name')->getClientOriginalName();
+            $filename =GeneralFunctions::cleanFileName($request->file('video_thumb_name')->getClientOriginalName()); 
             $fileTran->uploadFile($file, config('constants.awvideothumb'), $filename); 
             $video->video_thumb_name = $filename;
             if(trim($request->video_thumb_name_second)){
