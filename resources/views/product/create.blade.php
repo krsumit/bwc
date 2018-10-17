@@ -135,6 +135,20 @@
                 </div>
             </div>
         </div>
+        
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="title">Launch Price</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <input type="text" id="product_price" name="product_price" required="required"  value="{{old('product_price')?old('product_price'):$productPrice}}"/>
+
+                </div>
+            </div>
+        </div>
+        
+        
 
 
     </div>  

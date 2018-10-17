@@ -78,9 +78,12 @@ class ProductController extends Controller {
         
         $copy_id = 0;
         $productName = '';
+        $productPrice='';
         if (Input::get('copy_id')) {
             $copy_id = Input::get('copy_id');
-            $productName = Product::find($copy_id)->name;
+            $product=Product::find($copy_id);
+            $productName = $product->name;
+            $productPrice=$product->price;
         }
         //dd($copy_id);
         $attributeGroups = AttributeGroup::join('brand_models', 'attribute_groups.product_type_id', '=', 'brand_models.product_type_id')
@@ -90,7 +93,7 @@ class ProductController extends Controller {
         $brand = Brand::find($model->brand_id);
         
         //ProductType::orderBy('name','desc')->lists('name','id')->toArray();
-        return view('product.create', compact('brand', 'productType', 'model', 'attributeGroups', 'copy_id', 'productName'));
+        return view('product.create', compact('brand', 'productType', 'model', 'attributeGroups', 'copy_id', 'productName','productPrice'));
     }
 
     public function store(Request $request) {
@@ -99,6 +102,7 @@ class ProductController extends Controller {
         $product = new Product();
         $product->model_id = $request->model_id;
         $product->name = $request->product_name;
+        $product->price = $request->product_price;
         $product->save();
         $productId = $product->id;
         if(count($request->attribute_text)>0){
@@ -208,6 +212,7 @@ class ProductController extends Controller {
         //dd($request->file('attribute_file')[10]);
         $product = Product::find($id);
         $product->name = $request->product_name;
+        $product->price = $request->product_price;
         $product->save();
         $productId = $product->id;
         $oldAttributeLists = ProductAttributeValue::join('attributes', 'product_attribute_values.attribute_id', '=', 'attributes.id')->select('attributes.*', 'attribute_types.type')->join('attribute_types', 'attributes.attribute_type_id', '=', 'attribute_types.id')->where('product_attribute_values.product_id', '=', $id)->lists('type', 'id')->toArray();
@@ -334,11 +339,12 @@ class ProductController extends Controller {
             foreach ($request->label_attribute_file as $key => $val) {
                 if(!$request->file('attribute_file')[$key]){
                     $productAttributeValue = ProductAttributeValue::where('attribute_id', '=', $key)->where('product_id', '=', $id)->first();
-                    if(trim($productAttributeValue->value)){
-                        $productAttributeValue->caption = $val;
-                        $productAttributeValue->save();
+                    if ($productAttributeValue) {
+                        if (trim($productAttributeValue->value)) {
+                            $productAttributeValue->caption = $val;
+                            $productAttributeValue->save();
+                        }
                     }
-
                 }    
             }
         }

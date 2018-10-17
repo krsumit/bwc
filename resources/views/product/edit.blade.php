@@ -126,6 +126,7 @@
 
     <div class="container-fluid" id="variant_detail">
         <div class="form-legend" id="feed-detail">Variant Details</div>
+        
         <div  class="control-group row-fluid">
             <div class="span3">
                 <label class="control-label" for="title">Name</label>
@@ -133,6 +134,18 @@
             <div class="span9">
                 <div class="controls">
                     <input type="text" id="product_name" name="product_name" required="required"  value="{{old('product_name')?old('product_name'):$product->name}}"/>
+
+                </div>
+            </div>
+        </div>
+        
+        <div  class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="title">Launch Price</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <input type="text" id="product_price" name="product_price" required="required"  value="{{old('product_price')?old('product_price'):$product->price}}"/>
 
                 </div>
             </div>
