@@ -324,7 +324,7 @@ public function channelarticles($option) {
        if(isset($_GET['channelf'])){
          $channelf = $_GET['channelf'];
         }else{
-            $channelf = 1;
+            $channelf = '0';
         }
         if(isset($_GET['channel'])){
          $currentChannelId = $_GET['channel'];

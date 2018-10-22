@@ -19,7 +19,7 @@
                 <input id="panelSearch" required  placeholder="Search" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">
                 <button class="btn btn-search" type="submit"></button>
                 @if(isset($_GET['searchin'])) 
-                <a href="{{url("article/list/channelarticles/published")}}?channel={{$currentChannelId}}"><button class="btn btn-default" type="button">Reset</button></a>
+                <a href="{{url("article/list/channelarticles/published")}}?channel={{$idchannelf}}"><button class="btn btn-default" type="button">Reset</button></a>
                 @endif
 
                 <label class="radio">
@@ -178,7 +178,7 @@
                     <div class="span9">
                         <div class="controls">
                             <select name="channel_sel" id="channel_sel1" >
-                                
+                                <option value="0">-Select Channel-</option>
                                 @foreach($ChennalArr as $channelf)
                                
                                 <option @if($channelf->channel_id==$currentChannelId) disabled="disabled" @elseif($channelf->channel_id==$idchannelf) selected="selected" @endif  value="{{ $channelf->channel_id }}">{{ $channelf->channel }}</option>
