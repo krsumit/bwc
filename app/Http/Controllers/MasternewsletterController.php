@@ -202,7 +202,7 @@ class MasternewsletterController extends Controller {
              exec("/usr/bin/php /var/www/html/cms/public/bwedcronscript/cronjob.php 'section=newsletter'");
         elseif($newsletter->channel_id=='8')
              exec("/usr/bin/php /var/www/html/cms/public/bwhr/cronjob.php 'section=newsletter'");
-       elseif($newsletter->channel_id=='15')
+       elseif($newsletter->channel_id=='11')
              exec("/usr/bin/php /var/www/html/cms/public/bwdiffcron/cronjob.php 'section=newsletter'");
        
     }   
@@ -237,7 +237,7 @@ class MasternewsletterController extends Controller {
              exec("/usr/bin/php /var/www/html/cms/public/bwedcronscript/cronjob.php 'section=newsletter'");
         elseif($newsletter->channel_id=='8')
              exec("/usr/bin/php /var/www/html/cms/public/bwhr/cronjob.php 'section=newsletter'");
-        elseif($newsletter->channel_id=='15')
+        elseif($newsletter->channel_id=='11')
              exec("/usr/bin/php /var/www/html/cms/public/bwdiffcron/cronjob.php 'section=newsletter'");
 
         //exec("/usr/bin/php /var/www/html/public/hotcron/cronjob.php 'section=newsletter'");
@@ -347,7 +347,7 @@ class MasternewsletterController extends Controller {
              exec("/usr/bin/php /var/www/html/cms/public/bwedcronscript/cronjob.php 'section=newsletter'");
         elseif($newsletter->channel_id=='8')
              exec("/usr/bin/php /var/www/html/cms/public/bwhr/cronjob.php 'section=newsletter'");
-        elseif($newsletter->channel_id=='15')
+        elseif($newsletter->channel_id=='11')
              exec("/usr/bin/php /var/www/html/cms/public/bwdiffcron/cronjob.php 'section=newsletter'");
         
         return 'success';
