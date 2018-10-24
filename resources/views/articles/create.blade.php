@@ -641,8 +641,10 @@
             <script>
                         $().ready(function(){
                         $("#channel_sel").select2();
+			
                                 // Populate Events / Campaign / Magazine / Category Drop Down
                                 $('#channel_sel').change(function(){
+				event.preventDefault();
                         $.get("{{ url('article/event')}}",
                         { option: $(this).attr("value") },
                                 function(data) {
