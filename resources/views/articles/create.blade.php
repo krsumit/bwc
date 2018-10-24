@@ -1006,6 +1006,7 @@
                 <script>
                                     $().ready(function(){
                             $("#selectBoxFilter7").select2();
+                            event.preventDefault();
                             });</script>
             </div>
 

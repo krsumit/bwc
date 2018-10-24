@@ -2343,7 +2343,7 @@ the specific language governing permissions and limitations under the Apache Lic
     });
 
     $.fn.select2 = function () {
-	event.preventDefault();
+	
         var args = Array.prototype.slice.call(arguments, 0),
             opts,
             select2,
