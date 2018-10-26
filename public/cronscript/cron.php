@@ -149,7 +149,7 @@ class Cron {
                 break;
             case 'livefeed':
                 $this->migrateLiveFeed();
-            //whatsAppBroadcast
+		break;
         endswitch;
 
         $_SESSION['message'] = $this->message;
