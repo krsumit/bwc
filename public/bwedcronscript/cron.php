@@ -748,20 +748,15 @@ function migrateBwArticle() {
     }
 
     function migrateArticleAuthor($articleId, $isNew = 0, $condition='') {
-		$allauthorRst=$this->conn2->query("select author_id,author_type from author");
-		$allAuthArr=array();
-		while($autRow=$allauthorRst->fetch_object()){
-			$allAuthArr[$autRow->author_id]=$autRow->author_type;
-			
-		}
-		//echo '<pre>';
-		//echo print_r($allAuthArr); exit;
+	$articleRst=$this->conn->query("select author_type from articles where article_id=".$articleId);
+        $articleRow=$articleRst->fetch_object();
+        
         if ($isNew == '1') {
             $articleAuthorResultset = $this->conn->query("select * from article_author where article_id=$articleId and valid='1'");
             while ($authorRow = $articleAuthorResultset->fetch_assoc()) {
 				$tauthId=$authorRow['author_id'];
                 $auInsertStmt = $this->conn2->prepare("insert into article_author set article_id=?,author_type=?,author_id=?");
-                $auInsertStmt->bind_param('iii', $authorRow['article_id'], $allAuthArr[$tauthId], $authorRow['author_id']);
+                $auInsertStmt->bind_param('iii', $authorRow['article_id'],$articleRow->author_type, $authorRow['author_id']);
                 $auInsertStmt->execute();
                 $auInsertStmt->close();
             }
@@ -774,7 +769,7 @@ function migrateBwArticle() {
                 while ($authorRow = $articleAuthorResultset->fetch_assoc()) {
 					$tauthId=$authorRow['author_id'];
                     $auInsertStmt = $this->conn2->prepare("insert into article_author set article_id=?,author_type=?,author_id=?");
-                    $auInsertStmt->bind_param('iii', $authorRow['article_id'],$allAuthArr[$tauthId], $authorRow['author_id']);
+                    $auInsertStmt->bind_param('iii', $authorRow['article_id'],$articleRow->author_type, $authorRow['author_id']);
                     $auInsertStmt->execute();
                     $auInsertStmt->close();
                 }

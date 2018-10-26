@@ -1,1 +1,1 @@
-../mtdowling/jmespath.php/bin/jp.php
+сссо-Iи/оилKвойM-.H,ип+х(пOйлсо*

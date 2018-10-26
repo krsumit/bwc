@@ -614,6 +614,11 @@
                             <a href="/products">Manage Products</a>
                         </li>
                         @endif
+                         @if(in_array('126',Session::get('user_rights')))
+                        <li>
+                            <a href="/grids">Grids</a>
+                        </li>
+                        @endif
                         
                     </ul>
                 </div>

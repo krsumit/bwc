@@ -465,6 +465,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('attribute-values','AttributeValueController');
     Route::resource('brands','BrandController');
     Route::resource('products','ProductController');
+    Route::resource('grids','GridController');
     
     Route::post('product-types/attribute/store','ProductTypeController@storeAttribute');    
     Route::resource('product-types','ProductTypeController');

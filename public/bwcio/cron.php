@@ -1187,13 +1187,6 @@ class Cron {
         $articleRst=$this->conn->query("select author_type from articles where article_id=".$articleId);
         $articleRow=$articleRst->fetch_object();
         
-        /*$allauthorRst = $this->conn2->query("select author_id,author_type from author");
-        $allAuthArr = array();
-        while ($autRow = $allauthorRst->fetch_object()) {
-            $allAuthArr[$autRow->author_id] = $autRow->author_type;
-        }*/
-        //echo '<pre>';
-        //echo print_r($allAuthArr); exit;
         if ($isNew == '1') {
             $articleAuthorResultset = $this->conn->query("select * from article_author where article_id=$articleId and valid='1'");
             while ($authorRow = $articleAuthorResultset->fetch_assoc()) {
