@@ -61,8 +61,18 @@ class AuthorsController extends Controller {
         /* Right mgmt end */
          if (isset($_GET['id'])) {
             $id = $_GET['id'];
+            
          }
-        //echo $queryed ;exit;
+         if($id==3){
+                $whoauthor ='Guest Author';
+            }
+            elseif($id==4){
+                $whoauthor ='Columnist';
+            }else{
+                $whoauthor ='Bw Reporters';
+            }
+         
+        //echo $whoauthor ;exit;
         if (isset($_GET['keyword'])) {
             $queryed = $_GET['keyword'];
             $posts = DB::table('authors')
@@ -91,7 +101,7 @@ class AuthorsController extends Controller {
         }
 
 
-        return view('authors.authorshowlist', compact('posts'));
+        return view('authors.authorshowlist', compact('posts','whoauthor'));
     }
     
     

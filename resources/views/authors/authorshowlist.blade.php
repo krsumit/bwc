@@ -8,7 +8,7 @@
     <div class="panel-content filler">
         <div class="panel-logo"></div>
         <div class="panel-header">
-            <h1><small>Authors Listing</small></h1>
+            <h1><small>{{$whoauthor}} Listing</small></h1>
         </div>
         <div class="panel-search container-fluid">
             <div id="searchnameby">
@@ -33,7 +33,7 @@
             </div>
              <label class="radio">
                 <input type="radio" id="seacrchname" checked @if(isset($_GET['keyword'])) @if($_GET['keyword']!='') checked @endif @endif required name="searchin"  class="uniformRadio">
-                Search by Author Name
+                Search by {{$whoauthor}} Name
             </label>
             <label class="radio">
                 <input type="radio" id="seacrchemail" @if(isset($_GET['keywordemail'])) @if($_GET['keywordemail']!='') checked @endif @endif required name="searchin" class="uniformRadio" value="article_id">
@@ -101,7 +101,7 @@
                 </a>
             </li>
             <li class="current">
-                <a href="javascript:;"> Authors Listing</a>
+                <a href="javascript:;"> {{$whoauthor}} Listing</a>
             </li>
         </ul>
     </div>           
