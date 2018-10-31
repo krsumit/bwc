@@ -64,6 +64,7 @@ class AuthorsController extends Controller {
             
          }
          if($id==3){
+             
                 $whoauthor ='Guest Author';
             }
             elseif($id==4){
