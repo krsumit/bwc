@@ -405,10 +405,6 @@
 
                         <div class="span9">
 
-                        </div>
-
-                        <div class="span9">
-
                             <div class="controls">
                                 <input type="text" class="valid" name="author" id="author"/>
                             </div>
@@ -1346,13 +1342,38 @@
                                 }
                         })
                         });
-                                $("#Taglist").tokenInput("/tags/getJson", {
-                        theme: "facebook",
+                        
+                        $("#Taglist").tokenInput("/tags/getJson", {
+                                theme: "facebook",
                                 searchDelay: 300,
                                 minChars: 4,
                                 preventDuplicates: true,
                         });
+                        
+                        $("#product_list").tokenInput("/tags/getJson", {
+                                theme: "facebook",
+                                searchDelay: 300,
+                                minChars: 4,
+                                preventDuplicates: true,
+                        });
+                        
                         });</script>
+            
+            
+            
+            <div class="control-group row-fluid">    
+                <div class="span3">
+                    <label for="multiFilter" class="control-label">Products</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <input type="text" class="valid" name="product_list" id="product_list"/>
+                    </div>
+                </div>
+            </div>
+            
+            
+            
         </div>                       
         <!--Select Box with Filter Search end-->
     </div>

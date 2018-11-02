@@ -159,12 +159,11 @@ class GridController extends Controller {
      * @return Response
      */
     public function show($id){
-      
+     
     }
   
     
     public function destroy(Request $request){
-        dd($request);
         $rightId = 126;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
              return redirect('/dashboard'); 

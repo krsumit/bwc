@@ -1,14 +1,13 @@
 @extends('layouts/master')
 
-@section('title', 'Grids - BWCMS')
-
+@section('title', 'Grid Rows - BWCMS')
 
 @section('content') 
 <div class="panel">
     <div class="panel-content filler">
         <div class="panel-logo"></div>
         <div class="panel-header">
-            <h1><small>Grids</small></h1>
+            <h1><small>Grid Rows</small></h1>
 
         </div>
         <div class="panel-search container-fluid">
@@ -20,7 +19,7 @@
                  <button type="submit" class="btn btn-info">Search</button>
                 <!--                <button class="btn btn-search" type="submit"></button>-->
                 @if(isset($_GET['keyword'])) 
-                <a href="/grids"><button class="btn btn-default" type="button">Reset</button></a>
+                <a href="/grid-rows/{{$grid->id}}"><button class="btn btn-default" type="button">Reset</button></a>
                 @endif
 
             </form>
@@ -51,11 +50,11 @@
         </ul>
     </div>           <header>
         <i class="icon-big-notepad"></i>
-        <h2><small>Grids</small></h2>
+        <h2><small>Grid Rows</small></h2>
     </header>
    <div style="margin-bottom:20px;margin-right:20px;text-align:right;">
-        <a href="/grids/create" >
-            <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="submit">Create Grid</button>
+        <a href="/grid-rows/create?grid={{$grid->id}}" >
+            <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="submit">Create Row</button>
         </a>
     </div>
   
@@ -89,7 +88,7 @@
 
         <div class="container-fluid">
 
-            <div class="form-legend" id="Channel">Channel</div>
+            <div class="form-legend" id="Channel">Grid Details</div>
 
             <!--Select Box with Filter Search begin-->
             <div  class="control-group row-fluid">
@@ -98,25 +97,47 @@
                 </div>
                 <div class="span9">
                     <div class="controls">
-                        <select name="channel_sel" id="channel_sel" class="required channel_sel formattedelement">
-                            @foreach($channels as $channel)
-                            <option @if($channel->channel_id==$currentChannelId) selected="selected" @endif value="{{ $channel->channel_id }}">{{ $channel->channel }}</option>
-                            @endforeach
-                        </select>
-
+                        <label class="control-label" for="channel_sel">
+                        {{$channel->channel}}
+                        </label>
                     </div>
                 </div>
-                <script>
-                    $().ready(function () {
-                        $("#channel_sel").select2();
-                    });</script>
+             
             </div>
+            <div  class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="channel_sel">Grid</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <label class="control-label" for="channel_sel">
+                        {{$grid->name}}
+                        </label>
+                    </div>
+                </div>
+             
+            </div>
+            
+             <div  class="control-group row-fluid">
+                <div class="span3">
+                    <label class="control-label" for="channel_sel">Grid Type</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <label class="control-label" for="channel_sel">
+                        {{ ucfirst($grid->type)}}
+                        </label>
+                    </div>
+                </div>
+             
+            </div>
+            
 
             <!--Select Box with Filter Search end-->
             </div>
         </div>
-        @if(count($grids)>0)
-            {!! Form::open(array('url'=>'grids/'.$grids[0]->id,'class'=> 'form-horizontal','id'=>'brands_list_from','enctype'=>'multipart/form-data')) !!}
+        @if(count($rows)>0)
+            {!! Form::open(array('url'=>'/grid-rows/'.$grid->id,'class'=> 'form-horizontal','id'=>'brands_list_from','enctype'=>'multipart/form-data')) !!}
             {!! csrf_field() !!}
             {!! method_field('DELETE') !!}  
             <div class="container-fluid">
@@ -126,38 +147,19 @@
                         <table class="table table-striped" id="tableSortable">
                             <thead>
                                 <tr>
-                                    <th>Grid ID</th>
+                                    <th>Row ID</th>
                                     <th>Name</th>
-                                    <th>Type</th>
-                                    <th></th>
                                     <th><input type="checkbox" class="uniformCheckbox" value="checkbox1"  id="selectall"></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($grids as $grid)
-                                <tr class="gradeX" id="rowCur{{$grid->id}}">
-                                    <td><a href="/grids/{{$grid->id}}/edit">{{$grid->id}}</a> </td>
-                                    <td><a href="/grids/{{$grid->id}}/edit">{{$grid->name}}</a></td>
-                                    <td><a href="/grids/{{$grid->id}}">{{ucfirst($grid->type)}}</a></td>
+                                @foreach($rows as $row)
+                                <tr class="gradeX" id="rowCur{{$row->id}}">
+                                    <td><a href="/grid-rows/{{$row->id}}/edit">{{$row->id}}</a> </td>
+                                    <td><a href="/grid-rows/{{$row->id}}/edit">{{$row->name}}</a></td>
                                     <td class="center"> 
-                                        <div class="btn-group">
-                                            <button type="button" class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Manage Grid<span class="caret"></span></button>
-                                            <ul class="dropdown-menu">
-                                                @if($grid->type!='review')
-                                                <li><a href="/grid-rows/{{$grid->id}}">Manage Rows</a></li>
-                                                <li class="divider"></li>
-                                                @endif
-                                                <li><a href="/grid-columns/{{$grid->id}}">Manage Column</a></li>
-                                                <li class="divider"></li>
-                                                <li><a href="/grid-products/{{$grid->id}}">Manage Products</a></li>
-                                                <li class="divider"></li>
-
-                                            </ul>
-                                        </div>
+                                       <input type="checkbox" class="uniformCheckbox" value="{{$row->id}}" name="checkItem[]"> 
                                     </td>
-                                   <td class="center"> 
-                                       <input type="checkbox" class="uniformCheckbox" value="{{$grid->id}}" name="checkItem[]"> 
-                                   </td>
                                   
                                 </tr>
                                 @endforeach
@@ -168,9 +170,6 @@
                 </div>
                 <!--Sortable Non-responsive Table end-->
 
-                <div class="dataTables_paginate paging_bootstrap pagination">
-                    {!! $grids->appends(Input::get())->render() !!}
-                </div>
                 <script>
                     $(document).ready(function () {
                         $('#tableSortable').dataTable({
@@ -224,14 +223,9 @@
             {!! Form::close() !!}
         @else
         <div class="container-fluid">
-            No data available
+            No row available
         </div>
         @endif    
-        <script>
-            $("#channel_sel").change(function (){
-                //alert('{{url("product-types")}}' + '?channel=' + $(this).val());
-                window.location = '{{url("grids")}}' + '?channel=' + $(this).val();
-            });
-        </script>
+
 </div>
 @stop
