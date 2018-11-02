@@ -281,7 +281,7 @@
             <div class="control-group row-fluid">
                 <div class="span12 span-inset">
                     @if(in_array('13',Session::get('user_rights')))
-                    <button type="button" class="btn btn-danger" onclick="copyArticle()">Copy</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
+                    <button type="button" id="myBtn" class="btn btn-danger" onclick="copyArticle()">Copy</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>
                     @endif
                 </div>
             </div>
@@ -321,9 +321,11 @@
 
                 function copyArticle() {
                     var data = $('#artcilechannelin').serialize();  
+
                         //alert(data);
                         var data = $('#artcilechannelin').serialize();  
                         //alert('sumit');return false;
+			document.getElementById("myBtn").disabled = true;
                        $.ajax({
                             url : "/article/articlechannelinsert", // the endpoint
                             type : "POST", // http method

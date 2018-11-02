@@ -347,7 +347,10 @@ public function channelarticles($option) {
             $articles = array();
             DB::enableQueryLog();
             $condition = '';
-
+	//DB::enableQueryLog();
+	   //$Arrcopyarticles = DB::table('articles')->select(DB::raw('copyarticle_id'))->where('channel_id', $currentChannelId)->get();
+	//dd(DB::getQueryLog());
+//print_r($Arrcopyarticles);exit
             $q = DB::table('articles')
                     ->Leftjoin('article_author', 'articles.article_id', '=', 'article_author.article_id')
                     ->Leftjoin('authors', 'article_author.author_id', '=', 'authors.author_id');
@@ -359,7 +362,9 @@ public function channelarticles($option) {
                 
             
             $q->where('articles.channel_id', $channelf)
-                    ->where('status', 'p');
+                    ->where('status', 'p')->whereNotIn('articles.article_id', function($query) use ($currentChannelId)  {
+        $query->select('copyarticle_id')->from('articles')->where('channel_id','=', $currentChannelId);});
+		
             if (isset($_GET['searchin'])) {
                 if ($_GET['searchin'] == 'title') {
                     $q->where('articles.title', 'like', '%' . $_GET['keyword'] . '%');
