@@ -11,6 +11,7 @@ use App\Grid;
 use App\GridProduct;
 use App\GridColumn;
 use App\GridRow;
+use App\Channel;
 use Session;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -61,15 +62,24 @@ class GridProductController extends Controller {
         $currentChannelId = $grid->channel_id;        
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
-        
+        $channel=Channel::find($grid->channel_id);
         $girdRows=array();
         $gridColumn= GridColumn::where('grid_id','=',$grid->id)->get();
-        //dd($gridColumn);
+        //echo count($gridColumn).'-';
         if($grid->type=='review'){
+            $gridRows= GridProduct::where('grid_id','=',$grid->id)->get();
+            
+            if(count($gridRows)>0){
+                
+            }
             
         }else{
-           $girdRows= GridRow::where('grid_id','=',$grid->id);
+            $girdRows= GridRow::where('grid_id','=',$grid->id);
+        
+           
         }
+       $rows=$girdRows;
+        return view('grid.product.products',compact('grid','gridColumn','channel','rows'));
         //dd($gridColumn); exit;
        // $gridProduct=$gridProduct::where('');
       

@@ -59,25 +59,35 @@ class GridColumnController extends Controller {
     }
    
     public function store(Request $request) {
+        //echo '<pre>';
+        //print_r($request->all());
         $grid=Grid::find($request->grid_id);
+        //dd($grid->type);
         $rightId=126;  
         $currentChannelId=$grid->channel_id;  
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
-            return redirect('/dashboard');  
+            return redirect('/dashboard'); 
         
-        $validation = $this->validate($request,[
-              'column_name' => 'required',
-              'product_type' => 'required',
-              'attribute_group' => 'required',
-        ]);
+        if ($grid->type == "review") {
+            $validation = $this->validate($request,[
+                'column_name' => 'required',
+                'product_type' => 'required',
+                'attribute_group' => 'required',
+            ]);
+        } else {
+            $validation = $this->validate($request, [
+                'column_name' => 'required'
+            ]);
+        }
+
         $column = new GridColumn();
         $column->name = trim($request->column_name);
         $column->grid_id=$request->grid_id;
-        $column->att_group_id=$request->attribute_group;
+        if ($grid->type == "review")
+            $column->att_group_id=$request->attribute_group;
         $column->save();
         Session::flash('message', 'Column added successfully.');
         return Redirect::to('grid-columns/'.$request->grid_id);
-        
     }  
     public function edit($id){       
         $rightId=126;  

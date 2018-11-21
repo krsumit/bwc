@@ -171,7 +171,7 @@ class MagazineissueController extends Controller {
           $q = DB::table('articles')
                     ->Leftjoin('magazine_list', 'articles.article_id', '=', 'magazine_list.a_id');
                     
-                $q->select(DB::raw('articles.article_id,articles.title,magazine_list.m_f,magazine_list.m_lw,magazine_list.m_eicn'));
+           $q->select(DB::raw('articles.article_id,articles.title,magazine_list.m_f,magazine_list.m_lw,magazine_list.m_eicn'));
                
            $SelectedArticleArr = $q->where('magazine_list.m_id', $id)->where('magazine_list.status', '1')->get();
          //$SelectedArticleArr = DB::table('articles')->Leftjoin('magazine_list', 'articles.article_id', '=', 'magazine_list.a_id')->where('magazine_list.m_id', $id);

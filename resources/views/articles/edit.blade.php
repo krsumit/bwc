@@ -783,6 +783,7 @@
                 $("#channel_sel").select2();
                         // Populate Events / Campaign / Magazine / Category Drop Down
                         $('#channel_sel').change(function(){
+                             $("#product_list").tokenInput("clear");
                 $.get("{{ url('article/event')}}",
                 { option: $(this).attr("value") },
                         function(data) {
@@ -1587,7 +1588,31 @@
                         preventDuplicates: true,
                         prePopulate: <?php echo $tags ?>,
                 });
+        
+                     $("#product_list").tokenInput(function(){ 
+                            return "/products/product-json?channel="+$("#channel_sel").val();
+                        }, 
+                        {
+                                theme: "facebook",
+                                searchDelay: 300,
+                                minChars: 4,
+                                preventDuplicates: true,
+                                prePopulate: <?php echo $productList ?>,
+                        });
+                        
                 });</script>
+            
+            <div class="control-group row-fluid">    
+                <div class="span3">
+                    <label for="multiFilter" class="control-label">Products</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <input type="text" class="valid" name="product_list" id="product_list"/>
+                    </div>
+                </div>
+            </div>
+            
         </div>
         <!--Select Box with Filter Search end-->
     </div>

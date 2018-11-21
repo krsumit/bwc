@@ -385,6 +385,19 @@ class ProductController extends Controller {
         Session::flash('message', 'Model deleted successfully.');
         return Redirect::to('brand_models/');
     }
+    public function getProductJson(){
+        $channel_id=$_GET['channel'];
+        $str=trim($_GET['q']);
+        $productList = DB::table('brand_models')
+                ->join('product_types','brand_models.product_type_id','=','product_types.id')
+                ->where('product_types.channel_id','=',$channel_id)
+                ->where('brand_models.name', "like", '%'.$str . '%')
+                ->whereNull('brand_models.deleted_at')
+                ->orderBy('brand_models.name')
+                ->select('brand_models.id','brand_models.name')
+                ->get();
+        return json_encode($productList);
+    }
 
     
     

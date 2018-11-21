@@ -641,6 +641,7 @@
                                 // Populate Events / Campaign / Magazine / Category Drop Down
                                 $('#channel_sel').change(function(){
 				//event.preventDefault();
+                                 $("#product_list").tokenInput("clear");
                         $.get("{{ url('article/event')}}",
                         { option: $(this).attr("value") },
                                 function(data) {
@@ -1350,7 +1351,10 @@
                                 preventDuplicates: true,
                         });
                         
-                        $("#product_list").tokenInput("/tags/getJson", {
+                        $("#product_list").tokenInput(function(){ 
+                            return "/products/product-json?channel="+$("#channel_sel").val();
+                        }, 
+                        {
                                 theme: "facebook",
                                 searchDelay: 300,
                                 minChars: 4,

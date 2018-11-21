@@ -1,28 +1,17 @@
 @extends('layouts/master')
 
-@section('title', 'Grid Rows - BWCMS')
+@section('title', 'Grid Products - BWCMS')
 
 @section('content') 
 <div class="panel">
     <div class="panel-content filler">
         <div class="panel-logo"></div>
         <div class="panel-header">
-            <h1><small>Grid Rows</small></h1>
+            <h1><small>Grid Products</small></h1>
 
         </div>
         <div class="panel-search container-fluid">
-            <form class="form-horizontal" method="get" action="">
-                <div class="controls">
-                    Keyword
-                    <input id="panelSearch" value="{{$_GET['keyword'] or ''}}" type="text" required="required" name="keyword">      
-                </div>
-                 <button type="submit" class="btn btn-info">Search</button>
-                <!--                <button class="btn btn-search" type="submit"></button>-->
-                @if(isset($_GET['keyword'])) 
-                <a href="/grid-rows/{{$grid->id}}"><button class="btn btn-default" type="button">Reset</button></a>
-                @endif
-
-            </form>
+            
         </div>
 
         <div class="panel-header">
@@ -50,13 +39,8 @@
         </ul>
     </div>           <header>
         <i class="icon-big-notepad"></i>
-        <h2><small>Grid Rows</small></h2>
+        <h2><small>Grid Products</small></h2>
     </header>
-   <div style="margin-bottom:20px;margin-right:20px;text-align:right;">
-        <a href="/grid-rows/create?grid={{$grid->id}}" >
-            <button class="btn btn-default" id="draftSubmit" value="S" name="status" type="submit">Create Row</button>
-        </a>
-    </div>
   
         <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
             <!--Notifications begin-->

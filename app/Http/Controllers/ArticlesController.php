@@ -25,6 +25,7 @@ use App\Author;
 use App\NewsType;
 use App\MasterVideo;
 use App\PhotoTag;
+use App\ArticleProduct;
 use App\Http\Controllers\Auth;
 use App\Http\Controllers\AuthorsController;
 use App\Http\Requests;
@@ -664,8 +665,16 @@ public function channelarticles($option) {
                 ->where('owner_id', $article->article_id)
                 ->orderBy('sequence')
                 ->get();
-        //echo 'test'; exit;
-        return view('articles.edit', compact('article', 'rights', 'channels', 'p1', 'postAs', 'country', 'states', 'newstype', 'category', 'magazine', 'event', 'campaign', 'columns', 'tags', 'photos', 'acateg', 'arrAuth','authors', 'arrTags', 'arrVideo', 'userTup', 'arrTopics','is_locked'));
+        // Product List
+        $productList = DB::table('brand_models')
+                ->join('article_products','brand_models.id','=','article_products.model_id')
+                ->whereNull('brand_models.deleted_at')
+                ->where('article_products.article_id','=',$article->article_id)
+                ->orderBy('brand_models.name')
+                ->select('brand_models.id','brand_models.name')
+                ->get();
+        $productList=json_encode($productList);
+        return view('articles.edit', compact('article', 'rights', 'channels', 'p1', 'postAs', 'country', 'states', 'newstype', 'category', 'magazine', 'event', 'campaign', 'columns', 'tags', 'photos', 'acateg', 'arrAuth','authors', 'arrTags', 'arrVideo', 'userTup', 'arrTopics','is_locked','productList'));
     }
 
     public function getRights($uid, $parentId = 0) {
@@ -957,6 +966,21 @@ public function channelarticles($option) {
                 $article_tags->save();
             }
         }
+        // Article product save new delete old
+        if(trim($request->product_list)){           
+            $products=explode(',',$request->product_list);
+            ArticleProduct::whereNotIn('model_id',$products)->where('article_id','=',$id)->delete();
+            foreach ($products as $key => $value) {
+                if(!ArticleProduct::where('model_id','=',$value)->where('article_id','=',$id)->first()){
+                    $artile_product=new ArticleProduct();
+                    $artile_product->article_id=$id;
+                    $artile_product->model_id=$value;        
+                    $artile_product->save();
+                }  
+            }
+        }else{
+            ArticleProduct::where('article_id','=',$id)->delete();
+        }  
         //Article Category - Save New: Delete Old
         $arrExistingCats = DB::table('article_category')->where('article_id', '=', $id)->get();
         if (count($arrExistingCats) > 0) {
@@ -1131,6 +1155,7 @@ public function channelarticles($option) {
     }
 
     public function store(Request $request) {
+       
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
         }
@@ -1267,6 +1292,17 @@ public function channelarticles($option) {
                 $article_tags->save();
             }
         }
+        //array_filter(explode(',',$request->product_list))
+        if(trim($request->product_list)){           
+            $products=explode(',',$request->product_list);
+            foreach ($products as $key => $value) {
+                $artile_product=new ArticleProduct();
+                $artile_product->article_id=$id;
+                $artile_product->model_id=$value;        
+                $artile_product->save();        
+            }
+        }   
+      
         //Article Category - Save
         for ($i = 1; $i <= 4; $i++) {
             $article_category = new ArticleCategory();
@@ -1550,7 +1586,7 @@ public function articlechannelinsert(Request $request) {
                     $article->country = $articleRow->country;
                     $article->state = $articleRow->state;
                     $article->news_type = $articleRow->news_type;
-                    $article->magazine_id = $articleRow->magazine_id;                    
+                    $article->magazine_id = '0';                    
                     $article->event_id = $articleRow->event_id;
                     $article->canonical_options = $articleRow->canonical_options;
                     $article->view_count = $articleRow->view_count;

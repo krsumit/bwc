@@ -464,6 +464,7 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('attribute-groups','AttributeGroupController');
     Route::resource('attribute-values','AttributeValueController');
     Route::resource('brands','BrandController');
+    Route::get('products/product-json','ProductController@getProductJson');
     Route::resource('products','ProductController');
     Route::resource('grid-rows','GridRowController');
     Route::resource('grid-columns','GridColumnController');
