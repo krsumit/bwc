@@ -215,7 +215,7 @@ class Cron {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
-        $photoshootResults = $this->conn->query("SELECT *  FROM album where channel_id='1' $condition");
+        $photoshootResults = $this->conn->query("SELECT *  FROM album where channel_id='$this->channelId' $condition");
         //echo $photoshootResults->num_rows;exit;
         if ($photoshootResults->num_rows > 0) {
             while ($photoshootRow = $photoshootResults->fetch_assoc()) {
@@ -366,7 +366,7 @@ class Cron {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
-        $eventrResults = $this->conn->query("SELECT * FROM event  WHERE channel_id= '1'  $condition");
+        $eventrResults = $this->conn->query("SELECT * FROM event  WHERE channel_id= '$this->channelId'  $condition");
         if ($eventrResults->num_rows > 0) {
             while ($eventRow = $eventrResults->fetch_assoc()) {
                 $eventId = $eventRow['event_id'];
@@ -477,7 +477,7 @@ class Cron {
 //select category_four_id as id,name,category_three_id as parent,valid,'4' as level from category_four where 1=1 $condition");
 //        
 //        echo $catresults->num_rows;exit;
-        $catresults = $this->conn->query("SELECT category_id as id,name,channel_id as parent_id,valid,'1' as level  FROM category where channel_id='1' $condition");
+        $catresults = $this->conn->query("SELECT category_id as id,name,channel_id as parent_id,valid,'1' as level  FROM category where channel_id='$this->channelId' $condition");
         //echo $catresults->num_rows;exit;
 
         while ($catrow = $catresults->fetch_assoc()) {
@@ -997,7 +997,7 @@ class Cron {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
-        $quickBytesResults = $this->conn->query("SELECT *  FROM quickbyte where channel_id='1' $condition");
+        $quickBytesResults = $this->conn->query("SELECT *  FROM quickbyte where channel_id='$this->channelId' $condition");
         //echo $quickBytesResults->num_rows;exit;
         if ($quickBytesResults->num_rows > 0) {
             
@@ -1177,7 +1177,7 @@ class Cron {
         //echo 'test'; exit;
         // updating scheduled articles
 	//Pti server url to insert article in cms: http://35.194.177.143/news/importfeed.php
-	file_get_contents('http://35.194.177.143/news/importfeed.php');
+	//file_get_contents('http://35.194.177.143/news/importfeed.php');
         $this->conn->query("update articles set status='P',updated_at='".date('Y-m-d H:i:s')."' where status='SD' and channel_id = $this->channelId and concat(publish_date,' ',publish_time) <= '" . date('Y-m-d H:i:s') . "'") or die($this->conn->error);
         //echo date('Y-m-d h:i:s'); exit;
         //exit;
@@ -1202,7 +1202,7 @@ class Cron {
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $articleResults = $this->conn->query("SELECT *  FROM articles where  channel_id='1'  $condition");
+        $articleResults = $this->conn->query("SELECT *  FROM articles where  channel_id='$this->channelId'  $condition");
         //echo $articleResults->num_rows ;exit;
         if ($articleResults->num_rows > 0) {
             // exit;
@@ -1295,7 +1295,7 @@ class Cron {
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $featurResults = $this->conn->query("SELECT *  FROM featuredarticle where channel_id='1' $condition");
+        $featurResults = $this->conn->query("SELECT *  FROM featuredarticle where channel_id='$this->channelId' $condition");
         // echo $featurResults->num_rows ;exit;
         //print_r($featurResults);exit;
         if ($featurResults->num_rows > 0) {
@@ -1598,7 +1598,7 @@ class Cron {
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $masterVideoResults = $this->conn->query("SELECT * FROM video_master where channel_id=1  $condition");
+        $masterVideoResults = $this->conn->query("SELECT * FROM video_master where channel_id=$this->channelId  $condition");
         //echo $masterVideoResults->num_rows; exit;
         if ($masterVideoResults->num_rows > 0) {
 
@@ -1710,7 +1710,7 @@ class Cron {
             // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $campaingResults = $this->conn->query("SELECT * FROM campaign where channel_id=1 $condition");
+        $campaingResults = $this->conn->query("SELECT * FROM campaign where channel_id=$this->channelId $condition");
         //echo $authorResults->num_rows; exit;
         if ($campaingResults->num_rows > 0) {
 
@@ -1763,7 +1763,7 @@ class Cron {
             //$condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
         //echo 'sumit' ;exit;
-        $masterNewsLetterResults = $this->conn->query("SELECT * FROM master_newsletter where channel_id= 1  $condition");
+        $masterNewsLetterResults = $this->conn->query("SELECT * FROM master_newsletter where channel_id= $this->channelId  $condition");
         // echo $masterNewsLetterResults->num_rows; exit;
         if ($masterNewsLetterResults->num_rows > 0) {
 
@@ -1914,7 +1914,7 @@ class Cron {
             // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $livestreamingResults = $this->conn->query("SELECT * FROM event_streaming where channel_id=1 $condition");
+        $livestreamingResults = $this->conn->query("SELECT * FROM event_streaming where channel_id=$this->channelId $condition");
         //echo $trendingResults->num_rows; exit;
         if ($livestreamingResults->num_rows > 0) {
 
