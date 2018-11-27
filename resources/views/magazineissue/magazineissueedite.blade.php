@@ -126,11 +126,8 @@
         <i class="icon-big-notepad"></i>
         <h2><small>Magazine Articles</small></h2>        
     </header>
-    <form class="form-horizontal" method="post" id="artcilmg">
-        <input type="hidden" name="m_id" value="{{$id}}" >
-        <input type="hidden" name="channel_id" value="{{$posts->channel_id}}" >
+    
         
-         {{ csrf_field() }}
          <div class="container-fluid" id="msg">
                 <div class="form-legend" id="Notifications">Notifications</div>
                 <!--Notifications begin-->
@@ -172,6 +169,11 @@
                 </script>                           
             </div>                            
         </div>  
+         <form class="form-horizontal" method="post" id="artcilmgnext">
+               <input type="hidden" name="m_id" value="{{$id}}" >
+        <input type="hidden" name="channel_id" value="{{$posts->channel_id}}" >
+        
+         {{ csrf_field() }}
          <div class="container-fluid" style="margin-bottom:0 !important;">
 
 
@@ -227,7 +229,12 @@
                 </div>
            
         </div><!-- end container --> 
-         
+        </form>
+         <form class="form-horizontal" method="post" id="artcilmg">
+         <input type="hidden" name="m_id" value="{{$id}}" >
+        <input type="hidden" name="channel_id" value="{{$posts->channel_id}}" >
+        
+         {{ csrf_field() }}
         <div class="container-fluid">
             <div class="form-legend" id="ma">Magazine Articles</div>
                 <!--Sortable Responsive Media Table begin-->
@@ -249,7 +256,7 @@
                                 <tr  class="gradeX"  id="rowCur{{$article->article_id}}">
                                    <td>{{ $article->article_id }}</td>
                                    <td><a href="/article/{{ $article->article_id }}">{{ $article->title }}</a></td>
-                                   <td class="center"><input type="checkbox" class="uniformCheckbox" value="{{$article->article_id}}" name="checkItem[]"></td>
+                                   <td class="center"><input type="checkbox" class="uniformCheckbox" value="{{$article->article_id}}" name="checkItemselect[]"></td>
                                    <td class="center">
                                                 <div class="uniformRadio" id="uniform-ifyes"><span><input id="ifyes" name="m_lw" class="uniformRadio" value="{{$article->article_id}}" style="opacity: 0;" type="radio"></span></div>
                                    </td>
@@ -279,6 +286,7 @@
                     </div>
 		</div>				
             </div>
+           </form>
            <script>
                $(document).ready(function() {
                    $('#tableSortable, #tableSortableRes, #tableSortableResMed').dataTable( {
@@ -304,7 +312,7 @@
                });
                
            </script>			   			   
-       </form>
+       
    </div>
 <script>
        $(document).ready(function () {
@@ -312,7 +320,7 @@
         });          
     function mginsertArticle() {
         var data = $('#artcilmg').serialize();  
-            //alert(data);
+            alert(data);
             var data = $('#artcilmg').serialize();  
             //alert('sumit');return false;
            $.ajax({
@@ -322,7 +330,7 @@
                 //cache: false,
                 // handle a successful response
                     success: function( response ) {
-                        //alert(response);
+                        alert(response);
                        document.getElementById("msg").style.display = "block";
                        $('html, body').scrollTop($("#msg").offset().top);
                        window.location.reload();

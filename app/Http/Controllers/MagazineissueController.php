@@ -308,8 +308,11 @@ class MagazineissueController extends Controller {
 
         foreach ($delArr as $d) {
             $valid = '0';
+           
             $deleteAl = [
-
+                'm_f'=> 0,
+                'm_lw'=> 0,
+                'm_eicn'=>0,
                 'status' => $valid,
                 'updated_at' => date('Y-m-d H:i:s')
             ];
@@ -392,8 +395,9 @@ public function mgainsert(Request $request) {
 
         $uid = Session::get('users')->id;
         
-       if (isset($_POST['checkItem'])) {
-        $ArArr = $_POST['checkItem'];        
+       if (isset($_POST['checkItemselect'])) {
+        $ArArr = $_POST['checkItemselect'];     
+        
         $MagissueArticle = Magazineissuearticle::whereIn('a_id', $ArArr)->get(); 
          if (count($MagissueArticle) > 0){
                 foreach($MagissueArticle as $articleRow) {
