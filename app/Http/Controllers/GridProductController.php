@@ -37,10 +37,8 @@ class GridProductController extends Controller {
 
     public function update(Request $request,$id){
         //dd($request->all());exit;
-       //echo 'tst';exit;
-        echo '<pre>';
+        //  echo '<pre>';
        $grid=Grid::find($id);
-       //dd($grid);exit;
        $rightId=126;  
        $currentChannelId=$grid->channel_id;
        if (!$this->rightObj->checkRights($currentChannelId, $rightId))
@@ -64,27 +62,33 @@ class GridProductController extends Controller {
         }else{
             //dd($request->all());
             foreach($request->product_list as $rowKey=>$row){
-                echo '<br>'.$rowKey.'<br>';print_r($row);
+                //echo '<br>'.$rowKey.'<br>';print_r($row);
                 foreach($row as $colKey=>$val){
-                    echo $colKey.'<br>';echo $val.'<br>';
+                    //echo $colKey.'<br>';echo $val.'<br>';
                     if(trim($val)){
+                        
+                        if(GridProduct::where('product_id','=',$val)->where('grid_id', '=', $id)->where('row_id','=',$rowKey)->where('column_id','=',$colKey)->first()){
+                            continue;
+                        }
+                        DB::table('grid_products')->where('grid_id', '=', $id)->where('row_id','=',$rowKey)->where('column_id','=',$colKey)->delete();
                         $insertGP=new GridProduct();
                         $insertGP->grid_id=$id;
                         $insertGP->row_id=$rowKey;
                         $insertGP->column_id=$colKey;
                         $insertGP->product_id=$val;
                         $insertGP->save();
+                    }else{
+                      DB::table('grid_products')->where('grid_id', '=', $id)->where('row_id','=',$rowKey)->where('column_id','=',$colKey)->delete();    
                     }
                 }
                 
             }
         }
-        dd($request->all());
+        //dd($request->all());
         Session::flash('message', 'Grid products updated successfully.');
         return Redirect::to('grids?channel='.$currentChannelId);
          
     }
-    
 
     public function show($id){
         $grid=Grid::find($id);
@@ -119,33 +123,35 @@ class GridProductController extends Controller {
                 ->orderBy('brand_models.name')
                 ->select('brand_models.id','brand_models.name')
                 ->get();
-            
             $productList=json_encode($productList);
-        
-        
-            
         }else{
             $girdRows= GridRow::where('grid_id','=',$id)->get();
-        
-         //dd($girdRows);
+             $productDetails = DB::table('brand_models')
+                ->join('grid_products','brand_models.id','=','grid_products.product_id')
+                ->whereNull('brand_models.deleted_at')
+                ->where('grid_products.grid_id','=',$grid->id)
+                ->orderBy('brand_models.name')     
+                ->select('brand_models.id','brand_models.name','grid_products.row_id','grid_products.column_id') 
+                ->get();  
+             //dd($productDetails);
+             foreach($productDetails as $productDetail){
+                 $productList[$productDetail->row_id][$productDetail->column_id]=array('id'=>$productDetail->id,'name'=>$productDetail->name);
+             }
+            // dd($productList);
         }
        $rows=$girdRows;
-       //dd($grid);exit;
-       //dd($gridColumns);
         return view('grid.product.products',compact('grid','gridColumns','channel','rows','productList'));
-        //dd($gridColumn); exit;
-       // $gridProduct=$gridProduct::where('');
-      
+     
     }
   
     
     public function destroy(Request $request){
-        dd($request);
-        $rightId = 126;
-        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
-             return redirect('/dashboard'); 
-        Grid::whereIn('id',$request->checkItem)->delete();
-        Session::flash('message', 'Grid deleted successfully.');
-        return Redirect::to('grids/');
+//        dd($request);
+//        $rightId = 126;
+//        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
+//             return redirect('/dashboard'); 
+//        Grid::whereIn('id',$request->checkItem)->delete();
+//        Session::flash('message', 'Grid deleted successfully.');
+//        return Redirect::to('grids/');
     }
 }

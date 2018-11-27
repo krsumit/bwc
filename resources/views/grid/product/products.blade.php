@@ -267,7 +267,8 @@
                             <td>{{$row->name}}</td>
                              @foreach($gridColumns as $gridcolumn)
                             <th>
-                                <input type="text" class="valid product_list_grid" name="product_list[{{$row->id}}][{{$gridcolumn->id}}]"/>
+                                <input type="hidden" name="hiadden_product_list[{{$row->id}}][{{$gridcolumn->id}}]" id="hiadden_product_list_{{$row->id}}_{{$gridcolumn->id}}" value='@if(isset($productList[$row->id][$gridcolumn->id])) [{{json_encode($productList[$row->id][$gridcolumn->id])}}] @endif'/>    
+                                <input type="text" class="valid product_list_grid" name="product_list[{{$row->id}}][{{$gridcolumn->id}}]" id="product_list_{{$row->id}}_{{$gridcolumn->id}}"/>
                                 
                             </th>
                             @endforeach
@@ -296,7 +297,15 @@
                         bSearch:false
                     });
         //https://stackoverflow.com/questions/17029020/jquery-for-iterating-through-a-2d-array-and-then-placing-the-value-in-a-html-div            
-                 $(".product_list_grid").tokenInput(function(){ 
+               
+                        
+                $('input[name^="product_list"]').each(function() {
+                    var id=$(this).attr('id');
+                    id=id.replace('product_list','hiadden_product_list');
+                    var prepop=$('#'+id).val();
+                    if(prepop.length==0)
+                        prepop='""';
+                      $(this).tokenInput(function(){ 
                             return "/products/product-json?channel="+{{$channel->channel_id}};
                         }, 
                         {
@@ -304,8 +313,11 @@
                                 searchDelay: 300,
                                 minChars: 4,
                                 preventDuplicates: true,
+                                tokenLimit:1,
+                                prePopulate:JSON.parse(prepop)
                         }); 
-                
+                    
+                });
                 
             });
         </script>
