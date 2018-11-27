@@ -74,39 +74,33 @@ class AuthorsController extends Controller {
             }
          
         //echo $whoauthor ;exit;
-        if (isset($_GET['keyword'])) {
-            $queryed = $_GET['keyword'];
-            $posts = DB::table('authors')
+        
+            
+            $p = DB::table('authors')
                     ->select('authors.*', 'authors.name')
                     ->where('authors.author_type_id', '=', $id)
-                    ->where('authors.valid', '=', '1')
-                    ->where('authors.name', 'LIKE', '%' . $queryed . '%')
-                    ->orderBy('updated_at', 'desc')
-                    ->paginate(10);
-        } else if (isset($_GET['keywordemail'])) {
-            $queryed = $_GET['keywordemail'];
-            $posts = DB::table('authors')
-                    ->select('authors.*', 'authors.email')
-                    ->where('authors.author_type_id', '=', $id)
-                    ->where('authors.valid', '=', '1')
-                    ->where('authors.email', 'LIKE', '%' . $queryed . '%')
-                    ->orderBy('updated_at', 'desc')
-                    ->paginate(10);
-        } else {
-            $posts = DB::table('authors')
-                    ->select('authors.*', 'authors.author_type_id')
-                    ->where('authors.author_type_id', '=', $id)
-                    ->where('authors.valid', '=', '1')
-                    ->orderBy('updated_at', 'desc')
-                    ->paginate(10);
-        }
+                    ->where('authors.valid', '=', '1');
+            if (isset($_GET['searchin'])) {
+                if ($_GET['searchin'] == 'author') {
+                    $p->where('authors.name', 'like', '%' . $_GET['keyword'] . '%');
+                }
+                if (@$_GET['searchin'] == 'email_id') {
+                    $p->where('authors.email', 'LIKE', '%' . $_GET['keyword'] . '%');
+                }
+            }
+                $p->orderBy('updated_at', 'desc');
+       $posts = $p->paginate(config('constants.recordperpage'));
+      // print_r($posts);
+       //exit;
 
-
-        return view('authors.authorshowlist', compact('posts','whoauthor'));
+        return view('authors.authorshowlist', compact('posts','whoauthor','id'));
     }
-    
-    
-    public function gustauthor() {
+     /**
+     * Show the form for authorlisting 
+     *
+     * @return show
+     */
+    public function showdeletedauthorlisting() {
 
         /* Right mgmt start */
         $rightId = 44;
@@ -114,77 +108,22 @@ class AuthorsController extends Controller {
             return redirect('/dashboard');
         /* Right mgmt end */
 
-
-        //echo $queryed ;exit;
-        if (isset($_GET['keyword'])) {
-            $queryed = $_GET['keyword'];
-            $posts = DB::table('authors')
+        //echo $whoauthor ;exit;
+        $p = DB::table('authors')
                     ->select('authors.*', 'authors.name')
-                    ->where('authors.author_type_id', '=', '3')
-                    ->where('authors.valid', '=', '1')
-                    ->where('authors.name', 'LIKE', '%' . $queryed . '%')
-                    ->orderBy('updated_at', 'desc')
-                    ->paginate(10);
-        } else if (isset($_GET['keywordemail'])) {
-            $queryed = $_GET['keywordemail'];
-            $posts = DB::table('authors')
-                    ->select('authors.*', 'authors.email')
-                    ->where('authors.author_type_id', '=', '3')
-                    ->where('authors.valid', '=', '1')
-                    ->where('authors.email', 'LIKE', '%' . $queryed . '%')
-                    ->orderBy('updated_at', 'desc')
-                    ->paginate(10);
-        } else {
-            $posts = DB::table('authors')
-                    ->select('authors.*', 'authors.author_type_id')
-                    ->where('authors.author_type_id', '=', '3')
-                    ->where('authors.valid', '=', '1')
-                    ->orderBy('updated_at', 'desc')
-                    ->paginate(10);
-        }
-
-
-        return view('authors.add-edit-guestauthor', compact('posts'));
-    }
-
-    public function bwreporters() {
-
-        /* Right mgmt start */
-        $rightId = 45;
-        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
-            return redirect('/dashboard');
-        /* Right mgmt end */
-
-        //echo $queryed ;exit;
-        if (isset($_GET['keyword'])) {
-            $queryed = $_GET['keyword'];
-            $posts = DB::table('authors')
-                    ->select('authors.*', 'authors.name')
-                    ->where('authors.author_type_id', '=', '2')
-                    ->where('authors.valid', '=', '1')
-                    ->where('authors.name', 'LIKE', '%' . $queryed . '%')
-                    ->orderBy('updated_at', 'desc')
-                    ->paginate(10);
-        } else if (isset($_GET['keywordemail'])) {
-            $queryed = $_GET['keywordemail'];
-            $posts = DB::table('authors')
-                    ->select('authors.*', 'authors.email')
-                    ->where('authors.author_type_id', '=', '2')
-                    ->where('authors.valid', '=', '1')
-                    ->where('authors.email', 'LIKE', '%' . $queryed . '%')
-                    ->orderBy('updated_at', 'desc')
-                    ->paginate(10);
-        } else {
-            $posts = DB::table('authors')
-                    ->select('authors.*', 'authors.author_type_id')
-                    ->where('authors.author_type_id', '=', '2')
-                    ->where('authors.valid', '=', '1')
-                    ->orderBy('updated_at', 'desc')
-                    ->paginate(10);
-        }
-
-
-        return view('authors.add-edit-bw-reporters', compact('posts'));
+                    ->where('authors.valid', '=', '0');
+            if (isset($_GET['searchin'])) {
+                if ($_GET['searchin'] == 'author') {
+                    $p->where('authors.name', 'like', '%' . $_GET['keyword'] . '%');
+                }
+                if (@$_GET['searchin'] == 'email_id') {
+                    $p->where('authors.email', 'LIKE', '%' . $_GET['keyword'] . '%');
+                }
+            }
+                $p->orderBy('updated_at', 'desc');
+       $posts = $p->paginate(config('constants.recordperpage'));
+       //print_r($posts);
+        return view('authors.authorshowdeletedlist', compact('posts'));
     }
 
     /**
@@ -547,6 +486,56 @@ class AuthorsController extends Controller {
             
     }
 
+    
+     /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return Response
+     */
+    public function restore() {
+        if (isset($_GET['option'])) {
+            $id = $_GET['option'];
+        }
+        // echo $id; die;
+        //fwrite($asd, " Del Ids: ".$id." \n\n");
+        $delArr = explode(',', $id);
+        //fwrite($asd, " Del Arr Count: ".count($delArr)." \n\n");
+        $errorArray=array();
+        foreach ($delArr as $d) {
+            //fwrite($asd, " Delete Id : ".$d." \n\n");
+            $valid = '1';
+            $noOfArticles=ArticleAuthor::where('author_id',$d)->count();
+            if($noOfArticles==0){
+                $deleteAl = [
+                'updated_at'=> date('Y:m:d H:i:s'),
+                'valid' => $valid
+                ];
+                DB::table('authors')
+                    ->where('author_id', $d)
+                    ->update($deleteAl);
+                
+            }else{
+                $author=Author::find($d);
+                $errorArray['author_id'][]=$d;
+                $errorArray['author_detail'][]=$author->name.'('.$author->email.')';      
+            }
+        }
+        if(count($errorArray)>0)
+            return json_encode($errorArray);
+        else
+            Session::flash('message', 'Your Author has been Restore successfully. It will appear on website shortly.');
+            return 'success'; 
+            
+            
+    }
+
+    
+    
+    
+    
+    
+    
     public function changeStatus() {
         $rightId = 45;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))

@@ -388,6 +388,8 @@ Route::match(['get', 'post'], 'bwreporters/add-edit-bw-reporters', ['as' => 'bwr
 Route::match(['get', 'post'], 'author/delete', ['as' => 'author/delete', 'uses' => 'AuthorsController@destroy']);
 Route::match(['get'], 'author/changestatus', ['as' => 'author/changestatus', 'uses' => 'AuthorsController@changeStatus']);
 Route::match(['get'], 'author/authorshowlist/{id}', ['uses' => 'AuthorsController@authorshowlisting']);
+Route::match(['get'], 'author/showdeletedauthorlisting', ['uses' => 'AuthorsController@showdeletedauthorlisting']);
+Route::match(['get', 'post'], 'author/restore', ['as' => 'author/restore', 'uses' => 'AuthorsController@restore']);
 Route::get('article/add-author/{id}',['middleware' => 'auth',   'uses' => 'AuthorsController@edit']);
 /*
  *  Adds category from Createcategory to category Table 

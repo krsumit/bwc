@@ -1,3 +1,4 @@
+
 [2018-11-05 13:17:51] local.ERROR: PDOException: PDO::__construct(): MySQL server has gone away in /var/www/html/bwcms/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php:50
 Stack trace:
 #0 /var/www/html/bwcms/vendor/laravel/framework/src/Illuminate/Database/Connectors/Connector.php(50): PDO->__construct('mysql:host=130....', 'root', 'bw#digital#2017...', Array)
@@ -6616,3 +6617,4 @@ Stack trace:
 #56 /var/www/html/bwcms/vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php(86): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #57 /var/www/html/bwcms/public/index.php(52): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #58 {main}  
+

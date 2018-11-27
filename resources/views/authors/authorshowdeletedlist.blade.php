@@ -8,7 +8,7 @@
     <div class="panel-content filler">
         <div class="panel-logo"></div>
         <div class="panel-header">
-            <h1><small>{{$whoauthor}} Listing</small></h1>
+            <h1><small>Deleted All type Author Listing</small></h1>
         </div>
         <div class="panel-search container-fluid">
             <form class="form-horizontal" method="get" action="">
@@ -17,14 +17,14 @@
                     <input id="panelSearch" required  placeholder="Search" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">
                     <button class="btn btn-search" type="submit"></button>
                      @if(isset($_GET['searchin'])) 
-                    <a href="{{url("author/authorshowlist")}}/{{$id}}"><button class="btn btn-default" type="button">Reset</button></a>
+                    <a href="{{url("author/showdeletedauthorlisting")}}"><button class="btn btn-default" type="button">Reset</button></a>
                     @endif
 
                 
             </div>
             
              <label class="radio">
-                <input type="radio" id="seacrchname"  @if(isset($_GET['searchin'])) @if($_GET['searchin']=='author') checked @endif @endif required name="searchin" class="uniformRadio" value="author">
+                <input type="radio" id="seacrchname"  @if(isset($_GET['searchin'])) @if($_GET['searchin']=='title') checked @endif @endif required name="searchin" class="uniformRadio" value="author">
                 Search by Author Name
             </label>
             <label class="radio">
@@ -37,7 +37,7 @@
        
 
         <script>
-               
+             
             $().ready(function () {
                 $(".uniformRadio").uniform({
                     radioClass: 'uniformRadio'
@@ -84,10 +84,39 @@
                 </a>
             </li>
             <li class="current">
-                <a href="javascript:;"> {{$whoauthor}} Listing</a>
+                <a href="javascript:;"> Deleted All type Author Listing</a>
             </li>
         </ul>
-    </div>           
+    </div> 
+    <div class="container-fluid" id="notificationdiv"  @if((!Session::has('message')) && (!Session::has('error')))style="display: none" @endif >
+
+             <div class="form-legend" id="Notifications">Notifications</div>
+
+            <!--Notifications begin-->
+            <div class="control-group row-fluid" >
+                <div class="span12 span-inset">
+                    @if (Session::has('message'))
+                    <div class="alert alert-success alert-block" style="">
+                        <i class="icon-alert icon-alert-info"></i>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>This is Success Notification</strong>
+                        <span>{{ Session::get('message') }}</span>
+                    </div>
+                    @endif
+
+                    @if (Session::has('error'))
+                    <div class="alert alert-error alert-block">
+                        <i class="icon-alert icon-alert-info"></i>
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>This is Error Notification</strong>
+                        <span>{{ Session::get('error') }}</span>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            <!--Notifications end-->
+
+        </div>
     <form class="form-horizontal" onsubmit="return validateAuthorData()" method="POST" enctype= "multipart/form-data" action="/article/addAuthor">
        {!! csrf_field() !!}
        
@@ -107,6 +136,7 @@
                                 <th>Name</th>
                                 <th>Email-ID</th>
                                 <th>Mobile</th>
+                                <th>Author Type</th>
                                 <th><input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectall"></th>
                             </tr>
                         </thead>
@@ -117,6 +147,15 @@
                                 <td ><a href="/article/add-author/{{$a->author_id}}">{{$a->name}}</a></td>
                                 <td >{{$a->email}}</td>
                                 <td  class="center">{{$a->mobile}}</td>
+                                @if($a->author_type_id==2)
+                                <td class="center">Bw Reporters </td>
+                                @endif
+                                @if($a->author_type_id==3)
+                                <td class="center">Guest Author </td>
+                                @endif
+                                @if($a->author_type_id==4)
+                                <td class="center">Columnist </td>
+                                @endif
                                 <td  class="center"><input type="checkbox" class="uniformCheckbox" value="{{$a->author_id}}" name="checkItem[]"></td>
                             </tr>
                             @endforeach
@@ -166,7 +205,7 @@
                          });
             });
             
-             function deleteAuthor() {
+             function restoredeleteAuthor() {
                         var ids = '';
                         var checkedVals = $('input[name="checkItem[]"]:checkbox:checked').map(function () {
                             var row = 'rowCur' + this.value;
@@ -177,7 +216,7 @@
                        // alert(2);
                         var ids = checkedVals.join(",");
                         //alert(ids);return false;
-                        $.get("{{ url('/author/delete/')}}",
+                        $.get("{{ url('/author/restore/')}}",
                                 {option: ids},
                         function (data) {
                             $.each(checkedVals, function (i, e) {
@@ -220,7 +259,7 @@
                             $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
                                 <i class="icon-alert icon-alert-info"></i><button type="button" class="close" data-dismiss="alert">\n\
                                 &times;</button><strong>This is Success Notification</strong>\n\
-                                <span></span>Selected records dumped.</div>');
+                                <span></span> Your Selected Author has been Restore successfully. It will appear on website shortly..</div>');
                             }
                           });
                     }
@@ -229,7 +268,7 @@
 
         <div class="control-group row-fluid">
             <div class="span12 span-inset">
-                <button type="button" onclick="deleteAuthor()" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>							
+                <button type="button" onclick="restoredeleteAuthor()" class="btn btn-danger">Restore</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>							
 
             </div></div>
     </form>
