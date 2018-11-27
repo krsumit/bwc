@@ -164,7 +164,7 @@
                 </div>
             </li>
             @endif
-            @if(count(array_diff(array('9','44','45'), Session::get('user_rights'))) != count(array('9','44','45')))
+            @if(count(array_diff(array('9','44','45','127'), Session::get('user_rights'))) != count(array('9','44','45','127')))
             <li>
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon pen"></i>
@@ -192,6 +192,11 @@
                          @if(in_array('45',Session::get('user_rights')))	
                         <li>
                             <a href="/author/authorshowlist/2">Reporters</a>
+                        </li>
+                        @endif
+                        @if(in_array('127',Session::get('user_rights')))	
+                        <li>
+                            <a href="/author/showdeletedauthorlisting/">Deleted Author list</a>
                         </li>
                         @endif
 <!--                        <li>
