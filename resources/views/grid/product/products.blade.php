@@ -212,6 +212,35 @@
         @endif  
         @if($grid->type=='review')
             <div class="container-fluid">
+                <div class="control-group row-fluid">
+                <table class="table table-striped" id="tableSortable">
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            @foreach($gridColumns as $gridcolumn)
+                            <th>{{$gridcolumn->name}}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($tableData as $data) 
+                        
+                        <tr>
+                            <td>{{$data['name']}}</td> 
+                            @foreach($gridColumns as $gridcolumn)
+                                @if(isset($data['data'][$gridcolumn->att_group_id]))
+                                <td>{{$data['data'][$gridcolumn->att_group_id]->rating}}&nbsp;/&nbsp;10</td>
+                                @else
+                                    <td>NA</td>
+                                @endif
+                            @endforeach
+                        </tr>
+                       @endforeach
+                    </tbody>
+                </table>           
+            </div>
+            </div>     
+               <div class="container-fluid"> 
                 <div class="control-group row-fluid">    
                     <div class="span3">
                         <label for="multiFilter" class="control-label">Products</label>
@@ -296,8 +325,7 @@
                         bSort: false,
                         bSearch:false
                     });
-        //https://stackoverflow.com/questions/17029020/jquery-for-iterating-through-a-2d-array-and-then-placing-the-value-in-a-html-div            
-               
+         
                         
                 $('input[name^="product_list"]').each(function() {
                     var id=$(this).attr('id');

@@ -98,6 +98,7 @@ class GridProductController extends Controller {
             return redirect('/dashboard');
         $channel=Channel::find($grid->channel_id);
         $girdRows=array();
+        $tableData=array();
         $gridColumns= GridColumn::where('grid_id','=',$grid->id)->get();
         //echo count($gridColumn).'-';
         if($grid->type=='review'){
@@ -107,15 +108,21 @@ class GridProductController extends Controller {
                 $i=0;
                 foreach($gridRows as $gridRow){
                 $product=BrandModel::find($gridRow->product_id);  
-                $tableData[$i]['name']=$product->name;
+                $tableData[$gridRow->product_id]['name']=$product->name;
                 $productDetail=DB::table('grid_products')
                         ->leftJoin('model_reviews','grid_products.product_id','=','model_reviews.brand_model_id')
+                        ->select('model_reviews.*')
                         ->where('grid_products.product_id','=',$gridRow->product_id)
+                        ->where('grid_products.grid_id','=',$id)
                         ->get();
-                 $tableData[$i]['data']=$productDetail;
+                
+                    foreach($productDetail as $detail){
+                        $tableData[$gridRow->product_id]['data'][$detail->attribute_group_id]=$detail;
+                    }
+                    
                 }
             }
-            
+            //dd($tableData);
             $productList = DB::table('brand_models')
                 ->join('grid_products','brand_models.id','=','grid_products.product_id')
                 ->whereNull('brand_models.deleted_at')
@@ -140,7 +147,7 @@ class GridProductController extends Controller {
             // dd($productList);
         }
        $rows=$girdRows;
-        return view('grid.product.products',compact('grid','gridColumns','channel','rows','productList'));
+        return view('grid.product.products',compact('grid','gridColumns','channel','rows','productList','tableData'));
      
     }
   
