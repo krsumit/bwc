@@ -120,12 +120,12 @@
             <!--Select Box with Filter Search end-->
             </div>
         </div>
-        @if(count($rows)>0)
-            {!! Form::open(array('url'=>'/grid-rows/'.$grid->id,'class'=> 'form-horizontal','id'=>'brands_list_from','enctype'=>'multipart/form-data')) !!}
-            {!! csrf_field() !!}
-            {!! method_field('DELETE') !!}  
-            <div class="container-fluid">
-                <!--Sortable Non-responsive Table begin-->
+        {!! Form::open(array('url'=>'/grid-products/'.$grid->id,'class'=> 'form-horizontal','id'=>'brands_list_from','enctype'=>'multipart/form-data')) !!}
+        {!! csrf_field() !!}
+        {!! method_field('PUT') !!} 
+        @if(count($rows)>0)            
+<!--            <div class="container-fluid">
+                Sortable Non-responsive Table begin
                 <div class="row-fluid">
                     <div class="span12">
                         <table class="table table-striped" id="tableSortable">
@@ -152,7 +152,7 @@
                         </table>
                     </div>
                 </div>
-                <!--Sortable Non-responsive Table end-->
+                Sortable Non-responsive Table end
 
                 <script>
                     $(document).ready(function () {
@@ -198,18 +198,118 @@
 
 
                 </script>
-            </div><!-- end container -->
+            </div> end container 
             <div class="control-group row-fluid">
                 <div class="span12 span-inset">
                     <button type="button" onclick="deleteProductType()" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>							
                 </div>
-            </div>
-            {!! Form::close() !!}
+            </div>-->
+           
+        @else
+<!--        <div class="container-fluid">
+            No row available
+        </div>-->
+        @endif  
+        @if($grid->type=='review')
+            <div class="container-fluid">
+                <div class="control-group row-fluid">    
+                    <div class="span3">
+                        <label for="multiFilter" class="control-label">Products</label>
+                    </div>
+                    <div class="span9">
+                        <div class="controls">
+                            <input type="text" class="valid" name="product_list" id="product_list"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group row-fluid">    
+                    <div class="span3"></div>
+                    <div class="span9">
+                        <div class="controls">
+                            <div class="span12 span-inset">
+                                <button type="submit" name="add" value="N" id="add" class="btn btn-warning">Save</button>
+                             </div>   
+                        </div>
+                    </div>
+                </div>
+            </div>   
+      
+        <script>
+            $().ready(function() { 
+                 $("#product_list").tokenInput(function(){ 
+                            return "/products/product-json?channel="+{{$channel->channel_id}};
+                        }, 
+                        {
+                                theme: "facebook",
+                                searchDelay: 300,
+                                minChars: 4,
+                                preventDuplicates: true,
+                                prePopulate: <?php echo $productList ?>,
+                        }); 
+         
+            });
+        </script>
         @else
         <div class="container-fluid">
-            No row available
+            <div class="control-group row-fluid">
+                <table class="table table-striped" id="tableSortable">
+                    <thead>
+                        <tr>
+                            <th>&nbsp;</th>
+                            @foreach($gridColumns as $gridcolumn)
+                            <th>{{$gridcolumn->name}}</th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($rows as $row)
+                        <tr>
+                            <td>{{$row->name}}</td>
+                             @foreach($gridColumns as $gridcolumn)
+                            <th>
+                                <input type="text" class="valid product_list_grid" name="product_list[{{$row->id}}][{{$gridcolumn->id}}]"/>
+                                
+                            </th>
+                            @endforeach
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>           
+            </div>
+            <div class="control-group row-fluid">    
+                    <div class="span3"></div>
+                    <div class="span9">
+                        <div class="controls">
+                            <div class="span12 span-inset">
+                                <button type="submit" name="add" value="N" id="add" class="btn btn-warning">Save</button>
+                             </div>   
+                        </div>
+                    </div>
+                </div>
         </div>
-        @endif    
-
+        <script>
+            $().ready(function() { 
+                 $('#tableSortable').dataTable({
+                        bInfo: false,
+                        bPaginate: false,
+                        bSort: false,
+                        bSearch:false
+                    });
+        //https://stackoverflow.com/questions/17029020/jquery-for-iterating-through-a-2d-array-and-then-placing-the-value-in-a-html-div            
+                 $(".product_list_grid").tokenInput(function(){ 
+                            return "/products/product-json?channel="+{{$channel->channel_id}};
+                        }, 
+                        {
+                                theme: "facebook",
+                                searchDelay: 300,
+                                minChars: 4,
+                                preventDuplicates: true,
+                        }); 
+                
+                
+            });
+        </script>
+        @endif
+         {!! Form::close() !!}
 </div>
 @stop
