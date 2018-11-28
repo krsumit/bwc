@@ -333,7 +333,7 @@
                         alert(response);
                        document.getElementById("msg").style.display = "block";
                        $('html, body').scrollTop($("#msg").offset().top);
-                       //window.location.reload();
+                       window.location.reload();
                     }
 
             });
