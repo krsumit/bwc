@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 use App\Article;
 use App\FeatureBox;
@@ -136,7 +135,6 @@ class MagazineissueController extends Controller {
      * @return Response
      */
     public function edit() {
-
        $uid = Session::get('users')->id;
         $rightLabel = "";
 

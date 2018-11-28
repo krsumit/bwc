@@ -1,6 +1,6 @@
 @extends('layouts/master')
 
-@section('title', 'Magazine issued Management - BWCMS')
+@section('title', 'Magazine issue Management - BWCMS')
 
 
 @section('content')
@@ -333,7 +333,7 @@
                         alert(response);
                        document.getElementById("msg").style.display = "block";
                        $('html, body').scrollTop($("#msg").offset().top);
-                       window.location.reload();
+                       //window.location.reload();
                     }
 
             });

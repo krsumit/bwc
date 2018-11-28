@@ -599,7 +599,13 @@ the specific language governing permissions and limitations under the Apache Lic
             this.container.data("select2", this);
 
             this.dropdown = this.container.find(".select2-drop");
-            this.dropdown.addClass(evaluate(opts.dropdownCssClass));
+            
+            if(isMobileDevice()){
+                this.dropdown.addClass('noSearch');
+            }else{
+                this.dropdown.addClass(evaluate(opts.dropdownCssClass));
+            }
+            
             this.dropdown.data("select2", this);
 
             this.results = results = this.container.find(resultsSelector);
@@ -2444,3 +2450,6 @@ the specific language governing permissions and limitations under the Apache Lic
     };
 
 }(jQuery));
+function isMobileDevice() {
+    return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+};
