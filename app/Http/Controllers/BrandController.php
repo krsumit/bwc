@@ -56,7 +56,6 @@ class BrandController extends Controller {
        if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');  
       return view('brand.create');
-      echo 'create brand page';
     }
 
     public function store(Request $request) {

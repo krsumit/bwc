@@ -447,6 +447,7 @@ Route::get('download/logs/{name}',['middleware' => 'auth', 'uses' => 'EventContr
 
 
 Route::group(['middleware' => 'auth'], function() {
+    
     Route::post('attendee/delete','EventSpeakerController@deleteAttendee');
     Route::get('attendee/get-json','EventSpeakerController@returnSpeakerJson');
     Route::resource('attendee','EventSpeakerController');
