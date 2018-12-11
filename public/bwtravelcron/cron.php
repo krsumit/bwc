@@ -136,7 +136,7 @@ class Cron {
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . 'bwauthors(s) inserted and ' . $_SESSION['noofupd'] . 'bwhealthauthors(s) updated.</h5>';
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . 'bwtravelauthors(s) inserted and ' . $_SESSION['noofupd'] . 'bwtravelauthors(s) updated.</h5>';
     }
 function migrateFeature() {
         $_SESSION['noofins'] = 0;
@@ -423,7 +423,7 @@ function migrateFeature() {
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . 'bwtravelsponsorviewcount(s) inserted and ' . $_SESSION['noofupd'] . 'bwhealthsponsorviewcount   (s) updated.</h5>';
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . 'bwtravelsponsorviewcount(s) inserted and ' . $_SESSION['noofupd'] . 'bwtravelsponsorviewcount   (s) updated.</h5>';
     } 
     
     function migrateQuotes() {
@@ -541,7 +541,7 @@ function migrateFeature() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwtraveluotescategory',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelquotescategory',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -553,7 +553,7 @@ function migrateFeature() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelhquotetags' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelquotetags' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -689,7 +689,7 @@ function migrateFeature() {
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
-        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . 'bwtravelevent(s) inserted and ' . $_SESSION['noofupd'] . 'bwhealthevent(s) updated.</h5>';
+        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . 'bwevent(s) inserted and ' . $_SESSION['noofupd'] . 'bwevent(s) updated.</h5>';
     }
  
    
