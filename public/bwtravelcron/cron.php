@@ -440,7 +440,7 @@ function migrateFeature() {
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
         //echo "SELECT * FROM event  WHERE 1 $condition";exit;
-        $quotesrResults = $this->conn->query("SELECT * FROM quotes WHERE channel_id = '13'  $condition");
+        $quotesrResults = $this->conn->query("SELECT * FROM quotes WHERE channel_id = '16'  $condition");
         //echo $quotesrResults->num_rows;exit;
         if ($quotesrResults->num_rows > 0) {
 
@@ -1845,7 +1845,7 @@ function migrateBwArticle() {
             // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $campaingResults = $this->conn->query("SELECT * FROM campaign where channel_id=13 $condition");
+        $campaingResults = $this->conn->query("SELECT * FROM campaign where channel_id=16 $condition");
         //echo $authorResults->num_rows; exit;
         if ($campaingResults->num_rows > 0) {
 
@@ -1991,7 +1991,7 @@ function migrateMasterNewsLetter() {
             // $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-        $livestreamingResults = $this->conn->query("SELECT * FROM event_streaming where channel_id=13 $condition");
+        $livestreamingResults = $this->conn->query("SELECT * FROM event_streaming where channel_id=16 $condition");
         //echo $trendingResults->num_rows; exit;
         if ($livestreamingResults->num_rows > 0) {
 
