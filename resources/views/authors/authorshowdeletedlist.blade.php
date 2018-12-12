@@ -223,44 +223,14 @@
                                 var row = 'rowCur' + e;
                                // $("#" + row).remove();
                             });
-                            /*$('#notificationdiv').show();
+                            $('#notificationdiv').show();
                             $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
                                 <i class="icon-alert icon-alert-info"></i><button type="button" class="close" data-dismiss="alert">\n\
                                 &times;</button><strong>This is Success Notification</strong>\n\
-                                <span></span>Selected records dumped.</div>');*/
+                                <span></span>Selected records dumped.</div>');
                            
                             //alert(1);
-                        }).done(function(data) {
-                            if (data.trim() != 'success'){
-                                //alert(data);
-                                var obj = JSON.parse(data);
-                                var ids=obj.author_id;
-                                var authors=obj.author_detail;
-                                $.each(checkedVals, function (i, e) {
-                                     if (ids.indexOf(e) === -1) {
-                                         var row = 'rowCur' + e;
-                                         $("#" + row).remove();
-                                     }
-                                    
-                                });
-                                message='';
-                                for (aut in authors) {
-                                    message += authors[aut]+'\n';
-                                }
-                                message+='Above author(s) are assigned in articles,Can\'t be deleted';
-                                alert(message);
-                            }
-                            else{
-                                 $.each(checkedVals, function (i, e) {
-                                         var row = 'rowCur' + e;
-                                         $("#" + row).remove();
-                                });
-                                $('#notificationdiv').show();
-                            $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
-                                <i class="icon-alert icon-alert-info"></i><button type="button" class="close" data-dismiss="alert">\n\
-                                &times;</button><strong>This is Success Notification</strong>\n\
-                                <span></span> Your Selected Author has been Restore successfully. It will appear on website shortly..</div>');
-                            }
+      
                           });
                     }
                     
