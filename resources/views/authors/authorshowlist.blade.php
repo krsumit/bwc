@@ -107,6 +107,7 @@
                                 <th>Name</th>
                                 <th>Email-ID</th>
                                 <th>Mobile</th>
+                                <th>Status</th>
                                 <th><input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectall"></th>
                             </tr>
                         </thead>
@@ -117,6 +118,16 @@
                                 <td ><a href="/article/add-author/{{$a->author_id}}">{{$a->name}}</a></td>
                                 <td >{{$a->email}}</td>
                                 <td  class="center">{{$a->mobile}}</td>
+                                <td  class="center" id="td{{$a->author_id}}">
+                                    <a href="javascript:void(0)" onclick="changeStatus('{{$a->author_status}}','{{$a->author_id}}',this)">
+                                    @if($a->author_status==1)
+                                        Active
+                                    @else    
+                                        Inactive
+                                    @endif    
+                                    </a>
+
+                                </td>
                                 <td  class="center"><input type="checkbox" class="uniformCheckbox" value="{{$a->author_id}}" name="checkItem[]"></td>
                             </tr>
                             @endforeach
@@ -224,6 +235,45 @@
                             }
                           });
                     }
+                    function changeStatus(currentStatus,authorId,element){
+                        //alert(authorId);
+                        var parenttd=$('#td'+authorId);
+                        var tdval=$('#td'+authorId).html();
+                        //console.log(tdval);
+                        var loader="<img src=\"{{ asset('images/photon/preloader/76.gif') }}\" alt=\"loader\ style=\width:20%; margin-left:15px;\"/>";
+//alert(loader);
+//return false;
+                        $.ajax({
+                        type        : 'GET', // define the type of HTTP verb we want to use (POST for our form)
+                                url         : '/author/changestatus', // the url where we want to POST
+                                data        :   { author_id :authorId,status:currentStatus },
+                                dataType    : 'json', // what type of data do we expect back from the server
+                                encode      : true,
+                                beforeSend  :function(data){
+                                      $(element).parent('td').html(loader);
+                                },
+                                complete    :function(data){
+                                    if(data.status!='200'){
+                                        alert(data.status+' '+data.statusText);
+                                        $(parenttd).html(tdval);
+                                    }
+                                
+                                },
+                                success :  function(data){
+                                    //alert(data.msg);
+                                    if(data.status=='1'){
+                                        $(parenttd).html(data.msg);
+                                    }else{
+                                        alert(data.msg);
+                                        $(parenttd).html(tdval);
+                                    }
+                            },
+                               
+                        })
+                    }
+                    
+                    
+                    
                     
         </script>
 
