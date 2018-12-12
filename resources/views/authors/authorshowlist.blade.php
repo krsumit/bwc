@@ -107,7 +107,9 @@
                                 <th>Name</th>
                                 <th>Email-ID</th>
                                 <th>Mobile</th>
-                                <th>Status</th>
+                                @if($id ==2)
+                                <th>Actions</th>
+                                @endif
                                 <th><input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectall"></th>
                             </tr>
                         </thead>
@@ -118,6 +120,7 @@
                                 <td ><a href="/article/add-author/{{$a->author_id}}">{{$a->name}}</a></td>
                                 <td >{{$a->email}}</td>
                                 <td  class="center">{{$a->mobile}}</td>
+                                @if($id ==2)
                                 <td  class="center" id="td{{$a->author_id}}">
                                     <a href="javascript:void(0)" onclick="changeStatus('{{$a->author_status}}','{{$a->author_id}}',this)">
                                     @if($a->author_status==1)
@@ -128,6 +131,7 @@
                                     </a>
 
                                 </td>
+                                 @endif
                                 <td  class="center"><input type="checkbox" class="uniformCheckbox" value="{{$a->author_id}}" name="checkItem[]"></td>
                             </tr>
                             @endforeach
