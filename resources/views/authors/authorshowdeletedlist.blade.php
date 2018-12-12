@@ -223,14 +223,25 @@
                                 var row = 'rowCur' + e;
                                // $("#" + row).remove();
                             });
-                            $('#notificationdiv').show();
+                            /*$('#notificationdiv').show();
                             $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
                                 <i class="icon-alert icon-alert-info"></i><button type="button" class="close" data-dismiss="alert">\n\
                                 &times;</button><strong>This is Success Notification</strong>\n\
-                                <span></span>Selected records dumped.</div>');
+                                <span></span>Selected records dumped.</div>');*/
                            
                             //alert(1);
-      
+                        }).done(function(data) {
+
+                                 $.each(checkedVals, function (i, e) {
+                                         var row = 'rowCur' + e;
+                                         $("#" + row).remove();
+                                });
+                                $('#notificationdiv').show();
+                            $('#notificationdiv .control-group .span12.span-inset').html('<div class="alert alert-success alert-block">\n\
+                                <i class="icon-alert icon-alert-info"></i><button type="button" class="close" data-dismiss="alert">\n\
+                                &times;</button><strong>This is Success Notification</strong>\n\
+                                <span></span> Your Selected Author has been Restore successfully. It will appear on website shortly..</div>');
+                            
                           });
                     }
                     
