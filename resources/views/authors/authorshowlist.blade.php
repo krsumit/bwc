@@ -108,7 +108,7 @@
                                 <th>Email-ID</th>
                                 <th>Mobile</th>
                                 @if($id ==2)
-                                <th>Actions</th>
+                                <th>Status</th>
                                 @endif
                                 <th><input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectall"></th>
                             </tr>
