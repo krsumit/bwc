@@ -211,7 +211,7 @@
         </div>-->
         @endif  
         @if($grid->type=='review')
-            <div class="container-fluid">
+            <div class="container-fluid" style="overflow:auto;">
                 <div class="control-group row-fluid">
                 <table class="table table-striped" id="tableSortable">
                     <thead>
@@ -279,7 +279,7 @@
             });
         </script>
         @else
-        <div class="container-fluid">
+        <div class="container-fluid" style="overflow:auto;">
             <div class="control-group row-fluid">
                 <table class="table table-striped" id="tableSortable">
                     <thead>
