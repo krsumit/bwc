@@ -497,7 +497,7 @@ class AuthorsController extends Controller {
         if (isset($_GET['option'])) {
             $id = $_GET['option'];
         }
-        // echo $id; die;
+         //echo $id; die;
         //fwrite($asd, " Del Ids: ".$id." \n\n");
         $delArr = explode(',', $id);
         //fwrite($asd, " Del Arr Count: ".count($delArr)." \n\n");
@@ -506,14 +506,14 @@ class AuthorsController extends Controller {
             //fwrite($asd, " Delete Id : ".$d." \n\n");
             $valid = '1';
             $noOfArticles=ArticleAuthor::where('author_id',$d)->count();
-            if($noOfArticles==0){
-                $deleteAl = [
+            if($noOfArticles){
+                $restoredeleteAl = [
                 'updated_at'=> date('Y:m:d H:i:s'),
                 'valid' => $valid
                 ];
                 DB::table('authors')
                     ->where('author_id', $d)
-                    ->update($deleteAl);
+                    ->update($restoredeleteAl);
                 
             }else{
                 $author=Author::find($d);
