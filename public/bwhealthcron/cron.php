@@ -13,7 +13,7 @@ class Cron {
         mysqli_set_charset($this->conn,"utf8");
         $this->conn2 = new mysqli(LHOST, LUSER, LPASS, LDATABASE) or die($this->conn2->connect_errro);
         mysqli_set_charset($this->conn2,"utf8");
-        $this->channelId=16;
+        $this->channelId=13;
     }
 
 
@@ -96,7 +96,7 @@ class Cron {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelauthors' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthauthors' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -132,7 +132,7 @@ class Cron {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelauthors',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthauthors',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -144,7 +144,7 @@ function migrateFeature() {
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
 
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelfeatur' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthfeatur' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -205,7 +205,7 @@ function migrateFeature() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelfeatur',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthfeatur',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -252,7 +252,7 @@ function migrateFeature() {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelquickbyte' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthquickbyte' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -339,7 +339,7 @@ function migrateFeature() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelquickbyte',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthquickbyte',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -379,7 +379,7 @@ function migrateFeature() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='bwtravelsponsorviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
+        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='bwhealthsponsorviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -419,7 +419,7 @@ function migrateFeature() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='bwtravelsponsorviewcount',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='bwhealthsponsorviewcount',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -433,7 +433,7 @@ function migrateFeature() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelquotes' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthquotes' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -485,7 +485,7 @@ function migrateFeature() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelquotes',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthquotes',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -497,7 +497,7 @@ function migrateFeature() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelquotescategory' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthquotescategory' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -541,7 +541,7 @@ function migrateFeature() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwtraveluotescategory',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthquotescategory',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -553,7 +553,7 @@ function migrateFeature() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelhquotetags' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthquotetags' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -594,7 +594,7 @@ function migrateFeature() {
         //        echo $this->message = '<h5 style="color:#009933;">' . $_SESSION['noofins'] . ' quotetags(s) inserted and ' . $_SESSION['noofupd'] . ' quotetags(s) updated.</h5>';
         //echo 'here'; exit;
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelquotetags',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthquotetags',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -609,7 +609,7 @@ function migrateFeature() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='bwtravelarticleviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
+        $cronresult = $this->conn2->query("select start_time from cron_log where section_name='bwhealtharticleviewcount' order by  start_time desc limit 0,1") or die($this->conn2->error);
         
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];    
@@ -640,7 +640,7 @@ function migrateFeature() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='bwtravelarticleviewcount',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn2->prepare("insert into cron_log set section_name='bwhealtharticleviewcount',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -656,7 +656,7 @@ function migrateFeature() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelevent' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthevent' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -685,7 +685,7 @@ function migrateFeature() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelevent',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthevent',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -697,7 +697,7 @@ function migrateBwCategory() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelcategory' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthcategory' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         $cronLastExecutionTime = 0;
         if ($cronresult->num_rows > 0) {
@@ -742,7 +742,7 @@ function migrateBwCategory() {
         }
         $this->migrateSubCategoryDirect($cronLastExecutionTime);
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelcategory',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthcategory',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -888,7 +888,7 @@ function migrateSubCategoryDirect($cronLastExecutionTime) {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtraveltag' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthtag' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -921,7 +921,7 @@ function migrateSubCategoryDirect($cronLastExecutionTime) {
             }
         }
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwtraveltag',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthtag',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -934,7 +934,7 @@ function migrateBwNewsType() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelnewstype' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthnewstype' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {  
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -966,7 +966,7 @@ function migrateBwNewsType() {
         }
         
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelnewstype',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthnewstype',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -979,7 +979,7 @@ function migrateBwTopics(){
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
         
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtraveltopics' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtrhealthtopics' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {  
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1000,7 +1000,7 @@ function migrateBwArticle() {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelarticle' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealtharticle' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1091,7 +1091,7 @@ function migrateBwArticle() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelarticle',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealtharticle',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -1309,7 +1309,7 @@ function migrateBwArticle() {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelsponsoredposts' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthsponsoredposts' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1383,7 +1383,7 @@ function migrateBwArticle() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelsponsoredposts',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthsponsoredposts',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -1498,7 +1498,7 @@ function migrateBwArticle() {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] =0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelmagazineissue' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthmagazineissue' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1551,7 +1551,7 @@ function migrateBwArticle() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelmagazineissue',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthmagazineissue',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -1567,7 +1567,7 @@ function migrateBwArticle() {
         $_SESSION['noofupd'] = 0;
         $_SESSION['noofdel'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelphotoshoot' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthphotoshoot' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1637,7 +1637,7 @@ function migrateBwArticle() {
         }
         
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelphotoshoot',start_time=?,end_time=?");
+        $updatecorstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthphotoshoot',start_time=?,end_time=?");
         $updatecorstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecorstmt->execute();
         $updatecorstmt->close();
@@ -1724,7 +1724,7 @@ function migrateBwArticle() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelmastervideo' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthmastervideo' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1792,7 +1792,7 @@ function migrateBwArticle() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelmastervideo',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthmastervideo',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -1838,7 +1838,7 @@ function migrateBwArticle() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelcampaing' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthcampaing' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1875,7 +1875,7 @@ function migrateBwArticle() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelcampaing',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthcampaing',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -1888,7 +1888,7 @@ function migrateMasterNewsLetter() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravelmasternewsletter' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthmasternewsletter' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -1950,7 +1950,7 @@ function migrateMasterNewsLetter() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravelmasternewsletter',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthmasternewsletter',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
@@ -1984,7 +1984,7 @@ function migrateMasterNewsLetter() {
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwtravellivestreaming' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwhealthlivestreaming' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];
@@ -2021,7 +2021,7 @@ function migrateMasterNewsLetter() {
         }
 
         $cronEndTime = date('Y-m-d H:i:s');
-        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwtravellivestreaming',start_time=?,end_time=?");
+        $updatecronstmt = $this->conn->prepare("insert into cron_log set section_name='bwhealthlivestreaming',start_time=?,end_time=?");
         $updatecronstmt->bind_param('ss', $conStartTime, $cronEndTime);
         $updatecronstmt->execute();
         $updatecronstmt->close();
