@@ -2783,6 +2783,7 @@ class Cron {
         $total_stories = 0;
         $repor_type_tdata.='<tr>';
         foreach ($channelsTotal as $total) {
+            $total_stories+=$total;
             $repor_type_tdata.='<td style="font-size: 14px;  border:1px solid #ccc !important; color: #222222; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>' . $total . '</b></td>';
         }
         $repor_type_tdata.='</tr>';
@@ -2822,7 +2823,7 @@ class Cron {
         //  echo  $mailbody; exit;
         $headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
         $from_email = "reports@bwbusinessworld.com";
-        $sub = '=?UTF-8?B?' . base64_encode("Last 15 Days Report – Article Contribution to Digital") . '?=';
+        $sub = '=?UTF-8?B?' . base64_encode("Last 7 Days Report – Article Contribution to Digital") . '?=';
         $headers .= 'From: ' . $from_email . "\r\n" . 'Reply-To: ' . $from_email . "\r\n" . 'X-Mailer: PHP/' . phpversion();
         //anurag.batra@businessworld.in,sudipta@businessworld.in,
         //echo $mailbody; exit;
