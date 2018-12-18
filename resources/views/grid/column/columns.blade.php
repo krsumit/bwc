@@ -155,7 +155,7 @@
                             </thead>
                             <tbody>
                                 @foreach($columns as $column)
-                                <tr class="gradeX" id="rowCur{{$column->id}}">
+                                <tr class="gradeX" id="item_{{$column->id}}">
                                     <td><a href="/grid-columns/{{$column->id}}/edit">{{$column->id}}</a> </td>
                                     <td><a href="/grid-columns/{{$column->id}}/edit">{{$column->name}}</a></td>
                                     <td class="center"> 
@@ -229,4 +229,26 @@
         @endif    
 
 </div>
+
+<script>
+//alert(1);
+  $("#tableSortable tbody").sortable({
+      appendTo: "parent",
+      helper: "clone",
+      update: function (event, ui) {
+        //alert($(this).html());
+        var data = $(this).sortable('serialize');
+        //alert(data);    
+        // POST to server using $.post or $.ajax
+                $.ajax({
+                    data:  data+'&_token={{ csrf_token() }}',
+                    type: 'POST',
+                        url: '{{ url("/grid-columns/sort/".$grid->id)}}'
+                });
+        
+    }
+  }).disableSelection();
+
+</script>
+
 @stop

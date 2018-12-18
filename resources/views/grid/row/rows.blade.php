@@ -1,8 +1,5 @@
 @extends('layouts/master')
-
 @section('title', 'Grid Rows - BWCMS')
-
-
 @section('content') 
 <div class="panel">
     <div class="panel-content filler">
@@ -139,7 +136,6 @@
         </div>
         @if(count($rows)>0)
             {!! Form::open(array('url'=>'/grid-rows/'.$grid->id,'class'=> 'form-horizontal','id'=>'brands_list_from','enctype'=>'multipart/form-data')) !!}
-            {!! csrf_field() !!}
             {!! method_field('DELETE') !!}  
             <div class="container-fluid">
                 <!--Sortable Non-responsive Table begin-->
@@ -155,7 +151,7 @@
                             </thead>
                             <tbody>
                                 @foreach($rows as $row)
-                                <tr class="gradeX" id="rowCur{{$row->id}}">
+                                <tr class="gradeX" id="item_{{$row->id}}">
                                     <td><a href="/grid-rows/{{$row->id}}/edit">{{$row->id}}</a> </td>
                                     <td><a href="/grid-rows/{{$row->id}}/edit">{{$row->name}}</a></td>
                                     <td class="center"> 
@@ -229,4 +225,25 @@
         @endif    
 
 </div>
+
+<script>
+//alert(1);
+
+ $("#tableSortable tbody").sortable({
+      appendTo: "parent",
+      helper: "clone",
+      update: function (event, ui) {
+        //alert($(this).html());
+        var data = $(this).sortable('serialize');
+                $.ajax({
+                    data: data+'&_token={{ csrf_token() }}',
+                    type: 'POST',
+                    url: '{{ url("/grid-rows/sort/".$grid->id)}}'
+                });
+        
+    }
+  }).disableSelection();
+
+</script>
+
 @stop

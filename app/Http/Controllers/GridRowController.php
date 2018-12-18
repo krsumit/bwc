@@ -66,9 +66,11 @@ class GridRowController extends Controller {
         $validation = $this->validate($request,[
               'row_name' => 'required',
         ]);
+        $seq=GridRow::where('grid_id','=',$request->grid_id)->max('sequence')+1;
         $row = new GridRow();
         $row->name = trim($request->row_name);
         $row->grid_id=$request->grid_id;
+        $row->sequence=$seq;
         $row->save();
         Session::flash('message', 'Row added successfully.');
         return Redirect::to('grid-rows/'.$request->grid_id);
@@ -125,13 +127,13 @@ class GridRowController extends Controller {
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
         $channel=Channel::find($grid->channel_id);
-        $rows=GridRow::where('grid_id','=',$grid->id)->get();
+        $rows=GridRow::where('grid_id','=',$grid->id)->orderBy('sequence')->get();
         return view('grid.row.rows',compact('rows','grid','channel'));
     }
   
     
     public function destroy($id,Request $request){
-        //echo $id; exit;
+        echo $id; exit;
         //dd($request->all());
         $rightId = 126;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
@@ -139,5 +141,15 @@ class GridRowController extends Controller {
         GridRow::whereIn('id',$request->checkItem)->delete();
         Session::flash('message', 'Row(s) deleted successfully.');
         return Redirect::to('grid-rows/'.$id);
+    }
+    
+    public function sortRows($id,Request $request) {
+        $gridId=$id;
+        foreach($request->item as $k => $itm){
+            $gridRow=GridRow::find($itm);
+            $gridRow->sequence=$k+1;
+            $gridRow->save();
+        }
+        
     }
 }

@@ -1,7 +1,8 @@
 @extends('layouts/master')
 @section('title', 'Edit Article - BWCMS')
 @section('content')
- <style> .none { display:none; } 
+ <style> 
+     .none { display:none; } 
  </style>
 <div class="panel">
     <div class="panel-content filler">

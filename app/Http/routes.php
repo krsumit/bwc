@@ -469,8 +469,13 @@ Route::group(['middleware' => 'auth'], function() {
     Route::resource('brands','BrandController');
     Route::get('products/product-json','ProductController@getProductJson');
     Route::resource('products','ProductController');
+    
+    Route::post('grid-rows/sort/{id}','GridRowController@sortRows');
     Route::resource('grid-rows','GridRowController');
+    
+    Route::post('grid-columns/sort/{id}','GridColumnController@sortColumns');
     Route::resource('grid-columns','GridColumnController');
+    
     Route::resource('grids','GridController');
     Route::resource('grid-products','GridProductController');
     

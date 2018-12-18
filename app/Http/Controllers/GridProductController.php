@@ -99,7 +99,7 @@ class GridProductController extends Controller {
         $channel=Channel::find($grid->channel_id);
         $girdRows=array();
         $tableData=array();
-        $gridColumns= GridColumn::where('grid_id','=',$grid->id)->get();
+        $gridColumns= GridColumn::where('grid_id','=',$grid->id)->orderBy('sequence')->get();
         //echo count($gridColumn).'-';
         if($grid->type=='review'){
             $tableData=array();
@@ -132,7 +132,7 @@ class GridProductController extends Controller {
                 ->get();
             $productList=json_encode($productList);
         }else{
-            $girdRows= GridRow::where('grid_id','=',$id)->get();
+            $girdRows= GridRow::where('grid_id','=',$id)->orderBy('sequence')->get();
              $productDetails = DB::table('brand_models')
                 ->join('grid_products','brand_models.id','=','grid_products.product_id')
                 ->whereNull('brand_models.deleted_at')

@@ -79,10 +79,11 @@ class GridColumnController extends Controller {
                 'column_name' => 'required'
             ]);
         }
-
+        $seq=GridColumn::where('grid_id','=',$request->grid_id)->max('sequence')+1;
         $column = new GridColumn();
         $column->name = trim($request->column_name);
         $column->grid_id=$request->grid_id;
+        $column->sequence=$seq;
         if ($grid->type == "review")
             $column->att_group_id=$request->attribute_group;
         $column->save();
@@ -147,7 +148,7 @@ class GridColumnController extends Controller {
         if (!$this->rightObj->checkRights($currentChannelId, $rightId))
             return redirect('/dashboard');
         $channel=Channel::find($grid->channel_id);
-        $columns=GridColumn::where('grid_id','=',$grid->id)->get();
+        $columns=GridColumn::where('grid_id','=',$grid->id)->orderBy('sequence')->get();
         return view('grid.column.columns',compact('columns','grid','channel'));
     }
   
@@ -161,5 +162,14 @@ class GridColumnController extends Controller {
         GridColumn::whereIn('id',$request->checkItem)->delete();
         Session::flash('message', 'Column(s) deleted successfully.');
         return Redirect::to('grid-columns/'.$id);
+    }
+    
+    public function sortColumns($id,Request $request) {
+        $gridId=$id;
+        foreach($request->item as $k => $itm){
+            $gridColumn=GridColumn::find($itm);
+            $gridColumn->sequence=$k+1;
+            $gridColumn->save();
+        }
     }
 }
