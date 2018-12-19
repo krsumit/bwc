@@ -1737,7 +1737,7 @@ class Cron {
         //echo 'test'; exit;
         // updating scheduled articles
 	//Pti server url to insert article in cms: http://35.194.177.143/news/importfeed.php
-	file_get_contents('http://35.194.177.143/news/importfeed.php');
+	//file_get_contents('http://35.194.177.143/news/importfeed.php');
         $this->conn->query("update articles set status='P',updated_at='".date('Y-m-d H:i:s')."' where status='SD' and channel_id = $this->channelId and concat(publish_date,' ',publish_time) <= '" . date('Y-m-d H:i:s') . "'") or die($this->conn->error);
         //echo date('Y-m-d h:i:s'); exit;
         //exit;
