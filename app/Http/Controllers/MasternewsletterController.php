@@ -204,8 +204,14 @@ class MasternewsletterController extends Controller {
              exec("/usr/bin/php /var/www/html/cms/public/bwhr/cronjob.php 'section=newsletter'");
        elseif($newsletter->channel_id=='11')
              exec("/usr/bin/php /var/www/html/cms/public/bwdiffcron/cronjob.php 'section=newsletter'");
+       elseif($newsletter->channel_id=='12')
+             exec("/usr/bin/php /var/www/html/cms/public/bwwellnesscron/cronjob.php 'section=newsletter'");
        elseif($newsletter->channel_id=='13')
              exec("/usr/bin/php /var/www/html/cms/public/bwhealthcron/cronjob.php 'section=newsletter'");
+       elseif($newsletter->channel_id=='15')
+             exec("/usr/bin/php /var/www/html/cms/public/bwautocron/cronjob.php 'section=newsletter'");
+       elseif($newsletter->channel_id=='16')
+             exec("/usr/bin/php /var/www/html/cms/public/bwtravelcron/cronjob.php 'section=newsletter'");
        
     }   
     //End end of sorting newsletter
@@ -241,9 +247,14 @@ class MasternewsletterController extends Controller {
              exec("/usr/bin/php /var/www/html/cms/public/bwhr/cronjob.php 'section=newsletter'");
         elseif($newsletter->channel_id=='11')
              exec("/usr/bin/php /var/www/html/cms/public/bwdiffcron/cronjob.php 'section=newsletter'");
+        elseif($newsletter->channel_id=='12')
+             exec("/usr/bin/php /var/www/html/cms/public/bwwellnesscron/cronjob.php 'section=newsletter'");
         elseif($newsletter->channel_id=='13')
              exec("/usr/bin/php /var/www/html/cms/public/bwhealthcron/cronjob.php 'section=newsletter'");
-
+        elseif($newsletter->channel_id=='15')
+             exec("/usr/bin/php /var/www/html/cms/public/bwautocron/cronjob.php 'section=newsletter'");
+        elseif($newsletter->channel_id=='16')
+             exec("/usr/bin/php /var/www/html/cms/public/bwtravelcron/cronjob.php 'section=newsletter'");
         //exec("/usr/bin/php /var/www/html/public/hotcron/cronjob.php 'section=newsletter'");
 
         Session::flash('message', 'Your article(s) assigned in newsletter.');
@@ -353,8 +364,14 @@ class MasternewsletterController extends Controller {
              exec("/usr/bin/php /var/www/html/cms/public/bwhr/cronjob.php 'section=newsletter'");
         elseif($newsletter->channel_id=='11')
              exec("/usr/bin/php /var/www/html/cms/public/bwdiffcron/cronjob.php 'section=newsletter'");
-        elseif($newsletter->channel_id=='13')
+        elseif($newsletter->channel_id=='12')
+             exec("/usr/bin/php /var/www/html/cms/public/bwwellnesscron/cronjob.php 'section=newsletter'");
+	elseif($newsletter->channel_id=='13')
              exec("/usr/bin/php /var/www/html/cms/public/bwhealthcron/cronjob.php 'section=newsletter'");
+	elseif($newsletter->channel_id=='15')
+             exec("/usr/bin/php /var/www/html/cms/public/bwautocron/cronjob.php 'section=newsletter'");
+	elseif($newsletter->channel_id=='16')
+             exec("/usr/bin/php /var/www/html/cms/public/bwtravelcron/cronjob.php 'section=newsletter'");
         
         return 'success';
     }
