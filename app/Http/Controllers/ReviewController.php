@@ -9,6 +9,7 @@ use Auth;
 use App\BrandModel;
 use App\Brand;
 use App\AttributeGroup;
+use App\Grid;
 use App\ProductType;
 use App\ModelReview;
 use Session;
@@ -78,6 +79,7 @@ class ReviewController extends Controller {
        $model->review_social_title=$request->review_social_title;
        $model->review_social_description=$request->review_social_description;
        $model->review_conclusion=$request->review_conclusion;
+       $model->grid_id=$request->grid_id;
        
        if ($request->file('review_image')) { 
                 $fileTran = new FileTransfer();
@@ -109,7 +111,7 @@ class ReviewController extends Controller {
            }  
        }
         Session::flash('message', 'Review updated successfully.');
-        return Redirect::to('brand-models/'); 
+        return Redirect::to('brand-models/?channel='.$currentChannelId); 
     }
     
     
@@ -149,8 +151,10 @@ class ReviewController extends Controller {
            }
        }
        //dd(DB::getQueryLog());
+       $girds=Grid::where('type','=','review')->where('channel_id','=',$currentChannelId)->select('id','name')->get();
+       //dd($girds);
        $brand = Brand::find($model->brand_id);
-        return view('review.review',compact('attributeGroups','model','productType','brand','reviews'));
+        return view('review.review',compact('attributeGroups','model','productType','brand','reviews','girds'));
        //$attributeGroups=AttributeGroup::join()->join()->get();
     }
   

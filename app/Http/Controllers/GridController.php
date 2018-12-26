@@ -107,6 +107,9 @@ class GridController extends Controller {
         $grid->name = trim($request->grid_name);
         $grid->type = trim($request->gride_type);
         $grid->channel_id=$request->channel_id;
+        if($request->has('is_home_page')){
+            $grid->is_home_page=$request->is_home_page;
+        }
         $grid->save();
         Session::flash('message', 'Grid added successfully.');
         return Redirect::to('grids?channel='.$request->channel_id);
@@ -143,6 +146,11 @@ class GridController extends Controller {
         $grid->name = trim($request->grid_name);
         $grid->type = trim($request->gride_type);
         $grid->channel_id=$request->channel_id;
+        if($request->has('is_home_page')){
+            $grid->is_home_page=$request->is_home_page;
+        }else{
+             $grid->is_home_page=0;
+        }
         $grid->save();
    
         Session::flash('message', 'Grid updated successfully.');

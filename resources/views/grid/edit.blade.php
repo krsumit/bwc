@@ -142,6 +142,21 @@
                                             
             </script>
         </div>
+        
+        <div  class="control-group row-fluid">
+            <div class="span12 span-inset">
+                    <label class="checkbox" >
+                        <input type="checkbox" name="is_home_page" class="uniformCheckbox" value="1" @if($grid->is_home_page=='1') checked="checked" @endif >
+                        <a href="javascript:void(0);">Show on Home Page.</a>
+                    </label>
+            </div>
+              <script>
+                    $().ready(function(){
+                        $(".uniformCheckbox").uniform();
+                    });
+                </script>
+        </div>
+        
       
         </div>  
     

@@ -184,6 +184,24 @@
                 </div>
 
             </div>
+        <div id="File_Upload" class="control-group row-fluid">
+             <div class="span3">
+                <label class="control-label">Select Grid</label>
+            </div>
+            <div class="span9">
+                 <select name="grid_id" id="grid_id">
+                     <option value="0">Please Select</option>
+                        @foreach($girds as $gird)
+                        <option value="{{ $gird->id }}" @if($model->grid_id==$gird->id) selected="selected" @endif>{{ $gird->name }}</option>
+                        @endforeach
+                </select>
+                    <script>
+                        $().ready(function(){
+                            $("#grid_id").select2();
+                        });
+                    </script>
+            </div>
+        </div>
         
     </div>  
     
