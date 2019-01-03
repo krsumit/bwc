@@ -8,6 +8,7 @@ use App\Right;
 use Auth;
 use App\Brand;
 use App\Grid;
+use App\ProductType;
 use Session;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -178,5 +179,27 @@ class GridController extends Controller {
         Grid::whereIn('id',$request->checkItem)->delete();
         Session::flash('message', 'Grid deleted successfully.');
         return Redirect::to('grids/');
+    }
+    /*
+     * This function will return the grides having same channel_is as product_type 
+    */
+    public function getGridJson(){
+        //echo 'test';exit;
+        $str=trim($_GET['q']);
+        $gridList=array();
+        if(trim($_GET['product_type'])){
+            $product_type_id=$_GET['product_type'];
+            $productType=ProductType::find($product_type_id);
+            if($productType){
+                $gridList= Grid::select('id','name')
+                        ->where('type','review')
+                        ->where('channel_id',$productType->channel_id)
+                        ->where('name', "like", '%'.$str . '%')
+                        ->orderBy('name')
+                        ->get();
+            }
+        }
+        
+        return json_encode($gridList);
     }
 }

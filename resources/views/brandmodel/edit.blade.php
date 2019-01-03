@@ -174,8 +174,31 @@
 
         <!--WYSIWYG Editor - Full Options end-->
 
-
-        <!--Drag And Drop Upload begin-->
+        <div class="control-group row-fluid">    
+                <div class="span3">
+                    <label class="control-label">Review Grid</label>
+                </div>
+                <div class="span9">
+                    <div class="controls">
+                        <input type="text" class="valid" name="grid" id="grid"/>
+                    </div>
+                </div>
+            <script>
+                    $().ready(function(){
+                         $("#grid").tokenInput(function(){ 
+                            return "/grids/grid-json?product_type="+$("#product_type").val();
+                        }, 
+                        {
+                                theme: "facebook",
+                                searchDelay: 300,
+                                minChars: 3,
+                                tokenLimit:1,
+                                preventDuplicates: true,
+                                prePopulate: <?php echo $grid ?>,
+                        });
+                    });
+            </script>
+            </div>
         
           <!--Sortable Responsive Media Table begin-->
                         <div class="row-fluid">

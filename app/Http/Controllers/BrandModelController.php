@@ -10,6 +10,7 @@ use App\Brand;
 use App\ProductType;
 use App\BrandModel;
 use App\ModelImage;
+use App\Grid;
 use Session;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -93,6 +94,7 @@ class BrandModelController extends Controller {
         $brandModel->product_type_id = $request->product_type;
         $brandModel->name = trim($request->model_name);
         $brandModel->description =trim($request->description);
+        $brandModel->grid_id =trim($request->grid);
         $brandModel->save();
         $images = explode(',', $request->uploadedImages);
         $images = array_filter($images);
@@ -115,7 +117,7 @@ class BrandModelController extends Controller {
             $c++;
         }
         Session::flash('message', 'Brand model added successfully.');
-        return Redirect::to('brand-models');
+        return Redirect::to('brand-modelss?channel='.$currentChannelId);
         
     }
 
@@ -135,9 +137,15 @@ class BrandModelController extends Controller {
         $brands=Brand::orderBy('name')->lists('name','id')->toArray();
         $productTypes= ProductType::whereIn('channel_id',$allowedChannel)->orderBy('name')->lists('name','id')->toArray();
         $brandModel=  BrandModel::find($id);  
+        $grid=array();
+        if($brandModel->grid_id!=0){
+            $gd=Grid::select('id','name')->find($brandModel->grid_id);
+            $grid[]=$gd->toArray();
+        }
+        $grid=json_encode($grid);
         $photos=  ModelImage::where('brand_model_id','=',$id)->orderBy('sequence')->get();
         //dd($photos);
-        return view('brandmodel.edit',compact('brandModel','brands','productTypes','photos'));
+        return view('brandmodel.edit',compact('brandModel','brands','productTypes','photos','grid'));
     }
 
     /**
@@ -166,6 +174,7 @@ class BrandModelController extends Controller {
         $brandModel->product_type_id = $request->product_type;
         $brandModel->name = trim($request->model_name);
         $brandModel->description =trim($request->description);
+        $brandModel->grid_id =trim($request->grid);
         $brandModel->save();
 
         $images = explode(',', $request->uploadedImages);
@@ -194,7 +203,7 @@ class BrandModelController extends Controller {
         }
         
         Session::flash('message', 'Model updated successfully.');
-        return Redirect::to('brand-models');
+        return Redirect::to('brand-models?channel='.$currentChannelId);
          
     }
     

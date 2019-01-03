@@ -174,7 +174,7 @@ class ArticlesController extends Controller {
         
     }
 
-    function imageEdit(Request $request) {  
+    function imageEdit(Request $request) {
         $tags=array();
         $photo = Photo::find($request->id);
         $article = '';
