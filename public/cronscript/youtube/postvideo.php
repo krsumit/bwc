@@ -17,6 +17,7 @@ if ($cronresult->num_rows > 0) {
 }
 //$masterVideoResults = $conn->query("SELECT * FROM video_master where channel_id=1  $condition order by id ");
 //echo "SELECT * FROM video_master where 1  $condition order by id "; exit;
+//echo "SELECT * FROM video_master where 1 and youtube_id=''  $condition order by id ";exit;
 $masterVideoResults = $conn->query("SELECT * FROM video_master where 1 and youtube_id=''  $condition order by id ");
 $OAUTH2_CLIENT_ID = '80935570278-ktl78l8eraaf02tk3ena8eac09g1tocs.apps.googleusercontent.com';
 $OAUTH2_CLIENT_SECRET = 'I3DhEImJNL3KmTK5oZTMMkuM';
@@ -60,8 +61,8 @@ if ($client->getAccessToken()) {
         if (file_exists($videoPath)) {
             try {
                 $snippet = new Google_Service_YouTube_VideoSnippet();
-                $snippet->setTitle($masterVideoRow['video_title']);
-                $snippet->setDescription($masterVideoRow['video_summary']);
+                $snippet->setTitle(addslashes($masterVideoRow['video_title']));
+                $snippet->setDescription(addslashes($masterVideoRow['video_summary']));
                 //$snippet->setTags(array("tag1", "tag21"));
                 //$snippet->setCategoryId("22");
                 $status = new Google_Service_YouTube_VideoStatus();
