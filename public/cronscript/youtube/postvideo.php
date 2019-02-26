@@ -18,7 +18,9 @@ if ($cronresult->num_rows > 0) {
 //$masterVideoResults = $conn->query("SELECT * FROM video_master where channel_id=1  $condition order by id ");
 //echo "SELECT * FROM video_master where 1  $condition order by id "; exit;
 //echo "SELECT * FROM video_master where 1 and youtube_id=''  $condition order by id ";exit;
+//echo "SELECT * FROM video_master where 1 and youtube_id=''  $condition order by id ";exit;
 $masterVideoResults = $conn->query("SELECT * FROM video_master where 1 and youtube_id=''  $condition order by id ");
+//echo $masterVideoResults->num_rows; exit;
 $OAUTH2_CLIENT_ID = '80935570278-ktl78l8eraaf02tk3ena8eac09g1tocs.apps.googleusercontent.com';
 $OAUTH2_CLIENT_SECRET = 'I3DhEImJNL3KmTK5oZTMMkuM';
 $REFRESH_TOKEN = '1/DmilbRJBH8Klh6C_d9xo6g8y5g1w55he5qPzoADys98';
@@ -59,9 +61,15 @@ if ($client->getAccessToken()) {
         $namename = '';
         //copy($videourl, $videoPath);
         if (file_exists($videoPath)) {
+            //echo $videoPath.'--'.$masterVideoRow['id'].'<br>';
             try {
                 $snippet = new Google_Service_YouTube_VideoSnippet();
-                $snippet->setTitle(addslashes($masterVideoRow['video_title']));
+                
+                if(strlen($masterVideoRow['video_title'])<95)
+                    $snippet->setTitle(addslashes($masterVideoRow['video_title']));
+                else
+                    $snippet->setTitle(addslashes(substr($masterVideoRow['video_title'],0,93)).'...');
+                
                 $snippet->setDescription(addslashes($masterVideoRow['video_summary']));
                 //$snippet->setTags(array("tag1", "tag21"));
                 //$snippet->setCategoryId("22");
@@ -90,11 +98,11 @@ if ($client->getAccessToken()) {
                 $handle = fopen($videoPath, "rb");
                 // print_r($handle); exit;
                 while (!$status && !feof($handle)) {
-                    $chunk = fread($handle, $chunkSizeBytes);
+          	    $chunk = fread($handle, $chunkSizeBytes);
                     //echo $chunkSizeBytes;exit;
                     // echo $chunk; exit;
-                    $status = $media->nextChunk($chunk);
-                }
+                   $status = $media->nextChunk($chunk);
+		 } 
                 fclose($handle);
                 // If you want to make other calls after the file upload, set setDefer back to false
                 $client->setDefer(false);
@@ -104,9 +112,9 @@ if ($client->getAccessToken()) {
                 $conn->query("update video_master set youtube_id='" . $status['id'] . "' where id=" . $masterVideoRow['id']);
                 $htmlBody .= '</ul>';
             } catch (Google_Service_Exception $e) {
-                 $htmlBody .= sprintf('<p>A service error occurred: <code>%s</code></p>', htmlspecialchars($e->getMessage()));
+                echo $htmlBody = sprintf('<p>A service error occurred: <code>%s</code></p>', htmlspecialchars($e->getMessage()));
             } catch (Google_Exception $e) {
-                $htmlBody .= sprintf('<p>An client error occurred: <code>%s</code></p>', htmlspecialchars($e->getMessage()));
+                echo $htmlBody = sprintf('<p>An client error occurred: <code>%s</code></p>', htmlspecialchars($e->getMessage()));
             }
         }
     }
