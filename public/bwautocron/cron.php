@@ -706,8 +706,8 @@ function migrateBwCategory() {
             $condition = " and  (created_at>='$cronLastExecutionTime' or updated_at>='$cronLastExecutionTime')";
         }
 
-         $catresults = $this->conn->query("SELECT category_id as id,name,channel_id as parent_id,valid,'1' as level  FROM category where channel_id=$this->channelId ");
-        echo $catresults->num_rows;exit;    
+         $catresults = $this->conn->query("SELECT category_id as id,name,channel_id as parent_id,valid,'1' as level  FROM category where channel_id=$this->channelId $condition");
+        //echo $catresults->num_rows;exit;    
         while ($catrow = $catresults->fetch_assoc()) {
             $categoryCheckStmt = $this->conn2->prepare("select category_id,category_name from channel_category where cms_cat_id=? and cms_cat_level=?");
             $categoryCheckStmt->bind_param('ii', $catrow['id'], $catrow['level']);
