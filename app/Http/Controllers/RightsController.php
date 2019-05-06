@@ -187,7 +187,7 @@ class RightsController extends Controller
         $email = $user->email;
         $mobile = $user->mobile;
         $roleO = $user->user_type_id;        
-        $roles = DB::table('user_types')->where('valid','1')->get();
+        $roles = DB::table('roles')->where('valid','1')->get();
         $old = DB::table('rights')
             ->join('user_rights','rights.rights_id','=','user_rights.rights_id')
             ->select(array(DB::raw('group_concat(rights.rights_id) as allrights')))
@@ -206,6 +206,7 @@ class RightsController extends Controller
         }else{
             $rightChannels=array();
         }
+        
         return view('rights.manage',compact('roles','name','email','mobile','roleO','userid','delArrcheck','allchannel','rightChannels'));
     }
 

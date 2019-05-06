@@ -512,6 +512,7 @@ class EventController extends Controller {
     }
 
     public function saveImport(Request $request) {
+        //dd($request);exit;
         $event = Event::find($request->event_id);
         $rightId = 107;
 
@@ -643,7 +644,8 @@ class EventController extends Controller {
                     $noOfEscapped++;
                     fputcsv($filetowrite, $ass_data);
                 }
-            }
+               
+            } 
         }
 
         fclose($handle);

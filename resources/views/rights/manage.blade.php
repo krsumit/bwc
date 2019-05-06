@@ -178,7 +178,7 @@
                     <select name="role" id="roleid">
                         <option selected="" value="">---Please Select---</option>
                         @foreach($roles as $role)
-                        <option value="{{$role->user_types_id}}">{{$role->label}}</option>
+                        <option value="{{$role->id}}">{{$role->name}}</option>
                         @endforeach
                     </select>
                 </div>
