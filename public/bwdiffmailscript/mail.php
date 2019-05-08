@@ -86,7 +86,7 @@ class Cron {
         $return_html .= '<head>';
         $return_html .= '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />';
         $return_html .= '<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">';
-        $return_html .= '<title>BW Smartcities</title>';
+        $return_html .= '<title>BW Defence</title>';
         $return_html .= '<style type="text/css">
 
         /* iPad Text Smoother */
@@ -212,7 +212,7 @@ class Cron {
         $return_html .= '<tr><td width="590" height="12"></td></tr>';
         $return_html .= '<tr><td width="590" style="font-size: 22px; color: #2f2f36; text-align: left; font-weight: bold; font-family: Helvetica, Arial, sans-serif; line-height: 30px;"><singleline>Dear&nbsp;'.$name .',</singleline></td></tr>';
         $return_html .= '<tr><td width="590" height="10"></td></tr>';
-        $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline>Your article titled <a href="'.$url.'" target="_blank">'.$articletitle.'&nbsp;(click here!)</a> has been published on BW Smartcities website.</singleline></td></tr>';
+        $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline>Your article titled <a href="'.$url.'" target="_blank">'.$articletitle.'&nbsp;(click here!)</a> has been published on BW Defence website.</singleline></td></tr>';
         $return_html .= '<tr><td width="590" height="30"></td></tr>';
         $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><b>What can you do now?</b></td></tr>'
                 . '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><a style="text-decoration: none; color: inherit; display: block; width: 180px;" href="'.$url.'" target="_blank"><img src="http://d1s8mqgwixvb29.cloudfront.net/static/images/fb.png" alt="Facebook"/>&nbsp;&nbsp; <span style="float:right">Share it on Facebook</span></a></td></tr>'
@@ -222,7 +222,7 @@ class Cron {
         $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline>Looking forward to many such enriching contributions from you.</singleline></td></tr>';
         $return_html .= '<tr><td width="590" height="30"></td></tr>';
         $return_html .= '<tr><td style="font-family:Segoe,Segoe UI,DejaVu Sans,Trebuchet MS,Verdana,sans-serif !important;"><strong >Regards</strong></td> </tr>';
-        $return_html .= '<tr><td style="font-family:Segoe,Segoe UI,DejaVu Sans,Trebuchet MS,Verdana,sans-serif !important;"><strong >BW Smartcities Editorial</strong></td> </tr>';
+        $return_html .= '<tr><td style="font-family:Segoe,Segoe UI,DejaVu Sans,Trebuchet MS,Verdana,sans-serif !important;"><strong >BW Defence Editorial</strong></td> </tr>';
         $return_html .= '<tr><td width="590" height="30"></td></tr>';
         $return_html .= '<tr><td width="590" style="font-size: 14px; color: #696a78; text-align: left; font-weight: normal; font-family: Helvetica, Arial, sans-serif; line-height: 26px;"><singleline><i>This is a system generated email. Please do not reply to this mail. For any feedback about the article/process or otherwise, <a href="'.$urlcontact.'" target="_blank">(click here)</a> &nbsp;to contact us.</i></singleline></td></tr>';
         $return_html .= '<tr><td width="590" height="30"></td></tr>';
