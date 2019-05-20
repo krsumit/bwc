@@ -32,7 +32,7 @@ class EventController extends Controller {
      */
     private $rightObj;
 
-    public function __construct() {
+    public function __construct() { 
         //$this->middleware('auth');
         $this->rightObj = new Right();
     }
@@ -320,7 +320,7 @@ class EventController extends Controller {
         return;
     }
 
-    public function manageEventSpeaker($id) {
+    public function manageEventSpeaker($id){
         $event = Event::find($id);
         $speaker_type_id = 1;
         if (isset($_GET['type'])) {
@@ -491,12 +491,12 @@ class EventController extends Controller {
         $matchText = $_GET['q'];
         $tag = new SpeakerTag;
         //->all()
-        $rst = $tag->where('tag', "like", $matchText . '%')->select('tags_id as id', 'tag as name')->get();
+        $rst = $tag->where('tag', "like", '%'.$matchText . '%')->select('tags_id as id', 'tag as name')->get();
         return response()->json($rst);
     }
 
     public function import($id) {
-        
+       
         $event = Event::find($id);
         $rightId = 107;
         $currentChannelId = $event->channel_id;
@@ -668,7 +668,7 @@ class EventController extends Controller {
     }
 
     public function importAttendee() {
-        //echo $id; exit;
+        //echo 'Importing attendee'; exit;
         $rightId = 107;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect()->intended('/dashboard');
@@ -677,21 +677,22 @@ class EventController extends Controller {
     }
 
     public function saveImportAttendee(Request $request) {
+       
         $noOfInserted = 0;
         $noOfUpdated = 0;
         $noOfEscapped = 0;
-
+        
         $rightId = 107;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect()->intended('/dashboard');
-
         $fileTran = new FileTransfer();
         //dd($request->all());
         if ($request->file('speaker_file')) {
             $file = $request->file('speaker_file');
             $filename = str_random(6) . '_' . preg_replace('/([^a-zA-Z0-9_.])+/', '-', $request->file('speaker_file')->getClientOriginalName());
             $fileTran->uploadFile($file, config('constants.aw_csv'), $filename, false, false);
-        }
+        }        
+        //echo '7-test1-2-3-4'; exit;
         $mobileExp = '/^([0-9]{7,14})$/';
         $uid = Session::get('users')->id;
         $eventId = $request->event_id;
@@ -717,6 +718,7 @@ class EventController extends Controller {
              
             fputcsv($filetowrite, $firstRow);
             while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                //echo '<pre>';echo print_r($data);exit;
                 $count=count($firstRow);
                 $data=array_slice($data,0,$count);
                 $ass_data = array_combine($firstRow, $data);
@@ -724,6 +726,13 @@ class EventController extends Controller {
                 if (preg_match($mobileExp, $ass_data['Mobile'])) {
                     $speaker = Speaker::where('mobile', '=', $ass_data['Mobile'])->first();
                     if ($speaker) {
+                        
+                        // Add tag if attendee already exist
+                        if(trim($request->Taglist)){
+                            
+                        }
+                        
+                        
                         if (trim($ass_data['Designation'])) {
                             $speakerDetail = SpeakerDetails::where('designation', '=', trim($ass_data['Designation']))->where('company', '=', trim($ass_data['Organisation']))->where('speaker_id', '=', $speaker->id)->first();
                             //dd($speakerDetail);
@@ -755,7 +764,7 @@ class EventController extends Controller {
                         $speaker->twitter = $ass_data['Twitter'];
                         $speaker->linkedin = $ass_data['LinkedIn'];
                         $speaker->description = $ass_data['Description'];
-                        $speaker->tags = $tagsId;
+                        $speaker->tags = $request->Taglist;
                         $speaker->status = '1';
                         $speaker->save();
                         $speaker_id = $speaker->id;
@@ -775,7 +784,8 @@ class EventController extends Controller {
                                 $speaker_detail_id = $speakerDetail->id;
                             }
                         }
-                        //echo '1 speaker added'; exit;
+                        print_r($data);
+                        echo '1 speaker added'; exit;
                     }
                 } else {
                     $noOfEscapped++;

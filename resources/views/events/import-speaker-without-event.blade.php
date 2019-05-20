@@ -89,15 +89,81 @@
         <div class="control-group row-fluid" id="Multiple_Select_Box_with_Filter_Search">
 
             <!-- Add Tag to Tags Table - Ajax request -->
-            <script>
-                $().ready(function () {
-                    var token = $('input[name=_token]');
+            <div class="control-group row-fluid">    
+            <div class="span3">
+                <label for="multiFilter" class="control-label">Tags(Industry)</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <input type="text" class="valid" name="Taglist" id="Taglist"/>
+                </div>
+            </div>
+        </div>
+        <div class="control-group row-fluid">
+            <div class="span3">
+                <label class="control-label" for="add tags">Add New Tags</label>
+            </div>
+            <div class="span9">
+                <div class="controls">
+                    <input type="text" name="addtags" class="valid"><span for="add tags" generated="true" class="error" style="display: none;">Please enter a valid text.</span>
+                </div>
+            </div>
+            <div class="span12 span-inset">
 
-                    $("#speaker_type").select2();
-                });</script>
+                <div style="float:right; width:11%; margin-bottom:5px;"><button type="button" class="btn btn-primary" id="attachTag" style="display:block;">Attach</button>
+                    <img src="{{ asset('images/photon/preloader/76.gif') }}" alt="loader" style="width:50%; display:block; margin-left:15px;display:none;"></div>
+            </div>
+        </div>
+        <!-- Add Tag to Tags Table - Ajax request -->
+        <script>
+            $().ready(function () {
+                var token = $('input[name=_token]');
+                // process the form
+                $("#attachTag").click(function () {
+                    if ($('input[name=addtags]').val().trim().length == 0) {
+                        alert('Please enter tage');
+                        return false;
+                    }
+
+                    $.ajax({
+                        type: 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                        url: '/event-speaker/addTag', // the url where we want to POST
+                        data: {tag: $('input[name=addtags]').val()},
+                        dataType: 'json', // what type of data do we expect back from the server
+                        encode: true,
+                        beforeSend: function (data) {
+                            $('#attachTag').hide();
+                            $('#attachTag').siblings('img').show();
+                        },
+                        complete: function (data) {
+                            $('#attachTag').show();
+                            $('#attachTag').siblings('img').hide();
+                        },
+                        success: function (data) {
+
+                            $.each(data, function (key, val) {
+
+                                $("#Taglist").tokenInput("add", val);
+                            });
+                            $('input[name=addtags]').val('');
+
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': token.val()
+                        }
+                    })
+                });
+                $("#Taglist").tokenInput("/event-speaker/getJson", {
+                    theme: "facebook",
+                    searchDelay: 300,
+                    minChars: 2,
+                    preventDuplicates: true,
+                    tokenLimit: 1,
+                });
+            });</script>
             <div id="File_Upload" class="control-group row-fluid">
                 <div class="span3">
-                    <label class="control-label">Photo<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="File should be only CSV"><i class="icon-photon info-circle"></i></a>
+                    <label class="control-label">Upload File<a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="File should be only CSV"><i class="icon-photon info-circle"></i></a>
                     <a href="https://static.businessworld.in/csv/sample.csv" title="Click here to dwonload sample file.">Sample</a>
                     </label>
 

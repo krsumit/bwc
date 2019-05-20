@@ -623,7 +623,7 @@ function migrateBwTopics(){
     }
 function migrateBwArticle() {
 	//echo 'sumit'; exit;
-        $this->conn->query("update articles set status='P' where status='SD' and concat(publish_date,' ',publish_time) <= '".date('Y-m-d h:i:s')."'") or die($this->conn->error);; 
+        $this->conn->query("update articles set status='P',updated_at='".date('Y-m-d H:i:s')."' where status='SD' and channel_id = $this->channelId and concat(publish_date,' ',publish_time) <= '".date('Y-m-d H:i:s')."'") or die($this->conn->error);
         $this->migrateBwAuthor();
         $this->migrateBwCategory();
         $this->migrateBwTag();
