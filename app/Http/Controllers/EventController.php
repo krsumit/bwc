@@ -794,8 +794,7 @@ class EventController extends Controller {
                                 $speaker_detail_id = $speakerDetail->id;
                             }
                         }
-                        print_r($data);
-                       
+                  
                     }
                 } else {
                     $noOfEscapped++;
