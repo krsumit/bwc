@@ -677,7 +677,6 @@ class EventController extends Controller {
     }
 
     public function saveImportAttendee(Request $request) {
-       
         $noOfInserted = 0;
         $noOfUpdated = 0;
         $noOfEscapped = 0;
@@ -726,13 +725,23 @@ class EventController extends Controller {
                 if (preg_match($mobileExp, $ass_data['Mobile'])) {
                     $speaker = Speaker::where('mobile', '=', $ass_data['Mobile'])->first();
                     if ($speaker) {
-                        
+                       // echo 'going to update'; exit;
                         // Add tag if attendee already exist
                         if(trim($request->Taglist)){
-                            
+                            if(trim($speaker->tags)){
+                                $tags=explode(',',$speaker->tags);
+                                if(!(in_array($request->Taglist,$tags))){
+                                    $tags= array_merge($tags,array($request->Taglist));                                
+                                    $tags=implode(',',$tags);
+                                    $speaker->tags=$tags;
+                                    $speaker->save();                                    
+                                }
+                                
+                            }else{
+                                $speaker->tags=$request->Taglist;
+                                $speaker->save();
+                            }
                         }
-                        
-                        
                         if (trim($ass_data['Designation'])) {
                             $speakerDetail = SpeakerDetails::where('designation', '=', trim($ass_data['Designation']))->where('company', '=', trim($ass_data['Organisation']))->where('speaker_id', '=', $speaker->id)->first();
                             //dd($speakerDetail);
@@ -756,6 +765,7 @@ class EventController extends Controller {
                             }
                         }
                     } else {
+                        
                         $tagsId = '';
                         $speaker = new Speaker;
                         $speaker->name = $ass_data['Name'];
@@ -785,12 +795,13 @@ class EventController extends Controller {
                             }
                         }
                         print_r($data);
-                        echo '1 speaker added'; exit;
+                       
                     }
                 } else {
                     $noOfEscapped++;
                     fputcsv($filetowrite, $ass_data);
                 }
+                
             }
         }
 

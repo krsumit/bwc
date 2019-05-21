@@ -283,7 +283,6 @@
                     searchDelay: 300,
                     minChars: 2,
                     preventDuplicates: true,
-                    tokenLimit: 1,
                     prePopulate: <?php echo $tags ?>,
                 });
             });</script>
