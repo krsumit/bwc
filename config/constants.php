@@ -62,7 +62,7 @@ return [
 'awsbaseurl'=>'http://static.businessworld.in/',       
 'recordperpage' => '20',
 'maxfilesize'=>'2',
-'maxfilesizevideo'=>'200',
+'maxfilesizevideo'=>'1000',
 'filesizein'=>'MB',
 'dimension_article'=>'870X470',
 'dimension_qb'=>'870X470',
