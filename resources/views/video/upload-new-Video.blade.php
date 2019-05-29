@@ -529,7 +529,7 @@
                                     accept: "video/*",
                                     maxFileSize: {
                                     "unit": "MB",
-                                            "size": 1000
+                                            "size": 250
                                     }
                             },
                     }
