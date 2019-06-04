@@ -658,7 +658,7 @@
                             var addtag=$(this).parents('table').find('input[name^="addtags"]');//.attr('name');
                             //alert($(addtag).val());
                             if ($(addtag).val().trim().length == 0) {
-                                alert('Please enter tage');
+                                alert('Please enter tag');
                                 return false;
                             }
                             $.ajax({

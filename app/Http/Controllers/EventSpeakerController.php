@@ -144,7 +144,6 @@ class EventSpeakerController extends Controller {
         $rightId = 104;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
-        
         $speaker=  Speaker::find($id);
         //echo $speaker->speaker_id; exit;
         $speakerDetails =  SpeakerDetails::where('speaker_id','=',$speaker->id)->orderBy('is_current','DESC')->orderBy('created_at','DESC')->get();
@@ -153,7 +152,7 @@ class EventSpeakerController extends Controller {
     }
   
   
-    public function edit($id) {       
+    public function edit($id){       
         $rightId = 104;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');

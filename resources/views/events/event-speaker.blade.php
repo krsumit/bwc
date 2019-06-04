@@ -173,7 +173,7 @@
                         // process the form
                         $("#attachTag").click(function () {
                             if ($('input[name=addtags]').val().trim().length == 0) {
-                                alert('Please enter tage');
+                                alert('Please enter tag');
                                 return false;
                             }
 

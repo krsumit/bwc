@@ -220,7 +220,7 @@
                                 // process the form
                         $("#attachTag").click(function(){
                         if ($('input[name=tagadded]').val().trim().length == 0){
-                        alert('Please enter tage'); return false;
+                        alert('Please enter tag'); return false;
                         }
 
                         $.ajax({
