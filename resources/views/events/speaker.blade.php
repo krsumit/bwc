@@ -26,6 +26,11 @@
                     <input type="radio" @if(isset($_GET['searchin'])) @if($_GET['searchin']=='email') checked @endif @endif name="searchin" class="uniformRadio" value="email">
                            Search by attendee Email ID
                 </label>
+                
+                <label class="radio">
+                    <input type="radio" @if(isset($_GET['searchin'])) @if($_GET['searchin']=='company') checked @endif @endif name="searchin" class="uniformRadio" value="company">
+                           Company
+                </label>
             </form>
         </div>
 

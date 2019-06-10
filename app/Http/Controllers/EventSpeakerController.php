@@ -36,7 +36,11 @@ class EventSpeakerController extends Controller {
 
     public function index() {
         //$event = Event::find($id);
-        $speakers = Speaker::where('status','=','1')->orderBy('updated_at', 'desc');
+        $speakers = Speaker::where('status','=','1')
+                ->leftJoin('speaker_details','speakers.id','=','speaker_details.speaker_id')
+                ->select('speakers.*')
+                ->groupBy('speakers.id')
+                ->orderBy('updated_at', 'desc');
         $rightId = 103;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
@@ -46,6 +50,9 @@ class EventSpeakerController extends Controller {
             }
             if (@$_GET['searchin'] == 'email') {
                 $speakers->where('email', 'like', '%' . $_GET['keyword'] . '%');
+            }
+            if (@$_GET['searchin'] == 'company') {
+                $speakers->where('speaker_details.company', 'like', '%' . $_GET['keyword'] . '%');
             }
         }
         $speakers = $speakers->paginate(config('constants.recordperpage'));
