@@ -492,7 +492,7 @@
 </div>
 <script>
                     $("#fileupload").validate({
-            errorElement: "span",
+                    errorElement: "span",
                     errorClass: "error",
                     //$("#pageSubmit").onclick: true,
                     onclick: true,

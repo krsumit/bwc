@@ -82,11 +82,11 @@
                                         }
                                         if (index == 'photopath') {
                                             $('#photo_photo').val(element);
-                                            $('input[name=mediaSel]').val('photo');
+                                            //$('input[name=mediaSel]').val('photo');
                                         }
                                         if (index == 'code') {
                                             $('#code').val(element);
-                                            $('input[name=mediaSel]').val('video');
+                                            //$('input[name=mediaSel]').val('video');
                                         }
                                         if (index == 'url') {
                                             $('#url').val(element);
@@ -129,18 +129,21 @@
                                         if (index == 'photo_id') {
                                             //$('#p_url').selected();
                                             if (element != 0) {
-                                                $('input[name=mediaSel]').val('photo');
+                                                //$('input[name=mediaSel]').val('photo');
                                                 $('#p_url').attr('checked', 'checked');
                                             }else{
                                                 $('#p_url').attr('checked', false);
                                             }
+                                            $.uniform.update();
+                                            $("#photourl").show();
+                                            $("#videoembd").hide();
                                         }
                                         if (index == 'video_id') {
                                             if (element != 0) {
-                                                //$('#v_embd').selected();
-                                                //$("#v_embd").attr("checked", true).checkboxradio("refresh");
-                                                $('input[name=mediaSel]').val('video');
                                                 $('#v_embd').attr('checked', 'checked');
+                                                $.uniform.update();
+                                                $("#photourl").hide();
+                                                $("#videoembd").show();
                                             }
                                         }
                                         //simpleSelectBox3.append("<option value='"+ element +"'>"+ index +"</option>");

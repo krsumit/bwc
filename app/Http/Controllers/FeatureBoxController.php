@@ -43,6 +43,7 @@ class FeatureBoxController extends Controller {
      * @return Response
      */
     public function create() {
+        //exit;
         //Authenticate User
         if (!Session::has('users')) {
             return redirect()->intended('/auth/login');
@@ -114,7 +115,7 @@ class FeatureBoxController extends Controller {
         $uid = $request->user()->id;
 
         $featureB = "";
-
+        //echo $request->mediaSel; exit;
 
         /* Right mgmt start */
         $rightId = 19;
@@ -193,9 +194,9 @@ class FeatureBoxController extends Controller {
         // echo $request->mediaSel;
         //die;
         //For Image or Video Added:
-        if ($request->mediaSel == 'photo') {
+        //echo $request->mediaSel; exit;
+        if ($request->mediaSel == 'photo'){
             //echo 'sumit';
-
             $photo = new Photo();
             if ($request->photo != '') {
                 $file = $request->file('photo');
@@ -213,16 +214,17 @@ class FeatureBoxController extends Controller {
             $photo->owner_id = $fid;
             $photo->valid = '1';
             $photo->save();
-            echo $pid = $photo->photo_id;
+            $pid = $photo->photo_id;
             //echo  $fid;
             //die;
             //Updating Feature Article
             $fBEdit = FeatureBox::find($fid);
             $fBEdit->photo_id = $pid;
+            $fBEdit->video_id = '';
             $fBEdit->update();
-
+            Video::where('owner_id','=',$fid)->where('owned_by','=','featurebox')->delete();
             //$pid = PhotosController::store($request);
-        } elseif ($request->mediaSel == 'video' && $request->code != '') {
+        } elseif ($request->mediaSel == 'video' && $request->code != ''){
             $video = new Video();
             $video->code = $request->code;
             $video->channel_id = $request->channel_id;
@@ -234,7 +236,9 @@ class FeatureBoxController extends Controller {
             //Updating Feature Article
             $fBEdit = FeatureBox::find($fid);
             $fBEdit->video_id = $vid;
+            $fBEdit->photo_id = '';
             $fBEdit->update();
+            Photo::where('owner_id','=',$fid)->where('owned_by','=','featurebox')->delete();
         }
         /// fclose($asd);
         Session::flash('message', 'Your FeatureBox has been Published successfully.');

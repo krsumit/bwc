@@ -134,9 +134,7 @@ class AuthorsController extends Controller {
     public function create($request) {
         //Save Request Tuple in Table - Validate First
         // ----- Not Being used for now ----//
-
         $author = new Author;
-
         $author->name = $request->name;
         $author->author_type_id = $request->author_type;
         $author->bio = $request->bio;
@@ -414,7 +412,6 @@ class AuthorsController extends Controller {
      * @return Response
      */
     public function edit($id) {
-        //
         //$asd = fopen("/home/sudipta/log.log", 'a+');
         if (isset($_GET['option'])) {
             $id = $_GET['option'];
