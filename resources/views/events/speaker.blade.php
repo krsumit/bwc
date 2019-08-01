@@ -12,7 +12,7 @@
             <h1><small>Event Attendee</small></h1>
         </div>
         <div class="panel-search container-fluid">
-            <form class="form-horizontal" method="get" action="">
+<!--            <form class="form-horizontal" method="get" action="">
                 <input id="panelSearch" required  placeholder="Search" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">
                 <button class="btn btn-search" type="submit"></button>
                 @if(isset($_GET['searchin'])) 
@@ -31,6 +31,31 @@
                     <input type="radio" @if(isset($_GET['searchin'])) @if($_GET['searchin']=='company') checked @endif @endif name="searchin" class="uniformRadio" value="company">
                            Company
                 </label>
+            </form>-->
+            
+            <form class="form-horizontal" method="get" action="">
+                <div class="controls">
+                    Name/Email/Mob
+                    <input id="panelSearch" value="{{$_GET['keyword'] or ''}}" type="text" name="keyword">       
+                </div>
+                <div class="controls">
+                    Designation
+                    <input id="panelSearch" value="{{$_GET['designation'] or ''}}" type="text" name="designation">       
+                </div>
+                <div class="controls">
+                    Company
+                    <input id="panelSearch" value="{{$_GET['company'] or ''}}" type="text" name="company">       
+                </div>
+                <div class="controls">
+                    Location
+                    <input id="panelSearch" value="{{$_GET['location'] or ''}}" type="text" name="location">       
+                </div>
+            
+                 <button type="submit" class="btn btn-info">Search</button>
+                @if((isset($_GET['keyword']))||(isset($_GET['designation']))||(isset($_GET['company']))||(isset($_GET['location']))) 
+                        <a href="/attendee"><button class="btn btn-default" type="button">Reset</button></a>
+                @endif
+
             </form>
         </div>
 
@@ -45,10 +70,10 @@
             });
         </script>
         <br><br>
-        <div class="panel-header">
-            <!--<h1><small>Page Navigation Shortcuts</small></h1>-->
-        </div> 
-        <script type="text/javascript">
+<!--        <div class="panel-header">
+            <h1><small>Page Navigation Shortcuts</small></h1>
+        </div> -->
+<!--        <script type="text/javascript">
             $(function () {
                 $("#jstree").jstree({
                     "json_data": {
@@ -84,14 +109,15 @@
                             event.preventDefault();
                         });
             });
-        </script>
-        <div class="sidebarMenuHolder">
+        </script>-->
+<!--        <div class="sidebarMenuHolder">
             <div class="JStree">
                 <div class="Jstree_shadow_top"></div>
                 <div id="jstree"></div>
                 <div class="Jstree_shadow_bottom"></div>
             </div>
-        </div>    </div>
+        </div>    -->
+    </div>
     <div class="panel-slider">
         <div class="panel-slider-center">
             <div class="panel-slider-arrow"></div>
@@ -169,6 +195,7 @@
                             <th>Image</th>
                             <th>Name</th>
                             <th>Email-ID</th>
+                            <th>Details</th>
                             <th>Action</th>
                             <th><input type="checkbox" class="uniformCheckbox" value="checkbox1"  id="selectall"></th>
                         </tr>
@@ -179,6 +206,13 @@
                             <td style="width:160px;"><img src="{{ config('constants.awsbaseurl').config('constants.awspeakerdir').$speaker->photo}}" alt="User Image" style="width:70%;" /></td>
                             <td>{{$speaker->name}}</td>
                             <td>{{$speaker->email}}</td>
+                             <td>
+                                {{$speaker->designation}}
+                                @if(trim($speaker->designation)) , @endif
+                                {{$speaker->company}}
+                                @if(trim($speaker->designation) || trim($speaker->company)) <br> @endif
+                                {{$speaker->city}}
+                            </td>
                             <td class="center"> 
                                 <div class="btn-group">
                                     <button type="button" class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Modify Detail<span class="caret"></span></button>
@@ -189,6 +223,7 @@
                                     </ul>
                                 </div>
                             </td>
+                           
                             </td>
                                 <td class="center"> <input type="checkbox" class="uniformCheckbox" value="{{$speaker->id}}" name="checkItem[]"></td>
                         </tr>
@@ -253,7 +288,7 @@
                 bInfo: false,
                 bPaginate: false,
                 "aaSorting": [],
-                "aoColumnDefs": [{"bSortable": false, "aTargets": [3,4]}],
+                "aoColumnDefs": [{"bSortable": false, "aTargets": [4,5]}],
                 "fnInitComplete": function () {
                     $(".dataTables_wrapper select").select2({
                         dropdownCssClass: 'noSearch'

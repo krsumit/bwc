@@ -36,26 +36,52 @@ class EventSpeakerController extends Controller {
 
     public function index() {
         //$event = Event::find($id);
+        //DB::enableQueryLog();
         $speakers = Speaker::where('status','=','1')
                 ->leftJoin('speaker_details','speakers.id','=','speaker_details.speaker_id')
-                ->select('speakers.*')
+                ->select('speakers.id','speakers.name','speakers.email','speakers.mobile','speakers.photo','speaker_details.designation','speaker_details.company','speaker_details.city')
                 ->groupBy('speakers.id')
-                ->orderBy('updated_at', 'desc');
+                ->orderBy('speakers.updated_at', 'desc');
         $rightId = 103;
         if (!$this->rightObj->checkRightsIrrespectiveChannel($rightId))
             return redirect('/dashboard');
-        if (isset($_GET['searchin'])) {
-            if ($_GET['searchin'] == 'name') {
-                $speakers->where('name', 'like', '%' . $_GET['keyword'] . '%');
-            }
-            if (@$_GET['searchin'] == 'email') {
-                $speakers->where('email', 'like', '%' . $_GET['keyword'] . '%');
-            }
-            if (@$_GET['searchin'] == 'company') {
-                $speakers->where('speaker_details.company', 'like', '%' . $_GET['keyword'] . '%');
-            }
+        
+        if (isset($_GET['keyword'])) {
+           if (trim($_GET['keyword'])){ 
+                $keyword=$_GET['keyword'];
+                $speakers->where(function ($subquery) use ($keyword){
+                    $subquery->where('email', 'like', '%' . $keyword . '%')
+                    ->orWhere('mobile', 'like', '%' . $keyword . '%')        
+                    ->orWhere('name', 'like', '%' . $keyword . '%');
+                });
+           }
         }
+        
+        if (isset($_GET['designation'])) {
+             if (trim($_GET['designation']))
+               $speakers->where('speaker_details.designation', 'like', '%' . $_GET['designation'] . '%');
+        }
+        
+        if (isset($_GET['company'])) {
+             if (trim($_GET['company']))
+                $speakers->where('speaker_details.company', 'like', '%' . $_GET['company'] . '%');
+        }
+        
+        if (isset($_GET['location'])) {
+            if (trim($_GET['location']))
+                $speakers->where('speaker_details.city', 'like', '%' . $_GET['location'] . '%');
+        }
+        
+        $speakers->where(function ($subquery){
+                    $subquery->whereNull('is_current')->orWhere('is_current','=','1');        
+                });
+            
         $speakers = $speakers->paginate(config('constants.recordperpage'));
+                
+        //$query =DB::getQueryLog();
+        
+        //dump(end($query));
+        
         return view('events.speaker', compact('speakers'));
     }
 
