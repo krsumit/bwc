@@ -131,7 +131,8 @@ class ArticlesController extends Controller {
                 $q->select(DB::raw('articles.article_id,articles.title,articles.created_at,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.auto_published,articles.channel_id,articles.locked_by,users.name as username,locker.name as locker_name,articles.locked_at'));
                 $q->orderBy('articles.created_at', 'desc');
             } else {
-                $q->select(DB::raw('articles.article_id,articles.title,articles.auto_published,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.channel_id,articles.locked_by,locker.name as locker_name,articles.locked_at'));
+                $q->join('users', 'articles.user_id', '=', 'users.id');
+                $q->select(DB::raw('articles.article_id,articles.title,articles.auto_published,articles.publish_date,articles.publish_time,group_concat(authors.name) as name,articles.channel_id,articles.locked_by,users.name as username,locker.name as locker_name,articles.locked_at'));
                 if ($option == 'scheduled') {
                     $q->orderBy('articles.updated_at', 'desc');
                 } else {

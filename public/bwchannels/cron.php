@@ -73,11 +73,11 @@ class Cron {
         $_SESSION['message'] = $this->message;
     }
 
-    function migrateBwAuthor() { 
+    function migrateBwAuthor() {     
         $_SESSION['noofins'] = 0;
         $_SESSION['noofupd'] = 0;
         $conStartTime = date('Y-m-d H:i:s');
-        $cronresult = $this->conn->query("select start_time from cron_log where section_name='bwscauthor' order by  start_time desc limit 0,1") or die($this->conn->error);
+        $cronresult = $this->conn->query("select start_time from cron_log where section_name='channelauthor' order by  start_time desc limit 0,1") or die($this->conn->error);
         $condition = '';
         if ($cronresult->num_rows > 0) {
             $cronLastExecutionTime = $cronresult->fetch_assoc()['start_time'];

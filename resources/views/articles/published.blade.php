@@ -194,6 +194,7 @@
                             <tr>
                                 <th>Article ID</th>
                                 <th>Title</th>
+                                <th>Published By</th>
                                 <th>Reporter Name</th>
                                 <th>Date,Time</th>
                                 <th>
@@ -217,6 +218,7 @@
                                 <td @if($article->auto_published == 1) style="background-color: #cce3cf;" @endif ><a href="/article/{{ $article->article_id }}">{{ $article->article_id }}</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Published by: {{ $article->name }}"><i class="icon-photon info-circle"></i></a></td>
                                 <td @if($article->auto_published == 1) style="background-color: #cce3cf;" @endif ><a href="/article/{{ $article->article_id }}">{{ $article->title }}</a>
                                 </td>
+                                <td @if($article->auto_published == 1) style="background-color: #cce3cf;" @endif ><a href="/article/{{ $article->article_id }}">{{$article->username}}</a></td>
                                 <td @if($article->auto_published == 1) style="background-color: #cce3cf;" @endif ><a href="/article/{{ $article->article_id }}">{{ $article->name }}</a></td>
                                 <td @if($article->auto_published == 1) style="background-color: #cce3cf;" @endif class="center"><a href="/article/{{ $article->article_id }}">{{ $article->publish_date }}</a>
                                     <a href="/article/{{ $article->article_id }}">{{ $article->publish_time }}</a>
@@ -319,7 +321,7 @@
                         bInfo: false,
                         bPaginate: false,
                         "aaSorting": [],
-                        "aoColumnDefs": [{"bSortable": false, "aTargets": [4]}],
+                        "aoColumnDefs": [{"bSortable": false, "aTargets": [5]}],
                         "fnInitComplete": function () {
                             $(".dataTables_wrapper select").select2({
                                 dropdownCssClass: 'noSearch'

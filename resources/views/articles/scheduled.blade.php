@@ -195,6 +195,7 @@
                             <tr>
                                 <th>Article ID</th>
                                 <th>Title</th>
+                                <th>Editor</th>
                                 <th>Reporter Name</th>
                                 <th>Date, Time</th>
                                 <th><input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectall"></th>
@@ -217,6 +218,7 @@
                                 <td><a href="/article/{{ $article->article_id }}">{{ $article->article_id }}</a> <a href="javascript:;" class="bootstrap-tooltip" data-placement="top" data-original-title="Scheduled by: Syed Wahid Bukhari."><i class="icon-photon info-circle"></i></a></td>
                                 <td><a href="/article/{{ $article->article_id }}">{{$article->title}}</a>
                                 </td>
+                                <td><a href="/article/{{ $article->article_id }}">{{$article->username}}</a></td>
                                 <td><a href="/article/{{ $article->article_id }}">{{$article->name}}</a></td>
                                 <td class="center">
                                     <a href="/article/{{ $article->article_id }}">{{$article->publish_date}}</a>
@@ -249,7 +251,7 @@
                         bInfo: false,
                         bPaginate: false,
                         "aaSorting": [],
-                        "aoColumnDefs": [{"bSortable": false, "aTargets": [4]}],
+                        "aoColumnDefs": [{"bSortable": false, "aTargets": [5]}],
                         "fnInitComplete": function () {
                             $(".dataTables_wrapper select").select2({
                                 dropdownCssClass: 'noSearch'

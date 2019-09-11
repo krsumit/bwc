@@ -586,7 +586,8 @@
                 <a href="javascript:;" class="sub-nav-container">
                     <i class="icon-photon iphone"></i>
                     <span class="nav-selection">Product</span>
-                    <i class="icon-menu-arrow"></i>                </a>
+                    <i class="icon-menu-arrow"></i>                
+                </a>
                 <div class="sub-nav">
                     <ul class="nav">
                         @if(in_array('113',Session::get('user_rights')))
@@ -629,11 +630,20 @@
                 </div>
             </li>
             @endif
-        <li class="nav-logout">
-                <a href="/auth/logout">
-                    <i class="icon-photon key_stroke"></i><span class="nav-selection">Logout</span>
+            
+            <li>
+                <a href="/change/password">
+                    <i class="icon-photon key_stroke"></i>
+                    <span class="nav-selection">Change Password</span>
+                    <i class="icon-menu-arrow"></i>                
                 </a>
             </li>
+            
+        <li class="nav-logout">
+                <a href="/auth/logout">
+                    <i class="icon-photon lock_stroke"></i><span class="nav-selection">Logout</span>
+                </a>
+        </li>
         </ul>
     </div>
 </div>

@@ -217,7 +217,8 @@ Route::controllers([
     'password'  => 'Auth\PasswordController'
 ]);
 */
-
+Route::get('change/password', 'Auth\AuthController@changePassword');
+Route::post('change/password', 'Auth\AuthController@saveChangedPassword');
 
 // Authentication routes...
 Route::get('auth/login', ['middleware' => 'guest',   'uses' =>'Auth\AuthController@getLogin']);

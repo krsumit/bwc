@@ -208,7 +208,7 @@
                             <tr>
                                 <th>Article ID</th>
                                 <th>Title</th>
-                                <th>Author</th>
+                                <th>Editor</th>
                                 <th>Reporter Name</th>
                                 <th>Date,Time</th>
                                 <th><input type="checkbox" class="uniformCheckbox" value="checkbox1" id="selectall"></th>

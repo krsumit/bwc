@@ -1,18 +1,16 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
-
 use Auth;
-use Hash;
 use App\User;
 use App\UserRight;
-use Validator;
 //use Illuminate\Http\Request;
-use Request;
+use Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Facades\Session;
 //use Illuminate\Contracts\Auth\Registrar;
+//use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
@@ -213,33 +211,25 @@ use AuthenticatesAndRegistersUsers,
         }
         exit;
     }
+    
     function changePassword(){
                 return view('auth.changepassword');
     }
     
+    
     function saveChangedPassword(Request $request){
-        $request=Request::all();        
-        $validator=Validator::make($request, [
-                     'old_password' => 'required|min:6',
-                    'password' => 'required|confirmed|min:6',
-        ]);
-        
-        if ($validator->fails()) {
-            return redirect('change/password')
-                        ->withErrors($validator)
-                        ->withInput();
-        }
-        
-        $current_password = Auth::User()->password;  
-        if (Hash::check($request['old_password'], $current_password)) {
-              $user=Auth::user();
-              $user->password=bcrypt($request['password']);
-              $user->save();
-              Session::flash('message', 'Password changed successfully.');
-        }else{
-            Session::flash('error', 'Please enter correct current password.');
-        }
+ 
+//        $validation = $this->validate($request,[
+//           'old_password' => 'required|min:6',
+//                    'password' => 'required|confirmed|min:6',
+//        ]);
+        //dd(Auth::user()->email);
+        $user=User::where('email','=',Auth::user()->email)->where('password','=',bcrypt($request->old_password))->first();
+        dd($user);
         return redirect('change/password' );
     }
+    
+    
+    
 
 }
