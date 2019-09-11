@@ -137,7 +137,7 @@
 
         <div class="control-group row-fluid">
             <div class="span3">
-                <label class="control-label" for="inputField">Old Password</label>
+                <label class="control-label" for="inputField">Current Password</label>
             </div>
             <div class="span9">
                 <div class="controls">
