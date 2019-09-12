@@ -159,10 +159,34 @@
                                 <td>
                                     {!!html_entity_decode($activity->notification)!!}
                                         <br>
-                                    <p class="noti_info" style="display:none;max-width: 500px;word-wrap: break-word;">
+                                    <div class="noti_info" style="display:none;max-width: 500px;word-wrap: break-word;">
                                         <b>Details:<br></b>
-                                        {{$activity->notification_info}}
-                                    </p>
+                                        <?php $activity=json_decode($activity->notification_info); ?>
+                                        @if(count($activity)>0)
+                                            <table>
+                                                @foreach($activity as $key=>$val)
+                                                    
+                                                        @if(gettype($val)!='object')
+                                                        <tr>
+                                                            <td>{{strtoupper($key)}}</td>
+                                                            <td>{{$val}}</td>
+                                                        </tr>     
+                                                        @else
+                                                        <tr>
+                                                            <td colspan="2"><b>{{strtoupper($key)}}</b></td> 
+                                                        </tr>
+                                                            @foreach($val as $k=>$v)
+                                                             <tr>
+                                                                <td>{{strtoupper($k)}}</td>
+                                                                <td>{{$v}}</td>
+                                                            </tr>  
+                                                            @endforeach
+                                                        @endif
+                                                       
+                                                @endforeach
+                                            </table>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td><a class="show_details" href="javascript:;">Details</a></td>
                              </tr>                         
@@ -207,12 +231,18 @@
                 });
 
             </script>
-        </div><!-- end container -->
-        <!--        <div class="control-group row-fluid">
-                    <div class="span12 span-inset">
-                        <button type="button" onclick="deleteAuthor()" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>							
-                    </div>
-                </div>-->
+        </div>
+        <div class="dataTables_paginate paging_bootstrap pagination">
+                {!! $activities->appends(Input::get())->render() !!}
+        </div>
+        <!-- end container -->
+        <!--        
+            <div class="control-group row-fluid">
+                        <div class="span12 span-inset">
+                            <button type="button" onclick="deleteAuthor()" class="btn btn-danger">Dump</button><img src="images/photon/preloader/76.gif" alt="loader" style="width:5%; display:none;"/>							
+                        </div>
+            </div>
+        -->
     </form>
 </div>
 @stop

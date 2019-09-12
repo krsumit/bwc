@@ -426,6 +426,7 @@ class EventController extends Controller {
                 ->leftJoin('speaker_details', 'event_speaker.speaker_detail_id', '=', 'speaker_details.id')
                 ->leftJoin('speaker_tags', 'speakers.tags', '=', 'speaker_tags.tags_id')
                 ->select('speakers.name', 'email', 'mobile', 'tag', 'photo', 'twitter', 'linkedin', 'description', 'designation', 'company', 'mobile', 'emails', 'city', 'address', 'speaker_type.name as type')
+                ->where('event_id','=',$event->event_id)
                 ->orderBy('speaker_type.name')
                 ->get();
         $data['event'] = $event;
@@ -832,7 +833,7 @@ class EventController extends Controller {
 
         $activities = ActivityLog::join('users', 'activity_logs.user_id', '=', 'users.id')
                         ->select('activity_logs.*', 'users.name')
-                        ->orderBy('created_at', 'DESC')->get();
+                        ->orderBy('created_at', 'DESC')->paginate(config('constants.recordperpage'));
         return view('events.activity-logs', compact('activities'));
     }
 
